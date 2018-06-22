@@ -1,5 +1,18 @@
-# Compiled class file
+#Build targets
+target/
+/target
+*/target
+
+#Maven release files
+*.releaseBackup
+release.properties
+
+.idea/
 *.class
+*.iml
+.classpath
+.project
+.settings/
 
 # Log file
 *.log
