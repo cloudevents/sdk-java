@@ -1,5 +1,6 @@
 # Java SDK for CloudEvents API
 
+[![Build Status](https://travis-ci.org/cloudevents/sdk-java.png)](https://travis-ci.org/cloudevents/sdk-java)
 [![License](https://img.shields.io/:license-Apache2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 A Java API for the [CloudEvents specification](https://github.com/cloudevents/spec)
