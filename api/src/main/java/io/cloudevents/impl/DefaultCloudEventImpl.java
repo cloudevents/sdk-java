@@ -15,6 +15,7 @@
  */
 package io.cloudevents.impl;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.cloudevents.CloudEvent;
 
 import java.io.Serializable;
@@ -137,6 +138,7 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
         this.eventTypeVersion = eventTypeVersion;
     }
 
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     void setEventTime(ZonedDateTime eventTime) {
         this.eventTime = eventTime;
     }
