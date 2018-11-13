@@ -20,13 +20,13 @@
     <parent>
         <groupId>io.cloudevents</groupId>
         <artifactId>cloudevents-parent</artifactId>
-        <version>0.0.2</version>
+        <version>0.0.3-SNAPSHOT</version>
     </parent>
 
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
     <name>CloudEvents - API</name>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <dependencies>
