@@ -20,6 +20,7 @@ import org.junit.Test;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +31,9 @@ public class CloudEventBuilderTest {
     public void testBuilderWithData() {
 
         // given
-        final Map<String, String> keyValueStore = Map.of("key1", "value1", "key2", "val2");
+        final Map<String, String> keyValueStore = new HashMap<>();
+        keyValueStore.put("key1", "value1");
+        keyValueStore.put("key2", "value2");
         final String eventId = UUID.randomUUID().toString();
         final URI src = URI.create("/trigger");
         final String eventType = "My.Cloud.Event.Type";
@@ -38,7 +41,8 @@ public class CloudEventBuilderTest {
         final ZonedDateTime eventTime = ZonedDateTime.now();
         final String contentType = "application/json";
         final URI schemaUri = URI.create("http://cloudevents.io/schema");
-        final Map<String, String> extensionData = Map.of("foo", "bar");
+        final Map<String, String> extensionData = new HashMap<>();
+        extensionData.put("foo", "bar");
 
         // when
         final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
