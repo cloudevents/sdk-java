@@ -61,7 +61,7 @@ public class CloudEventBuilderTest {
         simpleKeyValueEvent.getData().ifPresent(data -> {
             assertThat(data).isNotNull();
             assertThat(data).containsKeys("key1", "key2");
-            assertThat(data).containsValues("value1", "val2");
+            assertThat(data).containsValues("value1", "value2");
         });
 
         assertThat(simpleKeyValueEvent.getContentType().get()).isEqualTo(contentType);
