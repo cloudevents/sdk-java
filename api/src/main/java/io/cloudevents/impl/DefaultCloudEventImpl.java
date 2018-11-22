@@ -154,4 +154,20 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
     void setData(T data) {
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return "DefaultCloudEventImpl{" +
+                "cloudEventsVersion='" + cloudEventsVersion + '\'' +
+                ", extensions=" + extensions +
+                ", eventType='" + eventType + '\'' +
+                ", source=" + source +
+                ", eventID='" + eventID + '\'' +
+                ", eventTypeVersion='" + eventTypeVersion + '\'' +
+                ", eventTime=" + eventTime +
+                ", schemaURL=" + schemaURL +
+                ", contentType='" + contentType + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

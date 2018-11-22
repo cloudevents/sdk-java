@@ -53,6 +53,7 @@
 
     <modules>
         <module>api</module>
+        <module>http/vertx</module>
     </modules>
 
 </project>
