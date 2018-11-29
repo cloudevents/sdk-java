@@ -33,7 +33,7 @@ public class Server extends AbstractVerticle {
 Below is a sample on how to use the client to send a CloudEvent:
 
 ```java
-final HttpClientRequest request = vertx.createHttpClient().post(7890, "localhost", "/");
+final HttpClientRequest request = vertx.createHttpClient().post(8080, "localhost", "/");
 
 CeVertx.writeToHttpClientRequest(cloudEvent, request);
     request.handler(resp -> {
