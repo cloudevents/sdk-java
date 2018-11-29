@@ -20,13 +20,13 @@
     <parent>
         <groupId>io.cloudevents</groupId>
         <artifactId>cloudevents-parent</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.3</version>
     </parent>
 
     <groupId>io.cloudevents</groupId>
     <artifactId>http-vertx</artifactId>
     <name>CloudEvents - Vertx-transport-http</name>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
 
     <dependencies>
