@@ -25,6 +25,19 @@ import java.util.Optional;
  *
  */
 public interface CloudEvent<T> {
+
+    // required
+    String EVENT_TYPE_KEY = "ce-eventType";
+    String CLOUD_EVENTS_VERSION_KEY = "ce-cloudEventsVersion";
+    String SOURCE_KEY = "ce-source";
+    String EVENT_ID_KEY = "ce-eventID";
+
+    // none-required
+    String EVENT_TYPE_VERSION_KEY = "ce-eventTypeVersion";
+    String EVENT_TIME_KEY = "ce-eventTime";
+    String SCHEMA_URL_KEY = "ce-schemaURL";
+    String HEADER_PREFIX = "ce-x-";
+
     /**
      * Type of occurrence which has happened. Often this property is used for routing, observability, policy enforcement, etc.
      */
