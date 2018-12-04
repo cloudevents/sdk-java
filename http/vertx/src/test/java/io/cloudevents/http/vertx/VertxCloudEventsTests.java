@@ -66,7 +66,7 @@ class VertxCloudEventsTests {
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
-                .rxListen()
+                .rxListen(8080)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
                     HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
@@ -104,7 +104,7 @@ class VertxCloudEventsTests {
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
-                .rxListen()
+                .rxListen(8080)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
                     HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
@@ -135,7 +135,7 @@ class VertxCloudEventsTests {
                                 serverCheckpoint.flag();
                             }
                         }))
-                .rxListen()
+                .rxListen(8080)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
                     HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
