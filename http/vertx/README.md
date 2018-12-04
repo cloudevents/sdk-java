@@ -10,14 +10,14 @@ public class Server extends AbstractVerticle {
   public void start() {
     vertx.createHttpServer().requestHandler(req -> {
 
-      CeVertx.readFromRequest(req, reply -> {
+      VertxCloudEvents.create().readFromRequest(req, reply -> {
 
         if (reply.succeeded()) {
 
           final CloudEvent<?> receivedEvent = reply.result();
           // access the attributes:
           System.out.println(receivedEvent.getEventID());
-          ...
+          /// ...
         });
 
       req.response()
@@ -35,7 +35,7 @@ Below is a sample on how to use the client to send a CloudEvent:
 ```java
 final HttpClientRequest request = vertx.createHttpClient().post(8080, "localhost", "/");
 
-CeVertx.writeToHttpClientRequest(cloudEvent, request);
+VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
     request.handler(resp -> {
         context.assertEquals(resp.statusCode(), 200);
     });
