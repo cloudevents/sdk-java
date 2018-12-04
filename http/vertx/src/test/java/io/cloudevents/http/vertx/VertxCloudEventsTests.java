@@ -95,12 +95,12 @@ public class VertxCloudEventsTests {
                 // sending it to the test-server
                 final HttpClientRequest request = vertx.createHttpClient().post(port, "localhost", "/");
 
+                VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
                 request.handler(response -> {
                     context.assertEquals(response.statusCode(), 200);
 
                     async.complete();
                 });
-                VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
                 request.end();
             }
         });
@@ -143,13 +143,12 @@ public class VertxCloudEventsTests {
                 // sending it to the test-server
                 final HttpClientRequest request = vertx.createHttpClient().post(port, "localhost", "/");
 
-
+                VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
                 request.handler(resp -> {
                     context.assertEquals(resp.statusCode(), 200);
                     async.complete();
 
                 });
-                VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
                 request.end();
 
             }
@@ -189,7 +188,6 @@ public class VertxCloudEventsTests {
                 request.putHeader(HttpHeaders.createOptimized(CLOUD_EVENTS_VERSION_KEY), HttpHeaders.createOptimized("0.1"));
                 request.putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized("pushevent"));
                 request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized("0"));
-
 
                 request.handler(resp -> {
                     context.assertEquals(resp.statusCode(), 200);
