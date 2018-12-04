@@ -24,10 +24,8 @@
         <relativePath>../..</relativePath>
     </parent>
 
-    <groupId>io.cloudevents</groupId>
     <artifactId>http-vertx</artifactId>
     <name>CloudEvents - vertx-transport-http</name>
-    <version>0.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <dependencies>

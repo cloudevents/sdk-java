@@ -50,6 +50,10 @@
             <id>matzew</id>
             <name>Matthias Wessendorf</name>
         </developer>
+        <developer>
+            <id>jponge</id>
+            <name>Julien Ponge</name>
+        </developer>
     </developers>
 
     <modules>
