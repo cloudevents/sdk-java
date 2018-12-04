@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudevents.http.vertx;
+package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.http.vertx.VertxCloudEvents;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -41,48 +42,22 @@ import static io.cloudevents.CloudEvent.HEADER_PREFIX;
 import static io.cloudevents.CloudEvent.SCHEMA_URL_KEY;
 import static io.cloudevents.CloudEvent.SOURCE_KEY;
 
-public final class CeVertx {
+public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
-    private CeVertx() {
-        // no-op
+    private static String readRequiredHeaderValue(final MultiMap headers, final String headerName) {
+        return requireNonNull(headers.get(headerName));
     }
 
-    public static void writeToHttpClientRequest(final CloudEvent<?> ce, final HttpClientRequest request) {
-
-        // setting the right content-length:
-        if (ce.getData().isPresent()) {
-            request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized(String.valueOf(ce.getData().get().toString().length())));
+    private static String requireNonNull(final String val) {
+        if (val == null) {
+            throw new IllegalArgumentException();
         } else {
-            request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized("0"));
+            return val;
         }
-
-        // read required headers
-        request
-                .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaders.createOptimized("application/json"))
-                .putHeader(HttpHeaders.createOptimized(CLOUD_EVENTS_VERSION_KEY), HttpHeaders.createOptimized(ce.getCloudEventsVersion()))
-                .putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized(ce.getEventType()))
-                .putHeader(HttpHeaders.createOptimized(SOURCE_KEY), HttpHeaders.createOptimized(ce.getSource().toString()))
-                .putHeader(HttpHeaders.createOptimized(EVENT_ID_KEY), HttpHeaders.createOptimized(ce.getEventID()));
-
-        // read optional headers
-        ce.getEventTypeVersion().ifPresent(eventTypeVersion -> {
-            request.putHeader(HttpHeaders.createOptimized(EVENT_TYPE_VERSION_KEY), HttpHeaders.createOptimized(eventTypeVersion));
-        });
-
-        ce.getEventTime().ifPresent(eventTime -> {
-            request.putHeader(HttpHeaders.createOptimized(EVENT_TIME_KEY), HttpHeaders.createOptimized(eventTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
-        });
-
-        ce.getSchemaURL().ifPresent(schemaUrl -> {
-            request.putHeader(HttpHeaders.createOptimized(SCHEMA_URL_KEY), HttpHeaders.createOptimized(schemaUrl.toString()));
-        });
-
-        ce.getData().ifPresent(data -> {
-            request.write(data.toString());
-        });
     }
 
-    public static void readFromRequest(final HttpServerRequest request, final Handler<AsyncResult<CloudEvent>> resultHandler) {
+    @Override
+    public <T> void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<T>>> resultHandler) {
 
         final MultiMap headers = request.headers();
         final CloudEventBuilder builder = new CloudEventBuilder();
@@ -115,7 +90,7 @@ public final class CeVertx {
             final Map<String, String> extensions =
                     headers.entries().stream()
                             .filter(header -> header.getKey().startsWith(HEADER_PREFIX))
-                            .collect(Collectors.toMap(h -> h.getKey(), h -> h.getValue()));
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             builder.extensions(extensions);
             request.bodyHandler((Buffer buff) -> {
@@ -130,15 +105,39 @@ public final class CeVertx {
         }
     }
 
-    private static String readRequiredHeaderValue(final MultiMap headers, final String headerName) {
-        return requireNonNull(headers.get(headerName));
-    }
+    @Override
+    public <T> void writeToHttpClientRequest(CloudEvent<T> ce, HttpClientRequest request) {
 
-    private static String requireNonNull(final String val) {
-        if (val == null) {
-            throw new IllegalArgumentException();
+        // setting the right content-length:
+        if (ce.getData().isPresent()) {
+            request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized(String.valueOf(ce.getData().get().toString().length())));
         } else {
-            return val;
+            request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized("0"));
         }
+
+        // read required headers
+        request
+                .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaders.createOptimized("application/json"))
+                .putHeader(HttpHeaders.createOptimized(CLOUD_EVENTS_VERSION_KEY), HttpHeaders.createOptimized(ce.getCloudEventsVersion()))
+                .putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized(ce.getEventType()))
+                .putHeader(HttpHeaders.createOptimized(SOURCE_KEY), HttpHeaders.createOptimized(ce.getSource().toString()))
+                .putHeader(HttpHeaders.createOptimized(EVENT_ID_KEY), HttpHeaders.createOptimized(ce.getEventID()));
+
+        // read optional headers
+        ce.getEventTypeVersion().ifPresent(eventTypeVersion -> {
+            request.putHeader(HttpHeaders.createOptimized(EVENT_TYPE_VERSION_KEY), HttpHeaders.createOptimized(eventTypeVersion));
+        });
+
+        ce.getEventTime().ifPresent(eventTime -> {
+            request.putHeader(HttpHeaders.createOptimized(EVENT_TIME_KEY), HttpHeaders.createOptimized(eventTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
+        });
+
+        ce.getSchemaURL().ifPresent(schemaUrl -> {
+            request.putHeader(HttpHeaders.createOptimized(SCHEMA_URL_KEY), HttpHeaders.createOptimized(schemaUrl.toString()));
+        });
+
+        ce.getData().ifPresent(data -> {
+            request.write(data.toString());
+        });
     }
 }

@@ -21,12 +21,11 @@
         <groupId>io.cloudevents</groupId>
         <artifactId>cloudevents-parent</artifactId>
         <version>0.0.4-SNAPSHOT</version>
+        <relativePath>../..</relativePath>
     </parent>
 
-    <groupId>io.cloudevents</groupId>
     <artifactId>http-vertx</artifactId>
-    <name>CloudEvents - Vertx-transport-http</name>
-    <version>0.0.4-SNAPSHOT</version>
+    <name>CloudEvents - vertx-transport-http</name>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -40,7 +39,20 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>${vert.version}</version>
+            <version>${vertx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-codegen</artifactId>
+            <version>${vertx.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-rx-java2</artifactId>
+            <version>${vertx.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -60,13 +72,36 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-unit</artifactId>
-            <version>${vert.version}</version>
+            <version>${vertx.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-compile</id>
+                            <configuration>
+                                <annotationProcessors>
+                                    <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
+                                </annotationProcessors>
+                                <compilerArgs>
+                                    <arg>-AoutputDirectory=${project.basedir}/src/main</arg>
+                                </compilerArgs>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <properties>
-        <vert.version>3.6.0</vert.version>
+        <vertx.version>3.6.0</vertx.version>
         <jackson.version>2.9.6</jackson.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
