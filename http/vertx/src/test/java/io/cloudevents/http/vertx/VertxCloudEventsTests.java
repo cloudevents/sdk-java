@@ -38,9 +38,9 @@ import static io.cloudevents.CloudEvent.CLOUD_EVENTS_VERSION_KEY;
 import static io.cloudevents.CloudEvent.EVENT_TYPE_KEY;
 
 @RunWith(VertxUnitRunner.class)
-public class CloudEventsVertxTest {
+public class VertxCloudEventsTests {
 
-    private final static Logger logger = Logger.getLogger(CloudEventsVertxTest.class.getName());
+    private final static Logger logger = Logger.getLogger(VertxCloudEventsTests.class.getName());
 
     private HttpServer server;
     private Vertx vertx;
@@ -75,7 +75,7 @@ public class CloudEventsVertxTest {
         // set up the server and add a handler to check the values
         server.requestHandler(req -> {
 
-            CeVertx.readFromRequest(req, reply -> {
+            VertxCloudEvents.create().readFromRequest(req, reply -> {
 
                 if (reply.succeeded()) {
 
@@ -100,7 +100,7 @@ public class CloudEventsVertxTest {
 
                     async.complete();
                 });
-                CeVertx.writeToHttpClientRequest(cloudEvent, request);
+                VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
                 request.end();
             }
         });
@@ -123,7 +123,7 @@ public class CloudEventsVertxTest {
         // set up the server and add a handler to check the values
         server.requestHandler(req -> {
 
-            CeVertx.readFromRequest(req, reply -> {
+            VertxCloudEvents.create().readFromRequest(req, reply -> {
 
                 if (reply.succeeded()) {
 
@@ -149,7 +149,7 @@ public class CloudEventsVertxTest {
                     async.complete();
 
                 });
-                CeVertx.writeToHttpClientRequest(cloudEvent, request);
+                VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
                 request.end();
 
             }
@@ -166,7 +166,7 @@ public class CloudEventsVertxTest {
         // set up the server and add a handler to check the values
         server.requestHandler(req -> {
 
-            CeVertx.readFromRequest(req, reply -> {
+            VertxCloudEvents.create().readFromRequest(req, reply -> {
 
                 if (reply.succeeded()) {
 
