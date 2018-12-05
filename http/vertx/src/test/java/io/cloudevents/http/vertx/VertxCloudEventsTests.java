@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2018 The CloudEvents Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,188 +17,137 @@ package io.cloudevents.http.vertx;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
-import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpClientRequest;
+import io.cloudevents.http.reactivex.vertx.VertxCloudEvents;
 import io.vertx.core.http.HttpHeaders;
-import io.vertx.core.http.HttpServer;
-import io.vertx.ext.unit.Async;
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import io.vertx.junit5.Checkpoint;
+import io.vertx.junit5.VertxExtension;
+import io.vertx.junit5.VertxTestContext;
+import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.core.http.HttpClientRequest;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.URI;
 import java.util.logging.Logger;
 
 import static io.cloudevents.CloudEvent.CLOUD_EVENTS_VERSION_KEY;
 import static io.cloudevents.CloudEvent.EVENT_TYPE_KEY;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(VertxUnitRunner.class)
-public class VertxCloudEventsTests {
+@ExtendWith(VertxExtension.class)
+class VertxCloudEventsTests {
 
     private final static Logger logger = Logger.getLogger(VertxCloudEventsTests.class.getName());
 
-    private HttpServer server;
-    private Vertx vertx;
-    private int port;
-
-    @Before
-    public void setUp(TestContext context) throws IOException {
-        vertx = Vertx.vertx();
-        ServerSocket socket = new ServerSocket(0);
-        port = socket.getLocalPort();
-        socket.close();
-        server = vertx.createHttpServer();
-    }
-
-    @After
-    public void tearDown(TestContext context) {
-        vertx.close(context.asyncAssertSuccess());
-    }
-
     @Test
-    public void cloudEventWithPayload(TestContext context) {
-        final Async async = context.async();
+    @DisplayName("Post a cloud event with a payload")
+    void cloudEventWithPayload(Vertx vertx, VertxTestContext testContext) {
+        Checkpoint serverCheckpoint = testContext.checkpoint();
+        Checkpoint clientCheckpoint = testContext.checkpoint();
 
-        // Create the actuak CloudEvents object;
-        final CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+        CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
                 .source(URI.create("http://knative-eventing.com"))
                 .eventID("foo-bar")
                 .eventType("pushevent")
                 .data("{\"foo\":\"bar\"}}")
                 .build();
 
-        // set up the server and add a handler to check the values
-        server.requestHandler(req -> {
-
-            VertxCloudEvents.create().readFromRequest(req, reply -> {
-
-                if (reply.succeeded()) {
-
-                    final CloudEvent<?> receivedEvent = reply.result();
-                    context.assertEquals(receivedEvent.getEventID(), cloudEvent.getEventID());
-                    context.assertEquals(receivedEvent.getSource().toString(), cloudEvent.getSource().toString());
-                    context.assertEquals(receivedEvent.getEventType(), cloudEvent.getEventType());
-                    context.assertEquals(receivedEvent.getData().isPresent(), Boolean.TRUE);
-                }
-            });
-
-            req.response().end();
-        }).listen(port, ar -> {
-            if (ar.failed()) {
-                context.fail("could not start server");
-            } else {
-                // sending it to the test-server
-                final HttpClientRequest request = vertx.createHttpClient().post(port, "localhost", "/");
-
-                VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
-                request.handler(response -> {
-                    context.assertEquals(response.statusCode(), 200);
-
-                    async.complete();
+        vertx.createHttpServer()
+                .requestHandler(req -> VertxCloudEvents
+                        .create()
+                        .rxReadFromRequest(req)
+                        .doOnError(testContext::failNow)
+                        .subscribe(event -> testContext.verify(() -> {
+                            assertThat(event.getEventID()).isEqualTo(cloudEvent.getEventID());
+                            assertThat(event.getSource().toString()).isEqualTo(cloudEvent.getSource().toString());
+                            assertThat(event.getEventType()).isEqualTo(cloudEvent.getEventType());
+                            assertThat(event.getData()).isPresent();
+                            req.response().end();
+                            serverCheckpoint.flag();
+                        })))
+                .rxListen(8080)
+                .doOnError(testContext::failNow)
+                .subscribe(server -> {
+                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    req.handler(resp -> testContext.verify(() -> {
+                        assertThat(resp.statusCode()).isEqualTo(200);
+                        clientCheckpoint.flag();
+                    }));
+                    VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, req);
+                    req.end();
                 });
-                request.end();
-            }
-        });
-        logger.info("running on port: " + port);
-
-        async.awaitSuccess(1000);
     }
 
     @Test
-    public void cloudEventWithoutPayload(TestContext context) {
-        final Async async = context.async();
+    @DisplayName("Post a cloud event without a payload")
+    void cloudEventWithoutPayload(Vertx vertx, VertxTestContext testContext) {
+        Checkpoint serverCheckpoint = testContext.checkpoint();
+        Checkpoint clientCheckpoint = testContext.checkpoint();
 
-        // Create the actuak CloudEvents object;
-        final CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+        CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
                 .source(URI.create("http://knative-eventing.com"))
                 .eventID("foo-bar")
                 .eventType("pushevent")
                 .build();
 
-        // set up the server and add a handler to check the values
-        server.requestHandler(req -> {
-
-            VertxCloudEvents.create().readFromRequest(req, reply -> {
-
-                if (reply.succeeded()) {
-
-                    final CloudEvent<?> receivedEvent = reply.result();
-                    context.assertEquals(receivedEvent.getEventID(), cloudEvent.getEventID());
-                    context.assertEquals(receivedEvent.getSource().toString(), cloudEvent.getSource().toString());
-                    context.assertEquals(receivedEvent.getEventType(), cloudEvent.getEventType());
-                    context.assertEquals(receivedEvent.getData().isPresent(), Boolean.FALSE);
-                }
-            });
-
-            req.response().end();
-        }).listen(port, ar -> {
-            if (ar.failed()) {
-                context.fail("could not start server");
-            } else {
-                // sending it to the test-server
-                final HttpClientRequest request = vertx.createHttpClient().post(port, "localhost", "/");
-
-                VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
-                request.handler(resp -> {
-                    context.assertEquals(resp.statusCode(), 200);
-                    async.complete();
-
+        vertx.createHttpServer()
+                .requestHandler(req -> VertxCloudEvents
+                        .create()
+                        .rxReadFromRequest(req)
+                        .doOnError(testContext::failNow)
+                        .subscribe(event -> testContext.verify(() -> {
+                            assertThat(event.getEventID()).isEqualTo(cloudEvent.getEventID());
+                            assertThat(event.getSource().toString()).isEqualTo(cloudEvent.getSource().toString());
+                            assertThat(event.getEventType()).isEqualTo(cloudEvent.getEventType());
+                            assertThat(event.getData()).isNotPresent();
+                            req.response().end();
+                            serverCheckpoint.flag();
+                        })))
+                .rxListen(8080)
+                .doOnError(testContext::failNow)
+                .subscribe(server -> {
+                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    req.handler(resp -> testContext.verify(() -> {
+                        assertThat(resp.statusCode()).isEqualTo(200);
+                        clientCheckpoint.flag();
+                    }));
+                    VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, req);
+                    req.end();
                 });
-                request.end();
-
-            }
-        });
-        logger.info("running on port: " + port);
-
-        async.awaitSuccess(1000);
     }
 
     @Test
-    public void incompleteCloudEvent(TestContext context) {
-        final Async async = context.async();
+    @DisplayName("Post an incomplete cloud event")
+    void incompleteCloudEvent(Vertx vertx, VertxTestContext testContext) {
+        Checkpoint serverCheckpoint = testContext.checkpoint();
+        Checkpoint clientCheckpoint = testContext.checkpoint();
 
-        // set up the server and add a handler to check the values
-        server.requestHandler(req -> {
-
-            VertxCloudEvents.create().readFromRequest(req, reply -> {
-
-                if (reply.succeeded()) {
-
-                    context.fail("request was not complete");
-                } else {
-                    context.assertEquals(reply.failed(), Boolean.TRUE);
-                }
-            });
-
-            req.response().end();
-        }).listen(port, ar -> {
-
-            if (ar.failed()) {
-                context.fail("could not start server");
-            } else {
-                // fire the request
-                // sending it to the test-server
-                final HttpClientRequest request = vertx.createHttpClient().post(port, "localhost", "/");
-                // create incomplete CloudEvent request
-                request.putHeader(HttpHeaders.createOptimized(CLOUD_EVENTS_VERSION_KEY), HttpHeaders.createOptimized("0.1"));
-                request.putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized("pushevent"));
-                request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized("0"));
-
-                request.handler(resp -> {
-                    context.assertEquals(resp.statusCode(), 200);
-
-                    async.complete();
+        vertx.createHttpServer()
+                .requestHandler(req -> VertxCloudEvents
+                        .create()
+                        .rxReadFromRequest(req)
+                        .subscribe((e, t) -> {
+                            if (e != null) {
+                                testContext.failNow(new AssertionError("request was not complete, but got: " + e));
+                            } else {
+                                req.response().end();
+                                serverCheckpoint.flag();
+                            }
+                        }))
+                .rxListen(8080)
+                .doOnError(testContext::failNow)
+                .subscribe(server -> {
+                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    // create incomplete CloudEvent request
+                    req.putHeader(HttpHeaders.createOptimized(CLOUD_EVENTS_VERSION_KEY), HttpHeaders.createOptimized("0.1"));
+                    req.putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized("pushevent"));
+                    req.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized("0"));
+                    req.handler(resp -> testContext.verify(() -> {
+                        assertThat(resp.statusCode()).isEqualTo(200);
+                        clientCheckpoint.flag();
+                    }));
+                    req.end();
                 });
-                request.end();
-            }
-        });
-        logger.info("running on port: " + port);
-
-        async.awaitSuccess(1000);
     }
 }
