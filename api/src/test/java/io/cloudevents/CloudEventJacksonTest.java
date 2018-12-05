@@ -30,7 +30,7 @@ public class CloudEventJacksonTest {
     @Test
     public void testParseAzureJSON() {
         CloudEvent<Map<String, ?>> ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("azure.json"));
-        assertThat(ce.getEventType()).isEqualTo("Microsoft.Storage.BlobCreated");
+        assertThat(ce.getType()).isEqualTo("Microsoft.Storage.BlobCreated");
 
         ce.getData().ifPresent(data -> {
             assertThat(Map.class).isAssignableFrom(data.getClass());
@@ -48,8 +48,8 @@ public class CloudEventJacksonTest {
     @Test
     public void testParseAmazonJSON() {
         CloudEvent ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("aws.json"));
-        assertThat(ce.getEventType()).isEqualTo("aws.s3.object.created");
+        assertThat(ce.getType()).isEqualTo("aws.s3.object.created");
         assertThat(ce.getSource().equals(URI.create("https://serverless.com")));
-        assertThat(ce.getEventTime().get()).isEqualTo(ZonedDateTime.parse("2018-04-26T14:48:09.769Z", ISO_ZONED_DATE_TIME));
+        assertThat(ce.getTime().get()).isEqualTo(ZonedDateTime.parse("2018-04-26T14:48:09.769Z", ISO_ZONED_DATE_TIME));
     }
 }

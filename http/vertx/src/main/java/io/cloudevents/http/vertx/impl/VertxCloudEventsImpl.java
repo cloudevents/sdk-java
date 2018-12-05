@@ -30,15 +30,11 @@ import io.vertx.core.http.HttpServerRequest;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import static io.cloudevents.CloudEvent.CLOUD_EVENTS_VERSION_KEY;
+import static io.cloudevents.CloudEvent.SPECVERSION_KEY;
 import static io.cloudevents.CloudEvent.EVENT_ID_KEY;
 import static io.cloudevents.CloudEvent.EVENT_TIME_KEY;
 import static io.cloudevents.CloudEvent.EVENT_TYPE_KEY;
-import static io.cloudevents.CloudEvent.EVENT_TYPE_VERSION_KEY;
-import static io.cloudevents.CloudEvent.HEADER_PREFIX;
 import static io.cloudevents.CloudEvent.SCHEMA_URL_KEY;
 import static io.cloudevents.CloudEvent.SOURCE_KEY;
 
@@ -64,21 +60,20 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
         try {
             // just check, no need to set the version
-            readRequiredHeaderValue(headers, CLOUD_EVENTS_VERSION_KEY);
+            readRequiredHeaderValue(headers, SPECVERSION_KEY);
 
             builder
                     // set required values
-                    .eventType(readRequiredHeaderValue(headers, EVENT_TYPE_KEY))
+                    .type(readRequiredHeaderValue(headers, EVENT_TYPE_KEY))
                     .source(URI.create(readRequiredHeaderValue(headers ,SOURCE_KEY)))
-                    .eventID(readRequiredHeaderValue(headers, EVENT_ID_KEY))
+                    .id(readRequiredHeaderValue(headers, EVENT_ID_KEY))
 
                     // set optional values
-                    .eventTypeVersion(headers.get(EVENT_TYPE_VERSION_KEY))
                     .contentType(headers.get(HttpHeaders.CONTENT_TYPE));
 
             final String eventTime = headers.get(EVENT_TIME_KEY);
             if (eventTime != null) {
-                builder.eventTime(ZonedDateTime.parse(eventTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                builder.time(ZonedDateTime.parse(eventTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
 
             final String schemaURL = headers.get(SCHEMA_URL_KEY);
@@ -86,13 +81,6 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
                 builder.schemaURL(URI.create(schemaURL));
             }
 
-            // get the extensions
-            final Map<String, String> extensions =
-                    headers.entries().stream()
-                            .filter(header -> header.getKey().startsWith(HEADER_PREFIX))
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-            builder.extensions(extensions);
             request.bodyHandler((Buffer buff) -> {
 
                 if (buff.length()>0) {
@@ -118,17 +106,13 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
         // read required headers
         request
                 .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaders.createOptimized("application/json"))
-                .putHeader(HttpHeaders.createOptimized(CLOUD_EVENTS_VERSION_KEY), HttpHeaders.createOptimized(ce.getCloudEventsVersion()))
-                .putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized(ce.getEventType()))
+                .putHeader(HttpHeaders.createOptimized(SPECVERSION_KEY), HttpHeaders.createOptimized(ce.getSepcVersion()))
+                .putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized(ce.getType()))
                 .putHeader(HttpHeaders.createOptimized(SOURCE_KEY), HttpHeaders.createOptimized(ce.getSource().toString()))
-                .putHeader(HttpHeaders.createOptimized(EVENT_ID_KEY), HttpHeaders.createOptimized(ce.getEventID()));
+                .putHeader(HttpHeaders.createOptimized(EVENT_ID_KEY), HttpHeaders.createOptimized(ce.getId()));
 
         // read optional headers
-        ce.getEventTypeVersion().ifPresent(eventTypeVersion -> {
-            request.putHeader(HttpHeaders.createOptimized(EVENT_TYPE_VERSION_KEY), HttpHeaders.createOptimized(eventTypeVersion));
-        });
-
-        ce.getEventTime().ifPresent(eventTime -> {
+        ce.getTime().ifPresent(eventTime -> {
             request.putHeader(HttpHeaders.createOptimized(EVENT_TIME_KEY), HttpHeaders.createOptimized(eventTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
         });
 

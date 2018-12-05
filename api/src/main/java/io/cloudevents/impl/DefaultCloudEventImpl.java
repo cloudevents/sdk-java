@@ -33,25 +33,21 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String cloudEventsVersion = "0.1";
-    private Map extensions = null;
-    private String eventType = null;
+    private String specversion = "0.2";
+    private String type = null;
     private URI source = null;
-    private String eventID = null;
-    private String eventTypeVersion = null;
-    private ZonedDateTime eventTime = null;
+    private String id = null;
+    private ZonedDateTime time = null;
     private URI schemaURL = null;
     private String contentType = null;
     private T data = null;
 
-    public DefaultCloudEventImpl(final String eventType, final String cloudEventsVersion, final URI source, final String eventID, final String eventTypeVersion, final ZonedDateTime eventTime, final URI schemaURL, final String contentType, final Map extensions, final T data) {
-        this.cloudEventsVersion = cloudEventsVersion;
-        this.extensions = extensions;
-        this.eventType = eventType;
+    public DefaultCloudEventImpl(final String type, final String specversion, final URI source, final String id, final ZonedDateTime time, final URI schemaURL, final String contentType, final T data) {
+        this.specversion = specversion;
+        this.type = type;
         this.source = source;
-        this.eventID = eventID;
-        this.eventTypeVersion = eventTypeVersion;
-        this.eventTime = eventTime;
+        this.id = id;
+        this.time = time;
         this.schemaURL = schemaURL;
         this.contentType = contentType;
         this.data = data;
@@ -62,18 +58,13 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
     }
 
     @Override
-    public String getCloudEventsVersion() {
-        return cloudEventsVersion;
+    public String getSepcVersion() {
+        return specversion;
     }
 
     @Override
-    public Optional<Map> getExtensions() {
-        return Optional.ofNullable(extensions);
-    }
-
-    @Override
-    public String getEventType() {
-        return eventType;
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -82,18 +73,13 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
     }
 
     @Override
-    public String getEventID() {
-        return eventID;
+    public String getId() {
+        return id;
     }
 
     @Override
-    public Optional<String> getEventTypeVersion() {
-        return Optional.ofNullable(eventTypeVersion);
-    }
-
-    @Override
-    public Optional<ZonedDateTime> getEventTime() {
-        return Optional.ofNullable(eventTime);
+    public Optional<ZonedDateTime> getTime() {
+        return Optional.ofNullable(time);
     }
 
     @Override
@@ -111,36 +97,27 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
         return Optional.ofNullable(data);
     }
 
-
     // protected setters, used for (JSON) deserialization
 
-    void setCloudEventsVersion(String cloudEventsVersion) {
-        this.cloudEventsVersion = cloudEventsVersion;
+    void setSpecversion(String specversion) {
+        this.specversion = specversion;
     }
 
-    void setExtensions(Map extensions) {
-        this.extensions = extensions;
-    }
-
-    void setEventType(String eventType) {
-        this.eventType = eventType;
+    void setType(String type) {
+        this.type = type;
     }
 
     void setSource(URI source) {
         this.source = source;
     }
 
-    void setEventID(String eventID) {
-        this.eventID = eventID;
-    }
-
-    void setEventTypeVersion(String eventTypeVersion) {
-        this.eventTypeVersion = eventTypeVersion;
+    void setId(String id) {
+        this.id = id;
     }
 
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
-    void setEventTime(ZonedDateTime eventTime) {
-        this.eventTime = eventTime;
+    void setTime(ZonedDateTime time) {
+        this.time = time;
     }
 
     void setSchemaURL(URI schemaURL) {
@@ -158,13 +135,11 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
     @Override
     public String toString() {
         return "DefaultCloudEventImpl{" +
-                "cloudEventsVersion='" + cloudEventsVersion + '\'' +
-                ", extensions=" + extensions +
-                ", eventType='" + eventType + '\'' +
+                "specversion='" + specversion + '\'' +
+                ", type='" + type + '\'' +
                 ", source=" + source +
-                ", eventID='" + eventID + '\'' +
-                ", eventTypeVersion='" + eventTypeVersion + '\'' +
-                ", eventTime=" + eventTime +
+                ", id='" + id + '\'' +
+                ", time=" + time +
                 ", schemaURL=" + schemaURL +
                 ", contentType='" + contentType + '\'' +
                 ", data=" + data +

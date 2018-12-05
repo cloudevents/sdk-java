@@ -26,32 +26,23 @@ import java.util.Map;
  * Builder class to create a Java Object representing a CloudEvent implementation
  * @param <T> type of the data field
  */
-public class  CloudEventBuilder<T> {
+public class CloudEventBuilder<T> {
 
-    private final String cloudEventsVersion = "0.1";
-    private Map<?,?> extensions = new LinkedHashMap();
+    public static String SPEC_VERSION = "0.2";
+
     private String contentType;
-    private String eventType;
+    private String type;
     private URI source;
-    private String eventID;
-    private String eventTypeVersion;
-    private ZonedDateTime eventTime;
+    private String id;
+    private ZonedDateTime time;
     private URI schemaURL;
     private T data;
 
     /**
      * Type of occurrence which has happened. Often this property is used for routing, observability, policy enforcement, etc.
      */
-    public CloudEventBuilder<T> eventType(final String eventType) {
-        this.eventType = eventType;
-        return this;
-    }
-
-    /**
-     * The version of the eventType. This enables the interpretation of data by eventual consumers, requires the consumer to be knowledgeable about the producer.
-     */
-    public CloudEventBuilder<T> eventTypeVersion(final String eventTypeVersion) {
-        this.eventTypeVersion = eventTypeVersion;
+    public CloudEventBuilder<T> type(final String type) {
+        this.type = type;
         return this;
     }
 
@@ -68,16 +59,16 @@ public class  CloudEventBuilder<T> {
     /**
      * ID of the event. The semantics of this string are explicitly undefined to ease the implementation of producers. Enables deduplication.
      */
-    public CloudEventBuilder<T> eventID(final String eventID) {
-        this.eventID = eventID;
+    public CloudEventBuilder<T> id(final String id) {
+        this.id = id;
         return this;
     }
 
     /**
      * Timestamp of when the event happened.
      */
-    public CloudEventBuilder<T> eventTime(final ZonedDateTime eventTime) {
-        this.eventTime = eventTime;
+    public CloudEventBuilder<T> time(final ZonedDateTime time) {
+        this.time = time;
         return this;
     }
 
@@ -98,17 +89,7 @@ public class  CloudEventBuilder<T> {
     }
 
     /**
-     * This is for additional metadata and this does not have a mandated structure. This enables a place for custom
-     * fields a producer or middleware might want to include and provides a place to test metadata before adding them
-     * to the CloudEvents specification.
-     */
-    public CloudEventBuilder<T> extensions(final Map extensions) {
-        this.extensions = extensions;
-        return this;
-    }
-
-    /**
-     * The event payload. The payload depends on the eventType, schemaURL and eventTypeVersion, the payload is encoded into a media format which is specified by the contentType attribute (e.g. application/json).
+     * The event payload. The payload depends on the type and schemaURL, the payload is encoded into a media format which is specified by the contenttype attribute (e.g. application/json).
      */
     public CloudEventBuilder<T> data(final T data) {
         this.data = data;
@@ -120,10 +101,10 @@ public class  CloudEventBuilder<T> {
      */
     public CloudEvent<T> build() {
 
-        if (eventType == null || cloudEventsVersion == null || source == null || eventID == null) {
+        if (type == null || source == null || id == null) {
             throw new IllegalArgumentException("please provide all required fields");
         }
 
-        return new DefaultCloudEventImpl<T>(eventType, cloudEventsVersion, source, eventID, eventTypeVersion, eventTime, schemaURL, contentType, extensions, data);
+        return new DefaultCloudEventImpl<T>(type, SPEC_VERSION, source, id, time, schemaURL, contentType, data);
     }
 }
