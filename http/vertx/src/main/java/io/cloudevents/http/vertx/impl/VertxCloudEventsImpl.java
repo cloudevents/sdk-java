@@ -96,7 +96,7 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
             request.bodyHandler((Buffer buff) -> {
 
                 if (buff.length()>0) {
-                    builder.data(buff.toJsonObject().toString());
+                    builder.data(buff.toString());
                 }
                 resultHandler.handle(Future.succeededFuture(builder.build()));
             });
