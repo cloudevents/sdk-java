@@ -17,6 +17,7 @@ package io.cloudevents.http.vertx;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.http.V01HttpTransportMappers;
 import io.cloudevents.http.V02HttpTransportMappers;
 import io.cloudevents.http.reactivex.vertx.VertxCloudEvents;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.net.URI;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static io.cloudevents.SpecVersion.V_01;
@@ -208,6 +210,61 @@ class VertxCloudEventsTests {
                         assertThat(resp.statusCode()).isEqualTo(200);
                         clientCheckpoint.flag();
                     }));
+                    req.end();
+                });
+    }
+
+    @Test
+    @DisplayName("Post a 0.2 CloudEvents object with a payload")
+    void cloudEventWithExtension(Vertx vertx, VertxTestContext testContext) {
+        Checkpoint serverCheckpoint = testContext.checkpoint();
+        Checkpoint clientCheckpoint = testContext.checkpoint();
+
+        final DistributedTracingExtension dte = new DistributedTracingExtension();
+        dte.setTraceparent("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01");
+        dte.setTracestate("congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
+
+
+        final CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+                .specVersion("0.2")
+                .source(URI.create("http://knative-eventing.com"))
+                .id("foo-bar")
+                .extension(dte)
+                .type("pushevent")
+                .build();
+
+        Class[] exceptions =  {DistributedTracingExtension.class};
+
+        vertx.createHttpServer()
+                .requestHandler(req -> VertxCloudEvents
+                        .create()
+                        .rxReadFromRequest(req, exceptions)
+                        .doOnError(testContext::failNow)
+                        .subscribe(event -> testContext.verify(() -> {
+                            assertThat(event.getId()).isEqualTo(cloudEvent.getId());
+
+                            // extension headers
+                            assertThat(req.headers().get("traceparent")).isEqualTo("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01");
+                            assertThat(req.headers().get("tracestate")).isEqualTo("congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
+
+                            assertThat(event.getExtensions().get().get(0)).isNotNull();
+
+                            assertThat(event.getExtensions().get().get(0)).extracting("traceparent", "tracestate")
+                                    .contains("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01", "congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
+
+
+                            req.response().end();
+                            serverCheckpoint.flag();
+                        })))
+                .rxListen(8080)
+                .doOnError(testContext::failNow)
+                .subscribe(server -> {
+                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    req.handler(resp -> testContext.verify(() -> {
+                        assertThat(resp.statusCode()).isEqualTo(200);
+                        clientCheckpoint.flag();
+                    }));
+                    VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, req);
                     req.end();
                 });
     }

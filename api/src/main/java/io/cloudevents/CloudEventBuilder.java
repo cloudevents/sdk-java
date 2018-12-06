@@ -19,7 +19,9 @@ import io.cloudevents.impl.DefaultCloudEventImpl;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +38,7 @@ public class CloudEventBuilder<T> {
     private ZonedDateTime time;
     private URI schemaURL;
     private T data;
+    private final List<Extension> extensions = new ArrayList<>();
 
     /**
      * The version of the CloudEvents specification which the event uses.
@@ -103,6 +106,11 @@ public class CloudEventBuilder<T> {
         return this;
     }
 
+    public CloudEventBuilder<T> extension(final Extension extension) {
+        this.extensions.add(extension);
+        return this;
+    }
+
     /**
      * Constructs a new {@link CloudEvent} with the previously-set configuration.
      */
@@ -117,6 +125,6 @@ public class CloudEventBuilder<T> {
             throw new IllegalArgumentException("please provide all required fields");
         }
 
-        return new DefaultCloudEventImpl<T>(type, specversion, source, id, time, schemaURL, contentType, data);
+        return new DefaultCloudEventImpl<T>(type, specversion, source, id, time, schemaURL, contentType, data, extensions);
     }
 }

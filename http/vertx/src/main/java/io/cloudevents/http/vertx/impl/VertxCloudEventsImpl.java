@@ -17,7 +17,9 @@ package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.Extension;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.http.HttpTransportAttributes;
 import io.cloudevents.http.V02HttpTransportMappers;
 import io.cloudevents.http.vertx.VertxCloudEvents;
@@ -29,10 +31,19 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
@@ -50,6 +61,12 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
     @Override
     public <T> void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<T>>> resultHandler) {
+        this.readFromRequest(request, null, resultHandler);
+
+    }
+
+    @Override
+    public <T> void readFromRequest(HttpServerRequest request, Class[] extensions, Handler<AsyncResult<CloudEvent<T>>> resultHandler) {
 
         final MultiMap headers = request.headers();
         final CloudEventBuilder builder = new CloudEventBuilder();
@@ -84,6 +101,34 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
             if (schemaURL != null) {
                 builder.schemaURL(URI.create(schemaURL));
             }
+
+
+            if (extensions != null && extensions.length > 0) {
+
+                // move this out
+                Arrays.asList(extensions).forEach(ext -> {
+
+                    try {
+                        Object extObj  = ext.newInstance();
+                        final JsonObject extension = new JsonObject();
+                        Field[] fields = ext.getDeclaredFields();
+
+                        for (Field field : fields) {
+                            boolean accessible = field.isAccessible();
+                            field.setAccessible(true);
+                            field.set(extObj, request.headers().get(field.getName()));
+                            field.setAccessible(accessible);
+                        }
+                        builder.extension((Extension) extObj);
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
+
 
             request.bodyHandler((Buffer buff) -> {
 
@@ -126,8 +171,21 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
             request.putHeader(HttpHeaders.createOptimized(httpTransportAttributes.schemaUrlKey()), HttpHeaders.createOptimized(schemaUrl.toString()));
         });
 
+
+        ce.getExtensions().ifPresent(extensions -> {
+
+            extensions.forEach(ext -> {
+                JsonObject.mapFrom(ext).forEach(extEntry -> {
+                    request.putHeader(HttpHeaders.createOptimized(extEntry.getKey()), HttpHeaders.createOptimized(extEntry.getValue().toString()));
+                });
+            });
+        });
+
+
         ce.getData().ifPresent(data -> {
             request.write(data.toString());
         });
+
+
     }
 }

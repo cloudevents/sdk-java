@@ -17,7 +17,7 @@ package io.cloudevents;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -66,4 +66,9 @@ public interface CloudEvent<T> {
      * The event payload. The payload depends on the eventType, schemaURL and eventTypeVersion, the payload is encoded into a media format which is specified by the contentType attribute (e.g. application/json).
      */
     Optional<T> getData();
+
+    /**
+     *
+     */
+    Optional<List<Extension>> getExtensions();
 }

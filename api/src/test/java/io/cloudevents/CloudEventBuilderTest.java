@@ -15,6 +15,7 @@
  */
 package io.cloudevents;
 
+import io.cloudevents.extensions.DistributedTracingExtension;
 import org.junit.Test;
 
 import java.net.URI;
@@ -166,6 +167,33 @@ public class CloudEventBuilderTest {
                 .build();
         // than
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
+    }
+
+    @Test
+    public void testBuilderWithoutDataAndDistributedTracingExtension() {
+
+        // given
+        final String id = UUID.randomUUID().toString();
+        final URI src = URI.create("mailto:cncf-wg-serverless@lists.cncf.io");
+        final String type = "My.Cloud.Event.Type";
+        final DistributedTracingExtension dte = new DistributedTracingExtension();
+        dte.setTraceparent("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01");
+        dte.setTracestate("congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
+
+        // when
+        final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
+                .type(type)
+                .id(id)
+                .source(src)
+                .extension(dte)
+                .build();
+        // than
+        assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
+        assertThat(simpleKeyValueEvent.getExtensions().get()).contains(dte);
+
+        Extension receivedDte = simpleKeyValueEvent.getExtensions().get().get(0);
+        assertThat(receivedDte).extracting("traceparent", "tracestate")
+                .contains("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01", "congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
     }
 
 }

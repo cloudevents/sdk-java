@@ -19,11 +19,13 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.Extension;
 import io.cloudevents.SpecVersion;
 
 import java.io.Serializable;
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,8 +47,9 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
     private URI schemaURL = null;
     private String contentType = null;
     private T data = null;
+    private List<Extension> extensions = null;
 
-    public DefaultCloudEventImpl(final String type, final String specversion, final URI source, final String id, final ZonedDateTime time, final URI schemaURL, final String contentType, final T data) {
+    public DefaultCloudEventImpl(final String type, final String specversion, final URI source, final String id, final ZonedDateTime time, final URI schemaURL, final String contentType, final T data, final List<Extension> extensions) {
         this.specversion = specversion;
         this.type = type;
         this.source = source;
@@ -55,6 +58,7 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
         this.schemaURL = schemaURL;
         this.contentType = contentType;
         this.data = data;
+        this.extensions = extensions;
     }
 
     DefaultCloudEventImpl() {
@@ -99,6 +103,11 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
     @Override
     public Optional<T> getData() {
         return Optional.ofNullable(data);
+    }
+
+    @Override
+    public Optional<List<Extension>> getExtensions() {
+        return Optional.ofNullable(extensions);
     }
 
     // protected setters, used for (JSON) deserialization
