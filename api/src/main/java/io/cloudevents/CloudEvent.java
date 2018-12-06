@@ -21,23 +21,10 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * An abstract event envelope, representing the 0.1 version of the <a href="https://github.com/cloudevents/spec/blob/master/spec.md">CNCF CloudEvent spec</a>.
+ * An abstract event envelope, representing the 0.2 version of the <a href="https://github.com/cloudevents/spec/blob/master/spec.md">CNCF CloudEvent spec</a>.
  *
  */
 public interface CloudEvent<T> {
-
-    // required
-    String EVENT_TYPE_KEY = "ce-type";
-    String SPECVERSION_KEY = "ce-specversion";
-    String SOURCE_KEY = "ce-source";
-    String EVENT_ID_KEY = "ce-id";
-
-    // none-required
-    String CONTENT_TYPE_KEY = "contenttype";
-    String DATA__KEY = "data";
-    String EVENT_TIME_KEY = "ce-time";
-    String SCHEMA_URL_KEY = "ce-schemaurl";
-    String HEADER_PREFIX = "ce-x-";
 
     /**
      * Type of occurrence which has happened. Often this property is used for routing, observability, policy enforcement, etc.

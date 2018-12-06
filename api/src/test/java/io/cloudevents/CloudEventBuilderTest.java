@@ -65,7 +65,7 @@ public class CloudEventBuilderTest {
         assertThat(simpleKeyValueEvent.getSchemaURL().get()).isEqualTo(schemaUri);
         assertThat(simpleKeyValueEvent.getType()).isEqualTo(type);
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
-        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo("0.2");
+        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.DEFAULT.toString());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class CloudEventBuilderTest {
         assertThat(simpleKeyValueEvent.getId()).isEqualTo(id);
         assertThat(simpleKeyValueEvent.getType()).isEqualTo(type);
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
-        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo("0.2");
+        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.DEFAULT.toString());
     }
 
     @Test
@@ -107,6 +107,27 @@ public class CloudEventBuilderTest {
                 .build();
         // than
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
+    }
+
+    @Test
+    public void test01BuilderWithoutDataAndUrn() {
+
+        // given
+        final String id = UUID.randomUUID().toString();
+        final URI src = URI.create("urn:event:from:myapi/resourse/123");
+        final String type = "some.Cloud.Event.Type";
+
+        // when
+        final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
+                .specVersion("0.1")
+                .type(type)
+                .id(id)
+                .source(src)
+                .build();
+        // than
+        assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
+        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.V_01.toString());
+
     }
 
     @Test

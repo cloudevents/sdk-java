@@ -1,0 +1,21 @@
+{
+  "eventID": "96fb5f0b-001e-0108-6dfe-da6e2806f124",
+  "eventTime": "2018-04-23T12:28:22.4579346Z",
+  "eventType": "Microsoft.Storage.BlobCreated",
+  "cloudEventsVersion": "0.1",
+  "data": {
+    "api": "PutBlockList",
+    "clientRequestId": "a23b4aba-2755-4107-8020-8ba6c54b203d",
+    "requestId": "96fb5f0b-001e-0108-6dfe-da6e28000000",
+    "eTag": "0x8D5A915B425AFFD",
+    "contentType": "image/jpeg",
+    "contentLength": 2779325,
+    "blobType": "BlockBlob",
+    "url": "https://cvtest34.blob.core.windows.net/myfiles/IMG_20180224_0004.jpg",
+    "sequencer": "000000000000000000000000000000BA00000000003db46c",
+    "storageDiagnostics": {
+      "batchId": "ba4fb664-f289-4742-8067-6c859411b066"
+    }
+  },
+  "source": "/subscriptions/326100e2-f69d-4268-8503-075374f62b6e/resourceGroups/cvtest34/providers/Microsoft.Storage/storageAccounts/cvtest34#/blobServices/default/containers/myfiles/blobs/IMG_20180224_0004.jpg"
+}

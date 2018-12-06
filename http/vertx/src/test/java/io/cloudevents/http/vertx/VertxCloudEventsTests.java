@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2018 The CloudEvents Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,8 @@ package io.cloudevents.http.vertx;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.http.V01HttpTransportMappers;
+import io.cloudevents.http.V02HttpTransportMappers;
 import io.cloudevents.http.reactivex.vertx.VertxCloudEvents;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.junit5.Checkpoint;
@@ -31,8 +33,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.net.URI;
 import java.util.logging.Logger;
 
-import static io.cloudevents.CloudEvent.SPECVERSION_KEY;
-import static io.cloudevents.CloudEvent.EVENT_TYPE_KEY;
+import static io.cloudevents.SpecVersion.V_01;
+import static io.cloudevents.SpecVersion.V_02;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(VertxExtension.class)
@@ -41,12 +43,13 @@ class VertxCloudEventsTests {
     private final static Logger logger = Logger.getLogger(VertxCloudEventsTests.class.getName());
 
     @Test
-    @DisplayName("Post a cloud event with a payload")
+    @DisplayName("Post a 0.2 CloudEvents object with a payload")
     void cloudEventWithPayload(Vertx vertx, VertxTestContext testContext) {
         Checkpoint serverCheckpoint = testContext.checkpoint();
         Checkpoint clientCheckpoint = testContext.checkpoint();
 
         CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+                .specVersion("0.2")
                 .source(URI.create("http://knative-eventing.com"))
                 .id("foo-bar")
                 .type("pushevent")
@@ -80,12 +83,13 @@ class VertxCloudEventsTests {
     }
 
     @Test
-    @DisplayName("Post a cloud event without a payload")
+    @DisplayName("Post a 0.2 CloudEvents object without a payload")
     void cloudEventWithoutPayload(Vertx vertx, VertxTestContext testContext) {
         Checkpoint serverCheckpoint = testContext.checkpoint();
         Checkpoint clientCheckpoint = testContext.checkpoint();
 
         CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+                .specVersion("0.2")
                 .source(URI.create("http://knative-eventing.com"))
                 .id("foo-bar")
                 .type("pushevent")
@@ -97,7 +101,63 @@ class VertxCloudEventsTests {
                         .rxReadFromRequest(req)
                         .doOnError(testContext::failNow)
                         .subscribe(event -> testContext.verify(() -> {
+
+                            // check headers
+                            assertThat(req.headers().get(V02HttpTransportMappers.SPEC_VERSION_KEY)).isEqualTo(V_02.toString());
+                            assertThat(req.headers().get(V01HttpTransportMappers.SPEC_VERSION_KEY)).isNull();
+                            assertThat(req.headers().get("ce-id")).isEqualTo("foo-bar");
+                            assertThat(req.headers().get("ce-eventID")).isNull();
+
+                            // check parsed object
                             assertThat(event.getId()).isEqualTo(cloudEvent.getId());
+                            assertThat(event.getSource().toString()).isEqualTo(cloudEvent.getSource().toString());
+                            assertThat(event.getType()).isEqualTo(cloudEvent.getType());
+                            assertThat(event.getData()).isNotPresent();
+                            req.response().end();
+                            serverCheckpoint.flag();
+                        })))
+                .rxListen(8080)
+                .doOnError(testContext::failNow)
+                .subscribe(server -> {
+                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    req.handler(resp -> testContext.verify(() -> {
+                        assertThat(resp.statusCode()).isEqualTo(200);
+                        clientCheckpoint.flag();
+                    }));
+                    VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, req);
+                    req.end();
+                });
+    }
+
+    @Test
+    @DisplayName("Post a 0.1 CloudEvents object without a payload")
+    void cloudEventWithoutPayload01(Vertx vertx, VertxTestContext testContext) {
+        Checkpoint serverCheckpoint = testContext.checkpoint();
+        Checkpoint clientCheckpoint = testContext.checkpoint();
+
+        CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+                .specVersion("0.1")
+                .source(URI.create("http://knative-eventing.com"))
+                .id("foo-bar")
+                .type("pushevent")
+                .build();
+
+        vertx.createHttpServer()
+                .requestHandler(req -> VertxCloudEvents
+                        .create()
+                        .rxReadFromRequest(req)
+                        .doOnError(testContext::failNow)
+                        .subscribe(event -> testContext.verify(() -> {
+
+                            // check headers
+                            assertThat(req.headers().get(V01HttpTransportMappers.SPEC_VERSION_KEY)).isEqualTo(V_01.toString());
+                            assertThat(req.headers().get(V02HttpTransportMappers.SPEC_VERSION_KEY)).isNull();
+                            assertThat(req.headers().get("ce-eventID")).isEqualTo("foo-bar");
+                            assertThat(req.headers().get("ce-id")).isNull();
+
+                            // check parsed object
+                            assertThat(event.getId()).isEqualTo(cloudEvent.getId());
+                            assertThat(event.getSepcVersion().toString()).isEqualTo(cloudEvent.getSepcVersion());
                             assertThat(event.getSource().toString()).isEqualTo(cloudEvent.getSource().toString());
                             assertThat(event.getType()).isEqualTo(cloudEvent.getType());
                             assertThat(event.getData()).isNotPresent();
@@ -140,8 +200,9 @@ class VertxCloudEventsTests {
                 .subscribe(server -> {
                     HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
                     // create incomplete CloudEvent request
-                    req.putHeader(HttpHeaders.createOptimized(SPECVERSION_KEY), HttpHeaders.createOptimized("0.1"));
-                    req.putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized("pushevent"));
+                    req.putHeader(HttpHeaders.createOptimized("ce-specversion"), HttpHeaders.createOptimized("0.2"));
+                    req.putHeader(HttpHeaders.createOptimized("ce-type"), HttpHeaders.createOptimized("pushevent"));
+                    req.putHeader(HttpHeaders.createOptimized("foo"), HttpHeaders.createOptimized("bar"));
                     req.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized("0"));
                     req.handler(resp -> testContext.verify(() -> {
                         assertThat(resp.statusCode()).isEqualTo(200);

@@ -15,8 +15,11 @@
  */
 package io.cloudevents.impl;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.SpecVersion;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -29,11 +32,12 @@ import java.util.Optional;
  *
  * @param <T> generic type of the underlying data field.
  */
+@JsonIgnoreProperties(value = { "eventTypeVersion", "extensions" }) // was removed from 0.1
 public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
-    private String specversion = "0.2";
+    private String specversion;
     private String type = null;
     private URI source = null;
     private String id = null;
@@ -99,10 +103,12 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
 
     // protected setters, used for (JSON) deserialization
 
+    @JsonAlias({"specversion", "cloudEventsVersion"})
     void setSpecversion(String specversion) {
         this.specversion = specversion;
     }
 
+    @JsonAlias({"type", "eventType"})
     void setType(String type) {
         this.type = type;
     }
@@ -111,11 +117,13 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
         this.source = source;
     }
 
+    @JsonAlias({"id", "eventID"})
     void setId(String id) {
         this.id = id;
     }
 
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    @JsonAlias({"time", "eventTime"})
     void setTime(ZonedDateTime time) {
         this.time = time;
     }

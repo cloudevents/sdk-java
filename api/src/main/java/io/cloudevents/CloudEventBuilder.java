@@ -28,8 +28,7 @@ import java.util.Map;
  */
 public class CloudEventBuilder<T> {
 
-    public static String SPEC_VERSION = "0.2";
-
+    private String specversion;
     private String contentType;
     private String type;
     private URI source;
@@ -37,6 +36,14 @@ public class CloudEventBuilder<T> {
     private ZonedDateTime time;
     private URI schemaURL;
     private T data;
+
+    /**
+     * The version of the CloudEvents specification which the event uses.
+     */
+    public CloudEventBuilder<T> specVersion(final String specVersion) {
+        this.specversion = specVersion;
+        return this;
+    }
 
     /**
      * Type of occurrence which has happened. Often this property is used for routing, observability, policy enforcement, etc.
@@ -101,10 +108,15 @@ public class CloudEventBuilder<T> {
      */
     public CloudEvent<T> build() {
 
+        // forcing latest (default) version
+        if (specversion == null) {
+            specversion = SpecVersion.DEFAULT.toString();
+        }
+
         if (type == null || source == null || id == null) {
             throw new IllegalArgumentException("please provide all required fields");
         }
 
-        return new DefaultCloudEventImpl<T>(type, SPEC_VERSION, source, id, time, schemaURL, contentType, data);
+        return new DefaultCloudEventImpl<T>(type, specversion, source, id, time, schemaURL, contentType, data);
     }
 }
