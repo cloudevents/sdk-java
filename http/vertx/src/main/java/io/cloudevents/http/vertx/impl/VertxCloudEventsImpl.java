@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2018 The CloudEvents Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,11 @@ package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.Extension;
+import io.cloudevents.SpecVersion;
+import io.cloudevents.extensions.DistributedTracingExtension;
+import io.cloudevents.http.HttpTransportAttributes;
+import io.cloudevents.http.V02HttpTransportMappers;
 import io.cloudevents.http.vertx.VertxCloudEvents;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -26,21 +31,19 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import static io.cloudevents.CloudEvent.CLOUD_EVENTS_VERSION_KEY;
-import static io.cloudevents.CloudEvent.EVENT_ID_KEY;
-import static io.cloudevents.CloudEvent.EVENT_TIME_KEY;
-import static io.cloudevents.CloudEvent.EVENT_TYPE_KEY;
-import static io.cloudevents.CloudEvent.EVENT_TYPE_VERSION_KEY;
-import static io.cloudevents.CloudEvent.HEADER_PREFIX;
-import static io.cloudevents.CloudEvent.SCHEMA_URL_KEY;
-import static io.cloudevents.CloudEvent.SOURCE_KEY;
 
 public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
@@ -58,41 +61,75 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
     @Override
     public <T> void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<T>>> resultHandler) {
+        this.readFromRequest(request, null, resultHandler);
+
+    }
+
+    @Override
+    public <T> void readFromRequest(HttpServerRequest request, Class[] extensions, Handler<AsyncResult<CloudEvent<T>>> resultHandler) {
 
         final MultiMap headers = request.headers();
         final CloudEventBuilder builder = new CloudEventBuilder();
 
-        try {
-            // just check, no need to set the version
-            readRequiredHeaderValue(headers, CLOUD_EVENTS_VERSION_KEY);
 
+        final HttpTransportAttributes httpTransportKeys;
+        {
+            if (headers.contains(V02HttpTransportMappers.SPEC_VERSION_KEY)) {
+                httpTransportKeys = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_02);
+            } else {
+                httpTransportKeys = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_01);
+            }
+        }
+
+        try {
             builder
                     // set required values
-                    .eventType(readRequiredHeaderValue(headers, EVENT_TYPE_KEY))
-                    .source(URI.create(readRequiredHeaderValue(headers ,SOURCE_KEY)))
-                    .eventID(readRequiredHeaderValue(headers, EVENT_ID_KEY))
+                    .specVersion(readRequiredHeaderValue(headers, httpTransportKeys.specVersionKey()))
+                    .type(readRequiredHeaderValue(headers, httpTransportKeys.typeKey()))
+                    .source(URI.create(readRequiredHeaderValue(headers ,httpTransportKeys.sourceKey())))
+                    .id(readRequiredHeaderValue(headers, httpTransportKeys.idKey()))
 
                     // set optional values
-                    .eventTypeVersion(headers.get(EVENT_TYPE_VERSION_KEY))
                     .contentType(headers.get(HttpHeaders.CONTENT_TYPE));
 
-            final String eventTime = headers.get(EVENT_TIME_KEY);
+            final String eventTime = headers.get(httpTransportKeys.timeKey());
             if (eventTime != null) {
-                builder.eventTime(ZonedDateTime.parse(eventTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                builder.time(ZonedDateTime.parse(eventTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
 
-            final String schemaURL = headers.get(SCHEMA_URL_KEY);
+            final String schemaURL = headers.get(httpTransportKeys.schemaUrlKey());
             if (schemaURL != null) {
                 builder.schemaURL(URI.create(schemaURL));
             }
 
-            // get the extensions
-            final Map<String, String> extensions =
-                    headers.entries().stream()
-                            .filter(header -> header.getKey().startsWith(HEADER_PREFIX))
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-            builder.extensions(extensions);
+            if (extensions != null && extensions.length > 0) {
+
+                // move this out
+                Arrays.asList(extensions).forEach(ext -> {
+
+                    try {
+                        Object extObj  = ext.newInstance();
+                        final JsonObject extension = new JsonObject();
+                        Field[] fields = ext.getDeclaredFields();
+
+                        for (Field field : fields) {
+                            boolean accessible = field.isAccessible();
+                            field.setAccessible(true);
+                            field.set(extObj, request.headers().get(field.getName()));
+                            field.setAccessible(accessible);
+                        }
+                        builder.extension((Extension) extObj);
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
+
+
             request.bodyHandler((Buffer buff) -> {
 
                 if (buff.length()>0) {
@@ -115,29 +152,40 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
             request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized("0"));
         }
 
+        HttpTransportAttributes httpTransportAttributes = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.fromVersion(ce.getSepcVersion()));
+
         // read required headers
         request
                 .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaders.createOptimized("application/json"))
-                .putHeader(HttpHeaders.createOptimized(CLOUD_EVENTS_VERSION_KEY), HttpHeaders.createOptimized(ce.getCloudEventsVersion()))
-                .putHeader(HttpHeaders.createOptimized(EVENT_TYPE_KEY), HttpHeaders.createOptimized(ce.getEventType()))
-                .putHeader(HttpHeaders.createOptimized(SOURCE_KEY), HttpHeaders.createOptimized(ce.getSource().toString()))
-                .putHeader(HttpHeaders.createOptimized(EVENT_ID_KEY), HttpHeaders.createOptimized(ce.getEventID()));
+                .putHeader(HttpHeaders.createOptimized(httpTransportAttributes.specVersionKey()), HttpHeaders.createOptimized(ce.getSepcVersion()))
+                .putHeader(HttpHeaders.createOptimized(httpTransportAttributes.typeKey()), HttpHeaders.createOptimized(ce.getType()))
+                .putHeader(HttpHeaders.createOptimized(httpTransportAttributes.sourceKey()), HttpHeaders.createOptimized(ce.getSource().toString()))
+                .putHeader(HttpHeaders.createOptimized(httpTransportAttributes.idKey()), HttpHeaders.createOptimized(ce.getId()));
 
         // read optional headers
-        ce.getEventTypeVersion().ifPresent(eventTypeVersion -> {
-            request.putHeader(HttpHeaders.createOptimized(EVENT_TYPE_VERSION_KEY), HttpHeaders.createOptimized(eventTypeVersion));
-        });
-
-        ce.getEventTime().ifPresent(eventTime -> {
-            request.putHeader(HttpHeaders.createOptimized(EVENT_TIME_KEY), HttpHeaders.createOptimized(eventTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
+        ce.getTime().ifPresent(eventTime -> {
+            request.putHeader(HttpHeaders.createOptimized(httpTransportAttributes.timeKey()), HttpHeaders.createOptimized(eventTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
         });
 
         ce.getSchemaURL().ifPresent(schemaUrl -> {
-            request.putHeader(HttpHeaders.createOptimized(SCHEMA_URL_KEY), HttpHeaders.createOptimized(schemaUrl.toString()));
+            request.putHeader(HttpHeaders.createOptimized(httpTransportAttributes.schemaUrlKey()), HttpHeaders.createOptimized(schemaUrl.toString()));
         });
+
+
+        ce.getExtensions().ifPresent(extensions -> {
+
+            extensions.forEach(ext -> {
+                JsonObject.mapFrom(ext).forEach(extEntry -> {
+                    request.putHeader(HttpHeaders.createOptimized(extEntry.getKey()), HttpHeaders.createOptimized(extEntry.getValue().toString()));
+                });
+            });
+        });
+
 
         ce.getData().ifPresent(data -> {
             request.write(data.toString());
         });
+
+
     }
 }

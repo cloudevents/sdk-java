@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@ModuleGen(groupPackage = "io.cloudevents.http", name = "vertx")
-package io.cloudevents.http.vertx;
+package io.cloudevents;
 
-import io.vertx.codegen.annotations.ModuleGen;
+public interface Extension {
+}

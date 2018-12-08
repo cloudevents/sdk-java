@@ -2,28 +2,29 @@
 
 ## Receiving CloudEvents
 
-Below is a sample on how to read CloudEvents from an HttpRequest:
+Below is a sample on how to use (Vert.x API for RxJava 2)[https://vertx.io/docs/vertx-rx/java2/] for reading CloudEvents from an HttpServerRequest:
 
 ```java
-import io.vertx.core.AbstractVerticle;
-public class Server extends AbstractVerticle {
+import io.cloudevents.http.reactivex.vertx.VertxCloudEvents;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.reactivex.core.AbstractVerticle;
+
+public class CloudEventVerticle extends AbstractVerticle {
+
   public void start() {
-    vertx.createHttpServer().requestHandler(req -> {
 
-      VertxCloudEvents.create().readFromRequest(req, reply -> {
-
-        if (reply.succeeded()) {
-
-          final CloudEvent<?> receivedEvent = reply.result();
-          // access the attributes:
-          System.out.println(receivedEvent.getEventID());
-          /// ...
-        });
-
-      req.response()
-        .putHeader("content-type", "text/plain")
-        .end("Got a CloudEvent!");
-    }).listen(8080);
+    vertx.createHttpServer()
+      .requestHandler(req -> VertxCloudEvents.create().rxReadFromRequest(req)
+      .subscribe((receivedEvent, throwable) -> {
+        if (receivedEvent != null) {
+          // I got a CloudEvent object:
+          System.out.println("The event type: " + receivedEvent.getEventType())
+        }
+      }))
+      .rxListen(8080)
+      .subscribe(server -> {
+        System.out.println("Server running!");
+    });
   }
 }
 ```
@@ -35,10 +36,12 @@ Below is a sample on how to use the client to send a CloudEvent:
 ```java
 final HttpClientRequest request = vertx.createHttpClient().post(8080, "localhost", "/");
 
+// add a client response handler
+request.handler(resp -> {
+    // react on the server response
+});
+
+// write the CloudEvent to the given HTTP Post request object
 VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
-    request.handler(resp -> {
-        context.assertEquals(resp.statusCode(), 200);
-    });
 request.end();
 ```
-

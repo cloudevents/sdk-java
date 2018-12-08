@@ -1,0 +1,22 @@
+{
+  "type": "aws.s3.object.created",
+  "id": "C234-1234-1234",
+  "time": "2018-04-26T14:48:09.769Z",
+  "source": "https://serverless.com",
+  "contentType": "application/json",
+  "specversion": "0.2",
+  "data":
+  { "s3SchemaVersion": "1.0",
+    "configurationId": "cd267a38-30df-400e-9e3d-d0f1ca6e2410",
+    "bucket":
+    { "name": "cloudevents",
+      "ownerIdentity": {},
+      "arn": "arn:aws:s3:::cloudevents" },
+    "object":
+    { "key": "dan_kohn.jpg",
+      "size": 444684,
+      "eTag": "38b01ff16138d7ca0a0eb3f7a88ff815",
+      "sequencer": "005AE1E6A9A3D61490"
+    }
+  }
+}

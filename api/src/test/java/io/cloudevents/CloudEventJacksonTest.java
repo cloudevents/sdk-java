@@ -28,9 +28,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CloudEventJacksonTest {
 
     @Test
-    public void testParseAzureJSON() {
-        CloudEvent<Map<String, ?>> ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("azure.json"));
-        assertThat(ce.getEventType()).isEqualTo("Microsoft.Storage.BlobCreated");
+    public void testParseAzure01JSON() {
+        CloudEvent<Map<String, ?>> ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("01_azure.json"));
+        assertThat(ce.getSepcVersion()).isEqualTo(SpecVersion.V_01.toString());
+        assertAzureCloudEvent(ce);
+    }
+
+    @Test
+    public void testParseAzure02JSON() {
+        CloudEvent<Map<String, ?>> ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("02_azure.json"));
+        assertThat(ce.getSepcVersion()).isEqualTo(SpecVersion.V_02.toString());
+        assertAzureCloudEvent(ce);
+    }
+
+    private void assertAzureCloudEvent(CloudEvent<Map<String, ?>> ce) {
+        assertThat(ce.getType()).isEqualTo("Microsoft.Storage.BlobCreated");
 
         ce.getData().ifPresent(data -> {
             assertThat(Map.class).isAssignableFrom(data.getClass());
@@ -40,16 +52,25 @@ public class CloudEventJacksonTest {
             assertThat(storageDiagnostics).containsOnlyKeys("batchId");
             assertThat(storageDiagnostics.get("batchId")).isEqualTo("ba4fb664-f289-4742-8067-6c859411b066");
         });
-
-
-
     }
 
     @Test
-    public void testParseAmazonJSON() {
-        CloudEvent ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("aws.json"));
-        assertThat(ce.getEventType()).isEqualTo("aws.s3.object.created");
+    public void testParseAmazon01JSON() {
+        CloudEvent ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("01_aws.json"));
+        assertAmazonCloudEvent(ce);
+    }
+
+    @Test
+    public void testParseAmazon02JSON() {
+        CloudEvent ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("02_aws.json"));
+        assertAmazonCloudEvent(ce);
+    }
+
+    private void assertAmazonCloudEvent(CloudEvent ce) {
+        assertThat(ce.getType()).isEqualTo("aws.s3.object.created");
+        assertThat(ce.getId()).isEqualTo("C234-1234-1234");
+        assertThat(ce.getData().isPresent());
         assertThat(ce.getSource().equals(URI.create("https://serverless.com")));
-        assertThat(ce.getEventTime().get()).isEqualTo(ZonedDateTime.parse("2018-04-26T14:48:09.769Z", ISO_ZONED_DATE_TIME));
+        assertThat(ce.getTime().get()).isEqualTo(ZonedDateTime.parse("2018-04-26T14:48:09.769Z", ISO_ZONED_DATE_TIME));
     }
 }

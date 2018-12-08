@@ -15,6 +15,7 @@
  */
 package io.cloudevents;
 
+import io.cloudevents.extensions.DistributedTracingExtension;
 import org.junit.Test;
 
 import java.net.URI;
@@ -34,26 +35,21 @@ public class CloudEventBuilderTest {
         final Map<String, String> keyValueStore = new HashMap<>();
         keyValueStore.put("key1", "value1");
         keyValueStore.put("key2", "value2");
-        final String eventId = UUID.randomUUID().toString();
+        final String id = UUID.randomUUID().toString();
         final URI src = URI.create("/trigger");
-        final String eventType = "My.Cloud.Event.Type";
-        final String eventTypeVersion = "2.0";
+        final String type = "My.Cloud.Event.Type";
         final ZonedDateTime eventTime = ZonedDateTime.now();
         final String contentType = "application/json";
         final URI schemaUri = URI.create("http://cloudevents.io/schema");
-        final Map<String, String> extensionData = new HashMap<>();
-        extensionData.put("foo", "bar");
 
         // when
         final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
                 .data(keyValueStore)
                 .contentType(contentType)
-                .eventType(eventType)
+                .type(type)
                 .schemaURL(schemaUri)
-                .eventTypeVersion(eventTypeVersion)
-                .eventTime(eventTime)
-                .extensions(extensionData)
-                .eventID(eventId)
+                .time(eventTime)
+                .id(id)
                 .source(src)
                 .build();
 
@@ -65,36 +61,139 @@ public class CloudEventBuilderTest {
         });
 
         assertThat(simpleKeyValueEvent.getContentType().get()).isEqualTo(contentType);
-        assertThat(simpleKeyValueEvent.getEventTime().get()).isEqualTo(eventTime);
-        assertThat(simpleKeyValueEvent.getEventID()).isEqualTo(eventId);
+        assertThat(simpleKeyValueEvent.getTime().get()).isEqualTo(eventTime);
+        assertThat(simpleKeyValueEvent.getId()).isEqualTo(id);
         assertThat(simpleKeyValueEvent.getSchemaURL().get()).isEqualTo(schemaUri);
-        assertThat(simpleKeyValueEvent.getEventType()).isEqualTo(eventType);
+        assertThat(simpleKeyValueEvent.getType()).isEqualTo(type);
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
-        assertThat(simpleKeyValueEvent.getExtensions().get()).isEqualTo(extensionData);
-        assertThat(simpleKeyValueEvent.getCloudEventsVersion()).isEqualTo("0.1");
-        assertThat(simpleKeyValueEvent.getEventTypeVersion().get()).isEqualTo("2.0");
+        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.DEFAULT.toString());
     }
 
     @Test
     public void testBuilderWithoutData() {
 
         // given
-        final String eventId = UUID.randomUUID().toString();
+        final String id = UUID.randomUUID().toString();
         final URI src = URI.create("/trigger");
-        final String eventType = "My.Cloud.Event.Type";
+        final String type = "My.Cloud.Event.Type";
 
         // when
         final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
-                .eventType(eventType)
-                .eventID(eventId)
+                .type(type)
+                .id(id)
                 .source(src)
                 .build();
         // than
         assertThat(simpleKeyValueEvent.getData().isPresent()).isFalse();
-        assertThat(simpleKeyValueEvent.getEventTime().isPresent()).isFalse();
-        assertThat(simpleKeyValueEvent.getEventID()).isEqualTo(eventId);
-        assertThat(simpleKeyValueEvent.getEventType()).isEqualTo(eventType);
+        assertThat(simpleKeyValueEvent.getTime().isPresent()).isFalse();
+        assertThat(simpleKeyValueEvent.getId()).isEqualTo(id);
+        assertThat(simpleKeyValueEvent.getType()).isEqualTo(type);
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
-        assertThat(simpleKeyValueEvent.getCloudEventsVersion()).isEqualTo("0.1");
+        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.DEFAULT.toString());
     }
+
+    @Test
+    public void testBuilderWithoutDataAndUrn() {
+
+        // given
+        final String id = UUID.randomUUID().toString();
+        final URI src = URI.create("urn:event:from:myapi/resourse/123");
+        final String type = "some.Cloud.Event.Type";
+
+        // when
+        final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
+                .type(type)
+                .id(id)
+                .source(src)
+                .build();
+        // than
+        assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
+    }
+
+    @Test
+    public void test01BuilderWithoutDataAndUrn() {
+
+        // given
+        final String id = UUID.randomUUID().toString();
+        final URI src = URI.create("urn:event:from:myapi/resourse/123");
+        final String type = "some.Cloud.Event.Type";
+
+        // when
+        final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
+                .specVersion("0.1")
+                .type(type)
+                .id(id)
+                .source(src)
+                .build();
+        // than
+        assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
+        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.V_01.toString());
+
+    }
+
+    @Test
+    public void testBuilderWithoutDataAndURISchema() {
+
+        // given
+        final String id = UUID.randomUUID().toString();
+        final URI src = URI.create("urn:event:from:myapi/resourse/123");
+        final String type = "some.Cloud.Event.Type";
+        final URI schema = URI.create("urn:oasis:names:specification:docbook:dtd:xml:4.1.2");
+
+        // when
+        final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
+                .type(type)
+                .id(id)
+                .source(src)
+                .schemaURL(schema)
+                .build();
+        // than
+        assertThat(simpleKeyValueEvent.getSchemaURL().get()).isEqualTo(schema);
+    }
+
+    @Test
+    public void testBuilderWithoutDataAndMailto() {
+
+        // given
+        final String id = UUID.randomUUID().toString();
+        final URI src = URI.create("mailto:cncf-wg-serverless@lists.cncf.io");
+        final String type = "My.Cloud.Event.Type";
+
+        // when
+        final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
+                .type(type)
+                .id(id)
+                .source(src)
+                .build();
+        // than
+        assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
+    }
+
+    @Test
+    public void testBuilderWithoutDataAndDistributedTracingExtension() {
+
+        // given
+        final String id = UUID.randomUUID().toString();
+        final URI src = URI.create("mailto:cncf-wg-serverless@lists.cncf.io");
+        final String type = "My.Cloud.Event.Type";
+        final DistributedTracingExtension dte = new DistributedTracingExtension();
+        dte.setTraceparent("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01");
+        dte.setTracestate("congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
+
+        // when
+        final CloudEvent<Map<String, String>> simpleKeyValueEvent = new CloudEventBuilder()
+                .type(type)
+                .id(id)
+                .source(src)
+                .extension(dte)
+                .build();
+        // than
+        assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
+        assertThat(simpleKeyValueEvent.getExtensions().get()).contains(dte);
+
+        Extension receivedDte = simpleKeyValueEvent.getExtensions().get().get(0);
+        assertThat(receivedDte).extracting("traceparent", "tracestate")
+                .contains("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01", "congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
+    }
+
 }

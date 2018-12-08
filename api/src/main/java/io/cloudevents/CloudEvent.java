@@ -17,36 +17,24 @@ package io.cloudevents;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 /**
- * An abstract event envelope, representing the 0.1 version of the <a href="https://github.com/cloudevents/spec/blob/master/spec.md">CNCF CloudEvent spec</a>.
+ * An abstract event envelope, representing the 0.2 version of the <a href="https://github.com/cloudevents/spec/blob/master/spec.md">CNCF CloudEvent spec</a>.
  *
  */
 public interface CloudEvent<T> {
 
-    // required
-    String EVENT_TYPE_KEY = "ce-eventType";
-    String CLOUD_EVENTS_VERSION_KEY = "ce-cloudEventsVersion";
-    String SOURCE_KEY = "ce-source";
-    String EVENT_ID_KEY = "ce-eventID";
-
-    // none-required
-    String EVENT_TYPE_VERSION_KEY = "ce-eventTypeVersion";
-    String EVENT_TIME_KEY = "ce-eventTime";
-    String SCHEMA_URL_KEY = "ce-schemaURL";
-    String HEADER_PREFIX = "ce-x-";
-
     /**
      * Type of occurrence which has happened. Often this property is used for routing, observability, policy enforcement, etc.
      */
-    String getEventType();
+    String getType();
 
     /**
      * The version of the CloudEvents specification which the event uses. This enables the interpretation of the context.
      */
-    String getCloudEventsVersion();
+    String getSepcVersion();
 
     /**
      * This describes the event producer. Often this will include information such as the type of the event source, the organization publishing the event, and some unique identifiers.
@@ -57,16 +45,12 @@ public interface CloudEvent<T> {
     /**
      * ID of the event. The semantics of this string are explicitly undefined to ease the implementation of producers. Enables deduplication.
      */
-    String getEventID();
+    String getId();
 
-    /**
-     * The version of the eventType. This enables the interpretation of data by eventual consumers, requires the consumer to be knowledgeable about the producer.
-     */
-    Optional<String> getEventTypeVersion();
     /**
      * Timestamp of when the event happened.
      */
-    Optional<ZonedDateTime> getEventTime();
+    Optional<ZonedDateTime> getTime();
 
     /**
      * A link to the schema that the data attribute adheres to.
@@ -79,12 +63,12 @@ public interface CloudEvent<T> {
     Optional<String> getContentType();
 
     /**
-     * This is for additional metadata and this does not have a mandated structure. This enables a place for custom fields a producer or middleware might want to include and provides a place to test metadata before adding them to the CloudEvents specification.
-     */
-    Optional<Map> getExtensions();
-
-    /**
      * The event payload. The payload depends on the eventType, schemaURL and eventTypeVersion, the payload is encoded into a media format which is specified by the contentType attribute (e.g. application/json).
      */
     Optional<T> getData();
+
+    /**
+     *
+     */
+    Optional<List<Extension>> getExtensions();
 }

@@ -13,7 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@ModuleGen(groupPackage = "io.cloudevents.http", name = "vertx")
-package io.cloudevents.http.vertx;
+package io.cloudevents.http;
 
-import io.vertx.codegen.annotations.ModuleGen;
+public class V02HttpTransportMappers extends V01HttpTransportMappers {
+
+    public static final String SPEC_VERSION_KEY = "ce-specversion";
+
+    @Override
+    public String typeKey() {
+        return "ce-type";
+    }
+
+    @Override
+    public String specVersionKey() {
+        return SPEC_VERSION_KEY;
+    }
+
+    @Override
+    public String idKey() {
+        return "ce-id";
+    }
+
+    @Override
+    public String timeKey() {
+        return "ce-time";
+    }
+
+    @Override
+    public String schemaUrlKey() {
+        return "ce-schemaurl";
+    }
+
+}
