@@ -2,7 +2,17 @@
 
 ## Firing CloudEvents using CDI
 
-In _Enterprise Java_ applications, implemented with Jakarta EE or the Eclipse Microprofile, it's trivial to combine this CloudEvents API with CDI. Application developers can now fire a CloudEvent for further processing inside of the application:
+For Maven based projects, use the following to configure the CloudEvents CDI library:
+
+```xml
+<dependency>
+    <groupId>io.cloudevents</groupId>
+    <artifactId>cdi</artifactId>
+    <version>0.2.0</version>
+</dependency>
+```
+
+In _Enterprise Java_ applications, implemented with [Jakarta EE](https://jakarta.ee/) or the [Eclipse MicroProfile](https://microprofile.io/), it's trivial to combine this CloudEvents API with CDI. Application developers can now fire a CloudEvent for further processing inside of the application:
 
 ```java
 import io.cloudevents.CloudEvent;
