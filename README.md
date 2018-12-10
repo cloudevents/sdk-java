@@ -13,7 +13,17 @@ The [CloudEvents specification](https://github.com/cloudevents/spec) is vendor-n
 
 ## Java API
 
-Based on the specification we started to look at an early implementation of the API for Java. Using the API your backend application can create strongly-typed CloudEvents, such as:
+For Maven based projects, use the following to configure the CloudEvents Java SDK:
+
+```xml
+<dependency>
+    <groupId>io.cloudevents</groupId>
+    <artifactId>cloudevents-api</artifactId>
+    <version>0.2.0</version>
+</dependency>
+```
+
+Application developers can now create strongly-typed CloudEvents, such as:
 
 ```java
 // given
@@ -33,7 +43,7 @@ final CloudEvent<MyCustomEvent> cloudEvent = new CloudEventBuilder<MyCustomEvent
 
 ## Possible Integrations
 
-The idea on the API is to keep the pure API simple, for allowing a wide range of possible integrations
+The API kept simple, for allowing a wide range of possible integrations:
 
 * [CDI](cdi/)
 * [Eclipse Vert.x](http/vertx/)

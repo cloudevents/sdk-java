@@ -2,6 +2,16 @@
 
 ## Receiving CloudEvents
 
+For Maven based projects, use the following to configure the CloudEvents Vertx HTTP Transport:
+
+```xml
+<dependency>
+    <groupId>io.cloudevents</groupId>
+    <artifactId>http-vertx</artifactId>
+    <version>0.2.0</version>
+</dependency>
+```
+
 Below is a sample on how to use [Vert.x API for RxJava 2](https://vertx.io/docs/vertx-rx/java2/) for reading CloudEvents from an HttpServerRequest:
 
 ```java
