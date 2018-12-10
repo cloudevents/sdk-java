@@ -27,6 +27,7 @@ import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.core.http.HttpClientRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,15 +43,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(VertxExtension.class)
 class VertxCloudEventsTests {
 
-    private final static Logger logger = Logger.getLogger(VertxCloudEventsTests.class.getName());
-
     @Test
     @DisplayName("Post a 0.2 CloudEvents object with a payload")
     void cloudEventWithPayload(Vertx vertx, VertxTestContext testContext) {
         Checkpoint serverCheckpoint = testContext.checkpoint();
         Checkpoint clientCheckpoint = testContext.checkpoint();
 
-        CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+        // given
+        final CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
                 .specVersion("0.2")
                 .source(URI.create("http://knative-eventing.com"))
                 .id("foo-bar")
@@ -61,20 +61,26 @@ class VertxCloudEventsTests {
         vertx.createHttpServer()
                 .requestHandler(req -> VertxCloudEvents
                         .create()
+                        // read the object from the server request
                         .rxReadFromRequest(req)
                         .doOnError(testContext::failNow)
                         .subscribe(event -> testContext.verify(() -> {
+
+                            // test
                             assertThat(event.getId()).isEqualTo(cloudEvent.getId());
                             assertThat(event.getSource().toString()).isEqualTo(cloudEvent.getSource().toString());
                             assertThat(event.getType()).isEqualTo(cloudEvent.getType());
                             assertThat(event.getData()).isPresent();
+
+                            // write the response back to the caller
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
                 .rxListen(8080)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
-                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    // create client to POST a CloudEvent to the server
+                    final HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
                     req.handler(resp -> testContext.verify(() -> {
                         assertThat(resp.statusCode()).isEqualTo(200);
                         clientCheckpoint.flag();
@@ -90,7 +96,8 @@ class VertxCloudEventsTests {
         Checkpoint serverCheckpoint = testContext.checkpoint();
         Checkpoint clientCheckpoint = testContext.checkpoint();
 
-        CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+        // given
+        final CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
                 .specVersion("0.2")
                 .source(URI.create("http://knative-eventing.com"))
                 .id("foo-bar")
@@ -100,6 +107,7 @@ class VertxCloudEventsTests {
         vertx.createHttpServer()
                 .requestHandler(req -> VertxCloudEvents
                         .create()
+                        // read the object from the server request
                         .rxReadFromRequest(req)
                         .doOnError(testContext::failNow)
                         .subscribe(event -> testContext.verify(() -> {
@@ -115,13 +123,16 @@ class VertxCloudEventsTests {
                             assertThat(event.getSource().toString()).isEqualTo(cloudEvent.getSource().toString());
                             assertThat(event.getType()).isEqualTo(cloudEvent.getType());
                             assertThat(event.getData()).isNotPresent();
+
+                            // write the response back to the caller
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
                 .rxListen(8080)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
-                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    // create client to POST a CloudEvent to the server
+                    final HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
                     req.handler(resp -> testContext.verify(() -> {
                         assertThat(resp.statusCode()).isEqualTo(200);
                         clientCheckpoint.flag();
@@ -137,7 +148,8 @@ class VertxCloudEventsTests {
         Checkpoint serverCheckpoint = testContext.checkpoint();
         Checkpoint clientCheckpoint = testContext.checkpoint();
 
-        CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
+        // given
+        final CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
                 .specVersion("0.1")
                 .source(URI.create("http://knative-eventing.com"))
                 .id("foo-bar")
@@ -147,6 +159,7 @@ class VertxCloudEventsTests {
         vertx.createHttpServer()
                 .requestHandler(req -> VertxCloudEvents
                         .create()
+                        // read the object from the server request
                         .rxReadFromRequest(req)
                         .doOnError(testContext::failNow)
                         .subscribe(event -> testContext.verify(() -> {
@@ -163,13 +176,16 @@ class VertxCloudEventsTests {
                             assertThat(event.getSource().toString()).isEqualTo(cloudEvent.getSource().toString());
                             assertThat(event.getType()).isEqualTo(cloudEvent.getType());
                             assertThat(event.getData()).isNotPresent();
+
+                            // write the response back to the caller
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
                 .rxListen(8080)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
-                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    // create client to POST a CloudEvent to the server
+                    final HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
                     req.handler(resp -> testContext.verify(() -> {
                         assertThat(resp.statusCode()).isEqualTo(200);
                         clientCheckpoint.flag();
@@ -188,6 +204,7 @@ class VertxCloudEventsTests {
         vertx.createHttpServer()
                 .requestHandler(req -> VertxCloudEvents
                         .create()
+                        // read the object from the server request
                         .rxReadFromRequest(req)
                         .subscribe((e, t) -> {
                             if (e != null) {
@@ -200,7 +217,9 @@ class VertxCloudEventsTests {
                 .rxListen(8080)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
-                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+
+                    // create client to POST a CloudEvent to the server
+                    final HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
                     // create incomplete CloudEvent request
                     req.putHeader(HttpHeaders.createOptimized("ce-specversion"), HttpHeaders.createOptimized("0.2"));
                     req.putHeader(HttpHeaders.createOptimized("ce-type"), HttpHeaders.createOptimized("pushevent"));
@@ -224,7 +243,6 @@ class VertxCloudEventsTests {
         dte.setTraceparent("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01");
         dte.setTracestate("congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
 
-
         final CloudEvent<String> cloudEvent = new CloudEventBuilder<String>()
                 .specVersion("0.2")
                 .source(URI.create("http://knative-eventing.com"))
@@ -233,33 +251,33 @@ class VertxCloudEventsTests {
                 .type("pushevent")
                 .build();
 
-        Class[] exceptions =  {DistributedTracingExtension.class};
+        final Class[] extensions =  {DistributedTracingExtension.class};
 
         vertx.createHttpServer()
                 .requestHandler(req -> VertxCloudEvents
                         .create()
-                        .rxReadFromRequest(req, exceptions)
+                        // read from request with expected Extension types
+                        .rxReadFromRequest(req, extensions)
                         .doOnError(testContext::failNow)
                         .subscribe(event -> testContext.verify(() -> {
                             assertThat(event.getId()).isEqualTo(cloudEvent.getId());
 
-                            // extension headers
+                            // test
                             assertThat(req.headers().get("traceparent")).isEqualTo("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01");
                             assertThat(req.headers().get("tracestate")).isEqualTo("congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
-
                             assertThat(event.getExtensions().get().get(0)).isNotNull();
-
                             assertThat(event.getExtensions().get().get(0)).extracting("traceparent", "tracestate")
                                     .contains("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01", "congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
 
-
+                            // write the response back to the caller
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
                 .rxListen(8080)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
-                    HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
+                    // create client to POST a CloudEvent to the server
+                    final HttpClientRequest req = vertx.createHttpClient().post(server.actualPort(), "localhost", "/");
                     req.handler(resp -> testContext.verify(() -> {
                         assertThat(resp.statusCode()).isEqualTo(200);
                         clientCheckpoint.flag();

@@ -2,7 +2,7 @@
 
 ## Receiving CloudEvents
 
-Below is a sample on how to use (Vert.x API for RxJava 2)[https://vertx.io/docs/vertx-rx/java2/] for reading CloudEvents from an HttpServerRequest:
+Below is a sample on how to use [Vert.x API for RxJava 2](https://vertx.io/docs/vertx-rx/java2/) for reading CloudEvents from an HttpServerRequest:
 
 ```java
 import io.cloudevents.http.reactivex.vertx.VertxCloudEvents;
