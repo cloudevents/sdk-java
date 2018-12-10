@@ -30,14 +30,14 @@ public class CloudEventJacksonTest {
     @Test
     public void testParseAzure01JSON() {
         CloudEvent<Map<String, ?>> ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("01_azure.json"));
-        assertThat(ce.getSepcVersion()).isEqualTo(SpecVersion.V_01.toString());
+        assertThat(ce.getSpecVersion()).isEqualTo(SpecVersion.V_01.toString());
         assertAzureCloudEvent(ce);
     }
 
     @Test
     public void testParseAzure02JSON() {
         CloudEvent<Map<String, ?>> ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("02_azure.json"));
-        assertThat(ce.getSepcVersion()).isEqualTo(SpecVersion.V_02.toString());
+        assertThat(ce.getSpecVersion()).isEqualTo(SpecVersion.V_02.toString());
         assertAzureCloudEvent(ce);
     }
 
