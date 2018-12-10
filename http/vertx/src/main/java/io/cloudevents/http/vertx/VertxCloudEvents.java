@@ -42,4 +42,7 @@ public interface VertxCloudEvents {
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
     <T> void writeToHttpClientRequest(CloudEvent<T> ce, HttpClientRequest request);
+
+    @GenIgnore(GenIgnore.PERMITTED_TYPE)
+    <T> void writeToHttpClientRequest(CloudEvent<T> ce, boolean binary, HttpClientRequest request);
 }

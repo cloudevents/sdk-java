@@ -66,7 +66,7 @@ public class CloudEventBuilderTest {
         assertThat(simpleKeyValueEvent.getSchemaURL().get()).isEqualTo(schemaUri);
         assertThat(simpleKeyValueEvent.getType()).isEqualTo(type);
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
-        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.DEFAULT.toString());
+        assertThat(simpleKeyValueEvent.getSpecVersion()).isEqualTo(SpecVersion.DEFAULT.toString());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class CloudEventBuilderTest {
         assertThat(simpleKeyValueEvent.getId()).isEqualTo(id);
         assertThat(simpleKeyValueEvent.getType()).isEqualTo(type);
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
-        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.DEFAULT.toString());
+        assertThat(simpleKeyValueEvent.getSpecVersion()).isEqualTo(SpecVersion.DEFAULT.toString());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class CloudEventBuilderTest {
                 .build();
         // than
         assertThat(simpleKeyValueEvent.getSource()).isEqualTo(src);
-        assertThat(simpleKeyValueEvent.getSepcVersion()).isEqualTo(SpecVersion.V_01.toString());
+        assertThat(simpleKeyValueEvent.getSpecVersion()).isEqualTo(SpecVersion.V_01.toString());
 
     }
 
@@ -195,5 +195,4 @@ public class CloudEventBuilderTest {
         assertThat(receivedDte).extracting("traceparent", "tracestate")
                 .contains("00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01", "congo=BleGNlZWRzIHRohbCBwbGVhc3VyZS4");
     }
-
 }

@@ -34,7 +34,7 @@ public interface CloudEvent<T> {
     /**
      * The version of the CloudEvents specification which the event uses. This enables the interpretation of the context.
      */
-    String getSepcVersion();
+    String getSpecVersion();
 
     /**
      * This describes the event producer. Often this will include information such as the type of the event source, the organization publishing the event, and some unique identifiers.

@@ -20,13 +20,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
-import io.cloudevents.SpecVersion;
 
 import java.io.Serializable;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -66,7 +64,7 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
     }
 
     @Override
-    public String getSepcVersion() {
+    public String getSpecVersion() {
         return specversion;
     }
 
@@ -112,7 +110,7 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
 
     // protected setters, used for (JSON) deserialization
 
-    @JsonAlias({"specversion", "cloudEventsVersion"})
+    @JsonAlias({"specversion", "specVersion", "cloudEventsVersion"})
     void setSpecversion(String specversion) {
         this.specversion = specversion;
     }
