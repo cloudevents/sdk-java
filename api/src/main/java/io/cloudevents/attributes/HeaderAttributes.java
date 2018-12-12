@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudevents.http;
+package io.cloudevents.attributes;
 
-import io.cloudevents.SpecVersion;
-
-import static io.cloudevents.SpecVersion.V_01;
-
-public interface HttpTransportAttributes {
+public interface HeaderAttributes {
 
     // required attrs
     String typeKey();
@@ -30,17 +26,4 @@ public interface HttpTransportAttributes {
     // none-required attrs
     String timeKey();
     String schemaUrlKey();
-
-    static HttpTransportAttributes getHttpAttributesForSpec(final SpecVersion specVersion) {
-
-        switch (specVersion) {
-
-            case V_01: return new V01HttpTransportMappers();
-            case V_02:
-            case DEFAULT: return new V02HttpTransportMappers();
-        }
-
-        // you should not be here!
-        throw new IllegalArgumentException("Could not find proper version");
-    }
 }

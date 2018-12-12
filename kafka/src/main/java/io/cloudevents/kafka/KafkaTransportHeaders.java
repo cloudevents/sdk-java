@@ -13,39 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudevents.http;
+package io.cloudevents.kafka;
 
-public class V01HttpTransportMappers implements HttpHeaderAttributes {
+import io.cloudevents.attributes.HeaderAttributes;
 
-    public static final String SPEC_VERSION_KEY = "ce-cloudEventsVersion";
-
+public class KafkaTransportHeaders implements HeaderAttributes {
     @Override
     public String typeKey() {
-        return "ce-eventType";
+        return "cloudEvent_type";
     }
 
     @Override
     public String specVersionKey() {
-        return SPEC_VERSION_KEY;
+        return "cloudEvent_specversion";
     }
 
     @Override
     public String sourceKey() {
-        return "ce-source";
+        return "cloudEvent_source";
     }
 
     @Override
     public String idKey() {
-        return "ce-eventID";
+        return "cloudEvent_id";
     }
 
     @Override
     public String timeKey() {
-        return "ce-eventTime";
+        return "cloudEvent_time";
     }
 
     @Override
     public String schemaUrlKey() {
-        return "ce-schemaURL";
+        return "cloudEvent_schemaurl";
     }
 }

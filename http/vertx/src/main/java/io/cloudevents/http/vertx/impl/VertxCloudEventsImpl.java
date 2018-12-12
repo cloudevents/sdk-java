@@ -19,7 +19,8 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.Extension;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.http.HttpTransportAttributes;
+import io.cloudevents.attributes.HeaderAttributes;
+import io.cloudevents.http.HttpHeaderAttributes;
 import io.cloudevents.http.V02HttpTransportMappers;
 import io.cloudevents.http.vertx.VertxCloudEvents;
 import io.cloudevents.json.Json;
@@ -70,12 +71,12 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
         // binary mode
         if (headers.get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(BINARY_TYPE.toString())) {
-            final HttpTransportAttributes httpTransportKeys;
+            final HeaderAttributes httpTransportKeys;
             {
                 if (headers.contains(V02HttpTransportMappers.SPEC_VERSION_KEY)) {
-                    httpTransportKeys = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_02);
+                    httpTransportKeys = HttpHeaderAttributes.getHttpAttributesForSpec(SpecVersion.V_02);
                 } else {
-                    httpTransportKeys = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_01);
+                    httpTransportKeys = HttpHeaderAttributes.getHttpAttributesForSpec(SpecVersion.V_01);
                 }
             }
 
@@ -158,7 +159,7 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
     @Override
     public <T> void writeToHttpClientRequest(CloudEvent<T> cloudEvent, boolean binary, HttpClientRequest request) {
 
-        final HttpTransportAttributes httpTransportAttributes = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.fromVersion(cloudEvent.getSpecVersion()));
+        final HeaderAttributes httpTransportAttributes = HttpHeaderAttributes.getHttpAttributesForSpec(SpecVersion.fromVersion(cloudEvent.getSpecVersion()));
 
         if (binary) {
             // setting the right content-length:

@@ -59,6 +59,7 @@
         <module>api</module>
         <module>cdi</module>
         <module>http/vertx</module>
+        <module>kafka</module>
     </modules>
 
     <properties>

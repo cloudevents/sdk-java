@@ -27,14 +27,11 @@ import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.core.http.HttpClientRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.net.URI;
-import java.util.List;
-import java.util.logging.Logger;
 
 import static io.cloudevents.SpecVersion.V_01;
 import static io.cloudevents.SpecVersion.V_02;

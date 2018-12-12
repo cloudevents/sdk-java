@@ -16,6 +16,7 @@
 package io.cloudevents.http;
 
 import io.cloudevents.SpecVersion;
+import io.cloudevents.attributes.HeaderAttributes;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +26,7 @@ public class HttpTransportAttributesTest {
     @Test
     public void testVersion01Headers() {
 
-        final HttpTransportAttributes v01 = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_01);
+        final HeaderAttributes v01 = HttpHeaderAttributes.getHttpAttributesForSpec(SpecVersion.V_01);
         assertThat(v01.specVersionKey()).isEqualTo("ce-cloudEventsVersion");
         assertThat(v01.timeKey()).isEqualTo("ce-eventTime");
         assertThat(v01.idKey()).isEqualTo("ce-eventID");
@@ -39,7 +40,7 @@ public class HttpTransportAttributesTest {
     @Test
     public void testVersion02Headers() {
 
-        final HttpTransportAttributes v02 = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_02);
+        final HeaderAttributes v02 = HttpHeaderAttributes.getHttpAttributesForSpec(SpecVersion.V_02);
         assertThat(v02.specVersionKey()).isEqualTo("ce-specversion");
         assertThat(v02.timeKey()).isEqualTo("ce-time");
         assertThat(v02.idKey()).isEqualTo("ce-id");
