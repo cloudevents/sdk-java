@@ -15,6 +15,9 @@
  */
 package io.cloudevents;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.cloudevents.impl.DefaultCloudEventImpl;
+
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -24,6 +27,7 @@ import java.util.Optional;
  * An abstract event envelope, representing the 0.2 version of the <a href="https://github.com/cloudevents/spec/blob/master/spec.md">CNCF CloudEvent spec</a>.
  *
  */
+@JsonDeserialize(as = DefaultCloudEventImpl.class)
 public interface CloudEvent<T> {
 
     /**
