@@ -15,7 +15,7 @@
  */
 package io.cloudevents;
 
-import io.cloudevents.util.JacksonMapper;
+import io.cloudevents.json.Json;
 import org.junit.Test;
 
 import java.net.URI;
@@ -29,14 +29,14 @@ public class CloudEventJacksonTest {
 
     @Test
     public void testParseAzure01JSON() {
-        CloudEvent<Map<String, ?>> ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("01_azure.json"));
+        CloudEvent<Map<String, ?>> ce = Json.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("01_azure.json"));
         assertThat(ce.getSpecVersion()).isEqualTo(SpecVersion.V_01.toString());
         assertAzureCloudEvent(ce);
     }
 
     @Test
     public void testParseAzure02JSON() {
-        CloudEvent<Map<String, ?>> ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("02_azure.json"));
+        CloudEvent<Map<String, ?>> ce = Json.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("02_azure.json"));
         assertThat(ce.getSpecVersion()).isEqualTo(SpecVersion.V_02.toString());
         assertAzureCloudEvent(ce);
     }
@@ -56,13 +56,13 @@ public class CloudEventJacksonTest {
 
     @Test
     public void testParseAmazon01JSON() {
-        CloudEvent ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("01_aws.json"));
+        CloudEvent ce = Json.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("01_aws.json"));
         assertAmazonCloudEvent(ce);
     }
 
     @Test
     public void testParseAmazon02JSON() {
-        CloudEvent ce = JacksonMapper.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("02_aws.json"));
+        CloudEvent ce = Json.fromInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("02_aws.json"));
         assertAmazonCloudEvent(ce);
     }
 

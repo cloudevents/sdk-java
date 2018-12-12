@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudevents.impl;
+package io.cloudevents.json;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;

@@ -15,8 +15,6 @@
  */
 package io.cloudevents.http.vertx.impl;
 
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.Extension;
@@ -24,9 +22,7 @@ import io.cloudevents.SpecVersion;
 import io.cloudevents.http.HttpTransportAttributes;
 import io.cloudevents.http.V02HttpTransportMappers;
 import io.cloudevents.http.vertx.VertxCloudEvents;
-import io.cloudevents.impl.DefaultCloudEventImpl;
-import io.cloudevents.impl.ZonedDateTimeDeserializer;
-import io.cloudevents.impl.ZonedDateTimeSerializer;
+import io.cloudevents.json.Json;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -35,7 +31,6 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 import java.lang.reflect.Field;
@@ -48,16 +43,6 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
     private final static CharSequence BINARY_TYPE = HttpHeaders.createOptimized("application/json");
     private final static CharSequence STRUCTURED_TYPE = HttpHeaders.createOptimized("application/cloudevents+json");
-
-    static {
-        // add Jackson datatype for ZonedDateTime
-        Json.mapper.registerModule(new Jdk8Module());
-
-        final SimpleModule module = new SimpleModule();
-        module.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
-        module.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
-        Json.mapper.registerModule(module);
-    }
 
     private static String readRequiredHeaderValue(final MultiMap headers, final String headerName) {
         return requireNonNull(headers.get(headerName));
@@ -155,7 +140,7 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
             request.bodyHandler((Buffer buff) -> {
 
                 if (buff.length()>0) {
-                    resultHandler.handle(Future.succeededFuture(Json.decodeValue(buff.toString(), DefaultCloudEventImpl.class)));
+                    resultHandler.handle(Future.succeededFuture(Json.decodeCloudEvent(buff.toString())));
                 } else {
                     throw new IllegalArgumentException("no cloudevent body");
                 }
