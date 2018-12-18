@@ -32,9 +32,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.URI;
-import java.util.List;
-import java.util.logging.Logger;
 
 import static io.cloudevents.SpecVersion.V_01;
 import static io.cloudevents.SpecVersion.V_02;
@@ -42,6 +42,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(VertxExtension.class)
 class VertxCloudEventsTests {
+
+    private int port;
+    @BeforeEach
+    void setUp(Vertx vertx, VertxTestContext testContext) throws IOException {
+        ServerSocket socket = new ServerSocket(0);
+        port = socket.getLocalPort();
+        socket.close();
+        testContext.completeNow();
+    }
 
     @Test
     @DisplayName("Post a 0.2 CloudEvents object with a payload")
@@ -76,7 +85,7 @@ class VertxCloudEventsTests {
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
-                .rxListen(8080)
+                .rxListen(port)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
                     // create client to POST a CloudEvent to the server
@@ -128,7 +137,7 @@ class VertxCloudEventsTests {
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
-                .rxListen(8080)
+                .rxListen(port)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
                     // create client to POST a CloudEvent to the server
@@ -181,7 +190,7 @@ class VertxCloudEventsTests {
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
-                .rxListen(8080)
+                .rxListen(port)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
                     // create client to POST a CloudEvent to the server
@@ -214,7 +223,7 @@ class VertxCloudEventsTests {
                                 serverCheckpoint.flag();
                             }
                         }))
-                .rxListen(8080)
+                .rxListen(port)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
 
@@ -273,7 +282,7 @@ class VertxCloudEventsTests {
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
-                .rxListen(8080)
+                .rxListen(port)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
                     // create client to POST a CloudEvent to the server
@@ -316,7 +325,7 @@ class VertxCloudEventsTests {
                             req.response().end();
                             serverCheckpoint.flag();
                         })))
-                .rxListen(8080)
+                .rxListen(port)
                 .doOnError(testContext::failNow)
                 .subscribe(server -> {
                     // create client to POST a CloudEvent to the server
