@@ -24,13 +24,17 @@ public class CloudEventVerticle extends AbstractVerticle {
   public void start() {
 
     vertx.createHttpServer()
-      .requestHandler(req -> VertxCloudEvents.create().rxReadFromRequest(req)
-      .subscribe((receivedEvent, throwable) -> {
-        if (receivedEvent != null) {
-          // I got a CloudEvent object:
-          System.out.println("The event type: " + receivedEvent.getEventType())
+      .requestHandler(req -> { 
+        VertxCloudEvents.create().rxReadFromRequest(req)
+          .subscribe((receivedEvent, throwable) -> {
+            if (receivedEvent != null) {
+              // I got a CloudEvent object:
+              System.out.println("The event type: " + receivedEvent.getEventType());
+            }
+          });
+          req.response().end();
         }
-      }))
+      )
       .rxListen(8080)
       .subscribe(server -> {
         System.out.println("Server running!");
