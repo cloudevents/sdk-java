@@ -45,7 +45,7 @@ public class CloudEvent<T> {
 	
 	private final T data;
 
-	public CloudEvent(String id, URI source, String specversion, String type,
+	CloudEvent(String id, URI source, String specversion, String type,
 			ZonedDateTime time, URI schemaurl, String contenttype,
 			T data) {
 		
