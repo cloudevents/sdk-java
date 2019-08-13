@@ -53,6 +53,10 @@
             <id>jponge</id>
             <name>Julien Ponge</name>
         </developer>
+	<developer>
+	    <id>fabiojose</id>
+	    <name>Fabio José de Moraes</name>
+	</developer>
     </developers>
 
     <modules>
