@@ -42,6 +42,18 @@
             <artifactId>jackson-datatype-jdk8</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+        
+        <dependency>
+             <groupId>org.glassfish</groupId>
+             <artifactId>javax.el</artifactId>
+             <version>${javax.el.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -61,6 +73,8 @@
 
     <properties>
         <jackson.version>2.9.6</jackson.version>
+        <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
+        <javax.el.version>3.0.1-b11</javax.el.version>
     </properties>
 
 </project>
