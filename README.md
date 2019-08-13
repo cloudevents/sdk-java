@@ -19,13 +19,17 @@ For Maven based projects, use the following to configure the CloudEvents Java SD
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
 </dependency>
 ```
 
 Application developers can now create strongly-typed CloudEvents, such as:
 
 ```java
+import io.cloudevents.v02.CloudEventBuilder;
+import io.cloudevents.v02.CloudEvent;
+import io.cloudevents.json.Json;
+
 // given
 final String eventId = UUID.randomUUID().toString();
 final URI src = URI.create("/trigger");
@@ -34,11 +38,14 @@ final MyCustomEvent payload = ...
 
 // passing in the given attributes
 final CloudEvent<MyCustomEvent> cloudEvent = new CloudEventBuilder<MyCustomEvent>()
-    .type(eventType)
-    .id(eventId)
-    .source(src)
-    .data(payload)
+    .withType(eventType)
+    .withId(eventId)
+    .withSource(src)
+    .withData(payload)
     .build();
+
+// marshalling as json
+final String json = Json.encode(cloudEvent);
 ```
 
 ## Possible Integrations
