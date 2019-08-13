@@ -93,6 +93,14 @@ public class CloudEventJacksonTest {
     }
 	
 	//should have time
+	@Test
+    public void should_have_time() {
+		// act
+        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_aws.json"), CloudEvent.class);
+        
+        // assert
+        assertTrue(ce.getTime().isPresent());
+    }
 	
 	@Test
     public void should_have_source() {
