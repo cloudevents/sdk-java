@@ -61,7 +61,17 @@ public final class Json {
             throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
         }
     }
-
+    
+    public static <T> T fromInputStream(final InputStream inputStream,
+    		Class<T> clazz) {
+    	try {
+            return MAPPER.readValue(inputStream, clazz);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to encode as JSON: " 
+            			+ e.getMessage());
+        }
+    }
+ 
     /**
      * Decode a given JSON string to a CloudEvent .
      *
