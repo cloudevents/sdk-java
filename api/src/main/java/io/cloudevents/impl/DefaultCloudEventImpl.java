@@ -140,6 +140,7 @@ public class DefaultCloudEventImpl<T> implements CloudEvent<T>, Serializable {
         this.schemaURL = schemaURL;
     }
 
+    @JsonAlias("contenttype")
     void setContentType(String contentType) {
         this.contentType = contentType;
     }
