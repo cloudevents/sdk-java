@@ -77,7 +77,7 @@ public class CloudEventJacksonTest {
 	}
 	
 	@Test
-	public void should_serialize_extension() {
+	public void should_serialize_trace_extension() {
 		// setup
 		String expected = "\"distributedTracing\":{\"traceparent\":\"0\",\"tracestate\":\"congo=4\"}";
 		final DistributedTracingExtension dt = new DistributedTracingExtension();
