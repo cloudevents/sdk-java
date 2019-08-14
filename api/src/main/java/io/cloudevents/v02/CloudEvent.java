@@ -2,12 +2,18 @@ package io.cloudevents.v02;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -25,7 +31,7 @@ import io.cloudevents.json.ZonedDateTimeDeserializer;
  */
 @JsonInclude(value = Include.NON_ABSENT)
 public class CloudEvent<T> {
-	
+
 	@NotBlank
 	private final String type;
 	
@@ -44,10 +50,12 @@ public class CloudEvent<T> {
 	private final String contenttype;
 	
 	private final T data;
+	
+	private final Map<String, Object> extensions;
 
 	CloudEvent(String id, URI source, String specversion, String type,
 			ZonedDateTime time, URI schemaurl, String contenttype,
-			T data) {
+			T data, Set<ExtensionFormat> extensions) {
 		
 		this.id = id;
 		this.source = source;
@@ -59,6 +67,12 @@ public class CloudEvent<T> {
 		this.contenttype = contenttype;
 		
 		this.data = data;
+		
+		this.extensions = extensions
+				.stream()
+				.collect(Collectors
+						.toMap(ExtensionFormat::getKey,
+								ExtensionFormat::getExtension));
 	}
 
 	public String getType() {
@@ -86,6 +100,16 @@ public class CloudEvent<T> {
 	}
 	public Optional<T> getData() {
 		return Optional.ofNullable(data);
+	}
+
+	@JsonAnyGetter
+	Map<String, Object> getExtensions() {
+		return Collections.unmodifiableMap(extensions);
+	}
+	
+	@JsonAnySetter
+	void addExtension(String name, Object value) {
+		extensions.put(name, value);
 	}
 	
 	@JsonCreator
