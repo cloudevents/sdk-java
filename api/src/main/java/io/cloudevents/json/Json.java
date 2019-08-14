@@ -50,6 +50,7 @@ public final class Json {
         try {
             return MAPPER.writeValueAsString(obj);
         } catch (Exception e) {
+        	e.printStackTrace();
             throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
         }
     }
