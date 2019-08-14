@@ -76,7 +76,7 @@ public class DistributedTracingExtension implements Extension {
      */
     public static class InMemory implements ExtensionFormat {
     	
-    	private static final String IN_MEMORY_KEY = "distributedTracing";
+    	public static final String IN_MEMORY_KEY = "distributedTracing";
     	
     	private final Extension extension;
     	public InMemory(DistributedTracingExtension extension) {
