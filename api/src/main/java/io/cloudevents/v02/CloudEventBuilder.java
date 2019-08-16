@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,6 +35,8 @@ public class CloudEventBuilder<T> {
 	private String contenttype;
 	private T data;
 	
+	private final Set<ExtensionFormat> extensions = new HashSet<>();
+	
 	private Validator getValidator() {
 		return Validation.buildDefaultValidatorFactory().getValidator();
 	}
@@ -46,7 +49,7 @@ public class CloudEventBuilder<T> {
 	 */
 	public CloudEvent<T> build() {
 		CloudEvent<T> event = new CloudEvent<>(id, source, SPEC_VERSION, type,
-				time, schemaurl, contenttype, data);
+				time, schemaurl, contenttype, data, extensions);
 		
 		Set<ConstraintViolation<CloudEvent<T>>> violations =
 				getValidator().validate(event);
@@ -98,6 +101,11 @@ public class CloudEventBuilder<T> {
 	
 	public CloudEventBuilder<T> withData(T data) {
 		this.data = data;
+		return this;
+	}
+	
+	public CloudEventBuilder<T> withExtension(ExtensionFormat extension) {
+		this.extensions.add(extension);
 		return this;
 	}
 }
