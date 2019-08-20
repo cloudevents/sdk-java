@@ -1,0 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+
+## [Unreleased]
+### Added
+- [Attributes](./api/src/main/java/io/cloudevents/Attributes.java) marker interface
+- Support for [Spec v0.3](https://github.com/cloudevents/spec/tree/v0.3)
+
+### Changed
+
+### Removed
