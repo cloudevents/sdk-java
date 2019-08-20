@@ -1,7 +1,7 @@
 package io.cloudevents.extensions;
 
 import io.cloudevents.Extension;
-import io.cloudevents.v02.ExtensionFormat;
+import io.cloudevents.ExtensionFormat;
 
 public class DistributedTracingExtension implements Extension {
 
