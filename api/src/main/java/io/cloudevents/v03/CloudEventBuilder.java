@@ -15,6 +15,7 @@ import javax.validation.Validator;
 
 import io.cloudevents.Event;
 import io.cloudevents.ExtensionFormat;
+import io.cloudevents.fun.EventBuilder;
 
 /**
  * The event builder.
@@ -22,7 +23,7 @@ import io.cloudevents.ExtensionFormat;
  * @author fabiojose
  *
  */
-public final class CloudEventBuilder<T> {
+public final class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
 	
 	private static Validator VALIDATOR;
 	
@@ -101,6 +102,11 @@ public final class CloudEventBuilder<T> {
 		builder.withData(data);
 		
 		return builder.build();
+	}
+	
+	@Override
+	public Event<AttributesImpl, T> build(T data, AttributesImpl attributes){
+		return CloudEventBuilder.<T>of(data, attributes);
 	}
 	
 	/**
