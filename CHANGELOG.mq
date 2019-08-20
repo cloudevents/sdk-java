@@ -6,9 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 ### Added
-- [Attributes](./api/src/main/java/io/cloudevents/Attributes.java) marker interface
+- [Attributes](./api/src/main/java/io/cloudevents/Attributes.java) marker
+interface for context attributes
 - Support for [Spec v0.3](https://github.com/cloudevents/spec/tree/v0.3)
+- [ExtensionFormat](./api/src/main/java/io/cloudevents/ExtensionFormat.java)
+interface for extentions
 
 ### Changed
+- CloudEvent interface signature, breaking the backward compatibility
 
 ### Removed
+- Support for Spec v0.1
+- `io.cloudevents.impl.DefaultCloudEventImpl`, in favor of a impl for each
+version
+- `io.cloudevents.CloudEventBuilder`, in favor of a builder for each version
