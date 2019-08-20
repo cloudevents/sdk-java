@@ -64,6 +64,46 @@ public final class CloudEventBuilder<T> {
 	}
 	
 	/**
+	 * Build an event from data and attributes
+	 * @param <T> the type of 'data'
+	 * @param data the value of data
+	 * @param attributes the context attributes
+	 * @return An new {@link CloudEventImpl} immutable instance
+	 * @throws IllegalStateException When there are specification constraints
+	 * violations
+	 */
+	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes) {
+		CloudEventBuilder<T> builder = CloudEventBuilder.<T>builder()
+			.withId(attributes.getId())
+			.withSource(attributes.getSource())
+			.withType(attributes.getType());
+		
+		attributes.getTime().ifPresent((time) -> {
+			builder.withTime(time);
+		});
+		
+		attributes.getSchemaurl().ifPresent((schemaurl) -> {
+			builder.withSchemaurl(schemaurl);
+		}); 
+		
+		attributes.getDatacontentencoding().ifPresent((dce) -> {
+			builder.withDatacontentencoding(dce);
+		});
+		
+		attributes.getDatacontenttype().ifPresent((dct) -> {
+			builder.withDatacontenttype(dct);
+		});
+		
+		attributes.getSubject().ifPresent((subject) -> {
+			builder.withSubject(subject);
+		});
+		
+		builder.withData(data);
+		
+		return builder.build();
+	}
+	
+	/**
 	 * 
 	 * @return An new {@link Event} immutable instance
 	 * @throws IllegalStateException When there are specification constraints
