@@ -13,7 +13,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-import io.cloudevents.Event;
+import io.cloudevents.CloudEvent;
 import io.cloudevents.ExtensionFormat;
 import io.cloudevents.fun.EventBuilder;
 
@@ -105,13 +105,13 @@ public final class CloudEventBuilder<T> implements EventBuilder<T, AttributesImp
 	}
 	
 	@Override
-	public Event<AttributesImpl, T> build(T data, AttributesImpl attributes){
+	public CloudEvent<AttributesImpl, T> build(T data, AttributesImpl attributes){
 		return CloudEventBuilder.<T>of(data, attributes);
 	}
 	
 	/**
 	 * 
-	 * @return An new {@link Event} immutable instance
+	 * @return An new {@link CloudEvent} immutable instance
 	 * @throws IllegalStateException When there are specification constraints
 	 * violations
 	 */
