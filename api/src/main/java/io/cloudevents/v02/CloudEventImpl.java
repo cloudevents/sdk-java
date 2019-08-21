@@ -8,63 +8,42 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-import io.cloudevents.json.ZonedDateTimeDeserializer;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.ExtensionFormat;
 
 /**
+ * The event implementation
  * 
  * @author fabiojose
  * 
- * Implemented using immutable data structure.
- * 
  */
 @JsonInclude(value = Include.NON_ABSENT)
-public class CloudEvent<T> {
+public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 
-	@NotBlank
-	private final String type;
-	
-	@NotBlank
-	@Pattern(regexp = "0\\.2")
-	private final String specversion;
-	
+	@JsonIgnore
 	@NotNull
-	private final URI source;
-	
-	@NotBlank
-	private final String id;
-	
-	private final ZonedDateTime time;
-	private final URI schemaurl;
-	private final String contenttype;
+	private final AttributesImpl attributes;
 	
 	private final T data;
 	
+	@NotNull
 	private final Map<String, Object> extensions;
 
-	CloudEvent(String id, URI source, String specversion, String type,
-			ZonedDateTime time, URI schemaurl, String contenttype,
-			T data, Set<ExtensionFormat> extensions) {
+	CloudEventImpl(AttributesImpl attributes, T data,
+			Set<ExtensionFormat> extensions) {
 		
-		this.id = id;
-		this.source = source;
-		this.specversion = specversion;
-		this.type = type;
-		
-		this.time = time;
-		this.schemaurl = schemaurl;
-		this.contenttype = contenttype;
+		this.attributes = attributes;
 		
 		this.data = data;
 		
@@ -74,46 +53,42 @@ public class CloudEvent<T> {
 						.toMap(ExtensionFormat::getKey,
 								ExtensionFormat::getExtension));
 	}
-
-	public String getType() {
-		return type;
+	
+	@JsonUnwrapped
+	@Override
+	public AttributesImpl getAttributes() {
+		return this.attributes;
 	}
-	public String getId() {
-		return id;
-	}
-	public String getSpecversion() {
-		return specversion;
-	}
-	public URI getSource() {
-		return source;
-	}
-
-	@JsonDeserialize(using = ZonedDateTimeDeserializer.class)
-	public Optional<ZonedDateTime> getTime() {
-		return Optional.ofNullable(time);
-	}
-	public Optional<URI> getSchemaurl() {
-		return Optional.ofNullable(schemaurl);
-	}
-	public Optional<String> getContenttype() {
-		return Optional.ofNullable(contenttype);
-	}
+	
+	/**
+     * The event payload. The payload depends on the eventType,
+     * schemaURL and eventTypeVersion, the payload is encoded into
+     * a media format which is specified by the contentType attribute
+     * (e.g. application/json).
+     */
 	public Optional<T> getData() {
 		return Optional.ofNullable(data);
 	}
 
 	@JsonAnyGetter
-	Map<String, Object> getExtensions() {
+	public Map<String, Object> getExtensions() {
 		return Collections.unmodifiableMap(extensions);
 	}
 	
+	/**
+	 * The unique method that allows mutation. Used by
+	 * Jackson Framework to inject the extensions.
+	 * 
+	 * @param name Extension name
+	 * @param value Extension value
+	 */
 	@JsonAnySetter
 	void addExtension(String name, Object value) {
 		extensions.put(name, value);
 	}
 	
 	@JsonCreator
-	public static <T> CloudEvent<T> build(
+	public static <T> CloudEventImpl<T> build(
 			@JsonProperty("id") String id,
 			@JsonProperty("source") URI source,
 			@JsonProperty("specversion") String specversion,

@@ -13,13 +13,18 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import io.cloudevents.CloudEvent;
+import io.cloudevents.ExtensionFormat;
+import io.cloudevents.fun.EventBuilder;
+
 /**
  * CloudEvent instances builder 
  * 
  * @author fabiojose
  *
  */
-public class CloudEventBuilder<T> {
+public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
+	private static Validator VALIDATOR;
 	
 	private static final String SPEC_VERSION = "0.2";
 	private static final String MESSAGE_SEPARATOR = ", ";
@@ -37,22 +42,64 @@ public class CloudEventBuilder<T> {
 	
 	private final Set<ExtensionFormat> extensions = new HashSet<>();
 	
-	private Validator getValidator() {
-		return Validation.buildDefaultValidatorFactory().getValidator();
+	private static Validator getValidator() {
+		if(null== VALIDATOR) {
+			VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+		}
+		return VALIDATOR;
 	}
-
+	
 	/**
 	 * 
-	 * @return An new {@link CloudEvent} immutable instance
+	 * @param <T> the type of 'data'
+	 * @param data the value of data
+	 * @param attributes the context attributes
+	 * @return An new {@link CloudEventImpl} immutable instance
 	 * @throws IllegalStateException When there are specification constraints
 	 * violations
 	 */
-	public CloudEvent<T> build() {
-		CloudEvent<T> event = new CloudEvent<>(id, source, SPEC_VERSION, type,
-				time, schemaurl, contenttype, data, extensions);
+	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes) {
+		CloudEventBuilder<T> builder = new CloudEventBuilder<T>()
+				.withId(attributes.getId())
+				.withSource(attributes.getSource())
+				.withType(attributes.getType());
 		
-		Set<ConstraintViolation<CloudEvent<T>>> violations =
+		attributes.getTime().ifPresent((time) -> {
+			builder.withTime(time);
+		});
+		
+		attributes.getSchemaurl().ifPresent((schema) -> {
+			builder.withSchemaurl(schema);
+		});
+		
+		attributes.getContenttype().ifPresent(contenttype -> {
+			builder.withContenttype(contenttype);
+		});
+		
+		return builder.withData(data).build();
+	}
+	
+	@Override
+	public CloudEvent<AttributesImpl, T> build(T data, AttributesImpl attributes){
+		return CloudEventBuilder.<T>of(data, attributes);
+	}
+	
+	/**
+	 * 
+	 * @return An new {@link CloudEventImpl} immutable instance
+	 * @throws IllegalStateException When there are specification constraints
+	 * violations
+	 */
+	public CloudEventImpl<T> build() {
+		AttributesImpl attributes = new AttributesImpl(type, SPEC_VERSION,
+				source, id, time, schemaurl, contenttype);
+		
+		CloudEventImpl<T> event = new CloudEventImpl<>(attributes, data, extensions);
+		
+		Set<ConstraintViolation<Object>> violations =
 				getValidator().validate(event);
+		
+		violations.addAll(getValidator().validate(event.getAttributes()));
 		
 		final String errs = 
 			violations.stream()
