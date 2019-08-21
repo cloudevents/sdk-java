@@ -1,7 +1,10 @@
 package io.cloudevents.v03;
 
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
+
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
+import io.cloudevents.fun.BinaryFormatAttributeUnmarshaller;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
@@ -94,16 +98,19 @@ public class AttributesImpl implements Attributes {
 		return Optional.ofNullable(subject);
 	}
 	
-	
-	
 	@Override
 	public String toString() {
-		return "AttributesImpl [id=" + id + ", source=" + source + ", specversion="
-				+ specversion + ", type=" + type + ", time=" + time + ", schemaurl=" + schemaurl + ", datacontentencoding=" + datacontentencoding
-				+ ", datacontenttype=" + datacontenttype + ", subject=" + subject + "]";
+		return "AttributesImpl [id=" + id + ", source=" + source 
+				+ ", specversion=" + specversion + ", type=" + type 
+				+ ", time=" + time + ", schemaurl=" + schemaurl 
+				+ ", datacontentencoding=" + datacontentencoding
+				+ ", datacontenttype=" + datacontenttype + ", subject=" 
+				+ subject + "]";
 	}
 
-	
+	/**
+	 * Used by the Jackson framework to unmarshall.
+	 */
 	@JsonCreator
 	public static AttributesImpl build(
 			@JsonProperty("id") String id,
@@ -118,5 +125,47 @@ public class AttributesImpl implements Attributes {
 		
 		return new AttributesImpl(id, source, specversion, type, time,
 				schemaurl, datacontentencoding, datacontenttype, subject);
+	}
+	
+	/**
+	 * The attribute unmarshaller for the binary format, that receives a
+	 * {@code Map} with attributes names as String and value as String.
+	 */
+	public static BinaryFormatAttributeUnmarshaller<AttributesImpl> unmarshaller() {
+		
+		return new BinaryFormatAttributeUnmarshaller<AttributesImpl>() {
+			@Override
+			public AttributesImpl unmarshall(Map<String, String> attributes) {
+				String type = attributes.get("type");
+				ZonedDateTime time =
+					Optional.ofNullable(attributes.get("time"))
+					.map((t) -> ZonedDateTime.parse(t,
+							ISO_ZONED_DATE_TIME))
+					.orElse(null);
+				
+				String specversion = attributes.get("specversion"); 
+				URI source = URI.create(attributes.get("source"));
+				
+				URI schemaurl = 
+					Optional.ofNullable(attributes.get("schemaurl"))
+					.map(schema -> URI.create(schema))
+					.orElse(null);
+				
+				String id = attributes.get("id");
+				
+				String datacontenttype = 
+					attributes.get("datacontenttype");
+				
+				String datacontentencoding = 
+					attributes.get("datacontentencoding");
+				
+				String subject = attributes.get("subject");
+				
+				return AttributesImpl.build(id, source, specversion, type,
+						time, schemaurl, datacontentencoding,
+						datacontenttype, subject);
+			}
+			
+		};
 	}
 }
