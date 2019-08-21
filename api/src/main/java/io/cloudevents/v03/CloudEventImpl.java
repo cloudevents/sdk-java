@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import io.cloudevents.Event;
+import io.cloudevents.CloudEvent;
 import io.cloudevents.ExtensionFormat;
 
 /**
@@ -29,10 +29,9 @@ import io.cloudevents.ExtensionFormat;
  *
  */
 @JsonInclude(value = Include.NON_ABSENT)
-public class CloudEventImpl<T> implements Event<AttributesImpl, T> {
+public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	
 	@JsonIgnore
-	@JsonUnwrapped
 	@NotNull
 	private final AttributesImpl attributes;
 	
@@ -53,6 +52,7 @@ public class CloudEventImpl<T> implements Event<AttributesImpl, T> {
 								ExtensionFormat::getExtension));
 	}
 
+	@JsonUnwrapped
 	@Override
 	public AttributesImpl getAttributes() {
 		return attributes;
@@ -70,7 +70,7 @@ public class CloudEventImpl<T> implements Event<AttributesImpl, T> {
 	}
 	
 	/**
-	 * The unique method that allows mutable. Used by
+	 * The unique method that allows mutation. Used by
 	 * Jackson Framework to inject the extensions.
 	 * 
 	 * @param name Extension name
