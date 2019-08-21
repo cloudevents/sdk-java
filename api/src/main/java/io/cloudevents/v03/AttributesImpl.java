@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
-import io.cloudevents.fun.BinaryFormatAttributeUnmarshaller;
+import io.cloudevents.fun.AttributeUnmarshaller;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
@@ -131,9 +131,9 @@ public class AttributesImpl implements Attributes {
 	 * The attribute unmarshaller for the binary format, that receives a
 	 * {@code Map} with attributes names as String and value as String.
 	 */
-	public static BinaryFormatAttributeUnmarshaller<AttributesImpl> unmarshaller() {
+	public static AttributeUnmarshaller<AttributesImpl> unmarshaller() {
 		
-		return new BinaryFormatAttributeUnmarshaller<AttributesImpl>() {
+		return new AttributeUnmarshaller<AttributesImpl>() {
 			@Override
 			public AttributesImpl unmarshall(Map<String, String> attributes) {
 				String type = attributes.get("type");
