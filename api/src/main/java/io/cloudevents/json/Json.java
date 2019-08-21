@@ -19,8 +19,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.impl.DefaultCloudEventImpl;
 
 import java.io.InputStream;
 import java.time.ZonedDateTime;
@@ -54,14 +52,6 @@ public final class Json {
             throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
         }
     }
-
-    public static CloudEvent fromInputStream(final InputStream inputStream) {
-        try {
-            return MAPPER.readValue(inputStream, DefaultCloudEventImpl.class);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
-        }
-    }
     
     public static <T> T fromInputStream(final InputStream inputStream,
     		Class<T> clazz) {
@@ -73,17 +63,6 @@ public final class Json {
         }
     }
  
-    /**
-     * Decode a given JSON string to a CloudEvent .
-     *
-     * @param str the JSON string.
-     * @return an instance of CloudEvent
-     * @throws IllegalStateException when there is a parsing or invalid mapping.
-     */
-    public static DefaultCloudEventImpl decodeCloudEvent(final String str) throws IllegalStateException {
-        return decodeValue(str, DefaultCloudEventImpl.class);
-    }
-
     /**
      * Decode a given JSON string to a POJO of the given class type.
      *
