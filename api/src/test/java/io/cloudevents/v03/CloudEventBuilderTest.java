@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.cloudevents.Event;
+import io.cloudevents.CloudEvent;
 
 /**
  * 
@@ -122,7 +122,7 @@ public class CloudEventBuilderTest {
 	@Test
 	public void should_have_subject() {
 		// act
-		Event<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce = 
 				CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
