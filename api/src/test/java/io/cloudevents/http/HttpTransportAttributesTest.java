@@ -15,38 +15,70 @@
  */
 package io.cloudevents.http;
 
-import io.cloudevents.SpecVersion;
+import static org.junit.Assert.assertEquals;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.cloudevents.fun.BinaryFormatAttributeMapper;
 
 public class HttpTransportAttributesTest {
 
     @Test
-    public void testVersion01Headers() {
-
-        final HttpTransportAttributes v01 = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_01);
-        assertThat(v01.specVersionKey()).isEqualTo("ce-cloudEventsVersion");
-        assertThat(v01.timeKey()).isEqualTo("ce-eventTime");
-        assertThat(v01.idKey()).isEqualTo("ce-eventID");
-        assertThat(v01.schemaUrlKey()).isEqualTo("ce-schemaURL");
-        assertThat(v01.typeKey()).isEqualTo("ce-eventType");
-
-        // non-changed between 01 / 02
-        assertThat(v01.sourceKey()).isEqualTo("ce-source");
-    }
-
-    @Test
     public void testVersion02Headers() {
+    	// setup
+    	Map<String, Object> myHeaders = new HashMap<>();
+    	myHeaders.put("ce-id", "0x11");
+		myHeaders.put("ce-source", "/source");
+		myHeaders.put("ce-specversion", "0.2");
+		myHeaders.put("ce-type", "br.my");
+		myHeaders.put("ce-time", "2019-09-16T20:49:00Z");
+		myHeaders.put("ce-schemaurl", "http://my.br");
+		myHeaders.put("Content-Type", "application/json");
 
-        final HttpTransportAttributes v02 = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_02);
-        assertThat(v02.specVersionKey()).isEqualTo("ce-specversion");
-        assertThat(v02.timeKey()).isEqualTo("ce-time");
-        assertThat(v02.idKey()).isEqualTo("ce-id");
-        assertThat(v02.schemaUrlKey()).isEqualTo("ce-schemaurl");
-        assertThat(v02.typeKey()).isEqualTo("ce-type");
+		// act
+		BinaryFormatAttributeMapper mapper = new io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl();
+		Map<String, String> attributes = mapper.map(myHeaders);
 
-        // non-changed between 01 / 02
-        assertThat(v02.sourceKey()).isEqualTo("ce-source");
+        // assert 
+        assertEquals("0x11", attributes.get("id"));
+        assertEquals("/source", attributes.get("source"));
+        assertEquals("0.2", attributes.get("specversion"));
+        assertEquals("br.my", attributes.get("type"));
+        assertEquals("2019-09-16T20:49:00Z", attributes.get("time"));
+        assertEquals("http://my.br", attributes.get("schemaurl"));
+        assertEquals("application/json", attributes.get("contenttype"));
+    }
+    
+    @Test
+    public void should_map_headers_v03() {
+    	// setup
+    	Map<String, Object> myHeaders = new HashMap<>();
+    	myHeaders.put("ce-id", "0x11");
+		myHeaders.put("ce-source", "/source");
+		myHeaders.put("ce-specversion", "0.2");
+		myHeaders.put("ce-type", "br.my");
+		myHeaders.put("ce-time", "2019-09-16T20:49:00Z");
+		myHeaders.put("ce-schemaurl", "http://my.br");
+		myHeaders.put("Content-Type", "application/json");
+		myHeaders.put("ce-datacontentencoding", "base64");
+		myHeaders.put("ce-subject", "the subject");
+
+		// act
+		BinaryFormatAttributeMapper mapper = new io.cloudevents.v03.http.BinaryFormatAttributeMapperImpl();
+		Map<String, String> attributes = mapper.map(myHeaders);
+
+        // assert 
+        assertEquals("0x11", attributes.get("id"));
+        assertEquals("/source", attributes.get("source"));
+        assertEquals("0.2", attributes.get("specversion"));
+        assertEquals("br.my", attributes.get("type"));
+        assertEquals("2019-09-16T20:49:00Z", attributes.get("time"));
+        assertEquals("http://my.br", attributes.get("schemaurl"));
+        assertEquals("application/json", attributes.get("datacontenttype"));
+        assertEquals("base64", attributes.get("datacontentencoding"));
+        assertEquals("the subject", attributes.get("subject"));
     }
 }
