@@ -90,7 +90,7 @@ public class CloudEventBuilderTest {
 	@Test
 	public void should_have_id() {
 		// act
-		CloudEvent<Object> ce = 
+		CloudEventImpl<Object> ce = 
 			new CloudEventBuilder<>()
 				.withId("id")
 				.withSource(URI.create("/source"))
@@ -98,13 +98,13 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertEquals("id", ce.getId());
+		assertEquals("id", ce.getAttributes().getId());
 	}
 	
 	@Test
 	public void should_have_source() {
 		// act
-		CloudEvent<Object> ce = 
+		CloudEventImpl<Object> ce = 
 			new CloudEventBuilder<>()
 				.withId("id")
 				.withSource(URI.create("/source"))
@@ -112,13 +112,13 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertEquals(URI.create("/source"), ce.getSource());
+		assertEquals(URI.create("/source"), ce.getAttributes().getSource());
 	}
 	
 	@Test
 	public void should_have_type() {
 		// act
-		CloudEvent<Object> ce = 
+		CloudEventImpl<Object> ce = 
 			new CloudEventBuilder<>()
 				.withId("id")
 				.withSource(URI.create("/source"))
@@ -126,13 +126,13 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertEquals("type", ce.getType());
+		assertEquals("type", ce.getAttributes().getType());
 	}
 	
 	@Test
 	public void should_have_specversion() {
 		// act
-		CloudEvent<Object> ce = 
+		CloudEventImpl<Object> ce = 
 			new CloudEventBuilder<>()
 				.withId("id")
 				.withSource(URI.create("/source"))
@@ -140,7 +140,7 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertEquals("0.2", ce.getSpecversion());
+		assertEquals("0.2", ce.getAttributes().getSpecversion());
 	}
 	
 	@Test
@@ -149,7 +149,7 @@ public class CloudEventBuilderTest {
 		ZonedDateTime expected = ZonedDateTime.now();
 		
 		// act
-		CloudEvent<Object> ce = 
+		CloudEventImpl<Object> ce = 
 			new CloudEventBuilder<>()
 				.withId("id")
 				.withSource(URI.create("/source"))
@@ -158,8 +158,8 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertTrue(ce.getTime().isPresent());
-		assertEquals(expected, ce.getTime().get());
+		assertTrue(ce.getAttributes().getTime().isPresent());
+		assertEquals(expected, ce.getAttributes().getTime().get());
 	}
 	
 	@Test
@@ -168,7 +168,7 @@ public class CloudEventBuilderTest {
 		URI expected = URI.create("/schema");
 		
 		// act
-		CloudEvent<Object> ce = 
+		CloudEventImpl<Object> ce = 
 			new CloudEventBuilder<>()
 				.withId("id")
 				.withSource(URI.create("/source"))
@@ -177,8 +177,8 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertTrue(ce.getSchemaurl().isPresent());
-		assertEquals(expected, ce.getSchemaurl().get());
+		assertTrue(ce.getAttributes().getSchemaurl().isPresent());
+		assertEquals(expected, ce.getAttributes().getSchemaurl().get());
 	}
 	
 	@Test
@@ -187,7 +187,7 @@ public class CloudEventBuilderTest {
 		String expected = "application/json";
 		
 		// act
-		CloudEvent<Object> ce = 
+		CloudEventImpl<Object> ce = 
 			new CloudEventBuilder<>()
 				.withId("id")
 				.withSource(URI.create("/source"))
@@ -196,8 +196,8 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertTrue(ce.getContenttype().isPresent());
-		assertEquals(expected, ce.getContenttype().get());
+		assertTrue(ce.getAttributes().getContenttype().isPresent());
+		assertEquals(expected, ce.getAttributes().getContenttype().get());
 	}
 	
 	@Test
@@ -206,7 +206,7 @@ public class CloudEventBuilderTest {
 		String expected = "my data";
 		
 		// act
-		CloudEvent<Object> ce = 
+		CloudEventImpl<Object> ce = 
 			new CloudEventBuilder<>()
 				.withId("id")
 				.withSource(URI.create("/source"))
