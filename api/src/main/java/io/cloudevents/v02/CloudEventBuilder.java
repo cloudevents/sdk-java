@@ -1,9 +1,25 @@
+/**
+ * Copyright 2019 The CloudEvents Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudevents.v02;
 
 import static java.lang.String.format;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -14,7 +30,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.ExtensionFormat;
+import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.fun.EventBuilder;
 
 /**
@@ -50,6 +66,14 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
 	}
 	
 	/**
+	 * Gets a brand new builder instance
+	 * @param <T> The 'data' type
+	 */
+	public static <T> CloudEventBuilder<T> builder() {
+		return new CloudEventBuilder<T>();
+	}
+	
+	/**
 	 * 
 	 * @param <T> the type of 'data'
 	 * @param data the value of data
@@ -58,7 +82,8 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
 	 * @throws IllegalStateException When there are specification constraints
 	 * violations
 	 */
-	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes) {
+	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes,
+			Collection<ExtensionFormat> extensions) {
 		CloudEventBuilder<T> builder = new CloudEventBuilder<T>()
 				.withId(attributes.getId())
 				.withSource(attributes.getSource())
@@ -76,12 +101,18 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
 			builder.withContenttype(contenttype);
 		});
 		
+		extensions.stream()
+			.forEach(extension -> {
+				builder.withExtension(extension);
+			});
+		
 		return builder.withData(data).build();
 	}
 	
 	@Override
-	public CloudEvent<AttributesImpl, T> build(T data, AttributesImpl attributes){
-		return CloudEventBuilder.<T>of(data, attributes);
+	public CloudEvent<AttributesImpl, T> build(T data, AttributesImpl attributes,
+			Collection<ExtensionFormat> extensions){
+		return CloudEventBuilder.<T>of(data, attributes, extensions);
 	}
 	
 	/**
