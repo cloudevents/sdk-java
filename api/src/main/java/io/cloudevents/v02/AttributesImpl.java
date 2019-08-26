@@ -1,7 +1,28 @@
+/**
+ * Copyright 2019 The CloudEvents Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudevents.v02;
+
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
@@ -15,8 +36,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
+import io.cloudevents.fun.AttributeMarshaller;
 import io.cloudevents.fun.AttributeUnmarshaller;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
+
 /**
  * 
  * @author fabiojose
@@ -42,7 +65,7 @@ public class AttributesImpl implements Attributes {
 	private final URI schemaurl;
 	private final String contenttype;
 	
-	public AttributesImpl(String type, String specversion, URI source,
+	AttributesImpl(String type, String specversion, URI source,
 			String id, ZonedDateTime time, URI schemaurl, String contenttype) {
 		this.type = type;
 		this.specversion = specversion;
@@ -131,6 +154,74 @@ public class AttributesImpl implements Attributes {
 	 */
 	public static AttributeUnmarshaller<AttributesImpl> unmarshaller() {
 		
-		return null;
+		return new AttributeUnmarshaller<AttributesImpl>() {
+			@Override
+			public AttributesImpl unmarshal(Map<String, String> attributes) {
+				String type = attributes.get(ContextAttributes.type.name());
+				ZonedDateTime time =
+					Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
+					.map((t) -> ZonedDateTime.parse(t,
+							ISO_ZONED_DATE_TIME))
+					.orElse(null);
+				
+				String specversion = attributes.get(ContextAttributes.specversion.name()); 
+				URI source = URI.create(attributes.get(ContextAttributes.source.name()));
+				
+				URI schemaurl = 
+					Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
+					.map(schema -> URI.create(schema))
+					.orElse(null);
+				
+				String id = attributes.get(ContextAttributes.id.name());
+				
+				String contenttype = 
+					attributes.get(ContextAttributes.contenttype.name());
+		
+				
+				return AttributesImpl.build(id, source, specversion, type,
+						time, schemaurl, contenttype);
+			}
+			
+		};
+	}
+	
+	/**
+	 * Creates the marshaller instance to marshall {@link AttributesImpl} as 
+	 * a {@link Map} of strings
+	 */
+	public static AttributeMarshaller<AttributesImpl> marshaller() {
+		return new AttributeMarshaller<AttributesImpl>() {
+			@Override
+			public Map<String, String> marshal(AttributesImpl attributes) {
+				Objects.requireNonNull(attributes);
+				
+				Map<String, String> result = new HashMap<>();
+
+				result.put(ContextAttributes.type.name(), 
+						attributes.getType());
+				result.put(ContextAttributes.specversion.name(),
+						attributes.getSpecversion());
+				result.put(ContextAttributes.source.name(),
+						attributes.getSource().toString());
+				result.put(ContextAttributes.id.name(),
+						attributes.getId());
+				
+				attributes.getTime().ifPresent((value) -> {
+					result.put(ContextAttributes.time.name(), 
+						value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+				});
+				
+				attributes.getSchemaurl().ifPresent((schema) -> {
+					result.put(ContextAttributes.schemaurl.name(),
+							schema.toString());
+				});
+				
+				attributes.getContenttype().ifPresent((ct) -> {
+					result.put(ContextAttributes.contenttype.name(), ct);
+				});
+
+				return result;
+			}
+		};
 	}
 }
