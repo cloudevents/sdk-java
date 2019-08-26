@@ -1,9 +1,10 @@
 package io.cloudevents.extensions;
 
-import io.cloudevents.Extension;
-import io.cloudevents.ExtensionFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-public class DistributedTracingExtension implements Extension {
+public class DistributedTracingExtension {
 
     private String traceparent;
     private String tracestate;
@@ -65,8 +66,6 @@ public class DistributedTracingExtension implements Extension {
 		return true;
 	}
 
-
-
 	/**
      * The in-memory format for distributed tracing.
      * <br/>
@@ -74,24 +73,32 @@ public class DistributedTracingExtension implements Extension {
      * @author fabiojose
      *
      */
-    public static class InMemory implements ExtensionFormat {
+    public static class Format implements ExtensionFormat {
     	
     	public static final String IN_MEMORY_KEY = "distributedTracing";
-    	
-    	private final Extension extension;
-    	public InMemory(DistributedTracingExtension extension) {
-    		this.extension = extension;
+
+    	private final InMemoryFormat memory;
+    	private final Map<String, String> transport = new HashMap<>();
+    	public Format(DistributedTracingExtension extension) {
+    		Objects.requireNonNull(extension);
+    		
+    		memory = InMemoryFormat.of(IN_MEMORY_KEY, extension, Object.class);
+    		
+    		transport.put("traceparent", extension.getTraceparent());
+    		transport.put("tracestate", extension.getTracestate());
     	}
-
+    	
 		@Override
-		public String getKey() {
-			return IN_MEMORY_KEY;
+		public InMemoryFormat memory() {
+			return memory;
+		}
+		
+		@Override
+		public Map<String, String> transport() {
+			return transport;
 		}
 
-		@Override
-		public Extension getExtension() {
-			return extension;
-		}
+		
     	
     }
 }
