@@ -1,3 +1,18 @@
+/**
+ * Copyright 2019 The CloudEvents Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudevents.v03;
 
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
@@ -23,7 +38,7 @@ import io.cloudevents.fun.AttributeUnmarshaller;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
- * The event attributes implementation for v0.2
+ * The event attributes implementation for v0.3
  * 
  * @author fabiojose
  *
@@ -135,31 +150,31 @@ public class AttributesImpl implements Attributes {
 		
 		return new AttributeUnmarshaller<AttributesImpl>() {
 			@Override
-			public AttributesImpl unmarshall(Map<String, String> attributes) {
-				String type = attributes.get("type");
+			public AttributesImpl unmarshal(Map<String, String> attributes) {
+				String type = attributes.get(ContextAttributes.type.name());
 				ZonedDateTime time =
-					Optional.ofNullable(attributes.get("time"))
+					Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
 					.map((t) -> ZonedDateTime.parse(t,
 							ISO_ZONED_DATE_TIME))
 					.orElse(null);
 				
-				String specversion = attributes.get("specversion"); 
-				URI source = URI.create(attributes.get("source"));
+				String specversion = attributes.get(ContextAttributes.specversion.name()); 
+				URI source = URI.create(attributes.get(ContextAttributes.source.name()));
 				
 				URI schemaurl = 
-					Optional.ofNullable(attributes.get("schemaurl"))
+					Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
 					.map(schema -> URI.create(schema))
 					.orElse(null);
 				
-				String id = attributes.get("id");
+				String id = attributes.get(ContextAttributes.id.name());
 				
 				String datacontenttype = 
-					attributes.get("datacontenttype");
+					attributes.get(ContextAttributes.datacontenttype.name());
 				
 				String datacontentencoding = 
-					attributes.get("datacontentencoding");
+					attributes.get(ContextAttributes.datacontentencoding.name());
 				
-				String subject = attributes.get("subject");
+				String subject = attributes.get(ContextAttributes.subject.name());
 				
 				return AttributesImpl.build(id, source, specversion, type,
 						time, schemaurl, datacontentencoding,
