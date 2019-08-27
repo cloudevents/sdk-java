@@ -20,6 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
+import io.cloudevents.Attributes;
+import io.cloudevents.fun.DataUnmarshaller;
+
 import java.io.InputStream;
 import java.time.ZonedDateTime;
 
@@ -95,6 +98,23 @@ public final class Json {
         } catch (Exception e) {
             throw new IllegalStateException("Failed to decode: " + e.getMessage(), e);
         }
+    }
+    
+    /**
+     * Creates a JSON Data Unmarshaller
+     * @param <T> The 'data' type
+     * @param <A> The attributes type
+     * @param type The type of 'data'
+     * @return A new instance of {@link DataUnmarshaller}
+     */
+    public static <T, A extends Attributes> 
+    	DataUnmarshaller<String, T, A> umarshaller(Class<T> type) {
+    	return new DataUnmarshaller<String, T, A>() {
+			@Override
+			public T unmarshall(String payload, A attributes) throws Exception {
+				return Json.decodeValue(payload, type);
+			}
+		};
     }
 
     private Json() {
