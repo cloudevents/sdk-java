@@ -36,7 +36,7 @@ public class CustomEventTypesTest {
 
         // given
         final Map<String, Object> storagePayload = (MAPPER.readValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("pvc.json"), Map.class));
-        final CloudEventImpl<Map<String, Object>> storageCloudEventWrapper = new CloudEventBuilder<Map<String, Object>>()
+        final CloudEventImpl<Map<String, Object>> storageCloudEventWrapper = CloudEventBuilder.<Map<String, Object>>builder()
                 .withType("ProvisioningSucceeded")
                 .withSource(URI.create("/scheduler"))
                 .withId(UUID.randomUUID().toString())

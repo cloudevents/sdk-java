@@ -47,7 +47,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'id' must not be blank");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withSource(URI.create("/test"))
 			.withType("type")
 			.build();
@@ -60,7 +60,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'id' must not be blank");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withId("")
 			.withSource(URI.create("/test"))
 			.withType("type")
@@ -74,7 +74,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'type' must not be blank");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withId("id")
 			.withSource(URI.create("/test"))
 			.build();
@@ -87,7 +87,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'type' must not be blank");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withId("id")
 			.withSource(URI.create("/test"))
 			.withType("")
@@ -101,7 +101,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'source' must not be null");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withId("id")
 			.withType("type")
 			.build();
@@ -111,7 +111,7 @@ public class CloudEventBuilderTest {
 	public void should_have_id() {
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -125,7 +125,7 @@ public class CloudEventBuilderTest {
 	public void should_have_source() {
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -139,7 +139,7 @@ public class CloudEventBuilderTest {
 	public void should_have_type() {
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -153,7 +153,7 @@ public class CloudEventBuilderTest {
 	public void should_have_specversion() {
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -170,7 +170,7 @@ public class CloudEventBuilderTest {
 		
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -189,7 +189,7 @@ public class CloudEventBuilderTest {
 		
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -208,7 +208,7 @@ public class CloudEventBuilderTest {
 		
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -227,7 +227,7 @@ public class CloudEventBuilderTest {
 		
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -250,7 +250,7 @@ public class CloudEventBuilderTest {
 		
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -276,7 +276,7 @@ public class CloudEventBuilderTest {
 		
 		// act
 		CloudEventImpl<Object> ce = 
-			new CloudEventBuilder<>()
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")

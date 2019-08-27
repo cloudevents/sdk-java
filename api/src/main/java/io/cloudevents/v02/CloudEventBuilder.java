@@ -58,6 +58,8 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
 	
 	private final Set<ExtensionFormat> extensions = new HashSet<>();
 	
+	private CloudEventBuilder() {}
+	
 	private static Validator getValidator() {
 		if(null== VALIDATOR) {
 			VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();

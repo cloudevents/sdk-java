@@ -125,7 +125,7 @@ public class BinaryMarshaller<P, T, A extends Attributes> {
 		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
 
 		final CloudEventImpl<String> ce = 
-			new CloudEventBuilder<String>()
+			CloudEventBuilder.<String>builder()
 				.withId("x10")
 				.withSource(URI.create("/source"))
 				.withType("event-type")

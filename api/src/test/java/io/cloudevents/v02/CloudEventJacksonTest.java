@@ -49,7 +49,7 @@ public class CloudEventJacksonTest {
 	public void should_encode_right_with_minimal_attrs() {
 		// setup
 		CloudEventImpl<Object> ce = 
-				new CloudEventBuilder<>()
+				CloudEventBuilder.<Object>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -74,7 +74,7 @@ public class CloudEventJacksonTest {
 	public void should_have_optional_attrs() {
 		// setup
 		CloudEventImpl<Object> ce = 
-				new CloudEventBuilder<>()
+				CloudEventBuilder.<Object>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -103,7 +103,7 @@ public class CloudEventJacksonTest {
 		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
 		
 		CloudEventImpl<Object> ce = 
-				new CloudEventBuilder<>()
+				CloudEventBuilder.<Object>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -124,7 +124,7 @@ public class CloudEventJacksonTest {
 	public void should_not_serialize_attributes_element() {
 		// setup
 		CloudEventImpl<Object> ce = 
-				new CloudEventBuilder<>()
+				CloudEventBuilder.<Object>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")

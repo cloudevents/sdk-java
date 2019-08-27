@@ -124,7 +124,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 			@JsonProperty("contenttype") String contenttype,
 			@JsonProperty("data") T data) {
 		
-		return new CloudEventBuilder<T>()
+		return CloudEventBuilder.<T>builder()
 				.withId(id)
 				.withSource(source)
 				.withType(type)
