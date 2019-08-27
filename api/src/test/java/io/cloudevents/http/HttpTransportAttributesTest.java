@@ -23,6 +23,8 @@ import java.util.Map;
 import org.junit.Test;
 
 import io.cloudevents.fun.BinaryFormatAttributeMapper;
+import io.cloudevents.fun.BinaryFormatHeaderMapper;
+import io.cloudevents.v02.http.BinaryFormatHeaderMapperImpl;
 
 public class HttpTransportAttributesTest {
 
@@ -50,6 +52,32 @@ public class HttpTransportAttributesTest {
         assertEquals("2019-09-16T20:49:00Z", attributes.get("time"));
         assertEquals("http://my.br", attributes.get("schemaurl"));
         assertEquals("application/json", attributes.get("contenttype"));
+    }
+    
+    @Test
+    public void shoul_map_attributes_v02() {
+    	// setup
+    	Map<String, String> attributes = new HashMap<>();
+    	attributes.put("id", "0x11");
+		attributes.put("source", "/source");
+		attributes.put("specversion", "0.2");
+		attributes.put("type", "br.my");
+		attributes.put("time", "2019-09-16T20:49:00Z");
+		attributes.put("schemaurl", "http://my.br");
+		attributes.put("contenttype", "application/json");
+		
+		// act
+		BinaryFormatHeaderMapper mapper = new BinaryFormatHeaderMapperImpl();
+		Map<String, Object> headers = mapper.map(attributes, new HashMap<String, String>());
+		
+		// assert
+		assertEquals("0x11", headers.get("ce-id"));
+        assertEquals("/source", headers.get("ce-source"));
+        assertEquals("0.2", headers.get("ce-specversion"));
+        assertEquals("br.my", headers.get("ce-type"));
+        assertEquals("2019-09-16T20:49:00Z", headers.get("ce-time"));
+        assertEquals("http://my.br", headers.get("ce-schemaurl"));
+        assertEquals("application/json", headers.get("Content-Type"));
     }
     
     @Test
