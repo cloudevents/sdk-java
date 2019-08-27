@@ -1,3 +1,18 @@
+/**
+ * Copyright 2019 The CloudEvents Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudevents.v03;
 
 import static org.junit.Assert.assertEquals;
@@ -15,8 +30,8 @@ import org.junit.rules.ExpectedException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.ExtensionFormat;
 import io.cloudevents.extensions.DistributedTracingExtension;
+import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
 
@@ -99,7 +114,7 @@ public class CloudEventJacksonTest {
 		dt.setTraceparent("0");
 		dt.setTracestate("congo=4");
 		
-		final ExtensionFormat tracing = new DistributedTracingExtension.InMemory(dt);
+		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
 		
 		CloudEvent<AttributesImpl, Object> ce = 
 				CloudEventBuilder.builder()
@@ -231,7 +246,7 @@ public class CloudEventJacksonTest {
         
         // assert
         assertNotNull(ce.getExtensions()
-        	.get(DistributedTracingExtension.InMemory.IN_MEMORY_KEY));
+        	.get(DistributedTracingExtension.Format.IN_MEMORY_KEY));
     }
 	
 	@Test
