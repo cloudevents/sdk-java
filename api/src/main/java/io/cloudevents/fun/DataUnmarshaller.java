@@ -35,6 +35,6 @@ public interface DataUnmarshaller<P, T, A extends Attributes> {
 	 * @return
 	 * @throws Exception
 	 */
-	T unmarshall(P payload, A attributes) throws Exception;
+	T unmarshal(P payload, A attributes) throws Exception;
 	
 }

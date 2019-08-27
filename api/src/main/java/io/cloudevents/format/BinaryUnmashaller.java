@@ -24,6 +24,7 @@ import io.cloudevents.fun.AttributeUnmarshaller;
 import io.cloudevents.fun.DataUnmarshaller;
 import io.cloudevents.fun.EventBuilder;
 import io.cloudevents.fun.ExtensionUmarshaller;
+import io.cloudevents.json.Json;
 import io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl;
 import io.cloudevents.v02.http.BinaryFormatExtensionMapperImpl;
 import io.cloudevents.v02.AttributesImpl;
@@ -41,44 +42,100 @@ public class BinaryUnmashaller<P, T, A extends Attributes> {
 	
 	private BinaryUnmashaller(){}
 	
+	/**
+	 * Gets a new builder instance
+	 * @param <P> The payload type, ex: String
+	 * @param <T> The 'data' type
+	 * @param <A> The 'attributes' type
+	 * @return
+	 */
 	public static <P, T, A extends Attributes> HeadersStep<P, T, A> builder() {
 		return new Builder<>();
 	}
 	
 	public interface HeadersStep<P, T, A extends Attributes> {
+		/**
+		 * Pass a supplier with the headers of binary format
+		 * @param headers
+		 * @return
+		 */
 		PayloadStep<P, T, A> withHeaders(Supplier<Map<String, Object>> headers);
 	}
 	
 	public interface PayloadStep<P, T, A extends Attributes> {
+		/**
+		 * Pass a supplier thats provides the payload
+		 * @param payload
+		 * @return
+		 */
 		AttributeMapStep<P, T, A> withPayload(Supplier<P> payload);
 	}
 	
 	public interface AttributeMapStep<P, T, A extends Attributes> {
+		/**
+		 * Maps the map of headers into map of attributes
+		 * @param un
+		 * @return
+		 */
 		AttributeUmarshallStep<P, T, A> attributes(BinaryFormatAttributeMapper un);
 	}
 	
 	public interface AttributeUmarshallStep<P, T, A extends Attributes> {
+		/**
+		 * Unmarshals the map of attributes into actual ones
+		 * @param un
+		 * @return
+		 */
 		DataUnmarshallStep<P, T, A> attributes(AttributeUnmarshaller<A> un);
 	}
 	
 	public interface DataUnmarshallStep<P, T, A extends Attributes> {
+		/**
+		 * Unmarshals the payload into actual 'data' type
+		 * @param un
+		 * @return
+		 */
 		ExtensionsMapStep<P, T, A> data(DataUnmarshaller<P, T, A> un);
 	}
 	
 	public interface ExtensionsMapStep<P, T, A extends Attributes> {
+		/**
+		 * Maps the headers map into map of extensions
+		 * @param mapper
+		 * @return
+		 */
 		ExtensionsStepBegin<P, T, A> extensions(BinaryFormatExtensionMapper mapper);
 	}
 	
 	public interface ExtensionsStepBegin<P, T, A extends Attributes> {
+		/**
+		 * Starts the block of extensions unmarshalling configuration
+		 * @return
+		 */
 		ExtensionsStep<P, T, A> begin();
 	}
 	
 	public interface ExtensionsStep<P, T, A extends Attributes> {
+		/**
+		 * Unmarshals a extension, based on the map of extensions
+		 * @param un
+		 * @return
+		 */
 		ExtensionsStep<P, T, A> extension(ExtensionUmarshaller un);
+		
+		/**
+		 * Ends the block of extensions umarshalling
+		 * @return
+		 */
 		Build<T, A> end();
 	}
 	
 	public interface Build<T, A extends Attributes> {
+		/**
+		 * Builds the {@link CloudEvent} instance
+		 * @param builder
+		 * @return
+		 */
 		CloudEvent<A, T> build(EventBuilder<T, A> builder);
 	}
 	
@@ -176,7 +233,7 @@ public class BinaryUnmashaller<P, T, A extends Attributes> {
 		@Override
 		public ExtensionsMapStep<P, T, A> data(DataUnmarshaller<P, T, A> un) {
 			try {
-				this.data = un.unmarshall(this.payload, this.attributes);
+				this.data = un.unmarshal(this.payload, this.attributes);
 				return this;
 			}catch(Exception e) {
 				throw new RuntimeException(e.getMessage(), e);
@@ -242,9 +299,7 @@ public class BinaryUnmashaller<P, T, A extends Attributes> {
 				.withPayload(() -> myPayload)
 				.attributes(new BinaryFormatAttributeMapperImpl()::map)
 				.attributes(AttributesImpl.unmarshaller()::unmarshal)
-				.data((payload, attributes) -> {
-					return mapper.readValue(payload, Dummy.class);
-				})
+				.data(Json.umarshaller(Dummy.class)::unmarshal)
 				.extensions(new BinaryFormatExtensionMapperImpl()::map)
 				.begin()
 					.extension((exts) -> {

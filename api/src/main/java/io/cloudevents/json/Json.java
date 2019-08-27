@@ -111,7 +111,7 @@ public final class Json {
     	DataUnmarshaller<String, T, A> umarshaller(Class<T> type) {
     	return new DataUnmarshaller<String, T, A>() {
 			@Override
-			public T unmarshall(String payload, A attributes) throws Exception {
+			public T unmarshal(String payload, A attributes) throws Exception {
 				return Json.decodeValue(payload, type);
 			}
 		};
