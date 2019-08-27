@@ -21,10 +21,12 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import io.cloudevents.Attributes;
+import io.cloudevents.fun.DataMarshaller;
 import io.cloudevents.fun.DataUnmarshaller;
 
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.util.Map;
 
 public final class Json {
 
@@ -113,6 +115,21 @@ public final class Json {
 			@Override
 			public T unmarshal(String payload, A attributes) throws Exception {
 				return Json.decodeValue(payload, type);
+			}
+		};
+    }
+    
+    /**
+     * Creates a JSON Data Marshaller
+     * @param <T> The 'data' type
+     * @return A new instance of {@link DataMarshaller}
+     */
+    public static <T> DataMarshaller<String, T> marshaller() {
+    	return new DataMarshaller<String, T>() {
+			@Override
+			public String marshal(T data, Map<String, Object> headers) 
+					throws Exception {
+				return Json.encode(data);
 			}
 		};
     }

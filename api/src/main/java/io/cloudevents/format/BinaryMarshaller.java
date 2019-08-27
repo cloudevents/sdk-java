@@ -146,9 +146,7 @@ public class BinaryMarshaller<P, T, A extends Attributes> {
 					.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 			})
 			.headers(BinaryFormatHeaderMapperImpl.mapper()::map)
-			.payload((data, headers) -> {
-				return Json.encode(data);
-			})
+			.payload(Json.marshaller()::marshal)
 			.build((payload, headers) -> {
 				return new Format<>(payload, headers);
 			});
