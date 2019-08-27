@@ -25,13 +25,15 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.cloudevents.fun.BinaryFormatAttributeMapper;
+import io.cloudevents.v02.ContextAttributes;
 
 /**
  * 
  * @author fabiojose
  *
  */
-public class BinaryFormatAttributeMapperImpl implements BinaryFormatAttributeMapper {
+public class BinaryFormatAttributeMapperImpl implements 
+	BinaryFormatAttributeMapper {
 	
 	public static final String HEADER_PREFIX = "ce-";
 
@@ -45,22 +47,26 @@ public class BinaryFormatAttributeMapperImpl implements BinaryFormatAttributeMap
 			.filter(header -> header.startsWith(HEADER_PREFIX))
 			.map(header -> header.substring(HEADER_PREFIX.length()));
 		
-		final AtomicReference<Entry<String, Object>> ct = new AtomicReference<>();
+		final AtomicReference<Entry<String, Object>> ct = 
+				new AtomicReference<>();
 		Map<String, String> result = headers.entrySet()
 			.stream()
-			.map(header -> new SimpleEntry<>(header.getKey().toLowerCase(Locale.US),
-					header.getValue()))
+			.map(header -> new SimpleEntry<>(header.getKey()
+					.toLowerCase(Locale.US),	header.getValue()))
 			.peek(header -> {
 				if("content-type".equals(header.getKey())) {
 					ct.set(header);
 				}
 			})
 			.filter(header -> header.getKey().startsWith(HEADER_PREFIX))
-			.map(header -> new SimpleEntry<>(header.getKey().substring(HEADER_PREFIX.length()), header.getValue()))
-			.map(header -> new SimpleEntry<>(header.getKey(), header.getValue().toString()))
+			.map(header -> new SimpleEntry<>(header.getKey()
+					.substring(HEADER_PREFIX.length()), header.getValue()))
+			.map(header -> new SimpleEntry<>(header.getKey(),
+					header.getValue().toString()))
 			.collect(toMap(Entry::getKey, Entry::getValue));
 		
-		result.put("contenttype", ct.get().getValue().toString());
+		result.put(ContextAttributes.contenttype.name(),
+				ct.get().getValue().toString());
 			
 		return result;
 	}
