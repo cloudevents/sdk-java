@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import io.cloudevents.fun.BinaryFormatHeaderMapper;
+import io.cloudevents.v02.ContextAttributes;
 
 import static io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl.HEADER_PREFIX;
 
@@ -34,20 +35,37 @@ import static io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl.HEADER_PRE
 public class BinaryFormatHeaderMapperImpl implements BinaryFormatHeaderMapper {
 
 	@Override
-	public Map<String, Object> map(Map<String, String> attributes) {
+	public Map<String, Object> map(Map<String, String> attributes, 
+			Map<String, String> extensions) {
 		Objects.requireNonNull(attributes);
+		Objects.requireNonNull(extensions);
 		
 		Map<String, Object> result = attributes.entrySet()
 			.stream()
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.toLowerCase(Locale.US), header.getValue()))
-			.filter(header -> !header.getKey().equals("contenttype"))
-			.map(header -> new SimpleEntry<>(HEADER_PREFIX+header.getKey(), header.getValue()))
+			.filter(header -> !header.getKey()
+					.equals(ContextAttributes.contenttype.name()))
+			.map(header -> new SimpleEntry<>(HEADER_PREFIX+header.getKey(),
+					header.getValue()))
 			.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		
-		result.put("Content-Type", attributes.get("contenttype"));
+		result.putAll(
+			extensions.entrySet()
+				.stream()
+				.map(header -> new SimpleEntry<>(HEADER_PREFIX+header.getKey(),
+						header.getValue()))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue))
+		);
+		
+		result.put("Content-Type", attributes
+				.get(ContextAttributes.contenttype.name()));
 		
 		return result;
+	}
+	
+	public static BinaryFormatHeaderMapper mapper() {
+		return new BinaryFormatHeaderMapperImpl();
 	}
 
 }
