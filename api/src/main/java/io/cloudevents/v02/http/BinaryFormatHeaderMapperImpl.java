@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import io.cloudevents.fun.BinaryFormatHeaderMapper;
 import io.cloudevents.v02.ContextAttributes;
 
 import static io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl.HEADER_PREFIX;
@@ -32,10 +31,10 @@ import static io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl.HEADER_PRE
  * @author fabiojose
  *
  */
-public class BinaryFormatHeaderMapperImpl implements BinaryFormatHeaderMapper {
+public final class BinaryFormatHeaderMapperImpl {
+	private BinaryFormatHeaderMapperImpl() {}
 
-	@Override
-	public Map<String, Object> map(Map<String, String> attributes, 
+	public static Map<String, Object> map(Map<String, String> attributes, 
 			Map<String, String> extensions) {
 		Objects.requireNonNull(attributes);
 		Objects.requireNonNull(extensions);
@@ -64,8 +63,4 @@ public class BinaryFormatHeaderMapperImpl implements BinaryFormatHeaderMapper {
 		return result;
 	}
 	
-	public static BinaryFormatHeaderMapper mapper() {
-		return new BinaryFormatHeaderMapperImpl();
-	}
-
 }
