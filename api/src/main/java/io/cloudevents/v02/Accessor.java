@@ -36,6 +36,7 @@ public final class Accessor {
 	 * @param cloudEvent
 	 * @throws IllegalArgumentException When argument is not an instance of {@link CloudEventImpl}
 	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <A extends Attributes, T> Collection<ExtensionFormat> 
 		extensionsOf(CloudEvent<A, T> cloudEvent) {
 		Objects.requireNonNull(cloudEvent);
