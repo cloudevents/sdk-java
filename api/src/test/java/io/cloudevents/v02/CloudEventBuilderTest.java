@@ -1,6 +1,22 @@
+/**
+ * Copyright 2019 The CloudEvents Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudevents.v02;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
@@ -9,6 +25,10 @@ import java.time.ZonedDateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import io.cloudevents.extensions.DistributedTracingExtension;
+import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.extensions.InMemoryFormat;
 
 /**
  * 
@@ -217,5 +237,56 @@ public class CloudEventBuilderTest {
 		// assert
 		assertTrue(ce.getData().isPresent());
 		assertEquals(expected, ce.getData().get());
+	}
+	
+	@Test
+	public void should_have_dte() {
+		// setup
+		final DistributedTracingExtension dt = new DistributedTracingExtension();
+		dt.setTraceparent("0");
+		dt.setTracestate("congo=4");
+		
+		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
+		
+		// act
+		CloudEventImpl<Object> ce = 
+			new CloudEventBuilder<>()
+				.withId("id")
+				.withSource(URI.create("/source"))
+				.withType("type")
+				.withExtension(tracing)
+				.build();
+		
+		Object actual = ce.getExtensions()
+			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY);
+		
+		// assert
+		assertNotNull(actual);
+		assertTrue(actual instanceof DistributedTracingExtension);
+	}
+	
+	@Test
+	public void should_have_custom_extension() {
+		String myExtKey = "comexampleextension1";
+		String myExtVal = "value";
+		
+		ExtensionFormat custom = ExtensionFormat
+			.of(InMemoryFormat.of(myExtKey, myExtKey, String.class),
+				myExtKey, myExtVal);
+		
+		// act
+		CloudEventImpl<Object> ce = 
+			new CloudEventBuilder<>()
+				.withId("id")
+				.withSource(URI.create("/source"))
+				.withType("type")
+				.withExtension(custom)
+				.build();
+		
+		Object actual = ce.getExtensions()
+				.get(myExtKey);
+		
+		assertNotNull(actual);
+		assertTrue(actual instanceof String);
 	}
 }
