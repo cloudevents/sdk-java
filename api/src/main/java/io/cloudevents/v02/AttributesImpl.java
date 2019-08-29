@@ -37,13 +37,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.fun.AttributeMarshaller;
-import io.cloudevents.fun.AttributeUnmarshaller;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
  * 
  * @author fabiojose
- *
+ * @version 0.2
  */
 @JsonInclude(value = Include.NON_ABSENT)
 public class AttributesImpl implements Attributes {
@@ -133,6 +132,13 @@ public class AttributesImpl implements Attributes {
 	public Optional<String> getContenttype() {
 		return Optional.ofNullable(contenttype);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Optional<String> getMediaType() {
+		return getContenttype();
+	}
 
 	@JsonCreator
 	public static AttributesImpl build(
@@ -150,78 +156,67 @@ public class AttributesImpl implements Attributes {
 	
 	/**
 	 * The attribute unmarshaller for the binary format, that receives a
-	 * {@code Map} with attributes names as String and value as String.
+	 * {@code Map} with attributes names as String and values as String.
 	 */
-	public static AttributeUnmarshaller<AttributesImpl> unmarshaller() {
+	public static AttributesImpl unmarshal(Map<String, String> attributes) {
+		String type = attributes.get(ContextAttributes.type.name());
+		ZonedDateTime time =
+			Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
+			.map((t) -> ZonedDateTime.parse(t,
+					ISO_ZONED_DATE_TIME))
+			.orElse(null);
 		
-		return new AttributeUnmarshaller<AttributesImpl>() {
-			@Override
-			public AttributesImpl unmarshal(Map<String, String> attributes) {
-				String type = attributes.get(ContextAttributes.type.name());
-				ZonedDateTime time =
-					Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
-					.map((t) -> ZonedDateTime.parse(t,
-							ISO_ZONED_DATE_TIME))
-					.orElse(null);
-				
-				String specversion = attributes.get(ContextAttributes.specversion.name()); 
-				URI source = URI.create(attributes.get(ContextAttributes.source.name()));
-				
-				URI schemaurl = 
-					Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
-					.map(schema -> URI.create(schema))
-					.orElse(null);
-				
-				String id = attributes.get(ContextAttributes.id.name());
-				
-				String contenttype = 
-					attributes.get(ContextAttributes.contenttype.name());
+		String specversion = attributes.get(ContextAttributes.specversion.name()); 
+		URI source = URI.create(attributes.get(ContextAttributes.source.name()));
 		
-				
-				return AttributesImpl.build(id, source, specversion, type,
-						time, schemaurl, contenttype);
-			}
-			
-		};
+		URI schemaurl = 
+			Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
+			.map(schema -> URI.create(schema))
+			.orElse(null);
+		
+		String id = attributes.get(ContextAttributes.id.name());
+		
+		String contenttype = 
+			attributes.get(ContextAttributes.contenttype.name());
+
+		
+		return AttributesImpl.build(id, source, specversion, type,
+				time, schemaurl, contenttype);
 	}
 	
 	/**
 	 * Creates the marshaller instance to marshall {@link AttributesImpl} as 
 	 * a {@link Map} of strings
 	 */
-	public static AttributeMarshaller<AttributesImpl> marshaller() {
-		return new AttributeMarshaller<AttributesImpl>() {
-			@Override
-			public Map<String, String> marshal(AttributesImpl attributes) {
-				Objects.requireNonNull(attributes);
-				
-				Map<String, String> result = new HashMap<>();
 
-				result.put(ContextAttributes.type.name(), 
-						attributes.getType());
-				result.put(ContextAttributes.specversion.name(),
-						attributes.getSpecversion());
-				result.put(ContextAttributes.source.name(),
-						attributes.getSource().toString());
-				result.put(ContextAttributes.id.name(),
-						attributes.getId());
-				
-				attributes.getTime().ifPresent((value) -> {
-					result.put(ContextAttributes.time.name(), 
-						value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-				});
-				
-				attributes.getSchemaurl().ifPresent((schema) -> {
-					result.put(ContextAttributes.schemaurl.name(),
-							schema.toString());
-				});
-				
-				attributes.getContenttype().ifPresent((ct) -> {
-					result.put(ContextAttributes.contenttype.name(), ct);
-				});
+	public static Map<String, String> marshal(AttributesImpl attributes) {
+		Objects.requireNonNull(attributes);
+		
+		Map<String, String> result = new HashMap<>();
 
-				return result;
-			}
-		};
+		result.put(ContextAttributes.type.name(), 
+				attributes.getType());
+		result.put(ContextAttributes.specversion.name(),
+				attributes.getSpecversion());
+		result.put(ContextAttributes.source.name(),
+				attributes.getSource().toString());
+		result.put(ContextAttributes.id.name(),
+				attributes.getId());
+		
+		attributes.getTime().ifPresent((value) -> {
+			result.put(ContextAttributes.time.name(), 
+				value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		});
+		
+		attributes.getSchemaurl().ifPresent((schema) -> {
+			result.put(ContextAttributes.schemaurl.name(),
+					schema.toString());
+		});
+		
+		attributes.getContenttype().ifPresent((ct) -> {
+			result.put(ContextAttributes.contenttype.name(), ct);
+		});
+
+		return result;
 	}
 }
