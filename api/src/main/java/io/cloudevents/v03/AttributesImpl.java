@@ -109,6 +109,12 @@ public class AttributesImpl implements Attributes {
 	public Optional<String> getDatacontenttype() {
 		return Optional.ofNullable(datacontenttype);
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public Optional<String> getMediaType() {
+		return getDatacontenttype();
+	}
 	public Optional<String> getSubject() {
 		return Optional.ofNullable(subject);
 	}

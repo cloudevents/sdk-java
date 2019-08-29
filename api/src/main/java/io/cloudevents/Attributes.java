@@ -15,6 +15,8 @@
  */
 package io.cloudevents;
 
+import java.util.Optional;
+
 /**
  * The marker interface for CloudEvents attributes
  *  
@@ -23,4 +25,10 @@ package io.cloudevents;
  */
 public interface Attributes {
 
+	/**
+	 * A common way to get the media type of CloudEvents 'data';
+	 * @return If has a value, it MUST follows the <a href="https://tools.ietf.org/html/rfc2046">RFC2046</a>
+	 */
+	Optional<String> getMediaType();
+	
 }
