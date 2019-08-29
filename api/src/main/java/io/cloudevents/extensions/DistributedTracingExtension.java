@@ -3,6 +3,8 @@ package io.cloudevents.extensions;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.AbstractMap.SimpleEntry;
 
 public class DistributedTracingExtension {
 
@@ -97,8 +99,34 @@ public class DistributedTracingExtension {
 		public Map<String, String> transport() {
 			return transport;
 		}
-
+    }
+    
+    /**
+     * Unmarshals the {@link DistributedTracingExtension} based on map of extensions.
+     * @param exts
+     * @return
+     */
+    public static Optional<ExtensionFormat> unmarshall(
+    		Map<String, String> exts) {
+    	String traceparent = exts.get("traceparent");
+		String tracestate  = exts.get("tracestate");
 		
-    	
+		if(null!= traceparent && null!= tracestate) {
+			DistributedTracingExtension dte = new DistributedTracingExtension();
+			dte.setTraceparent(traceparent);
+			dte.setTracestate(tracestate);
+			
+			InMemoryFormat inMemory = 
+				InMemoryFormat.of("distributedTracing", dte, Object.class);
+			
+			return Optional.of(
+				ExtensionFormat.of(inMemory, 
+					new SimpleEntry<>("traceparent", traceparent),
+					new SimpleEntry<>("tracestate", tracestate))
+			);
+			
+		}
+		
+		return Optional.empty();	
     }
 }
