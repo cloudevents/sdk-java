@@ -33,7 +33,7 @@ import io.cloudevents.v02.ContextAttributes;
  */
 public class HTTPAttributeMapper {
 	
-	public static final String HEADER_PREFIX = "ce-";
+	static final String HEADER_PREFIX = "ce-";
 	
 	public static Map<String, String> map(final Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
