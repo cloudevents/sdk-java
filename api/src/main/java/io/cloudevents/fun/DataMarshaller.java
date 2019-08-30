@@ -26,12 +26,12 @@ import java.util.Map;
 public interface DataMarshaller<P, T> {
 
 	/**
-	 * Marshals the 'data' into payload for wire serialization
+	 * Marshals the 'data' into payload
 	 * @param data
 	 * @param headers
 	 * @return
-	 * @throws Exception When something bad happens in the masharlling process
+	 * @throws RuntimeException When something bad happens during the marshal process
 	 */
-	P marshal(T data, Map<String, Object> headers) throws Exception;
+	P marshal(T data, Map<String, Object> headers) throws RuntimeException;
 	
 }
