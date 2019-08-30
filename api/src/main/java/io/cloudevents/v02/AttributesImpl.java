@@ -36,7 +36,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
-import io.cloudevents.fun.AttributeMarshaller;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
@@ -188,7 +187,6 @@ public class AttributesImpl implements Attributes {
 	 * Creates the marshaller instance to marshall {@link AttributesImpl} as 
 	 * a {@link Map} of strings
 	 */
-
 	public static Map<String, String> marshal(AttributesImpl attributes) {
 		Objects.requireNonNull(attributes);
 		
