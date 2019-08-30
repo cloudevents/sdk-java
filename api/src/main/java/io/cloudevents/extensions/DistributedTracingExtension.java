@@ -84,7 +84,8 @@ public class DistributedTracingExtension {
     	public Format(DistributedTracingExtension extension) {
     		Objects.requireNonNull(extension);
     		
-    		memory = InMemoryFormat.of(IN_MEMORY_KEY, extension, Object.class);
+    		memory = InMemoryFormat.of(IN_MEMORY_KEY, extension, 
+    				DistributedTracingExtension.class);
     		
     		transport.put("traceparent", extension.getTraceparent());
     		transport.put("tracestate", extension.getTracestate());
@@ -117,7 +118,8 @@ public class DistributedTracingExtension {
 			dte.setTracestate(tracestate);
 			
 			InMemoryFormat inMemory = 
-				InMemoryFormat.of("distributedTracing", dte, Object.class);
+				InMemoryFormat.of("distributedTracing", dte, 
+						DistributedTracingExtension.class);
 			
 			return Optional.of(
 				ExtensionFormat.of(inMemory, 
