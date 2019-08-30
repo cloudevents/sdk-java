@@ -24,15 +24,15 @@ import java.util.Objects;
 
 import io.cloudevents.v02.ContextAttributes;
 
-import static io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl.HEADER_PREFIX;
+import static io.cloudevents.v02.http.HTTPAttributeMapper.HEADER_PREFIX;
 
 /**
  * 
  * @author fabiojose
  * @version 0.2
  */
-public final class BinaryFormatHeaderMapperImpl {
-	private BinaryFormatHeaderMapperImpl() {}
+public final class HTTPHeaderMapper {
+	private HTTPHeaderMapper() {}
 
 	public static Map<String, Object> map(Map<String, String> attributes, 
 			Map<String, String> extensions) {
