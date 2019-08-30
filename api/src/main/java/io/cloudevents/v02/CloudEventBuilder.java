@@ -37,7 +37,7 @@ import io.cloudevents.fun.EventBuilder;
  * CloudEvent instances builder 
  * 
  * @author fabiojose
- *
+ * @version 0.2
  */
 public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
 	private static Validator VALIDATOR;
