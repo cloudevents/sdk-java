@@ -24,7 +24,6 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.cloudevents.fun.BinaryFormatAttributeMapper;
 import io.cloudevents.v03.ContextAttributes;
 
 /**
@@ -32,12 +31,12 @@ import io.cloudevents.v03.ContextAttributes;
  * @author fabiojose
  *
  */
-public class BinaryFormatAttributeMapperImpl implements BinaryFormatAttributeMapper {
+public class BinaryFormatAttributeMapperImpl {
+	private BinaryFormatAttributeMapperImpl() {}
 
 	public static final String HEADER_PREFIX = "ce-";
 
-	@Override
-	public Map<String, String> map(final Map<String, Object> headers) {
+	public static Map<String, String> map(final Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
 		
 		headers.keySet()
