@@ -15,21 +15,26 @@
  */
 package io.cloudevents.format;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Represents a result of binary marshalling, to be used to wire serialization
+ * Represents a result of binary marshal, to be used by the wire transfer
  * 
  * @author fabiojose
- *
+ * @param <T> The payload type
+ * @param <K> The header key type
+ * @param <V> The header value type
  */
-public class Format<T> {
+public class Wire<T, K, V> {
 
 	private final T payload;
-	private final Map<String, Object> headers;
+	private final Map<K, V> headers;
 	
-	public Format(T payload, Map<String, Object> headers) {
+	public Wire(T payload, Map<K, V> headers) {
+		Objects.requireNonNull(headers);
 		this.payload = payload;
 		this.headers = headers;
 	}
@@ -44,7 +49,7 @@ public class Format<T> {
 	/**
 	 * The headers
 	 */
-	public Map<String, Object> getHeaders() {
-		return headers;
+	public Map<K, V> getHeaders() {
+		return Collections.unmodifiableMap(headers);
 	}
 }
