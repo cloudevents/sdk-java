@@ -30,12 +30,12 @@ import io.cloudevents.v03.ContextAttributes;
  * @author fabiojose
  * @version 0.2
  */
-public class HTTPExtensionMapper {
-	private HTTPExtensionMapper() {}
+public class ExtensionMapper {
+	private ExtensionMapper() {}
 	
 	private static final List<String> RESERVED_HEADERS = 
 			ContextAttributes.VALUES.stream()
-				.map(attribute -> HTTPAttributeMapper
+				.map(attribute -> AttributeMapper
 						.HEADER_PREFIX + attribute)
 				.collect(Collectors.toList());
 		static {

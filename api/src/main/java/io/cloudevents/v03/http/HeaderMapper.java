@@ -15,7 +15,7 @@
  */
 package io.cloudevents.v03.http;
 
-import static io.cloudevents.v03.http.HTTPAttributeMapper.HEADER_PREFIX;
+import static io.cloudevents.v03.http.AttributeMapper.HEADER_PREFIX;
 
 import java.util.Locale;
 import java.util.Map;
@@ -31,8 +31,8 @@ import io.cloudevents.v03.ContextAttributes;
  * @author fabiojose
  *
  */
-public class HTTPHeaderMapper {
-	private HTTPHeaderMapper() {}
+public class HeaderMapper {
+	private HeaderMapper() {}
 
 	public static Map<String, Object> map(Map<String, String> attributes,
 			Map<String, String> extensions) {
