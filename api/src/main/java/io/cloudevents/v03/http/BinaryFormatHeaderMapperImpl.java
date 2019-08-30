@@ -15,7 +15,7 @@
  */
 package io.cloudevents.v03.http;
 
-import static io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl.HEADER_PREFIX;
+import static io.cloudevents.v03.http.BinaryFormatAttributeMapperImpl.HEADER_PREFIX;
 
 import java.util.Locale;
 import java.util.Map;
