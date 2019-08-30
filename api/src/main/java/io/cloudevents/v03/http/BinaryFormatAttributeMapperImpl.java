@@ -34,7 +34,7 @@ import io.cloudevents.v03.ContextAttributes;
 public class BinaryFormatAttributeMapperImpl {
 	private BinaryFormatAttributeMapperImpl() {}
 
-	public static final String HEADER_PREFIX = "ce-";
+	static final String HEADER_PREFIX = "ce-";
 
 	public static Map<String, String> map(final Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
