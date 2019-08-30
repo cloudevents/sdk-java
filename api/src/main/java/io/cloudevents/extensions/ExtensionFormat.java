@@ -16,6 +16,7 @@
 package io.cloudevents.extensions;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,4 +84,18 @@ public interface ExtensionFormat {
 		};
 	}
 	
+	/**
+	 * Marshals a collection of {@link ExtensionFormat} to {@code Map<String, String>}
+	 * @param extensions
+	 * @return
+	 */
+	public static Map<String, String> marshal(Collection<ExtensionFormat>
+		extensions) {
+		
+		return extensions.stream()
+				.map(ExtensionFormat::transport)
+				.flatMap(t -> t.entrySet().stream())
+				.collect(Collectors.toMap(Entry::getKey,
+						Entry::getValue));
+	}
 }
