@@ -17,28 +17,25 @@ package io.cloudevents.v02.http;
 
 import static java.util.stream.Collectors.toMap;
 
-import java.util.Map;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.cloudevents.fun.BinaryFormatAttributeMapper;
 import io.cloudevents.v02.ContextAttributes;
 
 /**
  * 
  * @author fabiojose
- *
+ * @version 0.2
  */
-public class BinaryFormatAttributeMapperImpl implements 
-	BinaryFormatAttributeMapper {
+public class BinaryFormatAttributeMapperImpl {
 	
 	public static final String HEADER_PREFIX = "ce-";
-
-	@Override
-	public Map<String, String> map(final Map<String, Object> headers) {
+	
+	public static Map<String, String> map(final Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
 		
 		headers.keySet()

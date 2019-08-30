@@ -15,24 +15,22 @@
  */
 package io.cloudevents.v02.http;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.stream.Collectors;
 
-import io.cloudevents.fun.BinaryFormatExtensionMapper;
 import io.cloudevents.v02.ContextAttributes;
 
 /**
  * 
  * @author fabiojose
- *
+ * @version 0.2
  */
-public class BinaryFormatExtensionMapperImpl implements
-	BinaryFormatExtensionMapper {
+public class BinaryFormatExtensionMapperImpl {
 	
 	private static final List<String> RESERVED_HEADERS = 
 		ContextAttributes.VALUES.stream()
@@ -43,11 +41,10 @@ public class BinaryFormatExtensionMapperImpl implements
 		RESERVED_HEADERS.add("content-type");
 	};
 
-	@Override
-	public Map<String, String> map(Map<String, Object> headers) {
+	public static Map<String, String> map(Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
 		
-		// remove all reserved words and then remaining may be extensions
+		// remove all reserved words and the remaining may be extensions
 		return 
 		headers.entrySet()
 			.stream()
