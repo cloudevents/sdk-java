@@ -29,7 +29,7 @@ import static io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl.HEADER_PRE
 /**
  * 
  * @author fabiojose
- *
+ * @version 0.2
  */
 public final class BinaryFormatHeaderMapperImpl {
 	private BinaryFormatHeaderMapperImpl() {}
