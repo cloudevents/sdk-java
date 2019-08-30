@@ -109,11 +109,11 @@ public final class Json {
      * @param type The type of 'data'
      * @return A new instance of {@link DataUnmarshaller}
      */
-    public static <T, A extends Attributes> 
-    	DataUnmarshaller<String, T, A> umarshaller(Class<T> type) {
+    public static <T, A extends Attributes> DataUnmarshaller<String, T, A> 
+    umarshaller(Class<T> type) {
     	return new DataUnmarshaller<String, T, A>() {
 			@Override
-			public T unmarshal(String payload, A attributes) throws Exception {
+			public T unmarshal(String payload, A attributes) {
 				return Json.decodeValue(payload, type);
 			}
 		};
@@ -127,8 +127,7 @@ public final class Json {
     public static <T> DataMarshaller<String, T> marshaller() {
     	return new DataMarshaller<String, T>() {
 			@Override
-			public String marshal(T data, Map<String, Object> headers) 
-					throws Exception {
+			public String marshal(T data, Map<String, Object> headers) {
 				return Json.encode(data);
 			}
 		};
