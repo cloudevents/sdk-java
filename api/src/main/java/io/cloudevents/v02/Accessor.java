@@ -21,6 +21,7 @@ import java.util.Objects;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.fun.ExtensionFormatAccessor;
 
 /**
  * 
@@ -28,10 +29,16 @@ import io.cloudevents.extensions.ExtensionFormat;
  *
  */
 public final class Accessor {
+	private Accessor() {}
 
 	/**
 	 * To get access the set of {@link ExtensionFormat} inside the 
 	 * event.
+	 * 
+	 * <br>
+	 * <br>
+	 * This method follow the signature of 
+	 * {@link ExtensionFormatAccessor#extensionsOf(CloudEvent)}
 	 * 
 	 * @param cloudEvent
 	 * @throws IllegalArgumentException When argument is not an instance of {@link CloudEventImpl}
