@@ -35,7 +35,7 @@ import io.cloudevents.v02.Accessor;
 import io.cloudevents.v02.AttributesImpl;
 import io.cloudevents.v02.CloudEventBuilder;
 import io.cloudevents.v02.CloudEventImpl;
-import io.cloudevents.v02.http.BinaryFormatHeaderMapperImpl;
+import io.cloudevents.v02.http.HeaderMapper;
 
 /**
  * 
@@ -113,7 +113,7 @@ public final class BinaryMarshaller {
 		 * @param builder
 		 * @return
 		 */
-		EventStep<A, T, P> builder(WireBuilder<P> builder);
+		EventStep<A, T, P> builder(WireBuilder<P, String, Object> builder);
 	}
 	
 	public static interface EventStep<A extends Attributes, T, P> {
@@ -131,7 +131,7 @@ public final class BinaryMarshaller {
 		 * this method call.
 		 * @return
 		 */
-		Wire<P> marshal();
+		Wire<P, String, Object> marshal();
 	}
 	
 	private static final class Builder<A extends Attributes, T, P> implements 
@@ -149,7 +149,7 @@ public final class BinaryMarshaller {
 		private ExtensionMarshaller extensionMarshaller;
 		private BinaryFormatHeaderMapper headerMapper;
 		private DataMarshaller<P, T> dataMarshaller;
-		private WireBuilder<P> wireBuilder;
+		private WireBuilder<P, String, Object> wireBuilder;
 		private Supplier<CloudEvent<A, T>> eventSupplier;
 
 		@Override
@@ -183,7 +183,7 @@ public final class BinaryMarshaller {
 		}
 		
 		@Override
-		public EventStep<A, T, P> builder(WireBuilder<P> builder) {
+		public EventStep<A, T, P> builder(WireBuilder<P, String, Object> builder) {
 			this.wireBuilder = builder;
 			return this;
 		}
@@ -195,7 +195,7 @@ public final class BinaryMarshaller {
 		}
 
 		@Override
-		public Wire<P> marshal() {
+		public Wire<P, String, Object> marshal() {
 			CloudEvent<A, T> event = eventSupplier.get();
 			
 			Map<String, String> attributesMap = 
@@ -240,14 +240,14 @@ public final class BinaryMarshaller {
 					.withExtension(tracing)
 					.build();
 		
-		Wire<String> wire = 
+		Wire<String, String, Object> wire = 
 		BinaryMarshaller.<AttributesImpl, String, String>builder()
 			.map(AttributesImpl::marshal)
 			.map(Accessor::extensionsOf) 
 			.map(ExtensionFormat::marshal)
-			.map(BinaryFormatHeaderMapperImpl::map)
+			.map(HeaderMapper::map)
 			.map(Json.marshaller()::marshal)
-			.builder(Wire<String>::new)
+			.builder(Wire<String, String, Object>::new)
 			.withEvent(() -> ce)
 			.marshal();
 		
