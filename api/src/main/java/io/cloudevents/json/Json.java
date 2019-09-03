@@ -74,15 +74,20 @@ public final class Json {
      * @param str the JSON string.
      * @param clazz the class to map to.
      * @param <T> the generic type.
-     * @return an instance of T
+     * @return an instance of T or {@code null} when {@code str} is an empty string or {@code null}
      * @throws IllegalStateException when there is a parsing or invalid mapping.
      */
     protected static <T> T decodeValue(final String str, final Class<T> clazz) throws IllegalStateException {
-        try {
-            return MAPPER.readValue(str, clazz);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to decode: " + e.getMessage());
-        }
+    	
+    	if(null!= str && !"".equals(str.trim())) {
+	        try {
+	            return MAPPER.readValue(str.trim(), clazz);
+	        } catch (Exception e) {
+	            throw new IllegalStateException("Failed to decode: " + e.getMessage());
+	        }
+    	}
+    	
+    	return null;
     }
 
     /**
@@ -91,15 +96,18 @@ public final class Json {
      * @param str the JSON string.
      * @param type the type to map to.
      * @param <T> the generic type.
-     * @return an instance of T
+     * @return an instance of T or {@code null} when {@code str} is an empty string or {@code null}
      * @throws IllegalStateException when there is a parsing or invalid mapping.
      */
     public static <T> T decodeValue(final String str, final TypeReference<T> type) throws IllegalStateException {
-        try {
-            return MAPPER.readValue(str, type);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to decode: " + e.getMessage(), e);
-        }
+    	if(null!= str && !"".equals(str.trim())) {
+	        try {
+	            return MAPPER.readValue(str.trim(), type);
+	        } catch (Exception e) {
+	            throw new IllegalStateException("Failed to decode: " + e.getMessage(), e);
+	        }
+    	}
+    	return null;
     }
     
     /**
