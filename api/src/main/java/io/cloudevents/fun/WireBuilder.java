@@ -17,7 +17,7 @@ package io.cloudevents.fun;
 
 import java.util.Map;
 
-import io.cloudevents.format.Format;
+import io.cloudevents.format.Wire;
 
 /**
  * 
@@ -25,11 +25,11 @@ import io.cloudevents.format.Format;
  *
  */
 @FunctionalInterface
-public interface FormatBuilder<P> {
+public interface WireBuilder<P, K, V> {
 
 	/**
-	 * Builds a format to be used for the wire serialization
+	 * Builds a wire format
 	 */
-	Format<P> build(P payload, Map<String, Object> headers);
+	Wire<P, K, V> build(P payload, Map<K, V> headers);
 	
 }
