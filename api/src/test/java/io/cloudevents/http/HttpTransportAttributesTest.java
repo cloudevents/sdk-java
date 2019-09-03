@@ -22,9 +22,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import io.cloudevents.v02.http.BinaryFormatAttributeMapperImpl;
-import io.cloudevents.v02.http.BinaryFormatHeaderMapperImpl;
-
 public class HttpTransportAttributesTest {
 
     @Test
@@ -40,7 +37,7 @@ public class HttpTransportAttributesTest {
 		myHeaders.put("Content-Type", "application/json");
 
 		// act
-		Map<String, String> attributes = BinaryFormatAttributeMapperImpl.map(myHeaders);
+		Map<String, String> attributes = io.cloudevents.v02.http.AttributeMapper.map(myHeaders);
 
         // assert 
         assertEquals("0x11", attributes.get("id"));
@@ -65,7 +62,7 @@ public class HttpTransportAttributesTest {
 		attributes.put("contenttype", "application/json");
 		
 		// act
-		Map<String, Object> headers = BinaryFormatHeaderMapperImpl
+		Map<String, Object> headers = io.cloudevents.v02.http.HeaderMapper
 				.map(attributes, new HashMap<String, String>());
 		
 		// assert
@@ -93,7 +90,7 @@ public class HttpTransportAttributesTest {
 		myHeaders.put("ce-subject", "the subject");
 
 		// act
-		Map<String, String> attributes = io.cloudevents.v03.http.BinaryFormatAttributeMapperImpl.map(myHeaders);
+		Map<String, String> attributes = io.cloudevents.v03.http.AttributeMapper.map(myHeaders);
 
         // assert 
         assertEquals("0x11", attributes.get("id"));
