@@ -22,8 +22,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.cloudevents.fun.BinaryFormatAttributeMapper;
 import io.cloudevents.v02.ContextAttributes;
 
 /**
@@ -32,38 +34,47 @@ import io.cloudevents.v02.ContextAttributes;
  * @version 0.2
  */
 public class AttributeMapper {
+	private AttributeMapper() {}
 	
 	static final String HEADER_PREFIX = "ce-";
 	
+	/**
+	 * Following the signature of {@link BinaryFormatAttributeMapper#map(Map)}
+	 * @param headers Map of HTTP request
+	 * @return Map with spec attributes and values without parsing
+	 * @see ContextAttributes
+	 */
 	public static Map<String, String> map(final Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
 		
-		headers.keySet()
-			.stream()
-			.map(header -> header.toLowerCase(Locale.US))
-			.filter(header -> header.startsWith(HEADER_PREFIX))
-			.map(header -> header.substring(HEADER_PREFIX.length()));
-		
-		final AtomicReference<Entry<String, Object>> ct = 
+		final AtomicReference<Optional<Entry<String, Object>>> ct = 
 				new AtomicReference<>();
+		
+		ct.set(Optional.empty());
+		
 		Map<String, String> result = headers.entrySet()
 			.stream()
+			.filter(header -> null!= header.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.toLowerCase(Locale.US),	header.getValue()))
 			.peek(header -> {
 				if("content-type".equals(header.getKey())) {
-					ct.set(header);
+					ct.set(Optional.ofNullable(header));
 				}
 			})
 			.filter(header -> header.getKey().startsWith(HEADER_PREFIX))
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.substring(HEADER_PREFIX.length()), header.getValue()))
+			
 			.map(header -> new SimpleEntry<>(header.getKey(),
 					header.getValue().toString()))
+			
 			.collect(toMap(Entry::getKey, Entry::getValue));
 		
-		result.put(ContextAttributes.contenttype.name(),
-				ct.get().getValue().toString());
+		ct.get().ifPresent(contentType -> {
+			result.put(ContextAttributes.contenttype.name(),
+					contentType.getValue().toString());
+		});
 			
 		return result;
 	}
