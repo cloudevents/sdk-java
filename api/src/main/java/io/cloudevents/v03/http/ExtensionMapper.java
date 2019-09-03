@@ -23,6 +23,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import io.cloudevents.fun.BinaryFormatExtensionMapper;
 import io.cloudevents.v03.ContextAttributes;
 
 /**
@@ -42,6 +43,11 @@ public class ExtensionMapper {
 			RESERVED_HEADERS.add("content-type");
 		};
 
+	/**
+	 * Following the signature of {@link BinaryFormatExtensionMapper}
+	 * @param headers The HTTP headers
+	 * @return The potential extensions without parsing
+	 */
 	public static Map<String, String> map(Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
 		
@@ -49,6 +55,7 @@ public class ExtensionMapper {
 		return 
 		headers.entrySet()
 			.stream()
+			.filter(header -> null!= header.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.toLowerCase(Locale.US), header.getValue().toString()))
 			.filter(header -> {
