@@ -56,6 +56,8 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	@NotNull
 	private final Map<String, Object> extensions;
 	
+	private final Set<ExtensionFormat> extensionsFormats;
+	
 	CloudEventImpl(AttributesImpl attributes, T data,
 			Set<ExtensionFormat> extensions) {
 		this.attributes = attributes;
@@ -65,6 +67,15 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.map(ExtensionFormat::memory)
 				.collect(Collectors.toMap(InMemoryFormat::getKey,
 						InMemoryFormat::getValue));
+		
+		this.extensionsFormats = extensions;
+	}
+	
+	/**
+	 * Used by the {@link Accessor} to access the set of {@link ExtensionFormat}
+	 */
+	Set<ExtensionFormat> getExtensionsFormats() {
+		return extensionsFormats;
 	}
 
 	@JsonUnwrapped
