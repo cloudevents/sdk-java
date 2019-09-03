@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,6 +28,20 @@ public class WireTest {
 		expectedEx.expect(NullPointerException.class);
 		
 		new Wire<String, String, Object>("payload", null);
+	}
+	
+	@Test
+	public void throws_when_try_to_change_headers() {
+		// setup
+		expectedEx.expect(UnsupportedOperationException.class);
+		
+		Map<String, Object> headers = new HashMap<>();
+		headers.put("contenttype", "application/json");
+		
+		// act
+		Wire<String, String, Object> wire = new Wire<>("payload", headers);
+		
+		wire.getHeaders().put("my-header", "my-header-val");
 	}
 	
 	@Test
