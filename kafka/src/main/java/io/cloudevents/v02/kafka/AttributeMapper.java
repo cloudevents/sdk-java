@@ -26,6 +26,9 @@ import java.util.Objects;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serdes;
 
+import io.cloudevents.fun.BinaryFormatAttributeMapper;
+import io.cloudevents.v02.ContextAttributes;
+
 /**
  * 
  * @author fabiojose
@@ -42,10 +45,10 @@ public final class AttributeMapper {
 	private static final String NULL_ARG = null;
 	
 	/**
-	 * Maps the headers into the map of attributes
-	 * 
-	 * @param headers
-	 * @return
+	 * Following the signature of {@link BinaryFormatAttributeMapper#map(Map)}
+	 * @param headers Map of Kafka headers
+	 * @return Map with spec attributes and values without parsing
+	 * @see ContextAttributes
 	 */
 	public static Map<String, String> map(Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
