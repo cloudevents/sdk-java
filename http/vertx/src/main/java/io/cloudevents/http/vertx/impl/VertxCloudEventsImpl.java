@@ -16,13 +16,20 @@
 package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.extensions.DistributedTracingExtension;
+import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.format.BinaryMarshaller;
+import io.cloudevents.format.BinaryUnmarshaller;
 import io.cloudevents.format.Wire;
 import io.cloudevents.http.vertx.VertxCloudEvents;
 import io.cloudevents.json.Json;
+import io.cloudevents.v02.Accessor;
 import io.cloudevents.v02.AttributesImpl;
+import io.cloudevents.v02.CloudEventBuilder;
 import io.cloudevents.v02.CloudEventImpl;
-import io.cloudevents.v02.http.HTTPBinaryMarshaller;
-import io.cloudevents.v02.http.HTTPBinaryUnmarshaller;
+import io.cloudevents.v02.http.AttributeMapper;
+import io.cloudevents.v02.http.ExtensionMapper;
+import io.cloudevents.v02.http.HeaderMapper;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -59,9 +66,17 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
         if (headers.get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(BINARY_TYPE.toString())) {
         	request.bodyHandler((Buffer buff) -> {
         		CloudEvent<AttributesImpl, String> event = 
-        		HTTPBinaryUnmarshaller
-	        		.unmarshaller(Json.umarshaller(String.class)::unmarshal)
-	        		.withHeaders(() -> {
+        		  BinaryUnmarshaller.<AttributesImpl, String, String>builder()
+    				.map(AttributeMapper::map)
+    				.map(AttributesImpl::unmarshal)
+    				.map("application/json", 
+    						Json.umarshaller(String.class)::unmarshal)
+    				.next()
+    				.map(ExtensionMapper::map)
+    				.map(DistributedTracingExtension::unmarshall)
+    				.next()
+    				.builder(CloudEventBuilder.<String>builder()::build)
+    				.withHeaders(() -> {
 	        			final Map<String, Object> result = new HashMap<>();
 	        			
 	        			headers.iterator()
@@ -75,7 +90,7 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
 	        			return buff.toString();
 	        		})
 	        		.unmarshal();
-        		
+
         		resultHandler.handle(Future.succeededFuture(event));
             });
         	
@@ -105,10 +120,15 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
         if (binary) {
         	Wire<String, String, Object> wire =
-        	HTTPBinaryMarshaller.<String, String>
-        		marshaller(Json.marshaller())
-	        		.withEvent(() -> cloudEvent)
-	        		.marshal();
+        	  BinaryMarshaller.<AttributesImpl, String, String>builder()
+				.map(AttributesImpl::marshal)
+				.map(Accessor::extensionsOf) 
+				.map(ExtensionFormat::marshal)
+				.map(HeaderMapper::map)
+				.map(Json.marshaller())
+				.builder(Wire<String, String, Object>::new)
+				.withEvent(() -> cloudEvent)
+        		.marshal();
         	
             // setting the right content-length:
         	request.putHeader(HttpHeaders.CONTENT_LENGTH, createOptimized("0"));
