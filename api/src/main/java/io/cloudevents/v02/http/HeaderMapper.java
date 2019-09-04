@@ -64,7 +64,6 @@ public final class HeaderMapper {
 			extensions.entrySet()
 				.stream()
 				.filter(extension -> null!= extension.getValue())
-
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue))
 		);
 		
