@@ -15,16 +15,18 @@
  */
 package io.cloudevents.v02.http;
 
+import static io.cloudevents.v02.http.AttributeMapper.HEADER_PREFIX;
+
 import java.util.AbstractMap.SimpleEntry;
-import java.util.stream.Collectors;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import io.cloudevents.fun.BinaryFormatHeaderMapper;
 import io.cloudevents.v02.ContextAttributes;
-
-import static io.cloudevents.v02.http.AttributeMapper.HEADER_PREFIX;
 
 /**
  * 
@@ -33,7 +35,15 @@ import static io.cloudevents.v02.http.AttributeMapper.HEADER_PREFIX;
  */
 public final class HeaderMapper {
 	private HeaderMapper() {}
+	
+	private static final String HTTP_CONTENT_TYPE = "Content-Type";
 
+	/**
+	 * Following the signature of {@link BinaryFormatHeaderMapper}
+	 * @param attributes The map of attributes created by {@link AttributeMapper}
+	 * @param extensions The map of extensions created by {@link ExtensionMapper}
+	 * @return The map of HTTP Headers
+	 */
 	public static Map<String, Object> map(Map<String, String> attributes, 
 			Map<String, String> extensions) {
 		Objects.requireNonNull(attributes);
@@ -41,6 +51,7 @@ public final class HeaderMapper {
 		
 		Map<String, Object> result = attributes.entrySet()
 			.stream()
+			.filter(attribute -> null!= attribute.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.toLowerCase(Locale.US), header.getValue()))
 			.filter(header -> !header.getKey()
@@ -52,13 +63,15 @@ public final class HeaderMapper {
 		result.putAll(
 			extensions.entrySet()
 				.stream()
-				.map(header -> new SimpleEntry<>(HEADER_PREFIX+header.getKey(),
-						header.getValue()))
+				.filter(extension -> null!= extension.getValue())
+
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue))
 		);
 		
-		result.put("Content-Type", attributes
-				.get(ContextAttributes.contenttype.name()));
+		Optional.ofNullable(attributes.get(ContextAttributes.contenttype.name()))
+			.ifPresent((ct) -> {
+				result.put(HTTP_CONTENT_TYPE, ct);
+			});
 		
 		return result;
 	}
