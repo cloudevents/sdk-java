@@ -17,6 +17,7 @@ package io.cloudevents.v02.kafka;
 
 import static java.util.stream.Collectors.toMap;
 
+import java.util.Locale;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,6 +52,9 @@ public final class AttributeMapper {
 		
 		return headers.entrySet()
 			.stream()
+			.filter(header -> null!= header.getValue())
+			.map(header -> new SimpleEntry<>(header.getKey()
+					.toLowerCase(Locale.US), header.getValue()))
 			.map(header -> new SimpleEntry<>(header.getKey(),
 					(byte[])header.getValue()))
 			.map(header -> {
@@ -58,7 +62,8 @@ public final class AttributeMapper {
 				String key = header.getKey();
 				key = key.substring(HEADER_PREFIX.length());
 
-				String val = DESERIALIZER.deserialize(NULL_ARG, header.getValue());
+				String val = DESERIALIZER.deserialize(NULL_ARG,
+						header.getValue());
 				return new SimpleEntry<>(key, val);
 			})
 			.collect(toMap(Entry::getKey, Entry::getValue));
