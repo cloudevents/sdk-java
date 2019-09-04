@@ -125,5 +125,5 @@ public class HeaderMapperTest {
 		
 		//assert
 		assertTrue(actual.containsKey("comexampleextension1"));	
-}
+	}
 }
