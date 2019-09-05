@@ -121,4 +121,25 @@ public class HeaderMapperTest {
 		//assert
 		assertTrue(actual.containsKey("comexampleextension1"));	
 	}
+	
+	@Test
+	public void should_all_values_as_byte_array() {
+		// setup
+		Map<String, String> attributes = new HashMap<>();
+		attributes.put("type", "mytype");
+		attributes.put("specversion", "0.2");
+		
+		Map<String, String> extensions = new HashMap<>();
+		extensions.put("null-ext", "null-value");
+		extensions.put("comexampleextension1", "value");
+		
+		// act
+		Map<String, Object> actuals = HeaderMapper.map(attributes, extensions);
+		
+		// assert
+		actuals.values()
+			.forEach(actual -> {
+				assertTrue(actual instanceof byte[]);
+			});
+	}
 }
