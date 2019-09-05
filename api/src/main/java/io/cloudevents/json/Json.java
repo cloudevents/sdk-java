@@ -58,6 +58,22 @@ public final class Json {
         }
     }
     
+    /**
+     * Encode a POJO to JSON using the underlying Jackson mapper.
+     *
+     * @param obj a POJO
+     * @return a byte array containing the JSON representation of the given POJO.
+     * @throws IllegalStateException if a property cannot be encoded.
+     */
+    public static byte[] binaryEncode(final Object obj) throws IllegalStateException {
+        try {
+            return MAPPER.writeValueAsBytes(obj);
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
+        }
+    }
+    
     public static <T> T fromInputStream(final InputStream inputStream,
     		Class<T> clazz) {
     	try {
@@ -128,7 +144,7 @@ public final class Json {
     }
     
     /**
-     * Creates a JSON Data Marshaller
+     * Creates a JSON Data Marshaller that produces a {@link String}
      * @param <T> The 'data' type
      * @return A new instance of {@link DataMarshaller}
      */
@@ -139,6 +155,18 @@ public final class Json {
 				return Json.encode(data);
 			}
 		};
+    }
+    
+    /**
+     * Marshalls the 'data' value as JSON, producing a byte array
+     * @param <T> The 'data' type
+     * @param data The 'data' value
+     * @param headers The headers
+     * @return A byte array with 'data' value encoded JSON
+     */
+    public static <T> byte[] binaryMarshal(T data,
+    			Map<String, Object> headers) {
+    	return Json.binaryEncode(data);
     }
 
     private Json() {
