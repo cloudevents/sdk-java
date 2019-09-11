@@ -25,7 +25,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.fun.AttributeMarshaller;
-import io.cloudevents.fun.BinaryFormatHeaderMapper;
+import io.cloudevents.fun.FormatHeaderMapper;
 import io.cloudevents.fun.DataMarshaller;
 import io.cloudevents.fun.ExtensionFormatAccessor;
 import io.cloudevents.fun.ExtensionMarshaller;
@@ -95,7 +95,7 @@ public final class BinaryMarshaller {
 		 * @param mapper
 		 * @return
 		 */
-		PayloadStep<A, T, P> map(BinaryFormatHeaderMapper mapper);
+		PayloadStep<A, T, P> map(FormatHeaderMapper mapper);
 	}
 	
 	public static interface PayloadStep<A extends Attributes, T, P> {
@@ -116,6 +116,14 @@ public final class BinaryMarshaller {
 		EventStep<A, T, P> builder(WireBuilder<P, String, Object> builder);
 	}
 	
+	/**
+	 * 
+	 * @author fabiojose
+	 *
+	 * @param <A> The attributes type
+	 * @param <T> The 'data' type
+	 * @param <P> The payload type
+	 */ 
 	public static interface EventStep<A extends Attributes, T, P> {
 		/**
 		 * Takes the {@link CloudEvent} instance to marshal
@@ -147,7 +155,7 @@ public final class BinaryMarshaller {
 		private AttributeMarshaller<A> attributeMarshaller;
 		private ExtensionFormatAccessor<A, T> extensionsAccessor;
 		private ExtensionMarshaller extensionMarshaller;
-		private BinaryFormatHeaderMapper headerMapper;
+		private FormatHeaderMapper headerMapper;
 		private DataMarshaller<P, T> dataMarshaller;
 		private WireBuilder<P, String, Object> wireBuilder;
 		private Supplier<CloudEvent<A, T>> eventSupplier;
@@ -171,7 +179,7 @@ public final class BinaryMarshaller {
 		}
 		
 		@Override
-		public PayloadStep<A, T, P> map(BinaryFormatHeaderMapper mapper) {
+		public PayloadStep<A, T, P> map(FormatHeaderMapper mapper) {
 			this.headerMapper = mapper;
 			return this;
 		}	
