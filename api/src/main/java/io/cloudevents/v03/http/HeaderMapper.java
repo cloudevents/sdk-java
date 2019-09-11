@@ -25,7 +25,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import io.cloudevents.fun.BinaryFormatHeaderMapper;
+import io.cloudevents.fun.FormatHeaderMapper;
 import io.cloudevents.v03.ContextAttributes;
 
 /**
@@ -39,7 +39,7 @@ public class HeaderMapper {
 	private static final String HTTP_CONTENT_TYPE = "Content-Type";
 
 	/**
-	 * Following the signature of {@link BinaryFormatHeaderMapper}
+	 * Following the signature of {@link FormatHeaderMapper}
 	 * @param attributes The map of attributes created by {@link AttributeMapper}
 	 * @param extensions The map of extensions created by {@link ExtensionMapper}
 	 * @return The map of HTTP Headers
