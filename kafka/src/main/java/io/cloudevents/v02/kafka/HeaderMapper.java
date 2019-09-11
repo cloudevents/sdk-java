@@ -28,7 +28,7 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.Serializer;
 
 import io.cloudevents.extensions.ExtensionFormat;
-import io.cloudevents.fun.BinaryFormatHeaderMapper;
+import io.cloudevents.fun.FormatHeaderMapper;
 import io.cloudevents.v02.AttributesImpl;
 
 /**
@@ -43,7 +43,7 @@ public class HeaderMapper {
 		Serdes.String().serializer();
 
 	/**
-	 * Following the signature of {@link BinaryFormatHeaderMapper}
+	 * Following the signature of {@link FormatHeaderMapper}
 	 * @param attributes The map of attributes created by 
 	 * {@link AttributesImpl#marshal(AttributesImpl)}
 	 * @param extensions The map of extensions created by 
