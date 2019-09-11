@@ -17,4 +17,8 @@ public class Much {
 		this.wow = wow;
 	}
 
+	@Override
+	public String toString() {
+		return "" + wow + "";
+	}
 }
