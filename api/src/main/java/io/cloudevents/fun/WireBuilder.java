@@ -29,6 +29,9 @@ public interface WireBuilder<P, K, V> {
 
 	/**
 	 * Builds a wire format
+	 * @param payload
+	 * @param headers
+	 * @return
 	 */
 	Wire<P, K, V> build(P payload, Map<K, V> headers);
 	
