@@ -26,9 +26,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.extensions.InMemoryFormat;
+import io.cloudevents.json.types.Much;
 
 /**
  * 
@@ -288,5 +290,32 @@ public class CloudEventBuilderTest {
 		
 		assertNotNull(actual);
 		assertTrue(actual instanceof String);
+	}
+	
+	@Test
+	public void should_builder_change_data_and_id() {
+		// setup
+		Much data = new Much();
+		data.setWow("amzing");
+		
+		String expected = "amazing";
+		
+		
+		CloudEventImpl<Much> base = 
+			CloudEventBuilder.<Much>builder()
+				.withId("id")
+				.withSource(URI.create("/source"))
+				.withType("type")
+				.withData(data)
+				.build();
+		
+		// act
+		CloudEvent<AttributesImpl, String> actual =
+			CloudEventBuilder.<Much>builder().build(base, "0x010", expected);
+		
+		// assert
+		assertTrue(actual.getData().isPresent());
+		assertEquals(expected, actual.getData().get());
+		assertEquals("0x010", actual.getAttributes().getId());
 	}
 }
