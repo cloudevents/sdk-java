@@ -51,7 +51,7 @@ import io.cloudevents.format.Wire;
  *
  * @param <K> The key type
  * @param <A> The attributes type
- * @param <T> The 'data' type
+ * @param <T> The CloudEvent 'data' type
  */
 public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements 
 	Producer<K, CloudEvent<A, T>> {
