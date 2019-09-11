@@ -23,7 +23,7 @@ import java.util.Map;
  *
  */
 @FunctionalInterface
-public interface BinaryFormatHeaderMapper {
+public interface FormatHeaderMapper {
 
 	/**
 	 * Maps the 'attributes' and 'extensions' of CloudEvent envelop to 'headers' of binary format
