@@ -21,6 +21,7 @@ import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import io.cloudevents.Builder;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.fun.EventBuilder;
@@ -39,7 +41,8 @@ import io.cloudevents.fun.EventBuilder;
  * @author fabiojose
  * @version 0.2
  */
-public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
+public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl>,
+	Builder<AttributesImpl, T> {
 	private static Validator VALIDATOR;
 	
 	private static final String SPEC_VERSION = "0.2";
@@ -118,11 +121,12 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
 	}
 	
 	/**
-	 * 
+	 * {@inheritDoc}
 	 * @return An new {@link CloudEventImpl} immutable instance
 	 * @throws IllegalStateException When there are specification constraints
 	 * violations
 	 */
+	@Override
 	public CloudEventImpl<T> build() {
 		AttributesImpl attributes = new AttributesImpl(type, SPEC_VERSION,
 				source, id, time, schemaurl, contenttype);
@@ -187,5 +191,42 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
 	public CloudEventBuilder<T> withExtension(ExtensionFormat extension) {
 		this.extensions.add(extension);
 		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <TT> CloudEvent<AttributesImpl, TT> 
+		build(CloudEvent<AttributesImpl, T> base, String id, TT newData) {
+		Objects.requireNonNull(base);
+		
+		AttributesImpl attributes = base.getAttributes();
+		
+		CloudEventBuilder<TT> builder = new CloudEventBuilder<TT>()
+				.withId(id)
+				.withSource(attributes.getSource())
+				.withType(attributes.getType());
+		
+		attributes.getTime().ifPresent((time) -> {
+			builder.withTime(time);
+		});
+		
+		attributes.getSchemaurl().ifPresent((schema) -> {
+			builder.withSchemaurl(schema);
+		});
+		
+		attributes.getContenttype().ifPresent(contenttype -> {
+			builder.withContenttype(contenttype);
+		});
+		
+		Collection<ExtensionFormat> extensions = Accessor.extensionsOf(base);
+		
+		extensions.stream()
+			.forEach(extension -> {
+				builder.withExtension(extension);
+			});
+		
+		return builder.withData(newData).build();
 	}
 }
