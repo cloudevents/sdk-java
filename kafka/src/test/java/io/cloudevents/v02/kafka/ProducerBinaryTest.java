@@ -69,10 +69,10 @@ import io.debezium.util.Testing;
  * @author fabiojose
  *
  */
-public class BinaryKafkaProducerTest {
+public class ProducerBinaryTest {
 	
 	private static final Logger log = 
-		LoggerFactory.getLogger(BinaryKafkaProducerTest.class);
+		LoggerFactory.getLogger(ProducerBinaryTest.class);
 	
 	private static final Deserializer<String> DESERIALIZER = 
 		Serdes.String().deserializer();
@@ -112,7 +112,7 @@ public class BinaryKafkaProducerTest {
 	
 	@Test
 	@SkipLongRunning
-	public void should_be_ok_with_all_in_place() throws Exception {
+	public void should_be_ok_with_all_required_attributes() throws Exception {
 		// setup
 		String dataJson = "{\"wow\":\"nice!\"}";
 		final Much data = new Much();
@@ -123,7 +123,6 @@ public class BinaryKafkaProducerTest {
 				.withId("x10")
 				.withSource(URI.create("/source"))
 				.withType("event-type")
-				.withSchemaurl(URI.create("/schema"))
 				.withContenttype("application/json")
 				.withData(data)
 				.build();
@@ -206,12 +205,6 @@ public class BinaryKafkaProducerTest {
 			assertEquals("event-type", DESERIALIZER
 					.deserialize(null, type.value()));
 			
-			Header schemaurl = 
-					actual.headers().lastHeader("ce_schemaurl");
-			assertNotNull(source);
-			assertEquals("/schema", DESERIALIZER
-					.deserialize(null, schemaurl.value()));
-			
 			byte[] actualData = actual.value();
 			assertNotNull(actualData);
 			assertEquals(dataJson, DESERIALIZER
@@ -220,7 +213,7 @@ public class BinaryKafkaProducerTest {
 	}
 	
 	@Test
-	public void should_be_ok_with_null_data() throws Exception {
+	public void should_be_ok_with_no_data() throws Exception {
 		// setup
 		final Much data = new Much();
 		data.setWow("nice!");
