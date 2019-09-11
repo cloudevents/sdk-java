@@ -105,6 +105,17 @@ public final class Json {
     	
     	return null;
     }
+    
+    protected static <T> T binaryDecodeValue(byte[] payload, final Class<T> clazz) {
+    	if(null!= payload) {
+    		try {
+	            return MAPPER.readValue(payload, clazz);
+	        } catch (Exception e) {
+	            throw new IllegalStateException("Failed to decode: " + e.getMessage());
+	        }
+    	}
+    	return null;
+    }
 
     /**
      * Decode a given JSON string to a POJO of the given type.
@@ -139,6 +150,25 @@ public final class Json {
 			@Override
 			public T unmarshal(String payload, A attributes) {
 				return Json.decodeValue(payload, type);
+			}
+		};
+    }
+    
+    /**
+     * Unmarshals a byte array into T type
+     * @param <T> The 'data' type
+     * @param <A> The attributes type
+     * @param payload The byte array
+     * @param attribues
+     * @return The data objects
+     */
+    public static <T, A extends Attributes> DataUnmarshaller<byte[], T, A> 
+    		binaryUmarshaller(Class<T> type) {
+    	
+    	return new DataUnmarshaller<byte[], T, A>() {
+			@Override
+			public T unmarshal(byte[] payload, A attributes) {
+				return Json.binaryDecodeValue(payload, type);
 			}
 		};
     }
