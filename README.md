@@ -29,8 +29,8 @@ Application developers can now create strongly-typed CloudEvents, such as:
 
 ```java
 import io.cloudevents.v02.CloudEventBuilder;
-import io.cloudevents.v02.CloudEvent;
-import io.cloudevents.v02.ExtensionFormat;
+import io.cloudevents.v02.CloudEventImpl;
+import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.json.Json;
 import io.cloudevents.extensions.DistributedTracingExtension;
 
@@ -45,10 +45,10 @@ final DistributedTracingExtension dt = new DistributedTracingExtension();
 dt.setTraceparent("00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01");
 dt.setTracestate("rojo=00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01");
 
-final ExtensionFormat tracing = new DistributedTracingExtension.InMemory(dt);
+final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
 
 // passing in the given attributes
-final CloudEvent<MyCustomEvent> cloudEvent = new CloudEventBuilder<MyCustomEvent>()
+final CloudEventImpl<MyCustomEvent> cloudEvent = new CloudEventBuilder<MyCustomEvent>()
     .withType(eventType)
     .withId(eventId)
     .withSource(src)
