@@ -78,6 +78,8 @@ public class DistributedTracingExtension {
     public static class Format implements ExtensionFormat {
     	
     	public static final String IN_MEMORY_KEY = "distributedTracing";
+    	public static final String TRACE_PARENT_KEY = "traceparent";
+    	public static final String TRACE_STATE_KEY = "tracestate";
 
     	private final InMemoryFormat memory;
     	private final Map<String, String> transport = new HashMap<>();
@@ -87,8 +89,8 @@ public class DistributedTracingExtension {
     		memory = InMemoryFormat.of(IN_MEMORY_KEY, extension, 
     				DistributedTracingExtension.class);
     		
-    		transport.put("traceparent", extension.getTraceparent());
-    		transport.put("tracestate", extension.getTracestate());
+    		transport.put(TRACE_PARENT_KEY, extension.getTraceparent());
+    		transport.put(TRACE_STATE_KEY, extension.getTracestate());
     	}
     	
 		@Override
@@ -109,8 +111,8 @@ public class DistributedTracingExtension {
      */
     public static Optional<ExtensionFormat> unmarshall(
     		Map<String, String> exts) {
-    	String traceparent = exts.get("traceparent");
-		String tracestate  = exts.get("tracestate");
+    	String traceparent = exts.get(Format.TRACE_PARENT_KEY);
+		String tracestate  = exts.get(Format.TRACE_STATE_KEY);
 		
 		if(null!= traceparent && null!= tracestate) {
 			DistributedTracingExtension dte = new DistributedTracingExtension();
