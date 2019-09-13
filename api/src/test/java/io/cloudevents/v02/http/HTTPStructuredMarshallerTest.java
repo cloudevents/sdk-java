@@ -32,6 +32,7 @@ import io.cloudevents.format.StructuredMarshaller;
 import io.cloudevents.format.Wire;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
+import io.cloudevents.v02.Accessor;
 import io.cloudevents.v02.AttributesImpl;
 import io.cloudevents.v02.CloudEventBuilder;
 import io.cloudevents.v02.CloudEventImpl;
@@ -49,7 +50,7 @@ public class HTTPStructuredMarshallerTest {
 	@Test
 	public void should_marshal_all_as_json() {
 		// setup
-		String expected = "{\"data\":{\"wow\":\"yes!\"},\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"application/json\",\"mediaType\":\"application/json\"}";
+		String expected = "{\"data\":{\"wow\":\"yes!\"},\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"application/json\"}";
 		
 		Much ceData = new Much();
 		ceData.setWow("yes!");
@@ -81,7 +82,7 @@ public class HTTPStructuredMarshallerTest {
 	@Test
 	public void should_marshal_data_as_text_and_evelope_as_json() {
 		// setup
-		String expected = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"text/plain\",\"mediaType\":\"text/plain\"}";
+		String expected = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"text/plain\"}";
 		String ceData = "yes!";
 
 		CloudEventImpl<String> ce = 
@@ -163,7 +164,9 @@ public class HTTPStructuredMarshallerTest {
 				.map((event) -> {
 					return Json.marshaller().marshal(event, NO_HEADERS);
 				})
-				.skip()
+				.map(Accessor::extensionsOf)
+				.map(ExtensionFormat::marshal)
+				.map(HeaderMapper::map)
 				.withEvent(() -> ce)
 				.marshal();
 		
