@@ -23,7 +23,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import io.cloudevents.fun.BinaryFormatExtensionMapper;
+import io.cloudevents.fun.FormatExtensionMapper;
 import io.cloudevents.v03.ContextAttributes;
 
 /**
@@ -44,7 +44,7 @@ public class ExtensionMapper {
 		};
 
 	/**
-	 * Following the signature of {@link BinaryFormatExtensionMapper}
+	 * Following the signature of {@link FormatExtensionMapper}
 	 * @param headers The HTTP headers
 	 * @return The potential extensions without parsing
 	 */
