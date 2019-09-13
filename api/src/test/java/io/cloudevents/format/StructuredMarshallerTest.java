@@ -21,7 +21,6 @@ import org.junit.rules.ExpectedException;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.format.StructuredMarshaller.Wrapper;
-import io.cloudevents.v02.Accessor;
 
 /**
  * 
@@ -163,5 +162,46 @@ public class StructuredMarshallerTest {
 			
 			return null;
 		});
+	}
+	
+	@Test
+	public void should_throw_on_null_header_mapper() {
+		// setup
+		expectedEx.expect(NullPointerException.class);
+		
+		StructuredMarshaller.<Attributes, Wrapper, String>builder()
+		.mime("Content-Type", "application/cloudevents+json")
+		.map((ce) -> {
+			
+			return null;
+		})
+		.map((event) -> {
+			
+			return null;
+		})
+		.map((extensions) -> {
+			
+			return null;
+		})
+		.map(null);
+	}
+	
+	@Test
+	public void should_ok_on_header_mapper() {
+		StructuredMarshaller.<Attributes, Wrapper, String>builder()
+		.mime("Content-Type", "application/cloudevents+json")
+		.map((ce) -> {
+			
+			return null;
+		})
+		.map((event) -> {
+			
+			return null;
+		})
+		.map((extensions) -> {
+			
+			return null;
+		})
+		.map((attributes, extensions) -> null);
 	}
 }
