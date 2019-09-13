@@ -17,6 +17,8 @@ package io.cloudevents;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * The marker interface for CloudEvents attributes
  *  
@@ -29,6 +31,7 @@ public interface Attributes {
 	 * A common way to get the media type of CloudEvents 'data';
 	 * @return If has a value, it MUST follows the <a href="https://tools.ietf.org/html/rfc2046">RFC2046</a>
 	 */
+	@JsonIgnore
 	Optional<String> getMediaType();
 	
 }
