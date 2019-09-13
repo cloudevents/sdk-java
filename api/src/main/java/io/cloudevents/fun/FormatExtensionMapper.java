@@ -23,7 +23,7 @@ import java.util.Map;
  *
  */
 @FunctionalInterface
-public interface BinaryFormatExtensionMapper {
+public interface FormatExtensionMapper {
 
 	/**
 	 * Maps the 'headers' of binary format into extensions
