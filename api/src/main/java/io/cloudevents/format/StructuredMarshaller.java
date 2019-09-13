@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import io.cloudevents.Attributes;
@@ -40,6 +41,7 @@ import io.cloudevents.v02.CloudEventImpl;
  *
  */
 public class StructuredMarshaller {
+	StructuredMarshaller() {}
 
 	/*
 	 * map("application/json", Json::marshaller()) // Data marshaller NOPE
@@ -69,10 +71,10 @@ public class StructuredMarshaller {
 		 * @param headerName Example {@code Content-Type} for HTTP
 		 * @param mediaType Example: {@code application/cloudevents+json}
 		 */
-		EnvelopMarshallerStep<A, T, P> mime(String headerName, String mediaType);
+		EnvelopeMarshallerStep<A, T, P> mime(String headerName, String mediaType);
 	}
 	
-	public static interface EnvelopMarshallerStep<A extends Attributes, T, P> {
+	public static interface EnvelopeMarshallerStep<A extends Attributes, T, P> {
 		/**
 		 * Sets the marshaller for the CloudEvent
 		 * @param marshaller
@@ -114,19 +116,22 @@ public class StructuredMarshaller {
 
 	private static final class Builder<A extends Attributes, T, P> implements
 		MediaTypeStep<A, T, P>,
-		EnvelopMarshallerStep<A, T, P>,
+		EnvelopeMarshallerStep<A, T, P>,
 		ExtensionAccessorStep<A, T, P>,
 		ExtensionMarshallerStep<A, T, P>,
 		HeaderMapperStep<A, T, P>,
 		EventStep<A, T, P>,
 		MarshalStep<P>{
 		
+		private static final Map<String, String> NO_ATTRS = 
+				new HashMap<>();
+		
 		private String headerName;
 		private String mediaType;
 		
 		private EnvelopeMarshaller<A, T, P> marshaller;
 		
-		private ExtensionFormatAccessor<A, T> accessor;
+		private ExtensionFormatAccessor<A, T> extensionAccessor;
 		
 		private ExtensionMarshaller extensionMarshaller;
 		
@@ -135,7 +140,7 @@ public class StructuredMarshaller {
 		private Supplier<CloudEvent<A, T>> event;
 		
 		@Override
-		public EnvelopMarshallerStep<A, T, P> mime(String headerName, String mediaType) {
+		public EnvelopeMarshallerStep<A, T, P> mime(String headerName, String mediaType) {
 			Objects.requireNonNull(headerName);
 			Objects.requireNonNull(mediaType);
 			
@@ -161,7 +166,7 @@ public class StructuredMarshaller {
 		public ExtensionMarshallerStep<A, T, P> map(ExtensionFormatAccessor<A, T> accessor) {
 			Objects.requireNonNull(accessor);
 			
-			this.accessor = accessor;
+			this.extensionAccessor = accessor;
 			return this;
 		}
 		
@@ -195,7 +200,13 @@ public class StructuredMarshaller {
 			
 			P payload = marshaller.marshal(ce);
 			
-			Map<String, Object> headers = new HashMap<>();
+			Map<String, Object> headers =
+			Optional.ofNullable(extensionAccessor)
+				.map(accessor -> accessor.extensionsOf(ce))
+				.map(extensions -> extensionMarshaller.marshal(extensions))
+				.map(extensions -> headerMapper.map(NO_ATTRS, extensions))
+				.orElse(new HashMap<>());
+			
 			headers.put(headerName, mediaType);
 			
 			return new Wire<>(payload, headers);
@@ -244,7 +255,6 @@ public class StructuredMarshaller {
 			  builder()
 				.mime("Content-Type", "application/cloudevents+json")
 				.map(event -> {
-					
 					return Json.marshaller().marshal(event, null);
 				})
 				.skip()
