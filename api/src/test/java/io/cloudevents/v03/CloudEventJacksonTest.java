@@ -61,7 +61,6 @@ public class CloudEventJacksonTest {
 		
 		// act
 		String json = Json.encode(ce);
-		System.out.println(json);
 		
 		// assert
 		assertTrue(json.contains("x10"));
