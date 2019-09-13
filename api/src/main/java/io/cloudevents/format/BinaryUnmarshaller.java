@@ -32,7 +32,7 @@ import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.fun.AttributeUnmarshaller;
 import io.cloudevents.fun.BinaryFormatAttributeMapper;
-import io.cloudevents.fun.BinaryFormatExtensionMapper;
+import io.cloudevents.fun.FormatExtensionMapper;
 import io.cloudevents.fun.DataUnmarshaller;
 import io.cloudevents.fun.EventBuilder;
 import io.cloudevents.fun.ExtensionUmarshaller;
@@ -97,7 +97,7 @@ public final class BinaryUnmarshaller {
 		 * @param mapper
 		 * @return
 		 */
-		ExtensionsStep<A, T, P> map(BinaryFormatExtensionMapper mapper);
+		ExtensionsStep<A, T, P> map(FormatExtensionMapper mapper);
 	}
 	
 	public interface ExtensionsStepBegin<A extends Attributes, T, P> {
@@ -153,10 +153,10 @@ public final class BinaryUnmarshaller {
 		 * @param payload
 		 * @return
 		 */
-		Unmarshaller<A, T> withPayload(Supplier<P> payload);
+		UnmarshalStep<A, T> withPayload(Supplier<P> payload);
 	}
 	
-	public static interface Unmarshaller<A extends Attributes, T> {
+	public static interface UnmarshalStep<A extends Attributes, T> {
 		/**
 		 * Builds an instance of {@link CloudEvent}, doing all the computation at
 		 * this method call.
@@ -174,13 +174,13 @@ public final class BinaryUnmarshaller {
 		BuilderStep<A, T, P>,
 		HeadersStep<A, T, P>,
 		PayloadStep<A, T, P>,
-		Unmarshaller<A, T>{
+		UnmarshalStep<A, T>{
 		
 		private BinaryFormatAttributeMapper attributeMapper;
 		private AttributeUnmarshaller<A> attributeUnmarshaller;
 		private Map<String, DataUnmarshaller<P, T, A>> dataUnmarshallers = 
 				new HashMap<>();
-		private BinaryFormatExtensionMapper extensionMapper;
+		private FormatExtensionMapper extensionMapper;
 		private Set<ExtensionUmarshaller> extensionUnmarshallers = 
 				new HashSet<>();
 		private EventBuilder<T, A> eventBuilder;
@@ -210,7 +210,7 @@ public final class BinaryUnmarshaller {
 		}
 
 		@Override
-		public ExtensionsStep<A, T, P> map(BinaryFormatExtensionMapper mapper) {
+		public ExtensionsStep<A, T, P> map(FormatExtensionMapper mapper) {
 			this.extensionMapper = mapper;
 			return this;
 		}
@@ -235,7 +235,7 @@ public final class BinaryUnmarshaller {
 		}
 
 		@Override
-		public Unmarshaller<A, T> withPayload(Supplier<P> payload) {
+		public UnmarshalStep<A, T> withPayload(Supplier<P> payload) {
 			this.payloadSupplier = payload;
 			return this;
 		}
