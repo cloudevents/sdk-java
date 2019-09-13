@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serdes;
 
-import io.cloudevents.fun.BinaryFormatExtensionMapper;
+import io.cloudevents.fun.FormatExtensionMapper;
 import io.cloudevents.v02.ContextAttributes;
 
 /**
@@ -52,7 +52,7 @@ public class ExtensionMapper {
 	private static final String NULL_ARG = null;
 
 	/**
-	 * Following the signature of {@link BinaryFormatExtensionMapper}
+	 * Following the signature of {@link FormatExtensionMapper}
 	 * @param headers The Kafka headers
 	 * @return The potential extensions without parsing
 	 */
