@@ -39,18 +39,7 @@ import io.cloudevents.fun.FormatExtensionMapper;
  *
  */
 public class StructuredUnmarshaller {
-
-	/*
-	 * .map("application/json", Json.umarshaller(Dummy.class)::unmarshal)// data unmarshaller
-	 * .map("application/avro", Avro::unmarshal)// data unmarshaller
-	 * .next()
-	 * .map(DistributedTracingExtension::unmarshall)
-	 * .next()
-	 * .map(Json::unmarshaller) // CloudEvent unmarshaller
-	 * .withHeaders(() -> myHeaders)
-	 * .withPayload(() -> myPayload)
-	 * .unmarshal();
-	 */
+	StructuredUnmarshaller() {}
 	
 	public static <A extends Attributes, T, P> DataUnmarshallerStep<A, T, P>
 			builder() {
@@ -171,23 +160,10 @@ public class StructuredUnmarshaller {
 			Map<String, Object> headers = headersSupplier.get();
 			P payload = payloadSupplier.get();
 			
-			// Process extensions in the header
-			Map<String, String> extensionsMap = 
-			Optional.ofNullable(extensionMapper)
-				.map(mapper -> mapper.map(headers))
-				.orElse(new HashMap<>());
+			//TODO Process extensions in the header
 			
-			/* TODO How to inject this list into result
-			List<ExtensionFormat> extensions = 
-				Optional.ofNullable(extensionUnmarshallers)
-					.map(uns -> 
-						uns.stream()
-							.map(un -> un.unmarshal(extensionsMap))
-							.filter(Optional::isPresent)
-							.map(Optional::get)
-							.collect(Collectors.toList()))
-					.orElse(new ArrayList<>());
-			*/
+			// TODO How to inject this list into result
+
 			// TODO process the extensions that are in-memory
 			
 			CloudEvent<A, T> result = 

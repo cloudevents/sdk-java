@@ -22,6 +22,8 @@ import java.util.function.Supplier;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.format.builder.EventStep;
+import io.cloudevents.format.builder.MarshalStep;
 import io.cloudevents.fun.AttributeMarshaller;
 import io.cloudevents.fun.DataMarshaller;
 import io.cloudevents.fun.ExtensionFormatAccessor;
@@ -108,32 +110,6 @@ public final class BinaryMarshaller {
 		EventStep<A, T, P> builder(WireBuilder<P, String, Object> builder);
 	}
 	
-	/**
-	 * 
-	 * @author fabiojose
-	 *
-	 * @param <A> The attributes type
-	 * @param <T> The 'data' type
-	 * @param <P> The payload type
-	 */ 
-	public static interface EventStep<A extends Attributes, T, P> {
-		/**
-		 * Takes the {@link CloudEvent} instance to marshal
-		 * @param event
-		 * @return
-		 */
-		Marshaller<P> withEvent(Supplier<CloudEvent<A, T>> event);
-	}
-	
-	public static interface Marshaller<P> {
-		/**
-		 * Builds an instance of {@link Wire}, doing all the computation at
-		 * this method call.
-		 * @return
-		 */
-		Wire<P, String, Object> marshal();
-	}
-	
 	private static final class Builder<A extends Attributes, T, P> implements 
 		AttributeMarshalStep<A, T, P>,
 		ExtensionsAccessorStep<A, T, P>,
@@ -142,7 +118,7 @@ public final class BinaryMarshaller {
 		HeaderMapStep<A, T, P>,
 		BuilderStep<A, T, P>,
 		EventStep<A, T, P>,
-		Marshaller<P> {
+		MarshalStep<P> {
 		
 		private AttributeMarshaller<A> attributeMarshaller;
 		private ExtensionFormatAccessor<A, T> extensionsAccessor;
@@ -189,7 +165,7 @@ public final class BinaryMarshaller {
 		}
 
 		@Override
-		public Marshaller<P> withEvent(Supplier<CloudEvent<A, T>> event) {
+		public MarshalStep<P> withEvent(Supplier<CloudEvent<A, T>> event) {
 			this.eventSupplier = event;
 			return this;
 		}

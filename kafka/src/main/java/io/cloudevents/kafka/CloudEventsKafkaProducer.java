@@ -42,7 +42,7 @@ import org.apache.kafka.common.header.internals.RecordHeader;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.BinaryMarshaller.EventStep;
+import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.format.Wire;
 
 /**

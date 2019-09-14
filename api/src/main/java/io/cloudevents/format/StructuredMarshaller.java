@@ -23,6 +23,8 @@ import java.util.function.Supplier;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.format.builder.EventStep;
+import io.cloudevents.format.builder.MarshalStep;
 import io.cloudevents.fun.EnvelopeMarshaller;
 import io.cloudevents.fun.ExtensionFormatAccessor;
 import io.cloudevents.fun.ExtensionMarshaller;
@@ -36,16 +38,6 @@ import io.cloudevents.fun.FormatHeaderMapper;
 public class StructuredMarshaller {
 	StructuredMarshaller() {}
 
-	/*
-	 * map("application/json", Json::marshaller()) // Data marshaller NOPE
-	 * map("application/avro", Avro::marshaller()) // Data marshaller
-	 * next()
-	 * mime("")
-	 * map(Json::marshaller) // CloudEvent marshaller
-	 * withEvent(() -> ce)
-	 * marshal() // returns a Wire instance
-	 */
-	
 	/**
 	 * 
 	 * @param <A> The attributes type
@@ -89,22 +81,6 @@ public class StructuredMarshaller {
 	
 	public static interface HeaderMapperStep<A extends Attributes, T, P> {
 		EventStep<A, T, P> map(FormatHeaderMapper mapper);
-	}
-	
-	public static interface EventStep<A extends Attributes, T, P> {
-		/**
-		 * Sets the event which will be marshaled
-		 * @param event
-		 * @return
-		 */
-		MarshalStep<P> withEvent(Supplier<CloudEvent<A, T>> event);
-	}
-	
-	public static interface MarshalStep<P> {
-		/**
-		 * Marshals the event to use in the wire transfer
-		 */
-		Wire<P, String, Object> marshal();
 	}
 
 	private static final class Builder<A extends Attributes, T, P> implements

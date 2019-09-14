@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.format.BinaryMarshaller;
-import io.cloudevents.format.BinaryMarshaller.EventStep;
+import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.format.Wire;
 import io.cloudevents.json.Json;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
