@@ -69,10 +69,10 @@ import io.debezium.util.Testing;
  * @author fabiojose
  *
  */
-public class ProducerBinaryTest {
+public class KafkaProducerBinaryTest {
 	
 	private static final Logger log = 
-		LoggerFactory.getLogger(ProducerBinaryTest.class);
+		LoggerFactory.getLogger(KafkaProducerBinaryTest.class);
 	
 	private static final Deserializer<String> DESERIALIZER = 
 		Serdes.String().deserializer();

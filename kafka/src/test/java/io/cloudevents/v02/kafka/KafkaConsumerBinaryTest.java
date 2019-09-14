@@ -58,8 +58,8 @@ import io.debezium.util.Testing;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.format.BinaryUnmarshaller;
-import io.cloudevents.format.BinaryUnmarshaller.HeadersStep;
-import io.cloudevents.format.BinaryUnmarshaller.PayloadStep;
+import io.cloudevents.format.builder.HeadersStep;
+import io.cloudevents.format.builder.PayloadStep;
 import io.cloudevents.json.Json;
 
 /**
@@ -67,7 +67,7 @@ import io.cloudevents.json.Json;
  * @author fabiojose
  *
  */
-public class ConsumerBinaryTest {
+public class KafkaConsumerBinaryTest {
 	
 	private static final int ONE_BROKER = 1;
 	private static final Integer ANY_PARTITION = null;
