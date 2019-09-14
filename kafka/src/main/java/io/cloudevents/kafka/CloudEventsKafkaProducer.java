@@ -60,25 +60,16 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 	private EventStep<A, T, byte[]> builder;
 	
 	/**
-	 * Instantiate a producer to emit structured events
-	 * @param producer To delegate the actual producer methods call
-	 */
-	public CloudEventsKafkaProducer(Producer<K, byte[]> producer) {
-		Objects.requireNonNull(producer);
-		
-		this.producer = producer;
-	}
-	
-	/**
-	 * Instantiate a producer to emit binary events
+	 * Instantiate a producer to emit {@link CloudEvent} instances in Kafka
 	 * @param producer To delegate the actual producer methods call
 	 * @param builder The builder to build the kafka records value
 	 */
 	public CloudEventsKafkaProducer(Producer<K, byte[]> producer, 
 			EventStep<A, T, byte[]> builder) {
-		this(producer);
+		Objects.requireNonNull(producer);
 		Objects.requireNonNull(builder);
 		
+		this.producer = producer;
 		this.builder = builder;
 	}
 	
@@ -89,8 +80,6 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 				.map(step -> step.withEvent(event))
 				.map(marshaller -> marshaller.marshal())
 				.get();
-		
-		//TODO treat the case of structured one
 		
 	}
 	
@@ -147,6 +136,7 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 			event, Callback callback) {
 		
 		// TODO Auto-generated method stub
+	
 		return null;
 	}
 	
