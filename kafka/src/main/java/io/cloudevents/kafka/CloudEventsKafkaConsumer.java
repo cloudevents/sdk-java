@@ -46,12 +46,11 @@ import org.apache.kafka.common.header.Headers;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.BinaryUnmarshaller.HeadersStep;
+import io.cloudevents.format.builder.HeadersStep;
 
 /**
  * 
  * @author fabiojose
- * @version 0.2
  * 
  * @param <K> The key type
  * @param <A> The attributes tytpe
@@ -60,14 +59,17 @@ import io.cloudevents.format.BinaryUnmarshaller.HeadersStep;
 public class CloudEventsKafkaConsumer<K, A extends Attributes, T> 
 	implements Consumer<K, CloudEvent<A, T>>{
 	
+	private static final String CE_CONTENT_TYPE = "application/cloudevents+";
+	private static final String CONTENT_TYPE_HEADER = "content-type";
+	
 	private final Consumer<K, byte[]> consumer;
 
 	private HeadersStep<A, T, byte[]> builder;
 	
 	/**
-	 * Instantiate a consumer prepared to process binary events too
+	 * Instantiate a consumer prepared to unmarshal the events from Kafka
 	 * @param consumer The Kafka Consumer with value as a byte array
-	 * @param builder The binary builder to build the CloudEvent
+	 * @param builder The builder to build the CloudEvent
 	 */
 	public CloudEventsKafkaConsumer(Consumer<K, byte[]> consumer, 
 			HeadersStep<A, T, byte[]> builder) {
@@ -109,17 +111,17 @@ public class CloudEventsKafkaConsumer<K, A extends Attributes, T>
 			
 			newRecords.add(
 				new ConsumerRecord<K, CloudEvent<A, T>>(
-						record.topic(),
-						record.partition(),
-						record.offset(), 
-						record.timestamp(), 
-						record.timestampType(), 
-						record.checksum(), 
-						record.serializedKeySize(), 
-						record.serializedValueSize(), 
-						record.key(), 
-						value, 
-						record.headers())
+					record.topic(),
+					record.partition(),
+					record.offset(), 
+					record.timestamp(), 
+					record.timestampType(), 
+					record.checksum(), 
+					record.serializedKeySize(), 
+					record.serializedValueSize(), 
+					record.key(), 
+					value, 
+					record.headers())
 			);
 		});
 		
