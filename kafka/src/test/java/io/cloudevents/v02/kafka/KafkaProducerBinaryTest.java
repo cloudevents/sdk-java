@@ -106,7 +106,8 @@ public class KafkaProducerBinaryTest {
 	@Test
 	public void should_throws_when_producer_is_null() {
 		assertThrows(NullPointerException.class, () -> {
-			new CloudEventsKafkaProducer<String, AttributesImpl, Much>(null);
+			new CloudEventsKafkaProducer<String, AttributesImpl, Much>(null,
+					(e) -> null);
 		});
 	}
 	
