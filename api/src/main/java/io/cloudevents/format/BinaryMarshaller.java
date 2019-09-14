@@ -15,27 +15,19 @@
  */
 package io.cloudevents.format;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.fun.AttributeMarshaller;
-import io.cloudevents.fun.FormatHeaderMapper;
 import io.cloudevents.fun.DataMarshaller;
 import io.cloudevents.fun.ExtensionFormatAccessor;
 import io.cloudevents.fun.ExtensionMarshaller;
+import io.cloudevents.fun.FormatHeaderMapper;
 import io.cloudevents.fun.WireBuilder;
-import io.cloudevents.json.Json;
-import io.cloudevents.v02.Accessor;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.CloudEventBuilder;
-import io.cloudevents.v02.CloudEventImpl;
-import io.cloudevents.v02.http.HeaderMapper;
 
 /**
  * 
@@ -95,10 +87,10 @@ public final class BinaryMarshaller {
 		 * @param mapper
 		 * @return
 		 */
-		PayloadStep<A, T, P> map(FormatHeaderMapper mapper);
+		DataMarshallerStep<A, T, P> map(FormatHeaderMapper mapper);
 	}
 	
-	public static interface PayloadStep<A extends Attributes, T, P> {
+	public static interface DataMarshallerStep<A extends Attributes, T, P> {
 		/**
 		 * Marshals the 'data' into payload
 		 * @param marshaller
@@ -146,7 +138,7 @@ public final class BinaryMarshaller {
 		AttributeMarshalStep<A, T, P>,
 		ExtensionsAccessorStep<A, T, P>,
 		ExtensionsStep<A, T, P>,
-		PayloadStep<A, T, P>,
+		DataMarshallerStep<A, T, P>,
 		HeaderMapStep<A, T, P>,
 		BuilderStep<A, T, P>,
 		EventStep<A, T, P>,
@@ -179,7 +171,7 @@ public final class BinaryMarshaller {
 		}
 		
 		@Override
-		public PayloadStep<A, T, P> map(FormatHeaderMapper mapper) {
+		public DataMarshallerStep<A, T, P> map(FormatHeaderMapper mapper) {
 			this.headerMapper = mapper;
 			return this;
 		}	
@@ -226,40 +218,5 @@ public final class BinaryMarshaller {
 			
 			return wireBuilder.build(payload, headers);
 		}
-	}
-	
-	public static void main(String[] args) {
-		final DistributedTracingExtension dt = 
-				new DistributedTracingExtension();
-		dt.setTraceparent("0");
-		dt.setTracestate("congo=4");
-		
-		final ExtensionFormat tracing = 
-				new DistributedTracingExtension.Format(dt);
-		
-		final CloudEventImpl<String> ce = 
-				CloudEventBuilder.<String>builder()
-					.withId("x10")
-					.withSource(URI.create("/source"))
-					.withType("event-type")
-					.withSchemaurl(URI.create("/schema"))
-					.withContenttype("text/plain")
-					.withData("my-data")
-					.withExtension(tracing)
-					.build();
-		
-		Wire<String, String, Object> wire = 
-		BinaryMarshaller.<AttributesImpl, String, String>builder()
-			.map(AttributesImpl::marshal)
-			.map(Accessor::extensionsOf) 
-			.map(ExtensionFormat::marshal)
-			.map(HeaderMapper::map)
-			.map(Json.marshaller()::marshal)
-			.builder(Wire<String, String, Object>::new)
-			.withEvent(() -> ce)
-			.marshal();
-		
-		System.out.println(wire.getPayload());
-		System.out.println(wire.getHeaders());
 	}
 }

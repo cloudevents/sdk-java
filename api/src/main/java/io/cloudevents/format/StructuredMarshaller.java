@@ -15,7 +15,6 @@
  */
 package io.cloudevents.format;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -24,16 +23,10 @@ import java.util.function.Supplier;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.extensions.DistributedTracingExtension;
-import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.fun.EnvelopeMarshaller;
 import io.cloudevents.fun.ExtensionFormatAccessor;
 import io.cloudevents.fun.ExtensionMarshaller;
 import io.cloudevents.fun.FormatHeaderMapper;
-import io.cloudevents.json.Json;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.CloudEventBuilder;
-import io.cloudevents.v02.CloudEventImpl;
 
 /**
  * 
@@ -211,54 +204,5 @@ public class StructuredMarshaller {
 			
 			return new Wire<>(payload, headers);
 		}
-	}
-	
-	public static class Wrapper {
-		private String name;
-		
-		public Wrapper() {}
-		public Wrapper(String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-	}
-	
-	public static void main(String[] args) {
-		final DistributedTracingExtension dt = 
-				new DistributedTracingExtension();
-		dt.setTraceparent("0");
-		dt.setTracestate("congo=4");
-		
-		final ExtensionFormat tracing = 
-				new DistributedTracingExtension.Format(dt);
-		
-		final CloudEventImpl<Wrapper> ce = 
-				CloudEventBuilder.<Wrapper>builder()
-					.withId("x10")
-					.withSource(URI.create("/source"))
-					.withType("event-type")
-					.withSchemaurl(URI.create("/schema"))
-					.withContenttype("text/plain")
-					.withData(new Wrapper("Jack"))
-					.withExtension(tracing)
-					.build();
-		
-		Wire<String, String, Object> wire =
-			StructuredMarshaller.<AttributesImpl, Wrapper, String>
-			  builder()
-				.mime("Content-Type", "application/cloudevents+json")
-				.map(event -> {
-					return Json.marshaller().marshal(event, null);
-				})
-				.skip()
-				.withEvent(() -> ce)
-				.marshal();
 	}
 }
