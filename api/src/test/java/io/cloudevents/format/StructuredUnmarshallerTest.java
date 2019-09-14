@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.cloudevents.Attributes;
-import io.cloudevents.format.StructuredMarshaller.Wrapper;
+import io.cloudevents.json.types.Much;
 
 /**
  * 
@@ -38,7 +38,7 @@ public class StructuredUnmarshallerTest {
 		expectedEx.expect(NullPointerException.class);
 		
 		// act
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map(null, (data, attributes) -> {
 				return null;
 			});
@@ -50,14 +50,14 @@ public class StructuredUnmarshallerTest {
 		expectedEx.expect(NullPointerException.class);
 		
 		// act
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map("application/json", null);
 	}
 	
 	@Test
 	public void should_ok_on_data_unmarshaller() {
 		// act
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map("application/json", (data, attributes) -> {
 				return null;
 			});
@@ -68,7 +68,7 @@ public class StructuredUnmarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map("application/json", (data, attributes) -> {
 				return null;
 			})
@@ -78,7 +78,7 @@ public class StructuredUnmarshallerTest {
 	
 	@Test
 	public void should_ok_on_extension_mapper() {
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map("application/json", (data, attributes) -> {
 				return null;
 			})
@@ -94,7 +94,7 @@ public class StructuredUnmarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map("application/json", (data, attributes) -> {
 				return null;
 			})
@@ -108,7 +108,7 @@ public class StructuredUnmarshallerTest {
 	
 	@Test
 	public void should_ok_on_extension_unmarshaller() {
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map("application/json", (data, attributes) -> {
 				return null;
 			})
@@ -127,7 +127,7 @@ public class StructuredUnmarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map("application/json", (data, attributes) -> {
 				return null;
 			})
@@ -145,7 +145,7 @@ public class StructuredUnmarshallerTest {
 	
 	@Test
 	public void should_ok_on_envelope_unmarshaller() {
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 			.map("application/json", (data, attributes) -> {
 				return null;
 			})
@@ -161,7 +161,7 @@ public class StructuredUnmarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 		.map("application/json", (data, attributes) -> {
 			return null;
 		})
@@ -175,7 +175,7 @@ public class StructuredUnmarshallerTest {
 	
 	@Test
 	public void should_ok_on_headers() {
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 		.map("application/json", (data, attributes) -> {
 			return null;
 		})
@@ -192,7 +192,7 @@ public class StructuredUnmarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);	
 		
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 		.map("application/json", (data, attributes) -> {
 			return null;
 		})
@@ -207,7 +207,7 @@ public class StructuredUnmarshallerTest {
 	
 	@Test
 	public void should_ok_on_payload_supplier() {
-		StructuredUnmarshaller.<Attributes, Wrapper, String>builder()
+		StructuredUnmarshaller.<Attributes, Much, String>builder()
 		.map("application/json", (data, attributes) -> {
 			return null;
 		})
