@@ -15,20 +15,19 @@
  */
 package io.cloudevents.format;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.format.builder.HeadersStep;
+import io.cloudevents.format.builder.PayloadStep;
+import io.cloudevents.format.builder.UnmarshalStep;
 import io.cloudevents.fun.DataUnmarshaller;
 import io.cloudevents.fun.EnvelopeUnmarshaller;
 import io.cloudevents.fun.ExtensionUmarshaller;
@@ -75,18 +74,6 @@ public class StructuredUnmarshaller {
 	
 	public static interface EnvelopeUnmarshallerStep<A extends Attributes, T, P> {
 		HeadersStep<A, T, P> map(EnvelopeUnmarshaller<A, T, P> unmarshaller);
-	}
-	
-	public static interface HeadersStep<A extends Attributes, T, P> {
-		PayloadStep<A, T, P> withHeaders(Supplier<Map<String, Object>> headers);
-	}
-	
-	public static interface PayloadStep<A extends Attributes, T, P> {
-		UnmarshalStep<A, T> withPayload(Supplier<P> payload);
-	}
-	
-	public static interface UnmarshalStep<A extends Attributes, T> {
-		CloudEvent<A, T> unmarshal();
 	}
 	
 	private static final class Builder<A extends Attributes, T, P> implements

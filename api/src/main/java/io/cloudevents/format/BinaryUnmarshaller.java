@@ -24,23 +24,18 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.format.builder.HeadersStep;
+import io.cloudevents.format.builder.PayloadStep;
+import io.cloudevents.format.builder.UnmarshalStep;
 import io.cloudevents.fun.AttributeUnmarshaller;
 import io.cloudevents.fun.BinaryFormatAttributeMapper;
-import io.cloudevents.fun.FormatExtensionMapper;
 import io.cloudevents.fun.DataUnmarshaller;
 import io.cloudevents.fun.EventBuilder;
 import io.cloudevents.fun.ExtensionUmarshaller;
-import io.cloudevents.json.Json;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.CloudEventBuilder;
-import io.cloudevents.v02.http.AttributeMapper;
-import io.cloudevents.v02.http.ExtensionMapper;
+import io.cloudevents.fun.FormatExtensionMapper;
 
 /**
  * 
@@ -136,33 +131,6 @@ public final class BinaryUnmarshaller {
 		 * @return
 		 */
 		HeadersStep<A, T, P> builder(EventBuilder<T, A> builder);
-	}
-	
-	public interface HeadersStep<A extends Attributes, T, P> {
-		/**
-		 * Pass a supplier with the headers of binary format
-		 * @param headers
-		 * @return
-		 */
-		PayloadStep<A, T, P> withHeaders(Supplier<Map<String, Object>> headers);
-	}
-	
-	public interface PayloadStep<A extends Attributes, T, P> {
-		/**
-		 * Pass a supplier thats provides the payload
-		 * @param payload
-		 * @return
-		 */
-		UnmarshalStep<A, T> withPayload(Supplier<P> payload);
-	}
-	
-	public static interface UnmarshalStep<A extends Attributes, T> {
-		/**
-		 * Builds an instance of {@link CloudEvent}, doing all the computation at
-		 * this method call.
-		 * @return
-		 */
-		CloudEvent<A, T> unmarshal();
 	}
 	
 	private static final class Builder<A extends Attributes, T, P> implements
@@ -272,82 +240,5 @@ public final class BinaryUnmarshaller {
 			
 			return eventBuilder.build(data, attributes, extensions);
 		}
-	}
-	
-	public static class Wrapper {
-		private String name;
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-	}
-	
-	public static class Dummy {
-		private String foo;
-		private Wrapper wrap;
-		
-		public Dummy() {
-			this.wrap = new Wrapper();
-			this.wrap.setName("common.name");
-			this.setFoo("bar");
-		}
-
-		public String getFoo() {
-			return foo;
-		}
-
-		public void setFoo(String foo) {
-			this.foo = foo;
-		}
-
-		@JsonUnwrapped
-		public Wrapper getWrap() {
-			return wrap;
-		}
-
-		public void setWrap(Wrapper wrap) {
-			this.wrap = wrap;
-		}
-	}
-	
-	public static void main(String[] args) {
-		
-		Map<String, Object> myHeaders = new HashMap<>();
-		myHeaders.put("ce-id", "0x11");
-		myHeaders.put("ce-source", "/source");
-		myHeaders.put("ce-specversion", "0.3");
-		myHeaders.put("ce-type", "br.my");
-		myHeaders.put("ce-time", "2019-09-16T20:49:00Z");
-		myHeaders.put("ce-schemaurl", "http://my.br");
-		myHeaders.put("my-ext", "my-custom extension");
-		myHeaders.put("traceparent", "0");
-		myHeaders.put("tracestate", "congo=4");
-		myHeaders.put("Content-Type", "application/json");
-		
-		String myPayload = "{\"foo\" : \"rocks\", \"name\" : \"jocker\"}";
-		
-		CloudEvent<AttributesImpl, Dummy> event = 
-			BinaryUnmarshaller.<AttributesImpl, Dummy, String>
-			builder()
-				.map(AttributeMapper::map)
-				.map(AttributesImpl::unmarshal)
-				.map("application/json", Json.umarshaller(Dummy.class)::unmarshal)
-				.map("text/plain", (payload, attributes) -> new Dummy())
-				.next()
-				.map(ExtensionMapper::map)
-				.map(DistributedTracingExtension::unmarshall)
-				.next()
-				.builder(CloudEventBuilder.<Dummy>builder()::build)
-				.withHeaders(() -> myHeaders)
-				.withPayload(() -> myPayload)
-				.unmarshal();
-		
-		System.out.println(event.getAttributes());
-		System.out.println(event.getData());
-		System.out.println(event.getExtensions());
-	}
+	}	
 }
