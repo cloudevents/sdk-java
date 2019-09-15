@@ -56,7 +56,7 @@ public class StructuredMarshaller {
 		 * @param headerName Example {@code Content-Type} for HTTP
 		 * @param mediaType Example: {@code application/cloudevents+json}
 		 */
-		EnvelopeMarshallerStep<A, T, P> mime(String headerName, String mediaType);
+		EnvelopeMarshallerStep<A, T, P> mime(String headerName, Object mediaType);
 	}
 	
 	public static interface EnvelopeMarshallerStep<A extends Attributes, T, P> {
@@ -96,7 +96,7 @@ public class StructuredMarshaller {
 				new HashMap<>();
 		
 		private String headerName;
-		private String mediaType;
+		private Object mediaType;
 		
 		private EnvelopeMarshaller<A, T, P> marshaller;
 		
@@ -109,7 +109,7 @@ public class StructuredMarshaller {
 		private Supplier<CloudEvent<A, T>> event;
 		
 		@Override
-		public EnvelopeMarshallerStep<A, T, P> mime(String headerName, String mediaType) {
+		public EnvelopeMarshallerStep<A, T, P> mime(String headerName, Object mediaType) {
 			Objects.requireNonNull(headerName);
 			Objects.requireNonNull(mediaType);
 			
