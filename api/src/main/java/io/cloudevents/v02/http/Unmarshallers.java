@@ -22,6 +22,7 @@ public class Unmarshallers {
 	 * @param <T> The 'data' type
 	 * @param type The type reference to use for 'data' unmarshal
 	 * @return A step to supply the headers, payload and to unmarshal
+	 * @see BinaryUnmarshaller
 	 */
 	public static <T> HeadersStep<AttributesImpl, T, String> 
 			binary(Class<T> type) {
