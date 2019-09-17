@@ -50,12 +50,12 @@ public class HeaderMapper {
 	 * {@link ExtensionFormat#marshal(java.util.Collection)}
 	 * @return The map of Kafka Headers with values as {@code byte[]}
 	 */
-	public static Map<String, Object> map(Map<String, String> attributes,
+	public static Map<String, byte[]> map(Map<String, String> attributes,
 			Map<String, String> extensions) {
 		Objects.requireNonNull(attributes);
 		Objects.requireNonNull(extensions);
 		
-		Map<String, Object> result = attributes.entrySet()
+		Map<String, byte[]> result = attributes.entrySet()
 			.stream()
 			.filter(attribute -> null!= attribute.getValue())
 			.map(attribute -> 

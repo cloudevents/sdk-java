@@ -65,7 +65,7 @@ public class HeaderMapperTest {
 		Map<String, String> extensions = new HashMap<>();
 		
 		// act
-		Map<String, Object> actual = HeaderMapper.map(attributes, extensions);
+		Map<String, String> actual = HeaderMapper.map(attributes, extensions);
 		
 		//assert
 		assertFalse(actual.containsKey("ce-type"));
@@ -83,7 +83,7 @@ public class HeaderMapperTest {
 		extensions.put("comexampleextension1", "value");
 		
 		// act
-		Map<String, Object> actual = HeaderMapper.map(attributes, extensions);
+		Map<String, String> actual = HeaderMapper.map(attributes, extensions);
 		
 		//assert
 		assertFalse(actual.containsKey("ce-null-ext"));
@@ -101,7 +101,7 @@ public class HeaderMapperTest {
 		extensions.put("comexampleextension1", "value");
 		
 		// act
-		Map<String, Object> actual = HeaderMapper.map(attributes, extensions);
+		Map<String, String> actual = HeaderMapper.map(attributes, extensions);
 		
 		//assert
 		assertFalse(actual.containsKey("Content-Type"));	
