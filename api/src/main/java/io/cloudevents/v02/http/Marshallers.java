@@ -59,6 +59,7 @@ public class Marshallers {
 				.map(Json.<T, String>marshaller()::marshal)
 				.builder(Wire<String, String, String>::new);
 	}
+	
 	/**
 	 * Builds a Structured Content Mode marshaller to marshal cloud event as JSON for
 	 * HTTP Transport Binding
