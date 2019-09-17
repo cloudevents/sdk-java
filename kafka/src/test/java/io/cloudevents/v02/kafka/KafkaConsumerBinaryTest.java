@@ -16,6 +16,7 @@
 package io.cloudevents.v02.kafka;
 
 import static io.cloudevents.v02.kafka.AttributeMapper.HEADER_PREFIX;
+import static io.cloudevents.v02.kafka.Unmarshallers.binary;
 import static java.lang.System.getProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -49,18 +50,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import io.cloudevents.CloudEvent;
+import io.cloudevents.extensions.DistributedTracingExtension;
+import io.cloudevents.format.builder.HeadersStep;
+import io.cloudevents.format.builder.PayloadStep;
 import io.cloudevents.kafka.CloudEventsKafkaConsumer;
 import io.cloudevents.types.Much;
 import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.CloudEventBuilder;
 import io.debezium.kafka.KafkaCluster;
 import io.debezium.util.Testing;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.extensions.DistributedTracingExtension;
-import io.cloudevents.format.BinaryUnmarshaller;
-import io.cloudevents.format.builder.HeadersStep;
-import io.cloudevents.format.builder.PayloadStep;
-import io.cloudevents.json.Json;
 
 /**
  * 
@@ -164,20 +162,9 @@ public class KafkaConsumerBinaryTest {
 		KafkaConsumer<String, byte[]> consumer = 
 				new KafkaConsumer<>(consumerProperties);
 		
-		HeadersStep<AttributesImpl, Much, byte[]> builder =
-			BinaryUnmarshaller.<AttributesImpl, Much, byte[]>
-			  builder()
-				.map(AttributeMapper::map)
-				.map(AttributesImpl::unmarshal)
-				.map("application/json", Json.binaryUmarshaller(Much.class))
-				.next()
-				.map(ExtensionMapper::map)
-				.next()
-				.builder(CloudEventBuilder.<Much>builder()::build);
-		
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumer, builder)){
+				new CloudEventsKafkaConsumer<>(consumer, binary(Much.class))){
 			ceConsumer.subscribe(Collections.singletonList(topic));
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
@@ -250,20 +237,9 @@ public class KafkaConsumerBinaryTest {
 		KafkaConsumer<String, byte[]> consumer = 
 				new KafkaConsumer<>(consumerProperties);
 		
-		HeadersStep<AttributesImpl, Much, byte[]> builder =
-			BinaryUnmarshaller.<AttributesImpl, Much, byte[]>
-			  builder()
-				.map(AttributeMapper::map)
-				.map(AttributesImpl::unmarshal)
-				.map("application/json", Json.binaryUmarshaller(Much.class))
-				.next()
-				.map(ExtensionMapper::map)
-				.next()
-				.builder(CloudEventBuilder.<Much>builder()::build);
-		
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumer, builder)){
+				new CloudEventsKafkaConsumer<>(consumer, binary(Much.class))){
 			ceConsumer.subscribe(Collections.singletonList(topic));
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
@@ -339,22 +315,10 @@ public class KafkaConsumerBinaryTest {
 		
 		KafkaConsumer<String, byte[]> consumer = 
 				new KafkaConsumer<>(consumerProperties);
-		
-		HeadersStep<AttributesImpl, Much, byte[]> builder =
-			BinaryUnmarshaller.<AttributesImpl, Much, byte[]>
-			  builder()
-				.map(AttributeMapper::map)
-				.map(AttributesImpl::unmarshal)
-				.map("application/json", Json.binaryUmarshaller(Much.class))
-				.next()
-				.map(ExtensionMapper::map)
-				.map(DistributedTracingExtension::unmarshall)
-				.next()
-				.builder(CloudEventBuilder.<Much>builder()::build);
-		
+				
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumer, builder)){
+				new CloudEventsKafkaConsumer<>(consumer, binary(Much.class))){
 			ceConsumer.subscribe(Collections.singletonList(topic));
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =

@@ -1,5 +1,6 @@
 package io.cloudevents.v02.kafka;
 
+import static io.cloudevents.v02.kafka.Marshallers.structured;
 import static java.lang.System.getProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,8 +9,6 @@ import java.io.File;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -34,9 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
-import io.cloudevents.format.StructuredMarshaller;
-import io.cloudevents.format.builder.EventStep;
-import io.cloudevents.json.Json;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
 import io.cloudevents.types.Much;
 import io.cloudevents.v02.AttributesImpl;
@@ -57,9 +53,6 @@ public class KafkaProducerStructuredTest {
 
 	private static final int ONE_BROKER = 1;
 	private static final Duration TIMEOUT = Duration.ofSeconds(5);
-	
-	private static final Map<String, Object> NO_HEADERS = 
-			new HashMap<>();
 
 	private KafkaCluster kafka;
 	private File data;
@@ -122,17 +115,9 @@ public class KafkaProducerStructuredTest {
 		
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
-		
-	    final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
-			StructuredMarshaller.<AttributesImpl, Much, byte[], byte[]>
-			  builder()
-				.mime("content-type", "application/cloudevents+json".getBytes())
-				.map((event) -> 
-					Json.binaryMarshal(event, NO_HEADERS))
-				.skip();
-			
+
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){
+			ceProducer = new CloudEventsKafkaProducer<>(producer, structured())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
@@ -194,17 +179,9 @@ public class KafkaProducerStructuredTest {
 		
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
-		
-	    final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
-			StructuredMarshaller.<AttributesImpl, Much, byte[], byte[]>
-			  builder()
-				.mime("content-type", "application/cloudevents+json".getBytes())
-				.map((event) -> 
-					Json.binaryMarshal(event, NO_HEADERS))
-				.skip();
-			
+
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){
+			ceProducer = new CloudEventsKafkaProducer<>(producer, structured())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
@@ -274,17 +251,9 @@ public class KafkaProducerStructuredTest {
 		
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
-		
-	    final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
-			StructuredMarshaller.<AttributesImpl, Much, byte[], byte[]>
-			  builder()
-				.mime("content-type", "application/cloudevents+json".getBytes())
-				.map((event) -> 
-					Json.binaryMarshal(event, NO_HEADERS))
-				.skip();
 			
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){
+			ceProducer = new CloudEventsKafkaProducer<>(producer, structured())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();

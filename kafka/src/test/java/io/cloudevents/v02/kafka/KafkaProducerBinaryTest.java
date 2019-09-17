@@ -15,6 +15,7 @@
  */
 package io.cloudevents.v02.kafka;
 
+import static io.cloudevents.v02.kafka.Marshallers.binary;
 import static java.lang.System.getProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -50,13 +51,8 @@ import org.slf4j.LoggerFactory;
 
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
-import io.cloudevents.format.BinaryMarshaller;
-import io.cloudevents.format.builder.EventStep;
-import io.cloudevents.format.Wire;
-import io.cloudevents.json.Json;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
 import io.cloudevents.types.Much;
-import io.cloudevents.v02.Accessor;
 import io.cloudevents.v02.AttributesImpl;
 import io.cloudevents.v02.CloudEventBuilder;
 import io.cloudevents.v02.CloudEventImpl;
@@ -149,19 +145,9 @@ public class KafkaProducerBinaryTest {
 		
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
-		
-		final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
-			BinaryMarshaller.<AttributesImpl, Much, byte[], byte[]>
-			  builder()
-				.map(AttributesImpl::marshal)
-				.map(Accessor::extensionsOf)
-				.map(ExtensionFormat::marshal)
-				.map(HeaderMapper::map)
-				.map(Json::binaryMarshal)
-				.builder(Wire<byte[], String, byte[]>::new);
-			
+					
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){
+			ceProducer = new CloudEventsKafkaProducer<>(producer, binary())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
@@ -246,19 +232,9 @@ public class KafkaProducerBinaryTest {
 		
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
-		
-		final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
-			BinaryMarshaller.<AttributesImpl, Much, byte[], byte[]>
-			  builder()
-				.map(AttributesImpl::marshal)
-				.map(Accessor::extensionsOf)
-				.map(ExtensionFormat::marshal)
-				.map(HeaderMapper::map)
-				.map(Json::binaryMarshal)
-				.builder(Wire<byte[], String, byte[]>::new);
-			
+					
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){
+			ceProducer = new CloudEventsKafkaProducer<>(producer, binary())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
@@ -357,18 +333,8 @@ public class KafkaProducerBinaryTest {
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
 		
-		final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
-			BinaryMarshaller.<AttributesImpl, Much, byte[], byte[]>
-			  builder()
-				.map(AttributesImpl::marshal)
-				.map(Accessor::extensionsOf)
-				.map(ExtensionFormat::marshal)
-				.map(HeaderMapper::map)
-				.map(Json::binaryMarshal)
-				.builder(Wire<byte[], String, byte[]>::new);
-			
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){
+			ceProducer = new CloudEventsKafkaProducer<>(producer, binary())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
