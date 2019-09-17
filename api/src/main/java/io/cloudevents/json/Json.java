@@ -176,12 +176,13 @@ public final class Json {
     /**
      * Creates a JSON Data Marshaller that produces a {@link String}
      * @param <T> The 'data' type
+     * @param <H> The type of headers value
      * @return A new instance of {@link DataMarshaller}
      */
-    public static <T> DataMarshaller<String, T> marshaller() {
-    	return new DataMarshaller<String, T>() {
+    public static <T, H> DataMarshaller<String, T, H> marshaller() {
+    	return new DataMarshaller<String, T, H>() {
 			@Override
-			public String marshal(T data, Map<String, Object> headers) {
+			public String marshal(T data, Map<String, H> headers) {
 				return Json.encode(data);
 			}
 		};
@@ -190,12 +191,13 @@ public final class Json {
     /**
      * Marshalls the 'data' value as JSON, producing a byte array
      * @param <T> The 'data' type
+     * @param <H> The type of headers value
      * @param data The 'data' value
      * @param headers The headers
      * @return A byte array with 'data' value encoded JSON
      */
-    public static <T> byte[] binaryMarshal(T data,
-    			Map<String, Object> headers) {
+    public static <T, H> byte[] binaryMarshal(T data,
+    			Map<String, H> headers) {
     	return Json.binaryEncode(data);
     }
 
