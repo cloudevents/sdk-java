@@ -20,17 +20,19 @@ import java.util.Map;
 /**
  * 
  * @author fabiojose
- *
+ * @param <H> The header value type
+ * 
  */
 @FunctionalInterface
-public interface FormatHeaderMapper {
+public interface FormatHeaderMapper<H> {
 
 	/**
-	 * Maps the 'attributes' and 'extensions' of CloudEvent envelop to 'headers' of binary format
+	 * Maps the 'attributes' and 'extensions' of CloudEvent envelop to
+	 * 'headers' of binary format
 	 * @param attributes
 	 * @return
 	 */
-	Map<String, Object> map(Map<String, String> attributes,
+	Map<String, H> map(Map<String, String> attributes,
 			Map<String, String> extensions);
 	
 }
