@@ -33,7 +33,7 @@ public interface DataUnmarshaller<P, T, A extends Attributes> {
 	 * @param payload
 	 * @param attributes
 	 * @return
-	 * @throws RuntimeException If something bad happens during the umarshall
+	 * @throws RuntimeException If something bad happens during the umarshal
 	 */
 	T unmarshal(P payload, A attributes);
 	
