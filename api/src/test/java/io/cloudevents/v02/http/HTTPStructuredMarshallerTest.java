@@ -21,19 +21,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
-import io.cloudevents.format.StructuredMarshaller;
 import io.cloudevents.format.Wire;
-import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
-import io.cloudevents.v02.Accessor;
-import io.cloudevents.v02.AttributesImpl;
 import io.cloudevents.v02.CloudEventBuilder;
 import io.cloudevents.v02.CloudEventImpl;
 
@@ -44,9 +38,6 @@ import io.cloudevents.v02.CloudEventImpl;
  */
 public class HTTPStructuredMarshallerTest {
 	
-	private static final Map<String, Object> NO_HEADERS = 
-		new HashMap<>();
-
 	@Test
 	public void should_marshal_all_as_json() {
 		// setup
@@ -65,15 +56,10 @@ public class HTTPStructuredMarshallerTest {
 					.build();
 		
 		// act
-		Wire<String, String, Object> actual = StructuredMarshaller.
-		  <AttributesImpl, Much, String>builder()
-			.mime("Content-Type", "application/cloudevents+json")
-			.map((event) -> {
-				return Json.marshaller().marshal(event, NO_HEADERS);
-			})
-			.skip()
-			.withEvent(() -> ce)
-			.marshal();
+		Wire<String, String, String> actual = 
+			Marshallers.<Much>structured()
+				.withEvent(() -> ce)
+				.marshal();
 		
 		assertTrue(actual.getPayload().isPresent());
 		assertEquals(expected, actual.getPayload().get());
@@ -95,15 +81,10 @@ public class HTTPStructuredMarshallerTest {
 					.build();
 		
 		// act
-		Wire<String, String, Object> actual = StructuredMarshaller.
-		  <AttributesImpl, String, String>builder()
-			.mime("Content-Type", "application/cloudevents+json")
-			.map((event) -> {
-				return Json.marshaller().marshal(event, NO_HEADERS);
-			})
-			.skip()
-			.withEvent(() -> ce)
-			.marshal();
+		Wire<String, String, String> actual = 
+			Marshallers.<String>structured()
+				.withEvent(() -> ce)
+				.marshal();
 		
 		assertTrue(actual.getPayload().isPresent());
 		assertEquals(expected, actual.getPayload().get());
@@ -125,15 +106,10 @@ public class HTTPStructuredMarshallerTest {
 					.build();
 		
 		// act
-		Wire<String, String, Object> actual = StructuredMarshaller.
-		  <AttributesImpl, String, String>builder()
-			.mime("Content-Type", "application/cloudevents+json")
-			.map((event) -> {
-				return Json.marshaller().marshal(event, NO_HEADERS);
-			})
-			.skip()
-			.withEvent(() -> ce)
-			.marshal();
+		Wire<String, String, String> actual = 
+			Marshallers.<String>structured()
+				.withEvent(() -> ce)
+				.marshal();
 		
 		assertFalse(actual.getHeaders().isEmpty());
 		assertTrue(actual.getHeaders().containsKey("Content-Type"));
@@ -158,15 +134,8 @@ public class HTTPStructuredMarshallerTest {
 				.build();
 		
 		// act
-		Wire<String, String, Object> actual = StructuredMarshaller.
-			  <AttributesImpl, String, String>builder()
-				.mime("Content-Type", "application/cloudevents+json")
-				.map((event) -> {
-					return Json.marshaller().marshal(event, NO_HEADERS);
-				})
-				.map(Accessor::extensionsOf)
-				.map(ExtensionFormat::marshal)
-				.map(HeaderMapper::map)
+		Wire<String, String, String> actual = 		
+			Marshallers.<String>structured()
 				.withEvent(() -> ce)
 				.marshal();
 		
