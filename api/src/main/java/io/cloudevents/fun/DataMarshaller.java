@@ -21,9 +21,12 @@ import java.util.Map;
  * 
  * @author fabiojose
  *
+ * @param <P> The payload type
+ * @param <T> The 'data' type
+ * @param <H> The type of headers value
  */
 @FunctionalInterface
-public interface DataMarshaller<P, T> {
+public interface DataMarshaller<P, T, H> {
 
 	/**
 	 * Marshals the 'data' into payload
@@ -32,6 +35,6 @@ public interface DataMarshaller<P, T> {
 	 * @return
 	 * @throws RuntimeException When something bad happens during the marshal process
 	 */
-	P marshal(T data, Map<String, Object> headers) throws RuntimeException;
+	P marshal(T data, Map<String, H> headers) throws RuntimeException;
 	
 }
