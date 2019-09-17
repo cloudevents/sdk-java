@@ -48,8 +48,8 @@ final CloudEventImpl<String> ce =
 			.build();
 
 /*Marshal the event as a Wire instance */
-final Wire<String, String, Object> wire =
-	BinaryMarshaller.<AttributesImpl, String, String>
+final Wire<String, String, String> wire =
+	BinaryMarshaller.<AttributesImpl, String, String, String>
       builder()
 		.map(AttributesImpl::marshal)
 		.map(Accessor::extensionsOf)
@@ -64,7 +64,7 @@ final Wire<String, String, Object> wire =
  * Use the wire result, getting the headers map
  * and the actual payload
  */
-wire.getHeaders(); //Map<String, Object>
+wire.getHeaders(); //Map<String, String>
 wire.getPayload(); //Optional<String> which has the JSON
 
 // Use in the transport binding: http, kafka, etc ...
@@ -167,8 +167,8 @@ final CloudEventImpl<String> ce =
 			.withExtension(tracing)
 			.build();
 
-final Wire<String, String, Object> wire =
-  StructuredMarshaller.<AttributesImpl, String, String>
+final Wire<String, String, String> wire =
+  StructuredMarshaller.<AttributesImpl, String, String, String>
     builder()
       .mime("Content-Type", "application/cloudevents+json")
       .map(event -> {
