@@ -38,7 +38,7 @@ public class StructuredMarshallerTest {
 		expectedEx.expect(NullPointerException.class);
 		
 		// act
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 			.mime(null, "");
 	}
 	
@@ -48,7 +48,7 @@ public class StructuredMarshallerTest {
 		expectedEx.expect(NullPointerException.class);
 		
 		// act
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 			.mime("", null);
 	}
 	
@@ -56,7 +56,7 @@ public class StructuredMarshallerTest {
 	public void should_be_ok_on_the_first_step() {
 		
 		// act
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 			.mime("Content-Type", "application/cloudevents+json");
 	}
 	
@@ -66,7 +66,7 @@ public class StructuredMarshallerTest {
 		expectedEx.expect(NullPointerException.class);
 				
 		// act
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 			.mime("Content-Type", "application/cloudevents+json")
 			.map(null);
 	}
@@ -76,7 +76,7 @@ public class StructuredMarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
 		.map((ce) -> {
 			
@@ -89,7 +89,7 @@ public class StructuredMarshallerTest {
 	@Test
 	public void should_be_ok_on_the_third_step() {
 		// act
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
 		.map((ce) -> {
 			
@@ -104,7 +104,7 @@ public class StructuredMarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
 		.map((ce) -> {
 			
@@ -116,7 +116,7 @@ public class StructuredMarshallerTest {
 	@Test
 	public void should_ok_on_the_extension_acessor() {
 		// act		
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
 		.map((ce) -> {
 			
@@ -133,7 +133,7 @@ public class StructuredMarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
 		.map((ce) -> {
 			
@@ -148,7 +148,7 @@ public class StructuredMarshallerTest {
 	
 	@Test
 	public void should_ok_on_extension_marshaller() {
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
 		.map((ce) -> {
 			
@@ -169,7 +169,7 @@ public class StructuredMarshallerTest {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
 		.map((ce) -> {
 			
@@ -188,7 +188,7 @@ public class StructuredMarshallerTest {
 	
 	@Test
 	public void should_ok_on_header_mapper() {
-		StructuredMarshaller.<Attributes, Much, String>builder()
+		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
 		.map((ce) -> {
 			
