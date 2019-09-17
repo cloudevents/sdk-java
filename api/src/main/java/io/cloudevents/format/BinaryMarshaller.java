@@ -44,134 +44,135 @@ public final class BinaryMarshaller {
 	 * @param <A> The attributes type
 	 * @param <T> The 'data' type
 	 * @param <P> The payload type
+	 * @param <H> The type of headers value
 	 * @return
 	 */
-	public static <A extends Attributes, T, P> 
-		AttributeMarshalStep<A, T, P> builder() {
+	public static <A extends Attributes, T, P, H> 
+		AttributeMarshalStep<A, T, P, H> builder() {
 		
-		return new Builder<A, T, P>();
+		return new Builder<A, T, P, H>();
 	}
 	
-	public static interface AttributeMarshalStep<A extends Attributes, T, P> {
+	public static interface AttributeMarshalStep<A extends Attributes, T, P, H> {
 		/**
 		 * Marshals the {@link Attributes} instance into a 
 		 * {@code Map<String, String>}
 		 * @param marshaller
 		 * @return
 		 */
-		ExtensionsAccessorStep<A, T, P> map(AttributeMarshaller<A> marshaller);
+		ExtensionsAccessorStep<A, T, P, H> map(AttributeMarshaller<A> marshaller);
 	}
 	
-	public static interface ExtensionsAccessorStep<A extends Attributes, T, P> {
+	public static interface ExtensionsAccessorStep<A extends Attributes, T, P, H> {
 		
 		/**
 		 * To get access of internal collection of {@link ExtensionFormat}
 		 * @param accessor
 		 * @return
 		 */
-		ExtensionsStep<A, T, P> map(ExtensionFormatAccessor<A, T> accessor);
+		ExtensionsStep<A, T, P, H> map(ExtensionFormatAccessor<A, T> accessor);
 		
 	}
 	
-	public static interface ExtensionsStep<A extends Attributes, T, P> {
+	public static interface ExtensionsStep<A extends Attributes, T, P, H> {
 		/**
 		 * Marshals the collection of {@link ExtensionFormat} into a
 		 * {@code Map<String, String>}
 		 * @param marshaller
 		 * @return
 		 */
-		HeaderMapStep<A, T, P> map(ExtensionMarshaller marshaller);
+		HeaderMapStep<A, T, P, H> map(ExtensionMarshaller marshaller);
 	}
 	
-	public static interface HeaderMapStep<A extends Attributes, T, P> {
+	public static interface HeaderMapStep<A extends Attributes, T, P, H> {
 		/**
 		 * Marshals the map of attributes and extensions into a map of headers
 		 * @param mapper
 		 * @return
 		 */
-		DataMarshallerStep<A, T, P> map(FormatHeaderMapper mapper);
+		DataMarshallerStep<A, T, P, H> map(FormatHeaderMapper<H> mapper);
 	}
 	
-	public static interface DataMarshallerStep<A extends Attributes, T, P> {
+	public static interface DataMarshallerStep<A extends Attributes, T, P, H> {
 		/**
 		 * Marshals the 'data' into payload
 		 * @param marshaller
 		 * @return
 		 */
-		BuilderStep<A, T, P> map(DataMarshaller<P, T> marshaller);
+		BuilderStep<A, T, P, H> map(DataMarshaller<P, T, H> marshaller);
 	}
 	
-	public static interface BuilderStep<A extends Attributes, T, P> {
+	public static interface BuilderStep<A extends Attributes, T, P, H> {
 		/**
 		 * Builds the {@link Wire} to use for wire transfer
 		 * @param builder
 		 * @return
 		 */
-		EventStep<A, T, P> builder(WireBuilder<P, String, Object> builder);
+		EventStep<A, T, P, H> builder(WireBuilder<P, String, H> builder);
 	}
 	
-	private static final class Builder<A extends Attributes, T, P> implements 
-		AttributeMarshalStep<A, T, P>,
-		ExtensionsAccessorStep<A, T, P>,
-		ExtensionsStep<A, T, P>,
-		DataMarshallerStep<A, T, P>,
-		HeaderMapStep<A, T, P>,
-		BuilderStep<A, T, P>,
-		EventStep<A, T, P>,
-		MarshalStep<P> {
+	private static final class Builder<A extends Attributes, T, P, H> implements 
+		AttributeMarshalStep<A, T, P, H>,
+		ExtensionsAccessorStep<A, T, P, H>,
+		ExtensionsStep<A, T, P, H>,
+		DataMarshallerStep<A, T, P, H>,
+		HeaderMapStep<A, T, P, H>,
+		BuilderStep<A, T, P, H>,
+		EventStep<A, T, P, H>,
+		MarshalStep<P, H> {
 		
 		private AttributeMarshaller<A> attributeMarshaller;
 		private ExtensionFormatAccessor<A, T> extensionsAccessor;
 		private ExtensionMarshaller extensionMarshaller;
-		private FormatHeaderMapper headerMapper;
-		private DataMarshaller<P, T> dataMarshaller;
-		private WireBuilder<P, String, Object> wireBuilder;
+		private FormatHeaderMapper<H> headerMapper;
+		private DataMarshaller<P, T, H> dataMarshaller;
+		private WireBuilder<P, String, H> wireBuilder;
 		private Supplier<CloudEvent<A, T>> eventSupplier;
 
 		@Override
-		public ExtensionsAccessorStep<A, T, P> map(AttributeMarshaller<A> marshaller) {
+		public ExtensionsAccessorStep<A, T, P, H> map(AttributeMarshaller<A> marshaller) {
 			this.attributeMarshaller = marshaller;
 			return this;
 		}
 		
 		@Override
-		public ExtensionsStep<A, T, P> map(ExtensionFormatAccessor<A, T> accessor) {
+		public ExtensionsStep<A, T, P, H> map(ExtensionFormatAccessor<A, T> accessor) {
 			this.extensionsAccessor = accessor;
 			return this;
 		}
 
 		@Override
-		public HeaderMapStep<A, T, P> map(ExtensionMarshaller marshaller) {
+		public HeaderMapStep<A, T, P, H> map(ExtensionMarshaller marshaller) {
 			this.extensionMarshaller = marshaller;
 			return this;
 		}
 		
 		@Override
-		public DataMarshallerStep<A, T, P> map(FormatHeaderMapper mapper) {
+		public DataMarshallerStep<A, T, P, H> map(FormatHeaderMapper<H> mapper) {
 			this.headerMapper = mapper;
 			return this;
 		}	
 		
 		@Override
-		public BuilderStep<A, T, P> map(DataMarshaller<P, T> marshaller) {
+		public BuilderStep<A, T, P, H> map(DataMarshaller<P, T, H> marshaller) {
 			this.dataMarshaller = marshaller;
 			return this;
 		}
 		
 		@Override
-		public EventStep<A, T, P> builder(WireBuilder<P, String, Object> builder) {
+		public EventStep<A, T, P, H> builder(WireBuilder<P, String, H> builder) {
 			this.wireBuilder = builder;
 			return this;
 		}
 
 		@Override
-		public MarshalStep<P> withEvent(Supplier<CloudEvent<A, T>> event) {
+		public MarshalStep<P, H> withEvent(Supplier<CloudEvent<A, T>> event) {
 			this.eventSupplier = event;
 			return this;
 		}
 
 		@Override
-		public Wire<P, String, Object> marshal() {
+		public Wire<P, String, H> marshal() {
 			CloudEvent<A, T> event = eventSupplier.get();
 			
 			Map<String, String> attributesMap = 
@@ -183,7 +184,7 @@ public final class BinaryMarshaller {
 			Map<String, String> extensionsMap = 
 					extensionMarshaller.marshal(extensionsFormat);
 			
-			Map<String, Object> headers = 
+			Map<String, H> headers = 
 					headerMapper.map(attributesMap, extensionsMap);
 			
 			P payload = null;
