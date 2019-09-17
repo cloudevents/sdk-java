@@ -44,12 +44,12 @@ public final class HeaderMapper {
 	 * @param extensions The map of extensions created by {@link ExtensionMapper}
 	 * @return The map of HTTP Headers
 	 */
-	public static Map<String, Object> map(Map<String, String> attributes, 
+	public static Map<String, String> map(Map<String, String> attributes, 
 			Map<String, String> extensions) {
 		Objects.requireNonNull(attributes);
 		Objects.requireNonNull(extensions);
 		
-		Map<String, Object> result = attributes.entrySet()
+		Map<String, String> result = attributes.entrySet()
 			.stream()
 			.filter(attribute -> null!= attribute.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
