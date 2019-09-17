@@ -102,10 +102,8 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 		
 	}
 	
-	@Override
-	public Future<RecordMetadata> send(ProducerRecord<K, CloudEvent<A, T>>
+	private ProducerRecord<K, byte[]> marshal(ProducerRecord<K, CloudEvent<A, T>>
 			event) {
-		
 		Wire<byte[], String, byte[]> wire = marshal(() -> event.value());
 		Set<Header> headers = marshal(wire.getHeaders());
 		
@@ -121,17 +119,24 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 				event.key(),
 				payload,
 				headers);
-				
-		return producer.send(record);
+			
+		return record;
+	}
+	
+	@Override
+	public Future<RecordMetadata> send(ProducerRecord<K, CloudEvent<A, T>>
+			event) {
+		
+		return producer.send(marshal(event));
+		
 	}
 
 	@Override
 	public Future<RecordMetadata> send(ProducerRecord<K, CloudEvent<A, T>> 
 			event, Callback callback) {
 		
-		// TODO Auto-generated method stub
-	
-		return null;
+		return producer.send(marshal(event), callback);
+		
 	}
 	
 	@Override
