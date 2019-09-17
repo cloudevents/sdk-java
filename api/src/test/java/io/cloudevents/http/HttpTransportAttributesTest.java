@@ -62,7 +62,7 @@ public class HttpTransportAttributesTest {
 		attributes.put("contenttype", "application/json");
 		
 		// act
-		Map<String, Object> headers = io.cloudevents.v02.http.HeaderMapper
+		Map<String, String> headers = io.cloudevents.v02.http.HeaderMapper
 				.map(attributes, new HashMap<String, String>());
 		
 		// assert
