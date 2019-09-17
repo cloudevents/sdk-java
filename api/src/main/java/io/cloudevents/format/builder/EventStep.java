@@ -27,13 +27,14 @@ import io.cloudevents.CloudEvent;
  * @param <A> The attributes type
  * @param <T> The 'data' type
  * @param <P> The payload type
+ * @param <H> The headers value type
  */
-public interface EventStep<A extends Attributes, T, P> {
+public interface EventStep<A extends Attributes, T, P, H> {
 
 	/**
 	 * Supplies the {@link CloudEvent} instance which will be marshaled
 	 * @param event cloud event to marshal
 	 * @return The next step of builder
 	 */
-	MarshalStep<P> withEvent(Supplier<CloudEvent<A, T>> event);
+	MarshalStep<P, H> withEvent(Supplier<CloudEvent<A, T>> event);
 }

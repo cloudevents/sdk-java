@@ -23,13 +23,14 @@ import io.cloudevents.format.Wire;
  * @author fabiojose
  * 
  * @param <P> The payload type
+ * @param <H> The headers value type
  */
-public interface MarshalStep<P> {
+public interface MarshalStep<P, H> {
 
 	/**
 	 * Marshals the {@link CloudEvent} instance as {@link Wire}
 	 * @return The wire to use in the transports bindings
 	 */
-	Wire<P, String, Object> marshal();
+	Wire<P, String, H> marshal();
 	
 }
