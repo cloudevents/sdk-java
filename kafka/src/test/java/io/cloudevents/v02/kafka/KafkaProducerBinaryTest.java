@@ -150,15 +150,15 @@ public class KafkaProducerBinaryTest {
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
 		
-		final EventStep<AttributesImpl, Much, byte[]> builder = 
-			BinaryMarshaller.<AttributesImpl, Much, byte[]>
+		final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
+			BinaryMarshaller.<AttributesImpl, Much, byte[], byte[]>
 			  builder()
 				.map(AttributesImpl::marshal)
 				.map(Accessor::extensionsOf)
 				.map(ExtensionFormat::marshal)
 				.map(HeaderMapper::map)
 				.map(Json::binaryMarshal)
-				.builder(Wire<byte[], String, Object>::new);
+				.builder(Wire<byte[], String, byte[]>::new);
 			
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
 			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){
@@ -216,9 +216,6 @@ public class KafkaProducerBinaryTest {
 	@Test
 	public void should_be_ok_with_no_data() throws Exception {
 		// setup
-		final Much data = new Much();
-		data.setWow("nice!");
-		
 		CloudEventImpl<Much> ce = 
 			CloudEventBuilder.<Much>builder()
 				.withId("x10")
@@ -250,15 +247,15 @@ public class KafkaProducerBinaryTest {
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
 		
-		final EventStep<AttributesImpl, Much, byte[]> builder = 
-			BinaryMarshaller.<AttributesImpl, Much, byte[]>
+		final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
+			BinaryMarshaller.<AttributesImpl, Much, byte[], byte[]>
 			  builder()
 				.map(AttributesImpl::marshal)
 				.map(Accessor::extensionsOf)
 				.map(ExtensionFormat::marshal)
 				.map(HeaderMapper::map)
 				.map(Json::binaryMarshal)
-				.builder(Wire<byte[], String, Object>::new);
+				.builder(Wire<byte[], String, byte[]>::new);
 			
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
 			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){
@@ -360,15 +357,15 @@ public class KafkaProducerBinaryTest {
 		final KafkaProducer<String, byte[]> producer = 
 				new KafkaProducer<String, byte[]>(producerProperties);
 		
-		final EventStep<AttributesImpl, Much, byte[]> builder = 
-			BinaryMarshaller.<AttributesImpl, Much, byte[]>
+		final EventStep<AttributesImpl, Much, byte[], byte[]> builder = 
+			BinaryMarshaller.<AttributesImpl, Much, byte[], byte[]>
 			  builder()
 				.map(AttributesImpl::marshal)
 				.map(Accessor::extensionsOf)
 				.map(ExtensionFormat::marshal)
 				.map(HeaderMapper::map)
 				.map(Json::binaryMarshal)
-				.builder(Wire<byte[], String, Object>::new);
+				.builder(Wire<byte[], String, byte[]>::new);
 			
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
 			ceProducer = new CloudEventsKafkaProducer<>(producer, builder)){

@@ -57,7 +57,7 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 	Producer<K, CloudEvent<A, T>> {
 
 	private final Producer<K, byte[]> producer;
-	private EventStep<A, T, byte[]> builder;
+	private EventStep<A, T, byte[], byte[]> builder;
 	
 	/**
 	 * Instantiate a producer to emit {@link CloudEvent} instances in Kafka
@@ -65,7 +65,7 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 	 * @param builder The builder to build the kafka records value
 	 */
 	public CloudEventsKafkaProducer(Producer<K, byte[]> producer, 
-			EventStep<A, T, byte[]> builder) {
+			EventStep<A, T, byte[], byte[]> builder) {
 		Objects.requireNonNull(producer);
 		Objects.requireNonNull(builder);
 		
@@ -73,7 +73,7 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 		this.builder = builder;
 	}
 	
-	private Wire<byte[], String, Object> marshal(Supplier<CloudEvent<A, T>> event) {
+	private Wire<byte[], String, byte[]> marshal(Supplier<CloudEvent<A, T>> event) {
 		
 		return 
 			Optional.ofNullable(builder)
@@ -90,13 +90,13 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 	 * @param headers
 	 * @return
 	 */
-	private Set<Header> marshal(Map<String, Object> headers) {
-		
+	private Set<Header> marshal(Map<String, byte[]> headers) {
+
 		return 
 		  headers.entrySet()
 			.stream()
 			.map(header -> 
-				new SimpleEntry<>(header.getKey(), (byte[])header.getValue()))
+				new SimpleEntry<>(header.getKey(), header.getValue()))
 			.map(header -> new RecordHeader(header.getKey(), header.getValue()))
 			.collect(Collectors.toSet());
 		
@@ -106,28 +106,22 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 	public Future<RecordMetadata> send(ProducerRecord<K, CloudEvent<A, T>>
 			event) {
 		
-		Wire<byte[], String, Object> wire = marshal(() -> event.value());
+		Wire<byte[], String, byte[]> wire = marshal(() -> event.value());
 		Set<Header> headers = marshal(wire.getHeaders());
 		
-		ProducerRecord<K, byte[]> record =
-			wire.getPayload()
-				.map(payload -> 
-				  new ProducerRecord<K, byte[]>(
-					event.topic(),
-					event.partition(),
-					event.timestamp(),
-					event.key(),
-					payload,
-					headers))
-				.orElse(
-				  new ProducerRecord<K, byte[]>(
-					event.topic(),
-					event.partition(),
-					event.timestamp(),
-					event.key(),
-					null,
-					headers));
+		byte[] payload = wire
+				.getPayload()
+				.orElse(null); 
 		
+		ProducerRecord<K, byte[]> record = 
+			new ProducerRecord<K, byte[]>(
+				event.topic(),
+				event.partition(),
+				event.timestamp(),
+				event.key(),
+				payload,
+				headers);
+				
 		return producer.send(record);
 	}
 
