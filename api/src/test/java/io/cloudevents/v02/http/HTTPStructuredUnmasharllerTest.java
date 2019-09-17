@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,11 +28,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
-import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.format.StructuredUnmarshaller;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
-import io.cloudevents.v02.Accessor;
 import io.cloudevents.v02.AttributesImpl;
 import io.cloudevents.v02.CloudEventBuilder;
 import io.cloudevents.v02.CloudEventImpl;
@@ -152,24 +149,7 @@ public class HTTPStructuredUnmasharllerTest {
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
 		
 		String json = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"text/plain\", \"distributedTracing\":{\"traceparent\":\"0\",\"tracestate\":\"congo=4\"}}";
-		String ceData = "yes!";
-		
-		final DistributedTracingExtension dt = new DistributedTracingExtension();
-		dt.setTraceparent("0");
-		dt.setTracestate("congo=4");
-		
-		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
 
-		CloudEventImpl<String> expected = 
-				CloudEventBuilder.<String>builder()
-					.withId("x10")
-					.withSource(URI.create("/source"))
-					.withType("event-type")
-					.withContenttype("text/plain")
-					.withData(ceData)
-					.withExtension(tracing)
-					.build();
-		
 		// act
 		CloudEvent<AttributesImpl, String> actual = 
 			StructuredUnmarshaller.<AttributesImpl, String, String>
