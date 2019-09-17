@@ -43,60 +43,61 @@ public class StructuredMarshaller {
 	 * @param <A> The attributes type
 	 * @param <T> The CloudEvents 'data' type
 	 * @param <P> The CloudEvents marshaled envelope type 
-	 * @return
+	 * @param <H> The header type
+	 * @return A new builder to build structured mashaller
 	 */
-	public static <A extends Attributes, T, P> MediaTypeStep<A, T, P>
+	public static <A extends Attributes, T, P, H> MediaTypeStep<A, T, P, H>
 			builder() {
 		return new Builder<>();
 	}
 		
-	public static interface MediaTypeStep<A extends Attributes, T, P> {
+	public static interface MediaTypeStep<A extends Attributes, T, P, H> {
 		/**
 		 * Sets the media type of CloudEvents envelope
 		 * @param headerName Example {@code Content-Type} for HTTP
 		 * @param mediaType Example: {@code application/cloudevents+json}
 		 */
-		EnvelopeMarshallerStep<A, T, P> mime(String headerName, Object mediaType);
+		EnvelopeMarshallerStep<A, T, P, H> mime(String headerName, H mediaType);
 	}
 	
-	public static interface EnvelopeMarshallerStep<A extends Attributes, T, P> {
+	public static interface EnvelopeMarshallerStep<A extends Attributes, T, P, H> {
 		/**
 		 * Sets the marshaller for the CloudEvent
 		 * @param marshaller
 		 */
-		ExtensionAccessorStep<A, T, P> map(EnvelopeMarshaller<A, T, P> marshaller);
+		ExtensionAccessorStep<A, T, P, H> map(EnvelopeMarshaller<A, T, P> marshaller);
 	}
 	
-	public static interface ExtensionAccessorStep<A extends Attributes, T, P> {
+	public static interface ExtensionAccessorStep<A extends Attributes, T, P, H> {
 		/**
 		 * To skip the extension special handling
 		 */
-		EventStep<A, T, P> skip();
-		ExtensionMarshallerStep<A, T, P> map(ExtensionFormatAccessor<A, T> accessor);
+		EventStep<A, T, P, H> skip();
+		ExtensionMarshallerStep<A, T, P, H> map(ExtensionFormatAccessor<A, T> accessor);
 	}
 	
-	public static interface ExtensionMarshallerStep<A extends Attributes, T, P> {
-		HeaderMapperStep<A, T, P> map(ExtensionMarshaller marshaller);
+	public static interface ExtensionMarshallerStep<A extends Attributes, T, P, H> {
+		HeaderMapperStep<A, T, P, H> map(ExtensionMarshaller marshaller);
 	}
 	
-	public static interface HeaderMapperStep<A extends Attributes, T, P> {
-		EventStep<A, T, P> map(FormatHeaderMapper mapper);
+	public static interface HeaderMapperStep<A extends Attributes, T, P, H> {
+		EventStep<A, T, P, H> map(FormatHeaderMapper<H> mapper);
 	}
 
-	private static final class Builder<A extends Attributes, T, P> implements
-		MediaTypeStep<A, T, P>,
-		EnvelopeMarshallerStep<A, T, P>,
-		ExtensionAccessorStep<A, T, P>,
-		ExtensionMarshallerStep<A, T, P>,
-		HeaderMapperStep<A, T, P>,
-		EventStep<A, T, P>,
-		MarshalStep<P>{
+	private static final class Builder<A extends Attributes, T, P, H> implements
+		MediaTypeStep<A, T, P, H>,
+		EnvelopeMarshallerStep<A, T, P, H>,
+		ExtensionAccessorStep<A, T, P, H>,
+		ExtensionMarshallerStep<A, T, P, H>,
+		HeaderMapperStep<A, T, P, H>,
+		EventStep<A, T, P, H>,
+		MarshalStep<P, H>{
 		
 		private static final Map<String, String> NO_ATTRS = 
 				new HashMap<>();
 		
 		private String headerName;
-		private Object mediaType;
+		private H mediaType;
 		
 		private EnvelopeMarshaller<A, T, P> marshaller;
 		
@@ -104,12 +105,12 @@ public class StructuredMarshaller {
 		
 		private ExtensionMarshaller extensionMarshaller;
 		
-		private FormatHeaderMapper headerMapper;
+		private FormatHeaderMapper<H> headerMapper;
 		
 		private Supplier<CloudEvent<A, T>> event;
 		
 		@Override
-		public EnvelopeMarshallerStep<A, T, P> mime(String headerName, Object mediaType) {
+		public EnvelopeMarshallerStep<A, T, P, H> mime(String headerName, H mediaType) {
 			Objects.requireNonNull(headerName);
 			Objects.requireNonNull(mediaType);
 			
@@ -119,7 +120,7 @@ public class StructuredMarshaller {
 		}
 
 		@Override
-		public ExtensionAccessorStep<A, T, P> map(EnvelopeMarshaller<A, T, P> marshaller) {
+		public ExtensionAccessorStep<A, T, P, H> map(EnvelopeMarshaller<A, T, P> marshaller) {
 			Objects.requireNonNull(marshaller);
 			
 			this.marshaller = marshaller;
@@ -127,12 +128,12 @@ public class StructuredMarshaller {
 		}
 		
 		@Override
-		public EventStep<A, T, P> skip() {
+		public EventStep<A, T, P, H> skip() {
 			return this;
 		}
 
 		@Override
-		public ExtensionMarshallerStep<A, T, P> map(ExtensionFormatAccessor<A, T> accessor) {
+		public ExtensionMarshallerStep<A, T, P, H> map(ExtensionFormatAccessor<A, T> accessor) {
 			Objects.requireNonNull(accessor);
 			
 			this.extensionAccessor = accessor;
@@ -140,7 +141,7 @@ public class StructuredMarshaller {
 		}
 		
 		@Override
-		public HeaderMapperStep<A, T, P> map(ExtensionMarshaller marshaller) {
+		public HeaderMapperStep<A, T, P, H> map(ExtensionMarshaller marshaller) {
 			Objects.requireNonNull(marshaller);
 			
 			this.extensionMarshaller = marshaller;
@@ -148,7 +149,7 @@ public class StructuredMarshaller {
 		}
 		
 		@Override
-		public EventStep<A, T, P> map(FormatHeaderMapper mapper) {
+		public EventStep<A, T, P, H> map(FormatHeaderMapper<H> mapper) {
 			Objects.requireNonNull(mapper);
 			
 			this.headerMapper = mapper;
@@ -156,7 +157,7 @@ public class StructuredMarshaller {
 		}
 
 		@Override
-		public MarshalStep<P> withEvent(Supplier<CloudEvent<A, T>> event) {
+		public MarshalStep<P, H> withEvent(Supplier<CloudEvent<A, T>> event) {
 			Objects.requireNonNull(event);
 			
 			this.event = event;
@@ -164,12 +165,12 @@ public class StructuredMarshaller {
 		}
 
 		@Override
-		public Wire<P, String, Object> marshal() {
+		public Wire<P, String, H> marshal() {
 			CloudEvent<A, T> ce = event.get();
 			
 			P payload = marshaller.marshal(ce);
 			
-			Map<String, Object> headers =
+			Map<String, H> headers =
 			Optional.ofNullable(extensionAccessor)
 				.map(accessor -> accessor.extensionsOf(ce))
 				.map(extensions -> extensionMarshaller.marshal(extensions))
