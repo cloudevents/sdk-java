@@ -49,8 +49,8 @@ final KafkaProducer<String, byte[]> producer =
 		new KafkaProducer<String, byte[]>(props);
 
 // Create your own marshaller: binary or structured
-final EventStep<AttributesImpl, String, byte[]> builder =
-	BinaryMarshaller.<AttributesImpl, String, byte[]>
+final EventStep<AttributesImpl, String, byte[], byte[]> builder =
+	BinaryMarshaller.<AttributesImpl, String, byte[], byte[]>
 	  builder()
 		.map(AttributesImpl::marshal)
 		.map(Accessor::extensionsOf)
