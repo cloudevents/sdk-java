@@ -69,7 +69,7 @@ public class HTTPStructuredUnmasharllerTest {
 				.map("application/json", Json.umarshaller(Much.class)::unmarshal)
 				.next()
 				.skip()
-				.map((payload) -> 
+				.map((payload, extensions) -> 
 					Json.decodeValue(payload, 
 						new TypeReference<CloudEventImpl<Much>>() {}))
 				.withHeaders(() -> httpHeaders)
@@ -118,7 +118,7 @@ public class HTTPStructuredUnmasharllerTest {
 				.map("application/json", Json.umarshaller(String.class)::unmarshal)
 				.next()
 				.skip()
-				.map((payload) -> 
+				.map((payload, extensions) -> 
 					Json.decodeValue(payload, 
 						new TypeReference<CloudEventImpl<String>>() {}))
 				.withHeaders(() -> httpHeaders)
@@ -143,12 +143,15 @@ public class HTTPStructuredUnmasharllerTest {
 	}
 	
 	@Test
-	public void should_unmarshal_then_tracing_extension() {
+	public void should_unmarshal_the_tracing_extension_from_headers() {
 		// setup
 		Map<String, Object> httpHeaders = new HashMap<>();
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
 		
-		String json = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"text/plain\", \"distributedTracing\":{\"traceparent\":\"0\",\"tracestate\":\"congo=4\"}}";
+		httpHeaders.put("traceparent", "0x200");
+		httpHeaders.put("tracestate", "congo=9");
+		
+		String json = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"text/plain\"}";
 
 		// act
 		CloudEvent<AttributesImpl, String> actual = 
@@ -159,9 +162,20 @@ public class HTTPStructuredUnmasharllerTest {
 				.map(ExtensionMapper::map)
 				.map(DistributedTracingExtension::unmarshall)
 				.next()
-				.map((payload) -> 
+				.map((payload, extensions) -> {
+					CloudEventImpl<String> event =
 					Json.decodeValue(payload, 
-						new TypeReference<CloudEventImpl<String>>() {}))
+						new TypeReference<CloudEventImpl<String>>() {});
+					
+					CloudEventBuilder<String> builder = 
+						CloudEventBuilder.<String>builder(event);
+					
+					extensions.get().forEach(extension -> {
+						builder.withExtension(extension);
+					});
+					
+					return builder.build();
+				})
 				.withHeaders(() -> httpHeaders)
 				.withPayload(() -> json)
 				.unmarshal();
@@ -169,5 +183,9 @@ public class HTTPStructuredUnmasharllerTest {
 		// assert
 		assertTrue(actual.getExtensions().containsKey(
 				DistributedTracingExtension.Format.IN_MEMORY_KEY));
+		
+		assertTrue(actual.getExtensions().get(
+				DistributedTracingExtension.Format.IN_MEMORY_KEY) 
+					instanceof DistributedTracingExtension);
 	}
 }
