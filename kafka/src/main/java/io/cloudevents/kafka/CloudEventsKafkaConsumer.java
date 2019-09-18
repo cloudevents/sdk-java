@@ -15,26 +15,28 @@
  */
 package io.cloudevents.kafka;
 
+import static java.util.stream.Collectors.groupingBy;
+
 import java.time.Duration;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static java.util.stream.Collectors.groupingBy;
-
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
 import org.apache.kafka.clients.consumer.OffsetCommitCallback;
@@ -42,6 +44,7 @@ import org.apache.kafka.common.Metric;
 import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
 
 import io.cloudevents.Attributes;
@@ -68,17 +71,17 @@ public class CloudEventsKafkaConsumer<K, A extends Attributes, T>
 	
 	/**
 	 * Instantiate a consumer prepared to unmarshal the events from Kafka
-	 * @param consumer The Kafka Consumer with value as a byte array
+	 * 
+	 * @param configuration To build the {@link KafkaConsumer} for delegation
 	 * @param builder The builder to build the CloudEvent
 	 */
-	public CloudEventsKafkaConsumer(Consumer<K, byte[]> consumer, 
+	public CloudEventsKafkaConsumer(Properties configuration, 
 			HeadersStep<A, T, byte[]> builder) {
-		
-		Objects.requireNonNull(consumer);
+		Objects.requireNonNull(configuration);
 		Objects.requireNonNull(builder);
 		
-		this.consumer = consumer;
 		this.builder = builder;
+		this.consumer = new KafkaConsumer<>(configuration);
 	}
 	
 	/**

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.clients.producer.Callback;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -57,20 +59,21 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 	Producer<K, CloudEvent<A, T>> {
 
 	private final Producer<K, byte[]> producer;
-	private EventStep<A, T, byte[], byte[]> builder;
+	private final EventStep<A, T, byte[], byte[]> builder;
 	
 	/**
 	 * Instantiate a producer to emit {@link CloudEvent} instances in Kafka
-	 * @param producer To delegate the actual producer methods call
+	 * 
+	 * @param configuration To build the {@link KafkaProducer} for delegation
 	 * @param builder The builder to build the kafka records value
 	 */
-	public CloudEventsKafkaProducer(Producer<K, byte[]> producer, 
+	public CloudEventsKafkaProducer(Properties configuration,
 			EventStep<A, T, byte[], byte[]> builder) {
-		Objects.requireNonNull(producer);
+		Objects.requireNonNull(configuration);
 		Objects.requireNonNull(builder);
 		
-		this.producer = producer;
 		this.builder = builder;
+		this.producer = new KafkaProducer<>(configuration);
 	}
 	
 	private Wire<byte[], String, byte[]> marshal(Supplier<CloudEvent<A, T>> event) {

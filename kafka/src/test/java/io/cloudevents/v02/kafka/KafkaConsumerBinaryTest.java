@@ -35,7 +35,6 @@ import java.util.function.Supplier;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -159,12 +158,9 @@ public class KafkaConsumerBinaryTest {
 			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
 					ByteArrayDeserializer.class);
 		
-		KafkaConsumer<String, byte[]> consumer = 
-				new KafkaConsumer<>(consumerProperties);
-		
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumer, binary(Much.class))){
+				new CloudEventsKafkaConsumer<>(consumerProperties, binary(Much.class))){
 			ceConsumer.subscribe(Collections.singletonList(topic));
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
@@ -234,12 +230,9 @@ public class KafkaConsumerBinaryTest {
 			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
 					ByteArrayDeserializer.class);
 		
-		KafkaConsumer<String, byte[]> consumer = 
-				new KafkaConsumer<>(consumerProperties);
-		
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumer, binary(Much.class))){
+				new CloudEventsKafkaConsumer<>(consumerProperties, binary(Much.class))){
 			ceConsumer.subscribe(Collections.singletonList(topic));
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
@@ -312,13 +305,10 @@ public class KafkaConsumerBinaryTest {
 					StringDeserializer.class);
 			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
 					ByteArrayDeserializer.class);
-		
-		KafkaConsumer<String, byte[]> consumer = 
-				new KafkaConsumer<>(consumerProperties);
 				
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumer, binary(Much.class))){
+				new CloudEventsKafkaConsumer<>(consumerProperties, binary(Much.class))){
 			ceConsumer.subscribe(Collections.singletonList(topic));
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
@@ -336,8 +326,7 @@ public class KafkaConsumerBinaryTest {
 			assertTrue(actual.getAttributes().getContenttype().isPresent());
 			assertEquals("application/json", actual.getAttributes().getContenttype().get());
 			assertFalse(actual.getData().isPresent());
-			
-			System.out.println(actual.getExtensions());
+
 			Object tracing = actual.getExtensions()
 					.get(DistributedTracingExtension.Format.IN_MEMORY_KEY);
 			

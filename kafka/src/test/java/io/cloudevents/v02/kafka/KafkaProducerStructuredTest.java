@@ -16,7 +16,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -112,12 +111,9 @@ public class KafkaProducerStructuredTest {
 					StringDeserializer.class);
 			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
 					ByteArrayDeserializer.class);
-		
-		final KafkaProducer<String, byte[]> producer = 
-				new KafkaProducer<String, byte[]>(producerProperties);
 
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, structured())){
+			ceProducer = new CloudEventsKafkaProducer<>(producerProperties, structured())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
@@ -176,12 +172,9 @@ public class KafkaProducerStructuredTest {
 					StringDeserializer.class);
 			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
 					ByteArrayDeserializer.class);
-		
-		final KafkaProducer<String, byte[]> producer = 
-				new KafkaProducer<String, byte[]>(producerProperties);
 
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, structured())){
+			ceProducer = new CloudEventsKafkaProducer<>(producerProperties, structured())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
@@ -248,12 +241,9 @@ public class KafkaProducerStructuredTest {
 					StringDeserializer.class);
 			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
 					ByteArrayDeserializer.class);
-		
-		final KafkaProducer<String, byte[]> producer = 
-				new KafkaProducer<String, byte[]>(producerProperties);
 			
 		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
-			ceProducer = new CloudEventsKafkaProducer<>(producer, structured())){
+			ceProducer = new CloudEventsKafkaProducer<>(producerProperties, structured())){
 			// act
 			RecordMetadata metadata = 
 				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
