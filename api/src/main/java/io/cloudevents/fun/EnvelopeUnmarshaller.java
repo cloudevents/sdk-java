@@ -15,8 +15,12 @@
  */
 package io.cloudevents.fun;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.extensions.ExtensionFormat;
 
 /**
  * 
@@ -26,10 +30,13 @@ import io.cloudevents.CloudEvent;
 public interface EnvelopeUnmarshaller<A extends Attributes, T, P> {
 
 	/**
-	 * Unmarshals the payload into {@link CloudEvent} instance impl 
+	 * Unmarshals the payload into {@link CloudEvent} instance implementation
+	 *  
 	 * @param payload The envelope payload
+	 * @param extensions Supplies a list of {@link ExtensionFormat}
 	 * @return The unmarshalled impl of CloudEvent
 	 */
-	CloudEvent<A, T> unmarshal(P payload);
+	CloudEvent<A, T> unmarshal(P payload, 
+			Supplier<List<ExtensionFormat>> extensions);
 	
 }
