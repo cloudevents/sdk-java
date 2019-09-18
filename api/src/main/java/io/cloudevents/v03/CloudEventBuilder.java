@@ -39,7 +39,9 @@ import io.cloudevents.fun.EventBuilder;
  * @author fabiojose
  *
  */
-public final class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl> {
+public final class CloudEventBuilder<T> implements 
+		EventBuilder<T, AttributesImpl> {
+	private CloudEventBuilder() {}
 	
 	private static Validator VALIDATOR;
 	
@@ -62,8 +64,6 @@ public final class CloudEventBuilder<T> implements EventBuilder<T, AttributesImp
 	private T data;
 	
 	private final Set<ExtensionFormat> extensions = new HashSet<>();
-
-	private CloudEventBuilder() {}
 	
 	private static Validator getValidator() {
 		if(null== VALIDATOR) {
