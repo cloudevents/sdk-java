@@ -16,6 +16,7 @@
 package io.cloudevents.v02.http;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
@@ -25,6 +26,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.json.types.Much;
 import io.cloudevents.v02.AttributesImpl;
 
@@ -71,5 +73,40 @@ public class HTTPBinaryUnmarshallerTest {
 		assertEquals("application/json", actual.getAttributes().getContenttype().get());
 		assertTrue(actual.getData().isPresent());
 		assertEquals(expected, actual.getData().get());
+	}
+	
+	@Test
+	public void should_unmarshal_tracing_extension_from_header() {
+		// setup
+		Much expected = new Much();
+		expected.setWow("yes!");
+		
+		Map<String, Object> myHeaders = new HashMap<>();
+    	myHeaders.put("ce-id", "0x11");
+		myHeaders.put("ce-source", "/source");
+		myHeaders.put("ce-specversion", "0.2");
+		myHeaders.put("ce-type", "br.my");
+		myHeaders.put("ce-time", "2019-09-16T20:49:00Z");
+		myHeaders.put("ce-schemaurl", "http://my.br");
+		myHeaders.put("Content-Type", "application/json");
+		
+		myHeaders.put("traceparent", "0x200");
+		myHeaders.put("tracestate", "congo=9");
+		
+		String payload = "{\"wow\":\"yes!\"}";
+		
+		// act
+		CloudEvent<AttributesImpl, Much> actual = 
+			Unmarshallers.binary(Much.class)
+				.withHeaders(() -> myHeaders)
+				.withPayload(() -> payload)
+				.unmarshal();
+		
+		// assert
+		assertNotNull(actual.getExtensions()
+			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY));
+		assertTrue(actual.getExtensions()
+			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY) 
+				instanceof DistributedTracingExtension);
 	}
 }
