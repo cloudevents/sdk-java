@@ -43,6 +43,8 @@ import io.cloudevents.fun.EventBuilder;
  */
 public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl>,
 	Builder<AttributesImpl, T> {
+	private CloudEventBuilder() {}
+	
 	private static Validator VALIDATOR;
 	
 	private static final String SPEC_VERSION = "0.2";
@@ -61,8 +63,6 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl>,
 	
 	private final Set<ExtensionFormat> extensions = new HashSet<>();
 	
-	private CloudEventBuilder() {}
-	
 	private static Validator getValidator() {
 		if(null== VALIDATOR) {
 			VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
@@ -76,6 +76,50 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl>,
 	 */
 	public static <T> CloudEventBuilder<T> builder() {
 		return new CloudEventBuilder<T>();
+	}
+	
+	/**
+	 * 
+	 * @param <T> The 'data' type
+	 * @param base A base event to copy {@link CloudEvent#getAttributes()},
+	 *  {@link CloudEvent#getData()} and {@link CloudEvent#getExtensions()}
+	 * @return
+	 */
+	public static <T> CloudEventBuilder<T> builder(
+			final CloudEvent<AttributesImpl, T> base) {
+		Objects.requireNonNull(base);
+		
+		CloudEventBuilder<T> result = new CloudEventBuilder<>();
+		
+		AttributesImpl attributes = base.getAttributes();
+		
+		result
+			.withId(attributes.getId())
+			.withSource(attributes.getSource())
+			.withType(attributes.getType());
+		
+		attributes.getTime().ifPresent((time) -> {
+			result.withTime(time);
+		});
+		
+		attributes.getSchemaurl().ifPresent((schema) -> {
+			result.withSchemaurl(schema);
+		});
+		
+		attributes.getContenttype().ifPresent(contenttype -> {
+			result.withContenttype(contenttype);
+		});
+		
+		Accessor.extensionsOf(base)
+			.forEach(extension -> {
+				result.withExtension(extension);
+			});
+		
+		base.getData().ifPresent(data -> {
+			result.withData(data);
+		});
+		
+		return result;
 	}
 	
 	/**
