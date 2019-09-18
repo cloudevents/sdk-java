@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
@@ -160,14 +161,22 @@ public class StructuredUnmarshaller {
 			Map<String, Object> headers = headersSupplier.get();
 			P payload = payloadSupplier.get();
 			
-			//TODO Process extensions in the header
+			final Map<String, String> extensionsMap = 
+				Optional.ofNullable(extensionMapper)
+					.map(mapper -> mapper.map(headers))
+					.orElse(new HashMap<>());
 			
-			// TODO How to inject this list into result
-
-			// TODO process the extensions that are in-memory
+			//TODO How to inject this list into result
 			
 			CloudEvent<A, T> result = 
-				unmarshaller.unmarshal(payload);
+				unmarshaller.unmarshal(payload, 
+				  () -> 
+					extensionUnmarshallers.stream()
+					.map(unmarshaller ->
+						unmarshaller.unmarshal(extensionsMap))
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.collect(Collectors.toList()));
 			
 			return result;
 		}
