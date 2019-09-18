@@ -153,7 +153,7 @@ public class StructuredUnmarshallerTest {
 			.map((headers) -> null)
 			.map((extensions) -> null)
 			.next()
-			.map((payload) -> null);
+			.map((payload, extensions) -> null);
 	}
 	
 	@Test
@@ -169,7 +169,7 @@ public class StructuredUnmarshallerTest {
 		.map((headers) -> null)
 		.map((extensions) -> null)
 		.next()
-		.map((payload) -> null)
+		.map((payload, extensions) -> null)
 		.withHeaders(null);
 	}
 	
@@ -183,7 +183,7 @@ public class StructuredUnmarshallerTest {
 		.map((headers) -> null)
 		.map((extensions) -> null)
 		.next()
-		.map((payload) -> null)
+		.map((payload, extensions) -> null)
 		.withHeaders(() -> null);
 	}
 	
@@ -200,7 +200,7 @@ public class StructuredUnmarshallerTest {
 		.map((headers) -> null)
 		.map((extensions) -> null)
 		.next()
-		.map((payload) -> null)
+		.map((payload, extensions) -> null)
 		.withHeaders(() -> null)
 		.withPayload(null);
 	}
@@ -215,7 +215,7 @@ public class StructuredUnmarshallerTest {
 		.map((headers) -> null)
 		.map((extensions) -> null)
 		.next()
-		.map((payload) -> null)
+		.map((payload, extensions) -> null)
 		.withHeaders(() -> null)
 		.withPayload(() -> null);
 	}
