@@ -8,6 +8,16 @@ The impl of Kafka Transport Biding for CloudEvents.
 
 See some examples of how to use with Kafka Consumer and Kafka Producer.
 
+Add the dependency in your project:
+
+```xml
+<dependency>
+    <groupId>io.cloudevents</groupId>
+    <artifactId>cloudevents-kafka</artifactId>
+    <version>0.3.0</version>
+</dependency>
+```
+
 ### Producer
 
 Producing CloudEvents in Kafka.
