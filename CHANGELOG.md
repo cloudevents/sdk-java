@@ -12,6 +12,17 @@ interface for context attributes
 - Support for [Spec v0.3](https://github.com/cloudevents/spec/tree/v0.3)
 - [ExtensionFormat](./api/src/main/java/io/cloudevents/ExtensionFormat.java)
 interface for extensions
+- [HTTP Marshallers](./api/src/main/java/io/cloudevents/v02/http/Marshallers.java) with bare minium marshallers for HTTP Transport Binding
+- [HTTP Unmarshallers](./api/src/main/java/io/cloudevents/v02/http/Unmarshallers.java) with bare minium unmarshallers for HTTP Transport Binding
+- [Kafka Marshallers](./kafka/src/main/java/io/cloudevents/v02/kafka/Marshallers.java) with bare minimum marshallers for Kafka Transport Binding
+- [CloudEventsKafkaProducer](./kafka/src/main/java//io/cloudevents/kafka/CloudEventsKafkaProducer.java) The CloudEvents producer that uses Kafka Clients API
+- [Kafka Unmarshallers](./kafka/src/main/java/io/cloudevents/v02/kafka/Unmarshallers.java) with bare minium unmarshallers for Kafka Transport Binding
+- [CloudEventsKafkaConsumer](./kafka/src/main/java//io/cloudevents/kafka/CloudEventsKafkaConsumer.java) The CloudEvents consumer that uses Kafka Clients API
+- [BinaryMarshaller](./api/src/main/java/io/cloudevents/format/BinaryMarshaller.java) To help in the case of you need to create your own marshallers for binary content mode
+- [BinaryUnmarshaller](./api/src/main/java/io/cloudevents/format/BinaryUnmarshaller.java) To help in the case of you need to create your own unmarshallers for binary content mode
+- [StructuredMarshaller](./api/src/main/java/io/cloudevents/format/StructuredMarshaller.java) To help in the case of you need to create your own marshallers for structured content mode
+- [StructuredUnmarshaller](./api/src/main/java/io/cloudevents/format/StructuredUnmarshaller.java) To help in the case of you need to create your own unmarshallers for structured content mode
+
 
 ### Changed
 - CloudEvent interface signature, breaking the backward compatibility
