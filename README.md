@@ -21,7 +21,7 @@ For Maven based projects, use the following to configure the CloudEvents Java SD
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
-    <version>0.2.2</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
@@ -65,7 +65,7 @@ There are [detailed ways](./api/README.md) of how to use the marshallers and unm
 
 ## Kafka
 
-The support for kafka transport binding is available. Read the [documentation and examples](./kafka/README.mds) of use.
+The support for kafka transport binding is available. Read the [documentation and examples](./kafka/README.md) of use.
 
 ## Possible Integrations
 
