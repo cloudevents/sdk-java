@@ -15,18 +15,20 @@
  */
 package io.cloudevents.json;
 
+import java.io.InputStream;
+import java.time.ZonedDateTime;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.fun.DataMarshaller;
 import io.cloudevents.fun.DataUnmarshaller;
-
-import java.io.InputStream;
-import java.time.ZonedDateTime;
-import java.util.Map;
 
 public final class Json {
 
@@ -133,6 +135,72 @@ public final class Json {
 	        } catch (Exception e) {
 	            throw new IllegalStateException("Failed to decode: " + e.getMessage(), e);
 	        }
+    	}
+    	return null;
+    }
+    
+    /**
+     * Example of use:
+     * <pre>
+     * String someJson = "...";
+     * Class<?> clazz = Much.class;
+     * 
+     * Json.decodeValue(someJson, CloudEventImpl.class, clazz);
+     * </pre>
+     * @param str The JSON String to parse
+     * @param parametrized Actual full type
+     * @param parameterClasses Type parameters to apply
+     * @param <T> the generic type.
+     * @return An instance of T or {@code null} when {@code str} is an empty string or {@code null}
+     * @see ObjectMapper#getTypeFactory
+     * @see TypeFactory#constructParametricType(Class, Class...)
+     */
+    public static <T> T decodeValue(final String str, Class<?> parametrized,
+    		Class<?>...parameterClasses) {
+    	if(null!= str && !"".equals(str.trim())) {
+    		 try {
+    			 JavaType type = 
+	    			 MAPPER.getTypeFactory()
+	    			 	.constructParametricType(parametrized,
+	    			 			parameterClasses);
+    			 
+    			 return MAPPER.readValue(str.trim(), type);
+ 	        } catch (Exception e) {
+ 	            throw new IllegalStateException("Failed to decode: " + e.getMessage(), e);
+ 	        }
+    	}
+    	return null;
+    }
+    
+    /**
+     * Example of use:
+     * <pre>
+     * String someJson = "...";
+     * Class<?> clazz = Much.class;
+     * 
+     * Json.decodeValue(someJson, CloudEventImpl.class, clazz);
+     * </pre>
+     * @param json The JSON byte array to parse
+     * @param parametrized Actual full type
+     * @param parameterClasses Type parameters to apply
+     * @param <T> the generic type.
+     * @return An instance of T or {@code null} when {@code str} is an empty string or {@code null}
+     * @see ObjectMapper#getTypeFactory
+     * @see TypeFactory#constructParametricType(Class, Class...)
+     */
+    public static <T> T binaryDecodeValue(final byte[] json, Class<?> parametrized,
+    		Class<?>...parameterClasses) {
+    	if(null!= json) {
+    		 try {
+    			 JavaType type = 
+	    			 MAPPER.getTypeFactory()
+	    			 	.constructParametricType(parametrized,
+	    			 			parameterClasses);
+    			 
+    			 return MAPPER.readValue(json, type);
+ 	        } catch (Exception e) {
+ 	            throw new IllegalStateException("Failed to decode: " + e.getMessage(), e);
+ 	        }
     	}
     	return null;
     }
