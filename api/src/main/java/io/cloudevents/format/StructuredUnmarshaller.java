@@ -29,7 +29,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.format.builder.HeadersStep;
 import io.cloudevents.format.builder.PayloadStep;
 import io.cloudevents.format.builder.UnmarshalStep;
-import io.cloudevents.fun.DataUnmarshaller;
 import io.cloudevents.fun.EnvelopeUnmarshaller;
 import io.cloudevents.fun.ExtensionUmarshaller;
 import io.cloudevents.fun.FormatExtensionMapper;
@@ -42,14 +41,9 @@ import io.cloudevents.fun.FormatExtensionMapper;
 public class StructuredUnmarshaller {
 	StructuredUnmarshaller() {}
 	
-	public static <A extends Attributes, T, P> DataUnmarshallerStep<A, T, P>
+	public static <A extends Attributes, T, P> ExtensionMapperStep<A, T, P>
 			builder() {
 		return new Builder<>();
-	}
-	
-	public static interface DataUnmarshallerStep<A extends Attributes, T, P> {
-		DataUnmarshallerStep<A, T, P> map(String mime, DataUnmarshaller<P, T, A> unmarshaller);
-		ExtensionMapperStep<A, T, P> next();
 	}
 	
 	public static interface ExtensionMapperStep<A extends Attributes, T, P> {
@@ -67,16 +61,12 @@ public class StructuredUnmarshaller {
 	}
 	
 	private static final class Builder<A extends Attributes, T, P> implements
-		DataUnmarshallerStep<A, T, P>,
 		ExtensionMapperStep<A, T, P>,
 		ExtensionUnmarshallerStep<A, T, P>,
 		EnvelopeUnmarshallerStep<A, T, P>,
 		HeadersStep<A, T, P>, 
 		PayloadStep<A, T, P>,
 		UnmarshalStep<A, T>{
-		
-		private final Map<String, DataUnmarshaller<P, T, A>> dataUnmarshallers = 
-				new HashMap<>();
 		
 		private FormatExtensionMapper extensionMapper;
 		
@@ -88,17 +78,6 @@ public class StructuredUnmarshaller {
 		private Supplier<Map<String, Object>> headersSupplier;
 		
 		private Supplier<P> payloadSupplier;
-
-		@Override
-		public DataUnmarshallerStep<A, T, P> map(String mime, 
-				DataUnmarshaller<P, T, A> unmarshaller) {
-			Objects.requireNonNull(mime);
-			Objects.requireNonNull(unmarshaller);
-			
-			dataUnmarshallers.put(mime, unmarshaller);
-			
-			return this;
-		}
 
 		@Override
 		public Builder<A, T, P> next() {
@@ -165,8 +144,6 @@ public class StructuredUnmarshaller {
 				Optional.ofNullable(extensionMapper)
 					.map(mapper -> mapper.map(headers))
 					.orElse(new HashMap<>());
-			
-			//TODO How to inject this list into result
 			
 			CloudEvent<A, T> result = 
 				unmarshaller.unmarshal(payload, 
