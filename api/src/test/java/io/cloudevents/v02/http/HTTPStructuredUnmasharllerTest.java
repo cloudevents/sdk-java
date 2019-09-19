@@ -24,12 +24,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
-import io.cloudevents.format.StructuredUnmarshaller;
-import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
 import io.cloudevents.v02.AttributesImpl;
 import io.cloudevents.v02.CloudEventBuilder;
@@ -64,14 +60,7 @@ public class HTTPStructuredUnmasharllerTest {
 		
 		// act
 		CloudEvent<AttributesImpl, Much> actual = 
-			StructuredUnmarshaller.<AttributesImpl, Much, String>
-			  builder()
-				.map("application/json", Json.umarshaller(Much.class)::unmarshal)
-				.next()
-				.skip()
-				.map((payload, extensions) -> 
-					Json.decodeValue(payload, 
-						new TypeReference<CloudEventImpl<Much>>() {}))
+			Unmarshallers.structured(Much.class)
 				.withHeaders(() -> httpHeaders)
 				.withPayload(() -> json)
 				.unmarshal();
@@ -113,14 +102,7 @@ public class HTTPStructuredUnmasharllerTest {
 		
 		// act
 		CloudEvent<AttributesImpl, String> actual = 
-			StructuredUnmarshaller.<AttributesImpl, String, String>
-			  builder()
-				.map("application/json", Json.umarshaller(String.class)::unmarshal)
-				.next()
-				.skip()
-				.map((payload, extensions) -> 
-					Json.decodeValue(payload, 
-						new TypeReference<CloudEventImpl<String>>() {}))
+			Unmarshallers.structured(String.class)
 				.withHeaders(() -> httpHeaders)
 				.withPayload(() -> json)
 				.unmarshal();
@@ -155,27 +137,7 @@ public class HTTPStructuredUnmasharllerTest {
 
 		// act
 		CloudEvent<AttributesImpl, String> actual = 
-			StructuredUnmarshaller.<AttributesImpl, String, String>
-			  builder()
-				.map("application/json", Json.umarshaller(String.class)::unmarshal)
-				.next()
-				.map(ExtensionMapper::map)
-				.map(DistributedTracingExtension::unmarshall)
-				.next()
-				.map((payload, extensions) -> {
-					CloudEventImpl<String> event =
-					Json.decodeValue(payload, 
-						new TypeReference<CloudEventImpl<String>>() {});
-					
-					CloudEventBuilder<String> builder = 
-						CloudEventBuilder.<String>builder(event);
-					
-					extensions.get().forEach(extension -> {
-						builder.withExtension(extension);
-					});
-					
-					return builder.build();
-				})
+			Unmarshallers.structured(String.class)
 				.withHeaders(() -> httpHeaders)
 				.withPayload(() -> json)
 				.unmarshal();
