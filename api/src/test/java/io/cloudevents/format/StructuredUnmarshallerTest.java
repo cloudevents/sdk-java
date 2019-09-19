@@ -33,56 +33,17 @@ public class StructuredUnmarshallerTest {
 	public ExpectedException expectedEx = ExpectedException.none();
 	
 	@Test
-	public void should_throw_on_null_mime_data_unmarshaller() {
-		// setup
-		expectedEx.expect(NullPointerException.class);
-		
-		// act
-		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map(null, (data, attributes) -> {
-				return null;
-			});
-	}
-	
-	@Test
-	public void should_throw_on_null_data_unmarshaller() {
-		// setup
-		expectedEx.expect(NullPointerException.class);
-		
-		// act
-		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map("application/json", null);
-	}
-	
-	@Test
-	public void should_ok_on_data_unmarshaller() {
-		// act
-		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map("application/json", (data, attributes) -> {
-				return null;
-			});
-	}
-	
-	@Test
 	public void should_throw_on_null_extension_mapper() {
 		// setup
 		expectedEx.expect(NullPointerException.class);
 		
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map("application/json", (data, attributes) -> {
-				return null;
-			})
-			.next()
 			.map(null);
 	}
 	
 	@Test
 	public void should_ok_on_extension_mapper() {
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map("application/json", (data, attributes) -> {
-				return null;
-			})
-			.next()
 			.map((headers) -> {
 				
 				return null;
@@ -95,10 +56,6 @@ public class StructuredUnmarshallerTest {
 		expectedEx.expect(NullPointerException.class);
 		
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map("application/json", (data, attributes) -> {
-				return null;
-			})
-			.next()
 			.map((headers) -> {
 				
 				return null;
@@ -109,10 +66,6 @@ public class StructuredUnmarshallerTest {
 	@Test
 	public void should_ok_on_extension_unmarshaller() {
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map("application/json", (data, attributes) -> {
-				return null;
-			})
-			.next()
 			.map((headers) -> {
 				
 				return null;
@@ -128,10 +81,6 @@ public class StructuredUnmarshallerTest {
 		expectedEx.expect(NullPointerException.class);
 		
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map("application/json", (data, attributes) -> {
-				return null;
-			})
-			.next()
 			.map((headers) -> {
 				
 				return null;
@@ -146,10 +95,6 @@ public class StructuredUnmarshallerTest {
 	@Test
 	public void should_ok_on_envelope_unmarshaller() {
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-			.map("application/json", (data, attributes) -> {
-				return null;
-			})
-			.next()
 			.map((headers) -> null)
 			.map((extensions) -> null)
 			.next()
@@ -162,10 +107,6 @@ public class StructuredUnmarshallerTest {
 		expectedEx.expect(NullPointerException.class);
 		
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-		.map("application/json", (data, attributes) -> {
-			return null;
-		})
-		.next()
 		.map((headers) -> null)
 		.map((extensions) -> null)
 		.next()
@@ -176,10 +117,6 @@ public class StructuredUnmarshallerTest {
 	@Test
 	public void should_ok_on_headers() {
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-		.map("application/json", (data, attributes) -> {
-			return null;
-		})
-		.next()
 		.map((headers) -> null)
 		.map((extensions) -> null)
 		.next()
@@ -193,10 +130,6 @@ public class StructuredUnmarshallerTest {
 		expectedEx.expect(NullPointerException.class);	
 		
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-		.map("application/json", (data, attributes) -> {
-			return null;
-		})
-		.next()
 		.map((headers) -> null)
 		.map((extensions) -> null)
 		.next()
@@ -208,10 +141,6 @@ public class StructuredUnmarshallerTest {
 	@Test
 	public void should_ok_on_payload_supplier() {
 		StructuredUnmarshaller.<Attributes, Much, String>builder()
-		.map("application/json", (data, attributes) -> {
-			return null;
-		})
-		.next()
 		.map((headers) -> null)
 		.map((extensions) -> null)
 		.next()
