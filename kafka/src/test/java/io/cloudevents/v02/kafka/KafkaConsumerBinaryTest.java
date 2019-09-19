@@ -94,7 +94,7 @@ public class KafkaConsumerBinaryTest {
 	}
 	
 	@Test
-	public void should_throws_when_producer_is_null() {
+	public void should_throws_when_configuration_is_null() {
 		assertThrows(NullPointerException.class, () -> {
 			new CloudEventsKafkaConsumer<String, AttributesImpl, Much>(null, 
 					new HeadersStep<AttributesImpl, Much, byte[]>() {
