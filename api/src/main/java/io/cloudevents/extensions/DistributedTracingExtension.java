@@ -120,13 +120,13 @@ public class DistributedTracingExtension {
 			dte.setTracestate(tracestate);
 			
 			InMemoryFormat inMemory = 
-				InMemoryFormat.of("distributedTracing", dte, 
+				InMemoryFormat.of(Format.IN_MEMORY_KEY, dte, 
 						DistributedTracingExtension.class);
 			
 			return Optional.of(
 				ExtensionFormat.of(inMemory, 
-					new SimpleEntry<>("traceparent", traceparent),
-					new SimpleEntry<>("tracestate", tracestate))
+					new SimpleEntry<>(Format.TRACE_PARENT_KEY, traceparent),
+					new SimpleEntry<>(Format.TRACE_STATE_KEY, tracestate))
 			);
 			
 		}
