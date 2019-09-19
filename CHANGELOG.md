@@ -45,3 +45,5 @@ version
 abstract envelope signature
 - interface: `io.cloudevents.Extension` in favor of
 `io.cloudevents.extensions.ExtensionFormat`
+
+[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v0.2.1...HEAD
