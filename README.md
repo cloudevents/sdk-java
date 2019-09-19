@@ -61,7 +61,7 @@ final CloudEventImpl<MyCustomEvent> cloudEvent =
 final String json = Json.encode(cloudEvent);
 ```
 
-There are [detailed ways](./api/README.md) of how to use the marshallers and unmarshallers with HTTP transport binding.
+There are [other detailed ways](./api/README.md) of how to use the marshallers and unmarshallers with HTTP transport binding.
 
 ## Kafka
 
