@@ -298,6 +298,8 @@ Wire<String, String, String> wire =
 
 **Structured Marshaller**
 
+TODO
+
 ### Unmarshaller
 
 **Binary Unmarshaller**
@@ -407,3 +409,7 @@ CloudEvent<AttributesImpl, Much> myEvent =
 		.withPayload(() -> payload)
 		.unmarshal();
 ```
+
+**Structured Unmarshaller**
+
+TODO
