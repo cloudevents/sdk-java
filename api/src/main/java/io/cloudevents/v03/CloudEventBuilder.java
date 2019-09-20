@@ -110,6 +110,10 @@ public final class CloudEventBuilder<T> implements
 			result.withDatacontentencoding(dce);
 		});
 		
+		attributes.getSubject().ifPresent(subject -> {
+			result.withSubject(subject);
+		});
+		
 		Accessor.extensionsOf(base)
 			.forEach(extension -> {
 				result.withExtension(extension);
