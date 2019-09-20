@@ -58,6 +58,7 @@ public class AttributeMapper {
 			.filter(header -> null!= header.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.toLowerCase(Locale.US), header.getValue()))
+			.filter(header -> header.getKey().startsWith(HEADER_PREFIX))
 			.map(header -> new SimpleEntry<>(header.getKey(),
 					(byte[])header.getValue()))
 			.map(header -> {
