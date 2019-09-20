@@ -21,6 +21,7 @@ import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,6 +81,47 @@ public final class CloudEventBuilder<T> implements
 		return new CloudEventBuilder<T>();
 	}
 	
+	public static <T> CloudEventBuilder<T> builder(
+			CloudEvent<AttributesImpl, T> base) {
+		Objects.requireNonNull(base);
+		
+		CloudEventBuilder<T> result = new CloudEventBuilder<>();
+		
+		AttributesImpl attributes = base.getAttributes();
+		
+		result
+			.withId(attributes.getId())
+			.withSource(attributes.getSource())
+			.withType(attributes.getType());
+		
+		attributes.getTime().ifPresent(time -> {
+			result.withTime(time);
+		});
+		
+		attributes.getSchemaurl().ifPresent((schema) -> {
+			result.withSchemaurl(schema);
+		});
+		
+		attributes.getDatacontenttype().ifPresent(dc -> {
+			result.withDatacontenttype(dc);
+		});
+		
+		attributes.getDatacontentencoding().ifPresent(dce -> {
+			result.withDatacontentencoding(dce);
+		});
+		
+		Accessor.extensionsOf(base)
+			.forEach(extension -> {
+				result.withExtension(extension);
+			});
+		
+		base.getData().ifPresent(data -> {
+			result.withData(data);
+		});
+		
+		return result;
+	}
+	
 	/**
 	 * Build an event from data and attributes
 	 * @param <T> the type of 'data'
@@ -89,7 +131,8 @@ public final class CloudEventBuilder<T> implements
 	 * @throws IllegalStateException When there are specification constraints
 	 * violations
 	 */
-	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes) {
+	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes,
+			Collection<ExtensionFormat> extensions) {
 		CloudEventBuilder<T> builder = CloudEventBuilder.<T>builder()
 			.withId(attributes.getId())
 			.withSource(attributes.getSource())
@@ -115,6 +158,11 @@ public final class CloudEventBuilder<T> implements
 			builder.withSubject(subject);
 		});
 		
+		extensions.stream()
+			.forEach(extension -> {
+				builder.withExtension(extension);
+			});
+		
 		builder.withData(data);
 		
 		return builder.build();
@@ -123,7 +171,7 @@ public final class CloudEventBuilder<T> implements
 	@Override
 	public CloudEvent<AttributesImpl, T> build(T data, AttributesImpl attributes, 
 			Collection<ExtensionFormat> extensions){
-		return CloudEventBuilder.<T>of(data, attributes);
+		return CloudEventBuilder.<T>of(data, attributes, extensions);
 	}
 	
 	/**
