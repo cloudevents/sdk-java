@@ -64,8 +64,6 @@ public class HeaderMapper {
 			extensions.entrySet()
 				.stream()
 				.filter(extension -> null!= extension.getValue())
-				.map(header -> new SimpleEntry<>(HEADER_PREFIX+header.getKey(),
-						header.getValue()))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue))
 		);
 		
