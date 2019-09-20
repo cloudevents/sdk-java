@@ -19,7 +19,10 @@ import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
@@ -146,6 +149,45 @@ public class AttributesImpl implements Attributes {
 		
 		return new AttributesImpl(id, source, specversion, type, time,
 				schemaurl, datacontentencoding, datacontenttype, subject);
+	}
+	
+	/**
+	 * Creates the marshaller instance to marshall {@link AttributesImpl} as 
+	 * a {@link Map} of strings
+	 */
+	public static Map<String, String> marshal(AttributesImpl attributes) {
+		Objects.requireNonNull(attributes);
+		
+		Map<String, String> result = new HashMap<>();
+
+		result.put(ContextAttributes.type.name(), 
+				attributes.getType());
+		result.put(ContextAttributes.specversion.name(),
+				attributes.getSpecversion());
+		result.put(ContextAttributes.source.name(),
+				attributes.getSource().toString());
+		result.put(ContextAttributes.id.name(),
+				attributes.getId());
+		
+		attributes.getTime().ifPresent((value) -> {
+			result.put(ContextAttributes.time.name(), 
+				value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		});
+		
+		attributes.getSchemaurl().ifPresent((schema) -> {
+			result.put(ContextAttributes.schemaurl.name(),
+					schema.toString());
+		});
+		
+		attributes.getDatacontenttype().ifPresent((ct) -> {
+			result.put(ContextAttributes.datacontenttype.name(), ct);
+		});
+		
+		attributes.getSubject().ifPresent(subject -> {
+			result.put(ContextAttributes.subject.name(), subject);
+		});
+
+		return result;
 	}
 	
 	/**
