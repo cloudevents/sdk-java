@@ -35,6 +35,7 @@ import io.cloudevents.v03.ContextAttributes;
  * @version 0.3
  */
 public class AttributeMapper {
+	private AttributeMapper() {}
 
 	static final String HEADER_PREFIX = "ce_";
 	
