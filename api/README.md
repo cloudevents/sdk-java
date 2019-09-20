@@ -250,11 +250,11 @@ EventStep<AttributesImpl, Much, String, String> builder =
 
 		/*
 		 * Step 2. Access the internal list of extensions
-		 *   - here we must provide a accessor of internal list of extensions
+		 *   - here we must provide an accessor for the internal list of extensions
 		 */
 		.map(Accessor::extensionsOf)
 
-		/**
+		/*
 		 * Step 3. The extensions marshalling
 		 *   - we must provide an impl able to marshal a Collection<ExtensionFormat> into a
 		 *   Map<String, String>
@@ -298,7 +298,77 @@ Wire<String, String, String> wire =
 
 **Structured Marshaller**
 
-TODO
+```java
+/*
+ * The imports used by the example bellow
+ */
+import java.util.HashMap;
+
+import io.cloudevents.CloudEvent;
+import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.format.StructuredMarshaller;
+import io.cloudevents.format.builder.EventStep;
+import io.cloudevents.json.Json;
+import io.cloudevents.json.types.Much;
+import io.cloudevents.v02.Accessor;
+import io.cloudevents.v02.AttributesImpl;
+
+// . . .
+
+/*
+ * Step 0. Define the types - there are four
+ *   - Type 1 -> AttributesImpl: the implementation of attributes
+ *   - Type 2 -> Much..........: the type CloudEvents' 'data'
+ *   - Type 3 -> String........: the type of payload that will result of marshalling
+ *   - Type 4 -> String........: the type of headers values. String for HTTP, byte[] for Kafka . . .
+ */
+EventStep<AttributesImpl, Much, String, String> builder =
+  StructuredMarshaller.<AttributesImpl, Much, String, String>
+    builder()
+	/*
+	 * Step 1. Setting the media type for the envelope
+	 *   - here we must to say the name of media type header and it's value
+	 */
+	.mime("Content-Type", "application/cloudevents+json")
+
+	/*
+	 * Step 2. The marshaller for envelope
+	 *   - we must provide an impl able to marshal the cloudevents envelope
+	 */
+	.map((event) -> {
+		return Json.<CloudEvent<AttributesImpl, Much>, String>
+					marshaller().marshal(event, new HashMap<>());
+	})
+
+    /*
+     * Step 3. Access the internal list of extensions
+     *   - here we must provide an accessor for the internal list of extensions
+     */
+	.map(Accessor::extensionsOf)
+
+    /*
+     * Step 4. The extensions marshalling
+     *   - we must provide an impl able to marshal a Collection<ExtensionFormat> into a Map<String, String>
+     */
+	.map(ExtensionFormat::marshal)
+
+    /*
+     * Step 5. Mapping to headers
+     *  - provide an impl able to map from attributes and extensions into a Map<String, String>, the headers of transport binding.
+     *  - now we get the EventStep<AttributesImpl, Much, String, String>, a common step that every marshaller returns
+     *   - from here we just call withEvent() and marshal() methods
+     */
+	.map(HeaderMapper::map);
+
+/*
+ * Using the marshaller
+ */
+Wire<String, String, String> wire =
+    builder
+        .withEvent(() -> myEvent)
+        .marshal();
+
+```
 
 ### Unmarshaller
 
@@ -412,4 +482,61 @@ CloudEvent<AttributesImpl, Much> myEvent =
 
 **Structured Unmarshaller**
 
-TODO
+```java
+/*
+ * Step 0. Define the types - there are three
+ *   - Type 1 -> AttributesImpl: the implementation of attributes
+ *   - Type 2 -> Much..........: the type CloudEvents' 'data'
+ *   - Type 3 -> String........: the type of payload used in the unmarshalling
+ */
+HeadersStep<AttributesImpl, Much, String> step =
+	StructuredUnmarshaller.<AttributesImpl, Much, String>
+	  builder()
+	  /*
+		 * Step 1. The extension mapping
+		 *   - we must provider an impl able to map from transport headers to map of extensions
+		 *   - we may use this for extensions that lives in the transport headers
+		 */
+		.map(ExtensionMapper::map)
+
+		/*
+		 * Step 2. The extension unmarshaller
+		 *   - we must provide an impl able to unmarshal from map of extenstions into actual ones
+		 */
+		.map(DistributedTracingExtension::unmarshall)
+
+		/*
+		 * Step 2'. When we are ok with extension unmarshallers, call next()
+		 */
+		.next()
+
+		/*
+		 * Step 3. Envelope unmarshaller
+		 *   - we must provide an impl able to unmarshal the envelope into cloudevents
+		 *   - now we get the HeadersStep<AttributesImpl, Much, String>, a common step that event unmarshaller must returns
+		 *   - from here we just call withHeaders(), withPayload() and unmarshal()
+		 */
+		.map((payload, extensions) -> {			
+			CloudEventImpl<Much> event =
+				Json.<CloudEventImpl<Much>>
+					decodeValue(payload, CloudEventImpl.class, Much.class);
+
+			CloudEventBuilder<Much> builder =
+				CloudEventBuilder.<Much>builder(event);
+
+			extensions.get().forEach(extension -> {
+				builder.withExtension(extension);
+			});
+
+			return builder.build();
+		});
+
+/*
+ * Using the unmarshaller
+ */
+CloudEvent<AttributesImpl, Much> myEvent =
+	step
+		.withHeaders(() -> transportHeaders)
+		.withPayload(() -> payload)
+		.unmarshal();
+```
