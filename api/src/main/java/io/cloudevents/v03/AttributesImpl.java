@@ -32,12 +32,11 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
-import io.cloudevents.fun.AttributeUnmarshaller;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
@@ -183,6 +182,10 @@ public class AttributesImpl implements Attributes {
 			result.put(ContextAttributes.datacontenttype.name(), ct);
 		});
 		
+		attributes.getDatacontentencoding().ifPresent(dce -> {
+			result.put(ContextAttributes.datacontentencoding.name(), dce);
+		});
+		
 		attributes.getSubject().ifPresent(subject -> {
 			result.put(ContextAttributes.subject.name(), subject);
 		});
@@ -194,41 +197,34 @@ public class AttributesImpl implements Attributes {
 	 * The attribute unmarshaller for the binary format, that receives a
 	 * {@code Map} with attributes names as String and value as String.
 	 */
-	public static AttributeUnmarshaller<AttributesImpl> unmarshaller() {
+	public static AttributesImpl unmarshal(Map<String, String> attributes) {
+		String type = attributes.get(ContextAttributes.type.name());
+		ZonedDateTime time =
+			Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
+			.map((t) -> ZonedDateTime.parse(t,
+					ISO_ZONED_DATE_TIME))
+			.orElse(null);
 		
-		return new AttributeUnmarshaller<AttributesImpl>() {
-			@Override
-			public AttributesImpl unmarshal(Map<String, String> attributes) {
-				String type = attributes.get(ContextAttributes.type.name());
-				ZonedDateTime time =
-					Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
-					.map((t) -> ZonedDateTime.parse(t,
-							ISO_ZONED_DATE_TIME))
-					.orElse(null);
-				
-				String specversion = attributes.get(ContextAttributes.specversion.name()); 
-				URI source = URI.create(attributes.get(ContextAttributes.source.name()));
-				
-				URI schemaurl = 
-					Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
-					.map(schema -> URI.create(schema))
-					.orElse(null);
-				
-				String id = attributes.get(ContextAttributes.id.name());
-				
-				String datacontenttype = 
-					attributes.get(ContextAttributes.datacontenttype.name());
-				
-				String datacontentencoding = 
-					attributes.get(ContextAttributes.datacontentencoding.name());
-				
-				String subject = attributes.get(ContextAttributes.subject.name());
-				
-				return AttributesImpl.build(id, source, specversion, type,
-						time, schemaurl, datacontentencoding,
-						datacontenttype, subject);
-			}
-			
-		};
+		String specversion = attributes.get(ContextAttributes.specversion.name()); 
+		URI source = URI.create(attributes.get(ContextAttributes.source.name()));
+		
+		URI schemaurl = 
+			Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
+			.map(schema -> URI.create(schema))
+			.orElse(null);
+		
+		String id = attributes.get(ContextAttributes.id.name());
+		
+		String datacontenttype = 
+			attributes.get(ContextAttributes.datacontenttype.name());
+		
+		String datacontentencoding = 
+			attributes.get(ContextAttributes.datacontentencoding.name());
+		
+		String subject = attributes.get(ContextAttributes.subject.name());
+		
+		return AttributesImpl.build(id, source, specversion, type,
+				time, schemaurl, datacontentencoding,
+				datacontenttype, subject);
 	}
 }
