@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+TODO 
+
+## [0.3.0]
+
 ### Added
 - [Attributes](./api/src/main/java/io/cloudevents/Attributes.java) marker
 interface for context attributes
@@ -46,4 +50,5 @@ abstract envelope signature
 - interface: `io.cloudevents.Extension` in favor of
 `io.cloudevents.extensions.ExtensionFormat`
 
-[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/cloudevents/sdk-java/compare/v0.2.1...v0.3.0
