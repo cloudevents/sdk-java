@@ -270,4 +270,73 @@ public class KafkaProducerStructuredTest {
 			assertEquals(expected, actualJson);
 		}
 	}
+	
+	@Test
+	@SkipLongRunning
+	public void should_be_with_wrong_value_serializer() throws Exception {
+		// setup
+		String expected = "{\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"application/json\",\"distributedTracing\":{\"traceparent\":\"0\",\"tracestate\":\"congo=4\"}}";
+		
+		final DistributedTracingExtension dt = new DistributedTracingExtension();
+		dt.setTraceparent("0");
+		dt.setTracestate("congo=4");
+		
+		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
+		
+		CloudEventImpl<Much> ce = 
+			CloudEventBuilder.<Much>builder()
+				.withId("x10")
+				.withSource(URI.create("/source"))
+				.withType("event-type")
+				.withContenttype("application/json")
+				.withExtension(tracing)
+				.build();
+		
+		final String topic = "binary.t";
+		
+		kafka.addBrokers(ONE_BROKER).startup();
+		kafka.createTopics(topic);
+		
+		Properties producerProperties = 
+			kafka.useTo().getProducerProperties("bin.me");
+		producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+				StringSerializer.class);
+		producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+				StringSerializer.class);
+		
+		Properties consumerProperties = kafka.useTo()
+				.getConsumerProperties("consumer", "consumer.id",OffsetResetStrategy.EARLIEST);
+			consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+					StringDeserializer.class);
+			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+					ByteArrayDeserializer.class);
+			
+		try(CloudEventsKafkaProducer<String, AttributesImpl, Much> 
+			ceProducer = new CloudEventsKafkaProducer<>(producerProperties, structured())){
+			// act
+			RecordMetadata metadata = 
+				ceProducer.send(new ProducerRecord<>(topic, ce)).get();
+			
+			log.info("Producer metadata {}", metadata);
+		}
+		
+		try(KafkaConsumer<String, byte[]> consumer = 
+				new KafkaConsumer<>(consumerProperties)){
+			consumer.subscribe(Collections.singletonList(topic));
+			
+			ConsumerRecords<String, byte[]> records = 
+					consumer.poll(TIMEOUT);
+			
+			ConsumerRecord<String, byte[]> actual =
+					records.iterator().next();
+			
+			// assert
+			byte[] actualData = actual.value();
+			assertNotNull(actualData);
+			
+			String actualJson = Serdes.String().deserializer()
+					.deserialize(null, actualData);
+			assertEquals(expected, actualJson);
+		}
+	}
 }

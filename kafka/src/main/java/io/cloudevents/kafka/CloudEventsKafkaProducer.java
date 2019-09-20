@@ -15,8 +15,10 @@
  */
 package io.cloudevents.kafka;
 
-import static java.util.AbstractMap.SimpleEntry;
+import static java.util.Optional.ofNullable;
+import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,11 +43,14 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.ProducerFencedException;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.format.Wire;
+import io.cloudevents.format.builder.EventStep;
 
 /**
  * 
@@ -57,6 +62,9 @@ import io.cloudevents.format.Wire;
  */
 public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements 
 	Producer<K, CloudEvent<A, T>> {
+	
+	private static final Logger log = 
+			LoggerFactory.getLogger(CloudEventsKafkaProducer.class);
 
 	private final Producer<K, byte[]> producer;
 	private final EventStep<A, T, byte[], byte[]> builder;
@@ -71,6 +79,16 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 			EventStep<A, T, byte[], byte[]> builder) {
 		Objects.requireNonNull(configuration);
 		Objects.requireNonNull(builder);
+		
+		ofNullable(configuration.get(VALUE_SERIALIZER_CLASS_CONFIG))
+			.map(config -> config.toString())
+			.filter(config -> 
+				!config.contains(ByteArraySerializer.class.getName()))
+			.ifPresent(wrong -> {
+				log.warn("Fixing the wrong deserializer {}", wrong);
+				configuration.put(VALUE_SERIALIZER_CLASS_CONFIG,
+						ByteArraySerializer.class);
+			});
 		
 		this.builder = builder;
 		this.producer = new KafkaProducer<>(configuration);

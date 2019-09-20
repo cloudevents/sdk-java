@@ -303,5 +303,80 @@ public class KafkaConsumerStructuredTest {
 			assertEquals("congo=4", dte.getTracestate());
 		}
 	}
-//
+	
+	@Test
+	public void should_be_with_wrong_value_deserializer() throws Exception {
+		// setup
+		Map<String, Object> httpHeaders = new HashMap<>();
+		httpHeaders.put("Content-Type", "application/cloudevents+json");
+		
+		String payload = "{\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"application/json\",\"distributedTracing\":{\"traceparent\":\"0\",\"tracestate\":\"congo=4\"}}";
+		
+		RecordHeader contenttype = new RecordHeader(HEADER_PREFIX
+				+ "contenttype", "application/json".getBytes());
+		
+		RecordHeaders kafkaHeaders = new RecordHeaders(
+				new RecordHeader[]{contenttype});
+		
+		final String topic = "binary.c";
+		
+		kafka.addBrokers(ONE_BROKER).startup();
+		kafka.createTopics(topic);
+		
+		Properties producerProperties = 
+				kafka.useTo().getProducerProperties("bin.me");
+			producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+					StringSerializer.class);
+			producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+					ByteArraySerializer.class);
+			
+		try(KafkaProducer<String, byte[]> producer = 
+				new KafkaProducer<>(producerProperties)){
+			ProducerRecord<String, byte[]> record = 
+				new ProducerRecord<>(topic, ANY_PARTITION, "0x", payload.getBytes(),
+						kafkaHeaders);
+			
+			producer.send(record);
+		}
+		
+		Properties consumerProperties = kafka.useTo()
+				.getConsumerProperties("consumer", "consumer.id",OffsetResetStrategy.EARLIEST);
+			consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+					StringDeserializer.class);
+			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+					StringDeserializer.class);
+			
+		// act
+		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
+				new CloudEventsKafkaConsumer<>(consumerProperties, 
+						structured(Much.class))){
+			
+			ceConsumer.subscribe(Collections.singletonList(topic));
+			
+			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
+					ceConsumer.poll(TIMEOUT);
+			
+			ConsumerRecord<String, CloudEvent<AttributesImpl, Much>> record =
+					records.iterator().next();
+			
+			CloudEvent<AttributesImpl, Much> actual = record.value();
+			assertEquals("x10", actual.getAttributes().getId());
+			assertEquals("0.2", actual.getAttributes().getSpecversion());
+			assertEquals(URI.create("/source"), actual.getAttributes().getSource());
+			assertEquals("event-type", actual.getAttributes().getType());
+			assertTrue(actual.getAttributes().getContenttype().isPresent());
+			assertEquals("application/json", actual.getAttributes().getContenttype().get());
+			assertFalse(actual.getData().isPresent());
+			
+			Object tracing = actual.getExtensions()
+					.get(DistributedTracingExtension.Format.IN_MEMORY_KEY);
+			
+			assertNotNull(tracing);
+			assertTrue(tracing instanceof DistributedTracingExtension);
+			DistributedTracingExtension dte = 
+					(DistributedTracingExtension)tracing;
+			assertEquals("0", dte.getTraceparent());
+			assertEquals("congo=4", dte.getTracestate());
+		}
+	}
 }

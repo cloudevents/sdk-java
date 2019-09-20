@@ -16,6 +16,8 @@
 package io.cloudevents.kafka;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
+import static java.util.Optional.ofNullable;
 
 import java.time.Duration;
 import java.util.AbstractMap.SimpleEntry;
@@ -46,6 +48,9 @@ import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
@@ -56,11 +61,14 @@ import io.cloudevents.format.builder.HeadersStep;
  * @author fabiojose
  * 
  * @param <K> The key type
- * @param <A> The attributes tytpe
+ * @param <A> The attributes type
  * @param <T> The CloudEvent 'data' type
  */
 public class CloudEventsKafkaConsumer<K, A extends Attributes, T> 
 	implements Consumer<K, CloudEvent<A, T>>{
+	
+	private static final Logger log = 
+		LoggerFactory.getLogger(CloudEventsKafkaConsumer.class);
 	
 	private static final String CE_CONTENT_TYPE = "application/cloudevents+";
 	private static final String CONTENT_TYPE_HEADER = "content-type";
@@ -79,6 +87,16 @@ public class CloudEventsKafkaConsumer<K, A extends Attributes, T>
 			HeadersStep<A, T, byte[]> builder) {
 		Objects.requireNonNull(configuration);
 		Objects.requireNonNull(builder);
+		
+		ofNullable(configuration.get(VALUE_DESERIALIZER_CLASS_CONFIG))
+			.map(config -> config.toString())
+			.filter(config -> 
+				!config.contains(ByteArrayDeserializer.class.getName()))
+			.ifPresent(wrong -> {
+				log.warn("Fixing the wrong deserializer {}", wrong);
+				configuration.put(VALUE_DESERIALIZER_CLASS_CONFIG,
+						ByteArrayDeserializer.class);
+			});
 		
 		this.builder = builder;
 		this.consumer = new KafkaConsumer<>(configuration);
