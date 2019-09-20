@@ -35,6 +35,7 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
 import io.cloudevents.v02.CloudEventImpl;
+import io.cloudevents.v02.AttributesImpl;
 import io.cloudevents.v02.kafka.Marshallers;
 
 // . . .
@@ -80,6 +81,7 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
 import io.cloudevents.v02.CloudEventImpl;
+import io.cloudevents.v02.AttributesImpl;
 import io.cloudevents.v02.kafka.Marshallers;
 
 // . . .
@@ -131,6 +133,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.kafka.CloudEventsKafkaConsumer;
 import io.cloudevents.types.Much;
 import io.cloudevents.v02.AttributesImpl;
+import io.cloudevents.v02.kafka.Unmarshallers;
 
 // . . .
 
@@ -176,6 +179,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.kafka.CloudEventsKafkaConsumer;
 import io.cloudevents.types.Much;
 import io.cloudevents.v02.AttributesImpl;
+import io.cloudevents.v02.kafka.Unmarshallers;
 
 // . . .
 

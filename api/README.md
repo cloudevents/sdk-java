@@ -19,6 +19,7 @@ import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.format.Wire;
 import io.cloudevents.v02.CloudEventBuilder;
 import io.cloudevents.v02.CloudEventImpl;
+import io.cloudevents.v02.http.Marshallers;
 
 //...
 
@@ -118,6 +119,8 @@ import java.time.ZonedDateTime;
 
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.v02.CloudEventBuilder;
+import io.cloudevents.v02.CloudEventImpl;
 import io.cloudevents.v02.http.Marshallers;
 
 // . . .
@@ -167,6 +170,7 @@ import java.util.Map;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.v02.AttributesImpl;
+import io.cloudevents.v02.http.Unmarshallers;
 
 // . . .
 
