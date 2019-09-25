@@ -25,8 +25,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
+	private static final long serialVersionUID = 1L;
 
-    public ZonedDateTimeDeserializer() {
+	public ZonedDateTimeDeserializer() {
         this(null);
     }
 

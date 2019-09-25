@@ -1,3 +1,18 @@
+/**
+ * Copyright 2019 The CloudEvents Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudevents.v02;
 
 import static org.junit.Assert.assertEquals;
@@ -13,6 +28,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.cloudevents.extensions.DistributedTracingExtension;
+import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.json.Json;
 
 /**
@@ -32,8 +48,8 @@ public class CloudEventJacksonTest {
 	@Test
 	public void should_encode_right_with_minimal_attrs() {
 		// setup
-		CloudEvent<Object> ce = 
-				new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+				CloudEventBuilder.<Object>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -57,8 +73,8 @@ public class CloudEventJacksonTest {
 	@Test
 	public void should_have_optional_attrs() {
 		// setup
-		CloudEvent<Object> ce = 
-				new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+				CloudEventBuilder.<Object>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -84,10 +100,10 @@ public class CloudEventJacksonTest {
 		dt.setTraceparent("0");
 		dt.setTracestate("congo=4");
 		
-		final ExtensionFormat tracing = new DistributedTracingExtension.InMemory(dt);
+		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
 		
-		CloudEvent<Object> ce = 
-				new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+				CloudEventBuilder.<Object>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -105,59 +121,79 @@ public class CloudEventJacksonTest {
 	}
 	
 	@Test
+	public void should_not_serialize_attributes_element() {
+		// setup
+		CloudEventImpl<Object> ce = 
+				CloudEventBuilder.<Object>builder()
+					.withId("x10")
+					.withSource(URI.create("/source"))
+					.withType("event-type")
+					.withSchemaurl(URI.create("/schema"))
+					.withContenttype("text/plain")
+					.withData("my-data")
+					.build();
+		
+		// act
+		String actual = Json.encode(ce);
+		
+		// assert
+		assertFalse(actual.contains("\"attributes\""));
+	}
+	
+	@Test
     public void should_have_type() {
 		// act
-        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEvent.class);
+        CloudEventImpl<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEventImpl.class);
         
         // assert
-        assertEquals("aws.s3.object.created", ce.getType());
+        assertEquals("aws.s3.object.created", ce.getAttributes().getType());
     }
 	
 	@Test
     public void should_have_id() {
 		// act
-        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEvent.class);
+        CloudEventImpl<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEventImpl.class);
         
         // assert
-        assertEquals("C234-1234-1234", ce.getId());
+        assertEquals("C234-1234-1234", ce.getAttributes().getId());
     }
 	
 	//should have time
 	@Test
     public void should_have_time() {
 		// act
-        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEvent.class);
+        CloudEventImpl<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEventImpl.class);
         
         // assert
-        assertTrue(ce.getTime().isPresent());
+        assertTrue(ce.getAttributes().getTime().isPresent());
     }
 	
 	@Test
     public void should_have_source() {
 		// act
-        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEvent.class);
+        CloudEventImpl<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEventImpl.class);
         
         // assert
-        assertEquals(URI.create("https://serverless.com"), ce.getSource());
+        assertEquals(URI.create("https://serverless.com"), ce.getAttributes().getSource());
     }
 	
 	@Test
     public void should_have_contenttype() {
 		// act
-        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_aws.json"), CloudEvent.class);
+        CloudEventImpl<?> ce = Json.fromInputStream(resourceOf("02_aws.json"), CloudEventImpl.class);
         
         // assert
-        assertTrue(ce.getContenttype().isPresent());
-        assertEquals("application/json", ce.getContenttype().get());
+        assertTrue(ce.getAttributes().getContenttype().isPresent());
+        assertEquals("application/json", ce.getAttributes().getContenttype().get());
     }
 	
 	@Test
     public void should_have_specversion() {
 		// act
-        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEvent.class);
+        CloudEventImpl<?> ce = Json.fromInputStream(resourceOf("02_new.json"), CloudEventImpl.class);
         
         // assert
-        assertEquals("0.2", ce.getSpecversion());
+        assertEquals("0.2", ce.getAttributes().getSpecversion());
     }
 	
 	@Test
@@ -167,17 +203,17 @@ public class CloudEventJacksonTest {
 		expectedEx.expectMessage("invalid payload: 'id' must not be blank");
 		
 		// act
-		Json.fromInputStream(resourceOf("02_absent.json"), CloudEvent.class);
+		Json.fromInputStream(resourceOf("02_absent.json"), CloudEventImpl.class);
 	}
 	
 	@Test
     public void should_have_tracing_extension() {
 		// act
-        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_extension.json"), CloudEvent.class);
+        CloudEventImpl<?> ce = Json.fromInputStream(resourceOf("02_extension.json"), CloudEventImpl.class);
         
         // assert
         assertNotNull(ce.getExtensions()
-        	.get(DistributedTracingExtension.InMemory.IN_MEMORY_KEY));
+        	.get(DistributedTracingExtension.Format.IN_MEMORY_KEY));
     }
 	
 	@Test
@@ -187,7 +223,7 @@ public class CloudEventJacksonTest {
 		String expected = "extension-value";
 		
 		// act
-        CloudEvent<?> ce = Json.fromInputStream(resourceOf("02_extension.json"), CloudEvent.class);
+        CloudEventImpl<?> ce = Json.fromInputStream(resourceOf("02_extension.json"), CloudEventImpl.class);
         
         // assert
         assertEquals(expected, ce.getExtensions()

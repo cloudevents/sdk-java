@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The CloudEvents Authors
+ * Copyright 2019 The CloudEvents Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,22 @@
  */
 package io.cloudevents.http.vertx.impl;
 
+import static io.vertx.core.http.HttpHeaders.createOptimized;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
-import io.cloudevents.Extension;
-import io.cloudevents.SpecVersion;
-import io.cloudevents.http.HttpTransportAttributes;
-import io.cloudevents.http.V02HttpTransportMappers;
+import io.cloudevents.format.Wire;
 import io.cloudevents.http.vertx.VertxCloudEvents;
 import io.cloudevents.json.Json;
+import io.cloudevents.v02.AttributesImpl;
+import io.cloudevents.v02.CloudEventImpl;
+import io.cloudevents.v02.http.Marshallers;
+import io.cloudevents.v02.http.Unmarshallers;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -31,116 +39,53 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.json.JsonObject;
-
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 
 public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
     private final static CharSequence BINARY_TYPE = HttpHeaders.createOptimized("application/json");
     private final static CharSequence STRUCTURED_TYPE = HttpHeaders.createOptimized("application/cloudevents+json");
 
-    private static String readRequiredHeaderValue(final MultiMap headers, final String headerName) {
-        return requireNonNull(headers.get(headerName));
-    }
-
-    private static String requireNonNull(final String val) {
-        if (val == null) {
-            throw new IllegalArgumentException();
-        } else {
-            return val;
-        }
-    }
-
     @Override
-    public <T> void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<T>>> resultHandler) {
+    public void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<AttributesImpl, String>>> resultHandler) {
         this.readFromRequest(request, null, resultHandler);
 
     }
 
     @Override
-    public <T> void readFromRequest(HttpServerRequest request, Class[] extensions, Handler<AsyncResult<CloudEvent<T>>> resultHandler) {
+    public void readFromRequest(HttpServerRequest request, Class[] extensions, Handler<AsyncResult<CloudEvent<AttributesImpl, String>>> resultHandler) {
 
         final MultiMap headers = request.headers();
-        final CloudEventBuilder builder = new CloudEventBuilder();
 
         // binary mode
         if (headers.get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(BINARY_TYPE.toString())) {
-            final HttpTransportAttributes httpTransportKeys;
-            {
-                if (headers.contains(V02HttpTransportMappers.SPEC_VERSION_KEY)) {
-                    httpTransportKeys = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_02);
-                } else {
-                    httpTransportKeys = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.V_01);
-                }
-            }
+        	request.bodyHandler((Buffer buff) -> {
+        		CloudEvent<AttributesImpl, String> event = 
+        		  Unmarshallers.binary(String.class)
+    				.withHeaders(() -> {
+	        			final Map<String, Object> result = new HashMap<>();
+	        			
+	        			headers.iterator()
+	        				.forEachRemaining(header -> {
+	        					result.put(header.getKey(), header.getValue());
+	        				});
+	        			
+	        			return Collections.unmodifiableMap(result);
+	        		})
+	        		.withPayload(() -> {
+	        			return buff.toString();
+	        		})
+	        		.unmarshal();
 
-            try {
-                builder
-                        // set required values
-                        .specVersion(readRequiredHeaderValue(headers, httpTransportKeys.specVersionKey()))
-                        .type(readRequiredHeaderValue(headers, httpTransportKeys.typeKey()))
-                        .source(URI.create(readRequiredHeaderValue(headers ,httpTransportKeys.sourceKey())))
-                        .id(readRequiredHeaderValue(headers, httpTransportKeys.idKey()))
-
-                        // set optional values
-                        .contentType(headers.get(HttpHeaders.CONTENT_TYPE));
-
-                final String eventTime = headers.get(httpTransportKeys.timeKey());
-                if (eventTime != null) {
-                    builder.time(ZonedDateTime.parse(eventTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-                }
-
-                final String schemaURL = headers.get(httpTransportKeys.schemaUrlKey());
-                if (schemaURL != null) {
-                    builder.schemaURL(URI.create(schemaURL));
-                }
-
-
-                if (extensions != null && extensions.length > 0) {
-
-                    // move this out
-                    Arrays.asList(extensions).forEach(ext -> {
-
-                        try {
-                            Object extObj  = ext.newInstance();
-                            final JsonObject extension = new JsonObject();
-                            Field[] fields = ext.getDeclaredFields();
-
-                            for (Field field : fields) {
-                                boolean accessible = field.isAccessible();
-                                field.setAccessible(true);
-                                field.set(extObj, request.headers().get(field.getName()));
-                                field.setAccessible(accessible);
-                            }
-                            builder.extension((Extension) extObj);
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-                request.bodyHandler((Buffer buff) -> {
-
-                    if (buff.length()>0) {
-                        builder.data(buff.toString());
-                    }
-                    resultHandler.handle(Future.succeededFuture(builder.build()));
-                });
-            } catch (Exception e) {
-                resultHandler.handle(Future.failedFuture(e));
-            }
+        		resultHandler.handle(Future.succeededFuture(event));
+            });
+        	
         } else if (headers.get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(STRUCTURED_TYPE.toString())) {
             // structured read of the body
             request.bodyHandler((Buffer buff) -> {
 
                 if (buff.length()>0) {
-                    resultHandler.handle(Future.succeededFuture(Json.decodeCloudEvent(buff.toString())));
+                	resultHandler.handle(Future.succeededFuture(Json.decodeValue(buff.toString(),
+                			new TypeReference<CloudEventImpl<String>>() {})));
                 } else {
                     throw new IllegalArgumentException("no cloudevent body");
                 }
@@ -151,58 +96,43 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
     }
 
     @Override
-    public <T> void writeToHttpClientRequest(CloudEvent<T> cloudEvent, HttpClientRequest request) {
+    public void writeToHttpClientRequest(CloudEvent<AttributesImpl, String> cloudEvent, HttpClientRequest request) {
         writeToHttpClientRequest(cloudEvent, Boolean.TRUE, request);
     }
 
     @Override
-    public <T> void writeToHttpClientRequest(CloudEvent<T> cloudEvent, boolean binary, HttpClientRequest request) {
-
-        final HttpTransportAttributes httpTransportAttributes = HttpTransportAttributes.getHttpAttributesForSpec(SpecVersion.fromVersion(cloudEvent.getSpecVersion()));
+    public void writeToHttpClientRequest(CloudEvent<AttributesImpl, String> cloudEvent, boolean binary, HttpClientRequest request) {
 
         if (binary) {
+        	Wire<String, String, String> wire =
+        	  Marshallers.<String>binary()
+				.withEvent(() -> cloudEvent)
+        		.marshal();
+        	
             // setting the right content-length:
-            if (cloudEvent.getData().isPresent()) {
-                request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized(String.valueOf(cloudEvent.getData().get().toString().length())));
-            } else {
-                request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized("0"));
-            }
-
+        	request.putHeader(HttpHeaders.CONTENT_LENGTH, createOptimized("0"));
+        	wire.getPayload().ifPresent((payload) -> {
+        		request.putHeader(HttpHeaders.CONTENT_LENGTH, 
+        			createOptimized(String.valueOf(payload.length())));
+        	});            
+            
             // read required headers
-            request
-                    .putHeader(HttpHeaders.CONTENT_TYPE, BINARY_TYPE)
-                    .putHeader(HttpHeaders.createOptimized(httpTransportAttributes.specVersionKey()), HttpHeaders.createOptimized(cloudEvent.getSpecVersion()))
-                    .putHeader(HttpHeaders.createOptimized(httpTransportAttributes.typeKey()), HttpHeaders.createOptimized(cloudEvent.getType()))
-                    .putHeader(HttpHeaders.createOptimized(httpTransportAttributes.sourceKey()), HttpHeaders.createOptimized(cloudEvent.getSource().toString()))
-                    .putHeader(HttpHeaders.createOptimized(httpTransportAttributes.idKey()), HttpHeaders.createOptimized(cloudEvent.getId()));
+        	wire.getHeaders().entrySet()
+            	.stream()
+            	.forEach(header -> {
+            		request.putHeader(createOptimized(header.getKey()), 
+            			createOptimized(header.getValue()));
+            	});
 
-            // read optional headers
-            cloudEvent.getTime().ifPresent(eventTime -> {
-                request.putHeader(HttpHeaders.createOptimized(httpTransportAttributes.timeKey()), HttpHeaders.createOptimized(eventTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
+        	wire.getPayload().ifPresent((payload) -> {
+            	request.write(payload);
             });
-
-            cloudEvent.getSchemaURL().ifPresent(schemaUrl -> {
-                request.putHeader(HttpHeaders.createOptimized(httpTransportAttributes.schemaUrlKey()), HttpHeaders.createOptimized(schemaUrl.toString()));
-            });
-
-            cloudEvent.getExtensions().ifPresent(extensions -> {
-                extensions.forEach(ext -> {
-                    JsonObject.mapFrom(ext).forEach(extEntry -> {
-                        request.putHeader(HttpHeaders.createOptimized(extEntry.getKey()), HttpHeaders.createOptimized(extEntry.getValue().toString()));
-                    });
-                });
-            });
-
-
-            cloudEvent.getData().ifPresent(data -> {
-                request.write(data.toString());
-            });
-
         } else {
             // read required headers
             request.putHeader(HttpHeaders.CONTENT_TYPE, STRUCTURED_TYPE);
             final String json = Json.encode(cloudEvent);
-            request.putHeader(HttpHeaders.CONTENT_LENGTH, HttpHeaders.createOptimized(String.valueOf(json.length())));
+            request.putHeader(HttpHeaders.CONTENT_LENGTH, 
+            		createOptimized(String.valueOf(json.length())));
             // this the body
             request.write(json);
         }

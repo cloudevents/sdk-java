@@ -1,9 +1,12 @@
 package io.cloudevents.extensions;
 
-import io.cloudevents.Extension;
-import io.cloudevents.v02.ExtensionFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.AbstractMap.SimpleEntry;
 
-public class DistributedTracingExtension implements Extension {
+public class DistributedTracingExtension {
 
     private String traceparent;
     private String tracestate;
@@ -65,8 +68,6 @@ public class DistributedTracingExtension implements Extension {
 		return true;
 	}
 
-
-
 	/**
      * The in-memory format for distributed tracing.
      * <br/>
@@ -74,24 +75,62 @@ public class DistributedTracingExtension implements Extension {
      * @author fabiojose
      *
      */
-    public static class InMemory implements ExtensionFormat {
+    public static class Format implements ExtensionFormat {
     	
     	public static final String IN_MEMORY_KEY = "distributedTracing";
-    	
-    	private final Extension extension;
-    	public InMemory(DistributedTracingExtension extension) {
-    		this.extension = extension;
+    	public static final String TRACE_PARENT_KEY = "traceparent";
+    	public static final String TRACE_STATE_KEY = "tracestate";
+
+    	private final InMemoryFormat memory;
+    	private final Map<String, String> transport = new HashMap<>();
+    	public Format(DistributedTracingExtension extension) {
+    		Objects.requireNonNull(extension);
+    		
+    		memory = InMemoryFormat.of(IN_MEMORY_KEY, extension, 
+    				DistributedTracingExtension.class);
+    		
+    		transport.put(TRACE_PARENT_KEY, extension.getTraceparent());
+    		transport.put(TRACE_STATE_KEY, extension.getTracestate());
     	}
-
-		@Override
-		public String getKey() {
-			return IN_MEMORY_KEY;
-		}
-
-		@Override
-		public Extension getExtension() {
-			return extension;
-		}
     	
+		@Override
+		public InMemoryFormat memory() {
+			return memory;
+		}
+		
+		@Override
+		public Map<String, String> transport() {
+			return transport;
+		}
+    }
+    
+    /**
+     * Unmarshals the {@link DistributedTracingExtension} based on map of extensions.
+     * @param exts
+     * @return
+     */
+    public static Optional<ExtensionFormat> unmarshall(
+    		Map<String, String> exts) {
+    	String traceparent = exts.get(Format.TRACE_PARENT_KEY);
+		String tracestate  = exts.get(Format.TRACE_STATE_KEY);
+		
+		if(null!= traceparent && null!= tracestate) {
+			DistributedTracingExtension dte = new DistributedTracingExtension();
+			dte.setTraceparent(traceparent);
+			dte.setTracestate(tracestate);
+			
+			InMemoryFormat inMemory = 
+				InMemoryFormat.of(Format.IN_MEMORY_KEY, dte, 
+						DistributedTracingExtension.class);
+			
+			return Optional.of(
+				ExtensionFormat.of(inMemory, 
+					new SimpleEntry<>(Format.TRACE_PARENT_KEY, traceparent),
+					new SimpleEntry<>(Format.TRACE_STATE_KEY, tracestate))
+			);
+			
+		}
+		
+		return Optional.empty();	
     }
 }

@@ -1,6 +1,22 @@
+/**
+ * Copyright 2019 The CloudEvents Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudevents.v02;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
@@ -9,6 +25,12 @@ import java.time.ZonedDateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import io.cloudevents.CloudEvent;
+import io.cloudevents.extensions.DistributedTracingExtension;
+import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.extensions.InMemoryFormat;
+import io.cloudevents.json.types.Much;
 
 /**
  * 
@@ -27,7 +49,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'id' must not be blank");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withSource(URI.create("/test"))
 			.withType("type")
 			.build();
@@ -40,7 +62,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'id' must not be blank");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withId("")
 			.withSource(URI.create("/test"))
 			.withType("type")
@@ -54,7 +76,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'type' must not be blank");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withId("id")
 			.withSource(URI.create("/test"))
 			.build();
@@ -67,7 +89,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'type' must not be blank");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withId("id")
 			.withSource(URI.create("/test"))
 			.withType("")
@@ -81,7 +103,7 @@ public class CloudEventBuilderTest {
 		expectedEx.expectMessage("invalid payload: 'source' must not be null");
 		
 		// act
-		new CloudEventBuilder<Object>()
+		CloudEventBuilder.<Object>builder()
 			.withId("id")
 			.withType("type")
 			.build();
@@ -90,57 +112,57 @@ public class CloudEventBuilderTest {
 	@Test
 	public void should_have_id() {
 		// act
-		CloudEvent<Object> ce = 
-			new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
 				.build();
 		
 		// assert
-		assertEquals("id", ce.getId());
+		assertEquals("id", ce.getAttributes().getId());
 	}
 	
 	@Test
 	public void should_have_source() {
 		// act
-		CloudEvent<Object> ce = 
-			new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
 				.build();
 		
 		// assert
-		assertEquals(URI.create("/source"), ce.getSource());
+		assertEquals(URI.create("/source"), ce.getAttributes().getSource());
 	}
 	
 	@Test
 	public void should_have_type() {
 		// act
-		CloudEvent<Object> ce = 
-			new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
 				.build();
 		
 		// assert
-		assertEquals("type", ce.getType());
+		assertEquals("type", ce.getAttributes().getType());
 	}
 	
 	@Test
 	public void should_have_specversion() {
 		// act
-		CloudEvent<Object> ce = 
-			new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
 				.build();
 		
 		// assert
-		assertEquals("0.2", ce.getSpecversion());
+		assertEquals("0.2", ce.getAttributes().getSpecversion());
 	}
 	
 	@Test
@@ -149,8 +171,8 @@ public class CloudEventBuilderTest {
 		ZonedDateTime expected = ZonedDateTime.now();
 		
 		// act
-		CloudEvent<Object> ce = 
-			new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -158,8 +180,8 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertTrue(ce.getTime().isPresent());
-		assertEquals(expected, ce.getTime().get());
+		assertTrue(ce.getAttributes().getTime().isPresent());
+		assertEquals(expected, ce.getAttributes().getTime().get());
 	}
 	
 	@Test
@@ -168,8 +190,8 @@ public class CloudEventBuilderTest {
 		URI expected = URI.create("/schema");
 		
 		// act
-		CloudEvent<Object> ce = 
-			new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -177,8 +199,8 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertTrue(ce.getSchemaurl().isPresent());
-		assertEquals(expected, ce.getSchemaurl().get());
+		assertTrue(ce.getAttributes().getSchemaurl().isPresent());
+		assertEquals(expected, ce.getAttributes().getSchemaurl().get());
 	}
 	
 	@Test
@@ -187,8 +209,8 @@ public class CloudEventBuilderTest {
 		String expected = "application/json";
 		
 		// act
-		CloudEvent<Object> ce = 
-			new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -196,8 +218,8 @@ public class CloudEventBuilderTest {
 				.build();
 		
 		// assert
-		assertTrue(ce.getContenttype().isPresent());
-		assertEquals(expected, ce.getContenttype().get());
+		assertTrue(ce.getAttributes().getContenttype().isPresent());
+		assertEquals(expected, ce.getAttributes().getContenttype().get());
 	}
 	
 	@Test
@@ -206,8 +228,8 @@ public class CloudEventBuilderTest {
 		String expected = "my data";
 		
 		// act
-		CloudEvent<Object> ce = 
-			new CloudEventBuilder<>()
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
@@ -217,5 +239,83 @@ public class CloudEventBuilderTest {
 		// assert
 		assertTrue(ce.getData().isPresent());
 		assertEquals(expected, ce.getData().get());
+	}
+	
+	@Test
+	public void should_have_dte() {
+		// setup
+		final DistributedTracingExtension dt = new DistributedTracingExtension();
+		dt.setTraceparent("0");
+		dt.setTracestate("congo=4");
+		
+		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
+		
+		// act
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
+				.withId("id")
+				.withSource(URI.create("/source"))
+				.withType("type")
+				.withExtension(tracing)
+				.build();
+		
+		Object actual = ce.getExtensions()
+			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY);
+		
+		// assert
+		assertNotNull(actual);
+		assertTrue(actual instanceof DistributedTracingExtension);
+	}
+	
+	@Test
+	public void should_have_custom_extension() {
+		String myExtKey = "comexampleextension1";
+		String myExtVal = "value";
+		
+		ExtensionFormat custom = ExtensionFormat
+			.of(InMemoryFormat.of(myExtKey, myExtKey, String.class),
+				myExtKey, myExtVal);
+		
+		// act
+		CloudEventImpl<Object> ce = 
+			CloudEventBuilder.<Object>builder()
+				.withId("id")
+				.withSource(URI.create("/source"))
+				.withType("type")
+				.withExtension(custom)
+				.build();
+		
+		Object actual = ce.getExtensions()
+				.get(myExtKey);
+		
+		assertNotNull(actual);
+		assertTrue(actual instanceof String);
+	}
+	
+	@Test
+	public void should_builder_change_data_and_id() {
+		// setup
+		Much data = new Much();
+		data.setWow("amzing");
+		
+		String expected = "amazing";
+		
+		
+		CloudEventImpl<Much> base = 
+			CloudEventBuilder.<Much>builder()
+				.withId("id")
+				.withSource(URI.create("/source"))
+				.withType("type")
+				.withData(data)
+				.build();
+		
+		// act
+		CloudEvent<AttributesImpl, String> actual =
+			CloudEventBuilder.<Much>builder().build(base, "0x010", expected);
+		
+		// assert
+		assertTrue(actual.getData().isPresent());
+		assertEquals(expected, actual.getData().get());
+		assertEquals("0x010", actual.getAttributes().getId());
 	}
 }
