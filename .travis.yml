@@ -10,20 +10,22 @@ env:
   - secure: P+bDfjq+RCVmZjkwqC2m1eV2jr2VbR3NA8o9BcJFDduwKHboflzp92sL/Risp9QGwdRomPIfzUBL8Dq13lgDSgflfkZpbLhRamXi06E74MOHIZeV3EYbhOTmWa7DbBueUCTVmxmfgNI+207EtlKkW9ZBsqky/tUuLXdFCjjonDN3f3PmRI7odxZ4r5di46h73yynh+8+pAx7T6K52PJNGXtAZflKU2NHnfAUainAHMOY3UAOfL0vSVhKvW7s6i9/qrqUAXgN0PUeiAwKi0RnuoTEAe8n+GILYH8xRkkkTLZj3uxwI9lTYdtN2wOCJZ8U7bmy8jQxFCaes/LgyfL5F4e4r3FUPrFpgPOBqiP+7T20aoCxbMFQ2EUkRbwXsNXEQu1FCBNH/sMdw7FEfOfE43jIe4yQIoWlmz+Su0RGqgwOiolMb0O10M31apKqKmmyPBb9c9AWwraKZ1FRe+tTVVRRBlWUAxYjLhha4uczW3oY+sE2yY8k5gPN5JNWqvy92UZUupfAKoxh21C2K5ygeQR7crEnwwtw1flu9QUWfFYBvUKK7aC33WwRq+4RKB3oPeD9b/+Ix5jUcad9wqy5rw0rKJRHJzvYoAaJ+kIlnD9nZLq52fj5gs/+1JOlRpE3rP0z9M6qUPE5QWHa8DGYvXwe8s93gZbcBPqxVNv1U6o=
   - secure: UFn72lygDZrU66+kJJ7tH2MiGvq2sfUu396TaVkZipVz7wW0NZ//wkI1w/SKluPjEa/dJ3hcxz+IR8R9QCcZgIbBhaxgmjCG10majm24+3TqcqeE/lUHtD00LGDJUmSbr2vsenHYRZk7TNe3Cb3YrKL2APSTVaMWJo3fCMT7BaydXuAL8D4ZAJrPTw9S9GsyjAGaPhN8P8wsJCBhRhOxS+TuMcjLTI6fXIN5kdZz6IygpRhmx7RSdICAl+otHz7znUQh4PyfAPGPItwACXTcDfF4lQ/DUNfA8FcRnR76lgvMSIS291YLy22ToBe5LT5smQWT4VE3TDVhkn9uAyTGXBN1NlOsiqKxW8eyFUckU0rQIkHHz6FFAtVnklt4EArN1l+KJksl524kBTph/IKWONiTNGKUwc4fIzB8o/iMIa0ZtadR0Fde32ssiEk7+lvkEHypZUe/WF+mEi8Y4PUeM9OBP/Gdxb7hLLzCaJNfZ3NRGYRZJieVk608jnRi7XADSRnw830ga5A3YbkZo7ljAD2UN3BKwhffs1FEnmGBz2mdnPie/HJ0nTf7g7/vIxgZT7UGcZ35olFah2kUEbiZkbT6OmKBY0a5regUB7+6aTjcP5aPFLkacz5BIs1jvrjcsalYEi+KFKWfmeLVQurqEQSpO0ZOVS7cAfm4qGTkv8Y=
   - secure: Fl7zB+DmZTER2j1PfHUlJORWCkqSWPViwqPeV+OvHK59Oisgv+MJ7w5jU+N5iEmKi7V6moDCpdnChAlLN4XxYNKWHhuw1jv1GAvr083qpTRikbHvzPGNGU1g3g5tResslYJRW+U8pbhl+i50I7i0+VbYshHDUvtKiC6Wfb4KSDkIGNPhekmw1RZ/tZkZPwgX95sAqioyeI/AGAlI7x209eIHL6igxt5auc4XsfqTU9fjIoyyp1jRP4WRJ3tatJshAiwM+9SI0vzZyIe7w3d6y9CtEGxcBlCcCYn18YJ1+7da3Bfxv4nrIfsRKuVW/p2cypc7N26WMgsVlUzXryX/Bqie4SvFBiEM+WJey8YW2wc8Fr0ndcFjPFIsvpo+uHQRkwzuGspbzmfIfOJVVKCbIhAuKQZSGuJB5bSKtQxk0Vgz35Q4ag8gr8UfrjjoMtP0bb4N7nzYTHB/osDDKT9gmM/lBWyjXPRtCHWDgPJxSWrLxoXVWnzGZC/6Jc0eeJQlVOZ3YUViqSV2x3cXlOjyzSCkoDGk7fMFgPL+YP1gvn47KMhN9MtrSY+vkGqwDWrXb+0Mq4z7EIog5ZD+qE5XB014lDnQEk7GVpp5DVktdMBXkCBxpmBPDnpPF2BuTgf7nAMtJcNgq0PpLYc2d4W9ZpB0rD5KO1G83/ai+KnCWig=
-before_install:
-- openssl aes-256-cbc -K $encrypted_3210c925a91b_key -iv $encrypted_3210c925a91b_iv
-  -in .travis.gpg -out .travis.asc -d
 
 jobs:
   include:
     - stage: Release
       jdk: openjdk8
-      on:
-        tags: true
-      install: mvn -DskipTests -Dgpg.skip install
-      after_success:
-      - gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import .travis.asc
-      - gpg2 --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg --no-default-keyring
-        --import .travis.asc
-      - mvn clean deploy --settings .travis.settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=349076B63A645A5DCD27614D48C38075433E04B2
-        -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
+      deploy:
+        provider: script
+        before_script:
+        - openssl aes-256-cbc -K $encrypted_3210c925a91b_key -iv $encrypted_3210c925a91b_iv
+          -in .travis.gpg -out .travis.asc -d
+        script:
+        - gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import .travis.asc
+        - gpg2 --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg --no-default-keyring
+          --import .travis.asc
+        - mvn clean deploy --settings .travis.settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=349076B63A645A5DCD27614D48C38075433E04B2
+          -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
+        skip_cleanup: true
+        on:
+          tags: true
