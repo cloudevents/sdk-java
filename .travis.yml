@@ -15,6 +15,7 @@ jobs:
   include:
     - stage: maven central release
       jdk: openjdk8
+      script: skip
       deploy:
         provider: script
         before_script:
@@ -22,13 +23,14 @@ jobs:
         script:
         - gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import .travis.asc
         - gpg2 --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg --no-default-keyring --import .travis.asc
-        - mvn clean deploy -P release --settings .travis.settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=349076B63A645A5DCD27614D48C38075433E04B2 -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
+        - mvn clean deploy -P release -DskipTests --settings .travis.settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=349076B63A645A5DCD27614D48C38075433E04B2 -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
         skip_cleanup: true
         on:
           tags: true
 
     - stage: github release
-      node_js: '6'
+      jdk: openjdk8
+      script: skip
       deploy:
         provider: releases
         api_key:
