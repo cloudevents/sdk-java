@@ -1,16 +1,22 @@
 openssl aes-256-cbc -K $encrypted_3210c925a91b_key \
         -iv $encrypted_3210c925a91b_iv \
-        -in .travis.gpg \
-        -out .travis.asc -d
+        -in .travis.pubring.enc -out .travis.pubring -d
 
-gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring \
-     --import .travis.asc
+openssl aes-256-cbc -K $encrypted_3210c925a91b_key \
+       -iv $encrypted_3210c925a91b_iv \
+       -in .travis.secring.enc -out .travis.secring -d
+
+gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg \
+     --no-default-keyring \
+     --import .travis.pubring
 
 gpg2 --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg \
      --no-default-keyring \
-     --import .travis.asc
+     --import .travis.secring
 
-mvn clean deploy -P release -DskipTests --settings .travis.settings.xml \
-    -Dgpg.executable=gpg2 -Dgpg.keyname=433E04B2 -Dgpg.passphrase=$PASSPHRASE \
+mvn clean deploy -P release -DskipTests \
+    --settings .travis.settings.xml \
+    -Dgpg.executable=gpg2 \
+    -Dgpg.passphrase=$PASSPHRASE \
     -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg \
     -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
