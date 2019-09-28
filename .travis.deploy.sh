@@ -1,8 +1,4 @@
 openssl aes-256-cbc -K $encrypted_3210c925a91b_key \
-        -iv $encrypted_3210c925a91b_iv \
-        -in .travis.pubring.enc -out .travis.pubring -d
-
-openssl aes-256-cbc -K $encrypted_3210c925a91b_key \
        -iv $encrypted_3210c925a91b_iv \
        -in .travis.secring.enc -out .travis.secring -d
 
