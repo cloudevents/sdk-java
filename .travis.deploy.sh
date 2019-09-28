@@ -14,7 +14,7 @@ gpg2 --import .travis.pubring
 #     --no-default-keyring \
 #     --import .travis.secring
 
-gpg2 --allow-secret-key-import --import .travis.secring
+gpg2 --batch --allow-secret-key-import --import .travis.secring
 
 #mvn clean deploy -P release -DskipTests \
 #    --settings .travis.settings.xml \
