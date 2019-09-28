@@ -157,8 +157,6 @@
                                 <configuration>
                                     <gpgArguments>
                                         <arg>--batch</arg>
-                                        <arg>--passphrase</arg>
-                                        <arg>${env.PASSPHRASE}</arg>
                                     </gpgArguments>
                                 </configuration>
                             </execution>
