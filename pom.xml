@@ -159,6 +159,8 @@
                                         <arg>--batch</arg>
                                         <arg>--passphrase</arg>
                                         <arg>${env.PASSPHRASE}</arg>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
                                     </gpgArguments>
                                 </configuration>
                             </execution>
