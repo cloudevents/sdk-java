@@ -10,6 +10,8 @@ openssl aes-256-cbc -K $encrypted_3210c925a91b_key \
 #     --no-default-keyring \
 #     --import .travis.pubring
 
+gpg2 --version
+
 gpg2 --import .travis.pubring
 
 #gpg --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg \
