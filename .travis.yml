@@ -16,11 +16,6 @@ env:
   - secure: Fl7zB+DmZTER2j1PfHUlJORWCkqSWPViwqPeV+OvHK59Oisgv+MJ7w5jU+N5iEmKi7V6moDCpdnChAlLN4XxYNKWHhuw1jv1GAvr083qpTRikbHvzPGNGU1g3g5tResslYJRW+U8pbhl+i50I7i0+VbYshHDUvtKiC6Wfb4KSDkIGNPhekmw1RZ/tZkZPwgX95sAqioyeI/AGAlI7x209eIHL6igxt5auc4XsfqTU9fjIoyyp1jRP4WRJ3tatJshAiwM+9SI0vzZyIe7w3d6y9CtEGxcBlCcCYn18YJ1+7da3Bfxv4nrIfsRKuVW/p2cypc7N26WMgsVlUzXryX/Bqie4SvFBiEM+WJey8YW2wc8Fr0ndcFjPFIsvpo+uHQRkwzuGspbzmfIfOJVVKCbIhAuKQZSGuJB5bSKtQxk0Vgz35Q4ag8gr8UfrjjoMtP0bb4N7nzYTHB/osDDKT9gmM/lBWyjXPRtCHWDgPJxSWrLxoXVWnzGZC/6Jc0eeJQlVOZ3YUViqSV2x3cXlOjyzSCkoDGk7fMFgPL+YP1gvn47KMhN9MtrSY+vkGqwDWrXb+0Mq4z7EIog5ZD+qE5XB014lDnQEk7GVpp5DVktdMBXkCBxpmBPDnpPF2BuTgf7nAMtJcNgq0PpLYc2d4W9ZpB0rD5KO1G83/ai+KnCWig=
 jobs:
   include:
-  - stage: Test gpg
-    jdk: openjdk8
-    script: bash .travis.deploy.sh
-    on:
-      branch: develop
   - stage: maven central release
     jdk: openjdk8
     script: skip
