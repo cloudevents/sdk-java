@@ -25,6 +25,8 @@ gpg2 --batch --allow-secret-key-import --import .travis.secring
 
 export GPG_TTY=$(tty)
 
-mvn package org.apache.maven.plugins:maven-gpg-plugin:1.6:sign -P release -DskipTests \
+mvn package org.apache.maven.plugins:maven-gpg-plugin:1.6:sign -P release \
+    -DskipTests \
     -Dgpg.executable=gpg2 \
+    -Dgpg.keyname=ECA44F0D \
     -Dgpg.passphrase=$PASSPHRASE
