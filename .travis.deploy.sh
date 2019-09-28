@@ -23,6 +23,8 @@ gpg2 --batch --allow-secret-key-import --import .travis.secring
 #    -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg \
 #    -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
 
+export GPG_TTY=$(tty)
+
 mvn package org.apache.maven.plugins:maven-gpg-plugin:1.6:sign -DskipTests \
     -Dgpg.executable=gpg2 \
     -Dgpg.passphrase=$PASSPHRASE
