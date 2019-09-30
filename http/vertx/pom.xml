@@ -20,7 +20,7 @@
     <parent>
         <groupId>io.cloudevents</groupId>
         <artifactId>cloudevents-parent</artifactId>
-        <version>0.3.0</version>
+        <version>0.3.1</version>
         <relativePath>../..</relativePath>
     </parent>
 
@@ -111,11 +111,9 @@
 
     <properties>
         <vertx.version>3.6.0</vertx.version>
-        <jackson.version>2.9.6</jackson.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <assertj-core.version>3.11.0</assertj-core.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
     </properties>
 
 </project>
-

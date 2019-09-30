@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
-TODO 
+TODO
+
+## [0.3.1]
+
+### Fixed
+
+- Vulnerable dependency `com.fasterxml.jackson.core:jackson-databind`
 
 ## [0.3.0]
 
@@ -50,5 +56,6 @@ abstract envelope signature
 - interface: `io.cloudevents.Extension` in favor of
 `io.cloudevents.extensions.ExtensionFormat`
 
-[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/cloudevents/sdk-java/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/cloudevents/sdk-java/compare/v0.2.1...v0.3.0
