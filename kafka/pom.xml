@@ -14,12 +14,12 @@
   <parent>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-parent</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
   </parent>
 
   <groupId>io.cloudevents</groupId>
   <artifactId>cloudevents-kafka</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
   <packaging>jar</packaging>
 
   <name>CloudEvents - Kafka Transport Binding</name>
