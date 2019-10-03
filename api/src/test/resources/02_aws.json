@@ -3,7 +3,7 @@
   "id": "C234-1234-1234",
   "time": "2018-04-26T14:48:09.769Z",
   "source": "https://serverless.com",
-  "contentType": "application/json",
+  "contenttype": "application/json",
   "specversion": "0.2",
   "data":
   { "s3SchemaVersion": "1.0",

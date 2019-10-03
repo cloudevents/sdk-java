@@ -8,15 +8,15 @@ For Maven based projects, use the following to configure the CloudEvents CDI lib
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 
 In _Enterprise Java_ applications, implemented with [Jakarta EE](https://jakarta.ee/) or the [Eclipse MicroProfile](https://microprofile.io/), it's trivial to combine this CloudEvents API with CDI. Application developers can now fire a CloudEvent for further processing inside of the application:
 
 ```java
-import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.v02.CloudEventBuilder;
+import io.cloudevents.v02.CloudEventImpl;
 import io.cloudevents.cdi.EventTypeQualifier;
 
 import javax.enterprise.event.Event;
@@ -28,15 +28,16 @@ import java.util.UUID;
 public class Router {
 
     @Inject
-    private Event<CloudEvent<MyCustomEvent>> cloudEvent;
+    private Event<CloudEventImpl<MyCustomEvent>> cloudEvent;
 
     public void routeMe() throws Exception {
 
-        final CloudEvent<MyCustomEvent> event = new CloudEventBuilder<MyCustomEvent>()
-                .type("Cloud.Storage.Item.Created")
-                .source(new URI("/trigger"))
-                .id(UUID.randomUUID().toString())
-                .data(new MyCustomEvent(...))
+        final CloudEventImpl<MyCustomEvent> event =
+            CloudEventBuilder.<MyCustomEvent>builder()
+                .withType("Cloud.Storage.Item.Created")
+                .withSource(new URI("/trigger"))
+                .withId(UUID.randomUUID().toString())
+                .withData(new MyCustomEvent(...))
                 .build();
 
         cloudEvent.select(

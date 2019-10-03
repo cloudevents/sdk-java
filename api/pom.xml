@@ -20,16 +20,21 @@
     <parent>
         <groupId>io.cloudevents</groupId>
         <artifactId>cloudevents-parent</artifactId>
-        <version>0.2.2-SNAPSHOT</version>
+        <version>0.3.1</version>
     </parent>
 
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
     <name>CloudEvents - API</name>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.3.1</version>
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -41,6 +46,18 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+
+        <dependency>
+             <groupId>org.glassfish</groupId>
+             <artifactId>javax.el</artifactId>
+             <version>${javax.el.version}</version>
         </dependency>
 
         <dependency>
@@ -60,8 +77,9 @@
     </dependencies>
 
     <properties>
-        <jackson.version>2.9.6</jackson.version>
+        <jackson.version>2.10.0.pr3</jackson.version>
+        <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
+        <javax.el.version>3.0.1-b11</javax.el.version>
     </properties>
 
 </project>
-
