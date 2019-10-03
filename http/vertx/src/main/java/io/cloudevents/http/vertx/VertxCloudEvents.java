@@ -16,16 +16,14 @@
 package io.cloudevents.http.vertx;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.Extension;
 import io.cloudevents.http.vertx.impl.VertxCloudEventsImpl;
+import io.cloudevents.v02.AttributesImpl;
 import io.vertx.codegen.annotations.GenIgnore;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpServerRequest;
-
-import java.util.List;
 
 @VertxGen
 public interface VertxCloudEvents {
@@ -35,14 +33,14 @@ public interface VertxCloudEvents {
     }
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
-    <T> void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<T>>> resultHandler);
+    void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<AttributesImpl, String>>> resultHandler);
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
-    <T> void readFromRequest(HttpServerRequest request, Class[] extensions, Handler<AsyncResult<CloudEvent<T>>> resultHandler);
+    void readFromRequest(HttpServerRequest request, Class[] extensions, Handler<AsyncResult<CloudEvent<AttributesImpl, String>>> resultHandler);
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
-    <T> void writeToHttpClientRequest(CloudEvent<T> ce, HttpClientRequest request);
+    void writeToHttpClientRequest(CloudEvent<AttributesImpl, String> ce, HttpClientRequest request);
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
-    <T> void writeToHttpClientRequest(CloudEvent<T> ce, boolean binary, HttpClientRequest request);
+    void writeToHttpClientRequest(CloudEvent<AttributesImpl, String> ce, boolean binary, HttpClientRequest request);
 }

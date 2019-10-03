@@ -16,9 +16,10 @@
 package io.cloudevents.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.json.types.GlusterVolumeClaim;
+import io.cloudevents.v02.CloudEventBuilder;
+import io.cloudevents.v02.CloudEventImpl;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -35,22 +36,23 @@ public class CustomEventTypesTest {
 
         // given
         final Map<String, Object> storagePayload = (MAPPER.readValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("pvc.json"), Map.class));
-        final CloudEvent<Map<String, Object>> storageCloudEventWrapper = new CloudEventBuilder<Map<String, Object>>()
-                .type("ProvisioningSucceeded")
-                .source(URI.create("/scheduler"))
-                .id(UUID.randomUUID().toString())
-                .data(storagePayload)
+        final CloudEventImpl<Map<String, Object>> storageCloudEventWrapper = CloudEventBuilder.<Map<String, Object>>builder()
+                .withType("ProvisioningSucceeded")
+                .withSource(URI.create("/scheduler"))
+                .withId(UUID.randomUUID().toString())
+                .withData(storagePayload)
                 .build();
 
         // when
         final String httpSerializedPayload = MAPPER.writeValueAsString(storageCloudEventWrapper);
         assertThat(httpSerializedPayload).contains("PersistentVolumeClaim");
         //PARSE into real object, on the other side
-        final CloudEvent<GlusterVolumeClaim> event = Json.decodeValue(httpSerializedPayload, new TypeReference<CloudEvent<GlusterVolumeClaim>>() {});
+        final CloudEventImpl<GlusterVolumeClaim> event = Json.decodeValue(httpSerializedPayload, new TypeReference<CloudEventImpl<GlusterVolumeClaim>>() {});
 
         // then
         assertThat(event.getData().get()).isNotNull();
         assertThat(event.getData().get().getSpec().getCapacity().get("storage")).isEqualTo("2Gi");
         assertThat(event.getData().get().getSpec().getAccessModes()).containsExactly("ReadWriteMany");
+     
     }
 }
