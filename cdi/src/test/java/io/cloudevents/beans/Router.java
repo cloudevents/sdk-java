@@ -16,8 +16,9 @@
 package io.cloudevents.beans;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.cdi.EventTypeQualifier;
+import io.cloudevents.v02.AttributesImpl;
+import io.cloudevents.v02.CloudEventBuilder;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -28,14 +29,15 @@ import java.util.UUID;
 public class Router {
 
     @Inject
-    private Event<CloudEvent<MyCustomEvent>> cloudEvent;
+    private Event<CloudEvent<AttributesImpl, MyCustomEvent>> cloudEvent;
 
     public void routeMe() throws Exception {
 
-        CloudEvent<MyCustomEvent> event = new CloudEventBuilder<MyCustomEvent>()
-                .type("Cloud.Storage.Item.Created")
-                .source(new URI("/trigger"))
-                .id(UUID.randomUUID().toString())
+        CloudEvent<AttributesImpl, MyCustomEvent> event = 
+        	CloudEventBuilder.<MyCustomEvent>builder()
+                .withType("Cloud.Storage.Item.Created")
+                .withSource(new URI("/trigger"))
+                .withId(UUID.randomUUID().toString())
                 .build();
 
         cloudEvent.select(
