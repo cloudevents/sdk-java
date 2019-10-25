@@ -147,13 +147,29 @@ public final class CloudEventBuilder<T> implements
 	 * @param <T> the type of 'data'
 	 * @param data the value of data
 	 * @param attributes the context attributes
+	 * @param extensions the extension attributes
 	 * @return An new {@link CloudEventImpl} immutable instance
 	 * @throws IllegalStateException When there are specification constraints
 	 * violations
 	 */
 	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes,
-			Collection<ExtensionFormat> extensions) {
-		CloudEventBuilder<T> builder = CloudEventBuilder.<T>builder()
+										   Collection<ExtensionFormat> extensions) {
+		return of(data, attributes, extensions, null);
+	}
+	/**
+	 * Build an event from data and attributes
+	 * @param <T> the type of 'data'
+	 * @param data the value of data
+	 * @param attributes the context attributes
+	 * @param extensions the extension attributes
+	 * @param validator existing instance of a validator
+	 * @return An new {@link CloudEventImpl} immutable instance
+	 * @throws IllegalStateException When there are specification constraints
+	 * violations
+	 */
+	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes,
+			Collection<ExtensionFormat> extensions, Validator validator) {
+		CloudEventBuilder<T> builder = CloudEventBuilder.<T>builder(validator)
 			.withId(attributes.getId())
 			.withSource(attributes.getSource())
 			.withType(attributes.getType());
@@ -191,7 +207,7 @@ public final class CloudEventBuilder<T> implements
 	@Override
 	public CloudEvent<AttributesImpl, T> build(T data, AttributesImpl attributes, 
 			Collection<ExtensionFormat> extensions){
-		return CloudEventBuilder.<T>of(data, attributes, extensions);
+		return CloudEventBuilder.<T>of(data, attributes, extensions, null);
 	}
 	
 	/**
