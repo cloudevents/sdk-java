@@ -15,11 +15,23 @@
  */
 package io.cloudevents.v03;
 
+import static io.cloudevents.v03.CloudEventBuilder.builder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.executable.ExecutableValidator;
+import javax.validation.metadata.BeanDescriptor;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,88 +43,88 @@ import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.extensions.InMemoryFormat;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
 public class CloudEventBuilderTest {
-	
+
 	@Rule
 	public ExpectedException expectedEx = ExpectedException.none();
-	
+
 	@Test
 	public void error_when_null_id() {
 		// setup
 		expectedEx.expect(IllegalStateException.class);
 		expectedEx.expectMessage("invalid payload: 'id' must not be blank");
-		
+
 		// act
-		CloudEventBuilder.builder()
+		builder()
 			.withSource(URI.create("/test"))
 			.withType("type")
 			.build();
 	}
-	
+
 	@Test
 	public void error_when_empty_id() {
 		// setup
 		expectedEx.expect(IllegalStateException.class);
 		expectedEx.expectMessage("invalid payload: 'id' must not be blank");
-		
+
 		// act
-		CloudEventBuilder.builder()
+		builder()
 			.withId("")
 			.withSource(URI.create("/test"))
 			.withType("type")
 			.build();
 	}
-	
+
 	@Test
 	public void error_when_null_type() {
 		// setup
 		expectedEx.expect(IllegalStateException.class);
 		expectedEx.expectMessage("invalid payload: 'type' must not be blank");
-		
+
 		// act
-		CloudEventBuilder.builder()
+		builder()
 			.withId("id")
 			.withSource(URI.create("/test"))
 			.build();
 	}
-	
+
 	@Test
 	public void error_when_empty_type() {
 		// setup
 		expectedEx.expect(IllegalStateException.class);
 		expectedEx.expectMessage("invalid payload: 'type' must not be blank");
-		
+
 		// act
-		CloudEventBuilder.builder()
+		builder()
 			.withId("id")
 			.withSource(URI.create("/test"))
 			.withType("")
 			.build();
 	}
-	
+
 	@Test
 	public void error_when_null_source() {
 		// setup
 		expectedEx.expect(IllegalStateException.class);
 		expectedEx.expectMessage("invalid payload: 'source' must not be null");
-		
+
 		// act
-		CloudEventBuilder.builder()
+		builder()
 			.withId("id")
 			.withType("type")
 			.build();
 	}
-	
+
 	@Test
 	public void error_when_empty_subject() {
 		// setup
 		expectedEx.expect(IllegalStateException.class);
 		expectedEx.expectMessage("invalid payload: 'subject' size must be between 1 and 2147483647");
-		
+
 		// act
 		CloudEventBuilder.<Object>builder()
 			.withId("id")
@@ -121,13 +133,13 @@ public class CloudEventBuilderTest {
 			.withSubject("")
 			.build();
 	}
-	
+
 	@Test
 	public void error_when_invalid_encoding() {
 		// setup
 		expectedEx.expect(IllegalStateException.class);
 		expectedEx.expectMessage("invalid payload: 'datacontentencoding' must match \"base64\"");
-		
+
 		// act
 		CloudEventBuilder.<Object>builder()
 			.withId("id")
@@ -137,18 +149,18 @@ public class CloudEventBuilderTest {
 			.withDatacontentencoding("binary")
 			.build();
 	}
-	
+
 	@Test
 	public void should_have_subject() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 				CloudEventBuilder.<Object>builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
 				.withSubject("subject")
 				.build();
-		
+
 		// assert
 		assertTrue(ce.getAttributes().getSubject().isPresent());
 		assertEquals("subject", ce.getAttributes().getSubject().get());
@@ -160,48 +172,133 @@ public class CloudEventBuilderTest {
 		final DistributedTracingExtension dt = new DistributedTracingExtension();
 		dt.setTraceparent("0");
 		dt.setTracestate("congo=4");
-		
+
 		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
-		
+
 		// act
-		CloudEventImpl<Object> ce = 
-			CloudEventBuilder.builder()
+		CloudEventImpl<Object> ce =
+			builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
 				.withExtension(tracing)
 				.build();
-		
+
 		Object actual = ce.getExtensions()
 			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY);
-		
+
 		// assert
 		assertNotNull(actual);
 		assertTrue(actual instanceof DistributedTracingExtension);
 	}
-	
+
 	@Test
 	public void should_have_custom_extension() {
 		String myExtKey = "comexampleextension1";
 		String myExtVal = "value";
-		
+
 		ExtensionFormat custom = ExtensionFormat
 			.of(InMemoryFormat.of(myExtKey, myExtKey, String.class),
 				myExtKey, myExtVal);
-		
+
 		// act
-		CloudEventImpl<Object> ce = 
-			CloudEventBuilder.builder()
+		CloudEventImpl<Object> ce =
+			builder()
 				.withId("id")
 				.withSource(URI.create("/source"))
 				.withType("type")
 				.withExtension(custom)
 				.build();
-		
+
 		Object actual = ce.getExtensions()
 				.get(myExtKey);
-		
+
 		assertNotNull(actual);
 		assertTrue(actual instanceof String);
+	}
+
+	@Test
+	public void should_copy_event_using_custom_validator() {
+		Validator validator = new MockValidator();
+		String expected = "test";
+		CloudEvent<AttributesImpl, String> event = CloudEventBuilder.<String>of(
+			expected,
+			new AttributesImpl(null, null, null, null, null, null, null, null, null),
+			Collections.emptyList(),
+			validator
+		);
+
+		try {
+			CloudEventBuilder.<String>builder().build();
+			fail("Expected validation error");
+		} catch (IllegalStateException e) {
+			assertNotNull(e);
+		}
+	}
+
+	@Test
+	public void should_build_event_using_custom_validator() {
+		Validator validator = new MockValidator();
+		String expected = "test";
+
+		CloudEventImpl<String> event = CloudEventBuilder
+			.<String>builder(validator)
+			.withData(expected)
+			.build();
+
+		assertNotNull(event);
+		assertEquals(expected, event.getData().get());
+	}
+
+	@Test
+	public void should_build_event_from_event_using_custom_validator() {
+		Validator validator = new MockValidator();
+		String expected = "test";
+		CloudEvent<AttributesImpl, String> event = CloudEventBuilder.<String>of(
+			expected,
+			new AttributesImpl(null, null, null, null, null, null, null, null, null),
+			Collections.emptyList(),
+			validator
+		);
+
+		CloudEvent<AttributesImpl, String> result = CloudEventBuilder
+			.<String>builder(event, validator)
+			.build();
+
+		assertNotNull(result);
+		assertEquals(expected, result.getData().get());
+	}
+	
+	private static class MockValidator implements Validator {
+
+		@Override
+		public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groups) {
+			return new HashSet<>();
+		}
+
+		@Override
+		public <T> Set<ConstraintViolation<T>> validateProperty(T object, String propertyName, Class<?>... groups) {
+			return null;
+		}
+
+		@Override
+		public <T> Set<ConstraintViolation<T>> validateValue(Class<T> beanType, String propertyName, Object value, Class<?>... groups) {
+			return null;
+		}
+
+		@Override
+		public BeanDescriptor getConstraintsForClass(Class<?> clazz) {
+			return null;
+		}
+
+		@Override
+		public <T> T unwrap(Class<T> type) {
+			return null;
+		}
+
+		@Override
+		public ExecutableValidator forExecutables() {
+			return null;
+		}
 	}
 }

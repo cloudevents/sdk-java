@@ -42,8 +42,15 @@ import io.cloudevents.fun.EventBuilder;
  */
 public final class CloudEventBuilder<T> implements 
 		EventBuilder<T, AttributesImpl> {
-	private CloudEventBuilder() {}
-	
+
+	private CloudEventBuilder(Validator validator) {
+		if(validator == null) {
+			this.validator = getValidator();
+		} else {
+			this.validator = validator;
+		}
+	}
+
 	private static Validator VALIDATOR;
 	
 	public static final String SPEC_VERSION = "0.3";
@@ -65,6 +72,7 @@ public final class CloudEventBuilder<T> implements
 	private T data;
 	
 	private final Set<ExtensionFormat> extensions = new HashSet<>();
+	private final Validator validator;
 	
 	private static Validator getValidator() {
 		if(null== VALIDATOR) {
@@ -78,66 +86,90 @@ public final class CloudEventBuilder<T> implements
 	 * @param <T> The 'data' type
 	 */
 	public static <T> CloudEventBuilder<T> builder() {
-		return new CloudEventBuilder<T>();
+		return new CloudEventBuilder<T>(null);
 	}
-	
+
+	public static <T> CloudEventBuilder<T> builder(Validator validator) {
+		return new CloudEventBuilder<T>(validator);
+	}
 	public static <T> CloudEventBuilder<T> builder(
 			CloudEvent<AttributesImpl, T> base) {
+		return builder(base, null);
+	}
+
+	public static <T> CloudEventBuilder<T> builder(
+			CloudEvent<AttributesImpl, T> base, Validator validator) {
 		Objects.requireNonNull(base);
-		
-		CloudEventBuilder<T> result = new CloudEventBuilder<>();
-		
+
+		CloudEventBuilder<T> result = new CloudEventBuilder<>(validator);
+
 		AttributesImpl attributes = base.getAttributes();
-		
+
 		result
 			.withId(attributes.getId())
 			.withSource(attributes.getSource())
 			.withType(attributes.getType());
-		
+
 		attributes.getTime().ifPresent(time -> {
 			result.withTime(time);
 		});
-		
+
 		attributes.getSchemaurl().ifPresent((schema) -> {
 			result.withSchemaurl(schema);
 		});
-		
+
 		attributes.getDatacontenttype().ifPresent(dc -> {
 			result.withDatacontenttype(dc);
 		});
-		
+
 		attributes.getDatacontentencoding().ifPresent(dce -> {
 			result.withDatacontentencoding(dce);
 		});
-		
+
 		attributes.getSubject().ifPresent(subject -> {
 			result.withSubject(subject);
 		});
-		
+
 		Accessor.extensionsOf(base)
 			.forEach(extension -> {
 				result.withExtension(extension);
 			});
-		
+
 		base.getData().ifPresent(data -> {
 			result.withData(data);
 		});
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Build an event from data and attributes
 	 * @param <T> the type of 'data'
 	 * @param data the value of data
 	 * @param attributes the context attributes
+	 * @param extensions the extension attributes
 	 * @return An new {@link CloudEventImpl} immutable instance
 	 * @throws IllegalStateException When there are specification constraints
 	 * violations
 	 */
 	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes,
-			Collection<ExtensionFormat> extensions) {
-		CloudEventBuilder<T> builder = CloudEventBuilder.<T>builder()
+										   Collection<ExtensionFormat> extensions) {
+		return of(data, attributes, extensions, null);
+	}
+	/**
+	 * Build an event from data and attributes
+	 * @param <T> the type of 'data'
+	 * @param data the value of data
+	 * @param attributes the context attributes
+	 * @param extensions the extension attributes
+	 * @param validator existing instance of a validator
+	 * @return An new {@link CloudEventImpl} immutable instance
+	 * @throws IllegalStateException When there are specification constraints
+	 * violations
+	 */
+	public static <T> CloudEventImpl<T> of(T data, AttributesImpl attributes,
+			Collection<ExtensionFormat> extensions, Validator validator) {
+		CloudEventBuilder<T> builder = CloudEventBuilder.<T>builder(validator)
 			.withId(attributes.getId())
 			.withSource(attributes.getSource())
 			.withType(attributes.getType());
@@ -175,7 +207,7 @@ public final class CloudEventBuilder<T> implements
 	@Override
 	public CloudEvent<AttributesImpl, T> build(T data, AttributesImpl attributes, 
 			Collection<ExtensionFormat> extensions){
-		return CloudEventBuilder.<T>of(data, attributes, extensions);
+		return CloudEventBuilder.<T>of(data, attributes, extensions, null);
 	}
 	
 	/**
@@ -194,9 +226,9 @@ public final class CloudEventBuilder<T> implements
 				new CloudEventImpl<T>(attributes, data, extensions);
 		
 		Set<ConstraintViolation<Object>> violations =
-				getValidator().validate(cloudEvent);
+				validator.validate(cloudEvent);
 		
-		violations.addAll(getValidator().validate(cloudEvent.getAttributes()));
+		violations.addAll(validator.validate(cloudEvent.getAttributes()));
 		
 		final String errs = 
 			violations.stream()
