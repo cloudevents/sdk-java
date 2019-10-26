@@ -29,7 +29,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
@@ -40,6 +42,7 @@ import io.cloudevents.json.ZonedDateTimeDeserializer;
  * @author fabiojose
  * @version 1.0
  */
+@JsonInclude(value = Include.NON_ABSENT)
 public class AttributesImpl implements Attributes {
 	
 	@NotBlank
