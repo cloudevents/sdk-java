@@ -29,7 +29,7 @@ import io.cloudevents.v03.ContextAttributes;
 /**
  * 
  * @author fabiojose
- * @version 0.2
+ * @version 0.3
  */
 public class ExtensionMapper {
 	private ExtensionMapper() {}
