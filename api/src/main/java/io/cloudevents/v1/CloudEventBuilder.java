@@ -115,7 +115,35 @@ public class CloudEventBuilder<T> implements
 			AttributesImpl attributes,
 			Collection<ExtensionFormat> extensions) {
 
-		return null;
+		CloudEventBuilder<T> builder = CloudEventBuilder.<T>builder()
+				.withId(attributes.getId())
+				.withSource(attributes.getSource())
+				.withType(attributes.getType());
+			
+		attributes.getTime().ifPresent((time) -> {
+			builder.withTime(time);
+		});
+		
+		attributes.getDataschema().ifPresent((dataschema) -> {
+			builder.withDataschema(dataschema);
+		});
+		
+		attributes.getDatacontenttype().ifPresent((dct) -> {
+			builder.withDatacontenttype(dct);
+		});
+		
+		attributes.getSubject().ifPresent((subject) -> {
+			builder.withSubject(subject);
+		});
+		
+		extensions.stream()
+			.forEach(extension -> {
+				builder.withExtension(extension);
+			});
+		
+		builder.withData(data);
+		
+		return builder.build();
 	}
 	
 	/**
