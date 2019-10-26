@@ -15,6 +15,8 @@
  */
 package io.cloudevents.v1;
 
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
+
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -182,5 +184,36 @@ public class AttributesImpl implements Attributes {
 		});
 		
 		return result;
+	}
+	
+	/**
+	 * The attribute unmarshaller for the binary format, that receives a
+	 * {@code Map} with attributes names as String and value as String.
+	 */
+	public static AttributesImpl unmarshal(Map<String, String> attributes) {
+		String type = attributes.get(ContextAttributes.type.name());
+		ZonedDateTime time =
+			Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
+			.map((t) -> ZonedDateTime.parse(t,
+					ISO_ZONED_DATE_TIME))
+			.orElse(null);
+		
+		String specversion = attributes.get(ContextAttributes.specversion.name()); 
+		URI source = URI.create(attributes.get(ContextAttributes.source.name()));
+		
+		URI dataschema = 
+			Optional.ofNullable(attributes.get(ContextAttributes.dataschema.name()))
+			.map(schema -> URI.create(schema))
+			.orElse(null);
+		
+		String id = attributes.get(ContextAttributes.id.name());
+		
+		String datacontenttype = 
+			attributes.get(ContextAttributes.datacontenttype.name());
+		
+		String subject = attributes.get(ContextAttributes.subject.name());
+		
+		return AttributesImpl.build(id, source, specversion, type,
+				datacontenttype, dataschema, subject, time);
 	}
 }
