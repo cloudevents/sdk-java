@@ -14,7 +14,7 @@ Add the dependency in your project:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-kafka</artifactId>
-    <version>0.3.1</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
