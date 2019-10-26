@@ -28,8 +28,8 @@ For Maven based projects, use the following to configure the CloudEvents Java SD
 Application developers can now create strongly-typed CloudEvents, such as:
 
 ```java
-import io.cloudevents.v02.CloudEventBuilder;
-import io.cloudevents.v02.CloudEventImpl;
+import io.cloudevents.v1.CloudEventBuilder;
+import io.cloudevents.v1.CloudEventImpl;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.json.Json;
 import io.cloudevents.extensions.DistributedTracingExtension;
