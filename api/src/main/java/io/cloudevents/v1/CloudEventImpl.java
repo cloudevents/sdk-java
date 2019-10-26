@@ -18,6 +18,7 @@ package io.cloudevents.v1;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -25,14 +26,15 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
@@ -46,11 +48,19 @@ import io.cloudevents.extensions.InMemoryFormat;
 @JsonInclude(value = Include.NON_ABSENT)
 public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	
+	public static final String EVENT_DATA_FIELD = "data";
+	public static final String EVENT_DATA_BASE64_FILED = "data_base64";
+	
 	@JsonIgnore
 	@NotNull
 	private final AttributesImpl attributes;
 	
+	@JsonIgnore
 	private final T data;
+	
+	//To use with json binary data
+	@JsonIgnore
+	private byte[] dataBase64;
 	
 	@NotNull
 	private final Map<String, Object> extensions;
@@ -77,6 +87,14 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 		return extensionsFormats;
 	}
 	
+	/**
+	 * To handle the JSON base64 serialization
+	 * @param data The byte array to encode as base64
+	 */
+	void setDataBase64(byte[] data) {
+		this.dataBase64 = data;
+	}
+	
 	@JsonUnwrapped
 	@Override
 	public AttributesImpl getAttributes() {
@@ -91,7 +109,16 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	@JsonAnyGetter
 	@Override
 	public Map<String, Object> getExtensions() {
-		return Collections.unmodifiableMap(extensions);
+		Map<String, Object> result = new HashMap<>(extensions);
+		
+		if(null== dataBase64) {
+			if(null!= data) {
+				result.put(EVENT_DATA_FIELD, data);
+			}
+		} else {
+			result.put(EVENT_DATA_BASE64_FILED, dataBase64);
+		}
+		return Collections.unmodifiableMap(result);
 	}
 	
 	/**
@@ -119,7 +146,9 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 			@JsonProperty("dataschema") URI dataschema,
 			@JsonProperty("subject") String subject,
 			@JsonProperty("time") ZonedDateTime time,
-			@JsonProperty("data") T data){
+			@JsonProperty("data")
+			@JsonAlias("data_base64")
+			T data){
 		
 		return CloudEventBuilder.<T>builder()
 				.withId(id)

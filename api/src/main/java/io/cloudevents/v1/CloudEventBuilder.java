@@ -158,7 +158,11 @@ public class CloudEventBuilder<T> implements
 				datacontenttype, dataschema, subject, time);
 		
 		CloudEventImpl<T> cloudEvent = 
-				new CloudEventImpl<T>(attributes, data, extensions);
+			new CloudEventImpl<T>(attributes, data, extensions);
+		
+		if(data instanceof byte[]) {
+			cloudEvent.setDataBase64((byte[])data);
+		}
 		
 		Set<ConstraintViolation<Object>> violations =
 				getValidator().validate(cloudEvent);

@@ -22,6 +22,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.time.ZonedDateTime;
+import java.util.Base64;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -280,5 +282,39 @@ public class CloudEventJacksonTest {
 		assertTrue(ce.getData().isPresent());
         assertEquals(expected.getWow(), ce.getData().get().getWow());
     }
+	
+	@Test
+	public void should_marshall_data_byte_array_as_data_base64() {
+		// setup
+		byte[] data = ("--mydata--"
+				+ "\n"
+				+ "customer=445"
+				+ "\n"
+				+ "invoice=5566"
+				+ "\n"
+				+ "---mydata---").getBytes();
+		
+		String expected = 
+			Base64.getEncoder().encodeToString(data);
+		
+		CloudEventImpl<byte[]> event = 
+			CloudEventBuilder.<byte[]>builder()
+				.withId("0xbin")
+				.withSource(URI.create("/customers/445"))
+				.withType("customers.ordering")
+				.withDatacontenttype("text/plain")
+				.withDataschema(URI.create("http://schame.server.com/customer/order"))
+				.withSubject("orders.json")
+				.withTime(ZonedDateTime.now())
+				.withData(data)
+				.build();
+
+		// act
+		String encoded = Json.encode(event);
+		
+		// assert
+		assertTrue(encoded.contains("\"data_base64\""));
+		assertTrue(encoded.contains("\"" + expected +"\""));
+	}
 	
 }

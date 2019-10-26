@@ -38,59 +38,6 @@ import io.cloudevents.v1.http.Marshallers;
  *
  */
 public class HTTPStructuredMarshallerTest {
-
-	@Test
-	public void should_marshal_all_as_json() {
-		// setup
-		String expected = "{\"data\":{\"wow\":\"yes!\"},\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"1.0\",\"type\":\"event-type\",\"datacontenttype\":\"application/json\",\"subject\":\"subject\"}";
-		
-		Much ceData = new Much();
-		ceData.setWow("yes!");
-
-		CloudEventImpl<Much> ce = 
-				CloudEventBuilder.<Much>builder()
-					.withId("x10")
-					.withSource(URI.create("/source"))
-					.withType("event-type")
-					.withDatacontenttype("application/json")
-					.withSubject("subject")
-					.withData(ceData)
-					.build();
-		
-		// act
-		Wire<String, String, String> actual = 
-			Marshallers.<Much>structured()
-				.withEvent(() -> ce)
-				.marshal();
-		
-		assertTrue(actual.getPayload().isPresent());
-		assertEquals(expected, actual.getPayload().get());
-	}
-	
-	@Test
-	public void should_marshal_data_as_text_and_evelope_as_json() {
-		// setup
-		String expected = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"1.0\",\"type\":\"event-type\",\"datacontenttype\":\"text/plain\"}";
-		String ceData = "yes!";
-
-		CloudEventImpl<String> ce = 
-				CloudEventBuilder.<String>builder()
-					.withId("x10")
-					.withSource(URI.create("/source"))
-					.withType("event-type")
-					.withDatacontenttype("text/plain")
-					.withData(ceData)
-					.build();
-		
-		// act
-		Wire<String, String, String> actual = 
-			Marshallers.<String>structured()
-				.withEvent(() -> ce)
-				.marshal();
-		
-		assertTrue(actual.getPayload().isPresent());
-		assertEquals(expected, actual.getPayload().get());
-	}
 	
 	@Test
 	public void should_headers_have_content_type() {
