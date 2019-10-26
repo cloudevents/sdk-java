@@ -11,7 +11,10 @@ TODO
 ## [1.0.0]
 
 ### Added
+
 - Support for [Spec v1.0](https://github.com/cloudevents/spec/tree/v1.0)
+- Improved readme to end request for vertx sample [PR 62](https://github.com/cloudevents/sdk-java/pull/62)
+- Allow providing an external validator [PR 65](https://github.com/cloudevents/sdk-java/pull/65)
 
 ## [0.3.1]
 
