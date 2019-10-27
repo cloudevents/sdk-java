@@ -15,6 +15,7 @@
  */
 package io.cloudevents.v1;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -284,7 +285,24 @@ public class CloudEventJacksonTest {
     }
 	
 	@Test
-	public void should_marshall_data_byte_array_as_data_base64() {
+    public void should_unmarshal_data_base64() {
+		// setup
+		byte[] expected = "mydata".getBytes();
+		
+		// act
+		CloudEvent<AttributesImpl, byte[]> ce = 
+	        	Json.fromInputStream(resourceOf("1_base64.json"), 
+	        			new TypeReference<CloudEventImpl<byte[]>>() {});
+		
+		System.out.println(new String(ce.getData().get()));
+        
+        // assert
+		assertTrue(ce.getData().isPresent());
+		assertArrayEquals(expected, ce.getData().get());
+    }
+	
+	@Test
+	public void should_marshal_data_byte_array_as_data_base64() {
 		// setup
 		byte[] data = ("--mydata--"
 				+ "\n"
