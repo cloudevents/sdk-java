@@ -85,6 +85,16 @@ public final class Json {
             			+ e.getMessage());
         }
     }
+    
+    public static <T> T fromInputStream(final InputStream inputStream,
+    		final TypeReference<T> type) {
+    	try {
+            return MAPPER.readValue(inputStream, type);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to encode as JSON: " 
+            			+ e.getMessage());
+        }
+    }
  
     /**
      * Decode a given JSON string to a POJO of the given class type.
