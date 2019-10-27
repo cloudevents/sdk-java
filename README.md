@@ -61,11 +61,41 @@ final CloudEventImpl<MyCustomEvent> cloudEvent =
 final String json = Json.encode(cloudEvent);
 ```
 
-There are [other detailed ways](./api/README.md) of how to use the marshallers and unmarshallers with HTTP transport binding.
+Or, an event with binary event data:
+
+```java
+import io.cloudevents.v1.CloudEventBuilder;
+import io.cloudevents.v1.CloudEventImpl;
+import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.json.Json;
+import io.cloudevents.extensions.DistributedTracingExtension;
+
+// given
+final String eventId = UUID.randomUUID().toString();
+final URI src = URI.create("/trigger");
+final String eventType = "My.Cloud.Event.Type";
+final byte[] payload = "a-binary-event-data".getBytes();
+
+// passing in the given attributes
+final CloudEventImpl<byte[]> cloudEvent =
+  CloudEventBuilder.<byte[]>builder()
+    .withType(eventType)
+    .withId(eventId)
+    .withSource(src)
+    .withData(payload)
+    .build();
+
+// marshalling as json that will have the data_base64
+final String json = Json.encode(cloudEvent);
+```
+
+There are [other detailed ways](./api/README.md) of how to use the marshallers
+and unmarshallers with HTTP transport binding.
 
 ## Kafka
 
-The support for kafka transport binding is available. Read the [documentation and examples](./kafka/README.md) of use.
+The support for kafka transport binding is available. Read the
+[documentation and examples](./kafka/README.md) of use.
 
 ## Possible Integrations
 
