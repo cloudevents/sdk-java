@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
+import java.util.Base64;
 
 import org.junit.Test;
 
@@ -62,6 +63,36 @@ public class HTTPBinaryMarshallerTest {
 			.withEvent(() -> ce)
 			.marshal();
 		
+		// assert
+		assertTrue(actual.getPayload().isPresent());
+		assertEquals(expected, actual.getPayload().get());
+	}
+	
+	@Test
+	public void should_marshal_byte_array_as_base64() {
+		// setup
+		
+		byte[] data = "my-data".getBytes();
+		String expected = "\"" +
+				Base64.getEncoder().encodeToString(data) + "\"";
+
+		CloudEventImpl<byte[]> ce = 
+			CloudEventBuilder.<byte[]>builder()
+				.withId("x10")
+				.withSource(URI.create("/source"))
+				.withType("event-type")
+				.withDatacontenttype("text/plain")
+				.withSubject("subject")
+				.withData(data)
+				.build();
+		
+		// act
+		Wire<String, String, String> actual = 
+			Marshallers.<byte[]>
+			  binary()
+				.withEvent(() -> ce)
+				.marshal();
+			  		
 		// assert
 		assertTrue(actual.getPayload().isPresent());
 		assertEquals(expected, actual.getPayload().get());
