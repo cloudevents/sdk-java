@@ -59,7 +59,7 @@ try(CloudEventsKafkaProducer<String, AttributesImpl, String>
 			.withId("x10")
 			.withSource(URI.create("/source"))
 			.withType("event-type")
-			.withDatacontenttype("application/json")
+			.withDataContentType("application/json")
 			.withData("Event Data")
 			.build();
 
@@ -105,7 +105,7 @@ try(CloudEventsKafkaProducer<String, AttributesImpl, String>
 			.withId("x10")
 			.withSource(URI.create("/source"))
 			.withType("event-type")
-			.withDatacontenttype("application/json")
+			.withDataContentType("application/json")
 			.withData("Event Data")
 			.build();
 

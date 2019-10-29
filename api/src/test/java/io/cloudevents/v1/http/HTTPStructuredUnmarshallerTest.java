@@ -54,7 +54,7 @@ public class HTTPStructuredUnmarshallerTest {
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
-					.withDatacontenttype("application/json")
+					.withDataContentType("application/json")
 					.withSubject("subject")
 					.withData(ceData)
 					.build();
@@ -101,7 +101,7 @@ public class HTTPStructuredUnmarshallerTest {
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
-					.withDatacontenttype("text/plain")
+					.withDataContentType("text/plain")
 					.withData(ceData)
 					.build();
 		

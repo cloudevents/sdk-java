@@ -87,7 +87,7 @@ public class CloudEventBuilder<T> implements
 		});
 		
 		attributes.getDatacontenttype().ifPresent(dc -> {
-			result.withDatacontenttype(dc);
+			result.withDataContentType(dc);
 		});
 		
 		attributes.getSubject().ifPresent(subject -> {
@@ -129,7 +129,7 @@ public class CloudEventBuilder<T> implements
 		});
 		
 		attributes.getDatacontenttype().ifPresent((dct) -> {
-			builder.withDatacontenttype(dct);
+			builder.withDataContentType(dct);
 		});
 		
 		attributes.getSubject().ifPresent((subject) -> {
@@ -205,7 +205,7 @@ public class CloudEventBuilder<T> implements
 		return this;
 	}
 	
-	public CloudEventBuilder<T> withDatacontenttype(
+	public CloudEventBuilder<T> withDataContentType(
 			String datacontenttype) {
 		this.datacontenttype = datacontenttype;
 		return this;

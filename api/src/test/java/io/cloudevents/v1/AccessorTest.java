@@ -46,7 +46,7 @@ public class AccessorTest {
 					.withSource(URI.create("/source"))
 					.withType("event-type")
 					.withDataschema(URI.create("/schema"))
-					.withDatacontenttype("text/plain")
+					.withDataContentType("text/plain")
 					.withData("my-data")
 					.build();
 		
@@ -72,7 +72,7 @@ public class AccessorTest {
 					.withSource(URI.create("/source"))
 					.withType("event-type")
 					.withDataschema(URI.create("/schema"))
-					.withDatacontenttype("text/plain")
+					.withDataContentType("text/plain")
 					.withData("my-data")
 					.withExtension(expected)
 					.build();
@@ -112,7 +112,7 @@ public class AccessorTest {
 					.withSource(URI.create("/source"))
 					.withType("event-type")
 					.withDataschema(URI.create("/schema"))
-					.withDatacontenttype("text/plain")
+					.withDataContentType("text/plain")
 					.withData("my-data")
 					.withExtension(expected)
 					.build();

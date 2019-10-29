@@ -156,7 +156,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.withType(type)
 				.withTime(time)
 				.withDataschema(dataschema)
-				.withDatacontenttype(datacontenttype)
+				.withDataContentType(datacontenttype)
 				.withData(data)
 				.withSubject(subject)
 				.build();

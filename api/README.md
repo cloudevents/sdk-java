@@ -42,7 +42,7 @@ CloudEventImpl<String> ce =
 		.withId("A234-1234-1234")					
 		.withDataschema(URI.create("http://my.br"))
 		.withTime(ZonedDateTime.now())
-		.withDatacontenttype("text/plain")
+		.withDataContentType("text/plain")
 		.withData("my-data")
 		.withExtension(tracing)
 		.build();
@@ -140,7 +140,7 @@ final CloudEventImpl<String> ce =
 			.withId("A234-1234-1234")
 			.withDataschema(URI.create("http://my.br"))
 			.withTime(ZonedDateTime.now())
-			.withDatacontenttype("text/plain")
+			.withDataContentType("text/plain")
 			.withData("my-data")
 			.withExtension(tracing)
 			.build();

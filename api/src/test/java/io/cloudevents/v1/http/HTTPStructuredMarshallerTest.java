@@ -50,7 +50,7 @@ public class HTTPStructuredMarshallerTest {
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
-					.withDatacontenttype("text/plain")
+					.withDataContentType("text/plain")
 					.withData(ceData)
 					.build();
 		

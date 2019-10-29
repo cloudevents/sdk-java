@@ -90,7 +90,7 @@ public class CloudEventJacksonTest {
 					.withSource(URI.create("/source"))
 					.withType("event-type")
 					.withDataschema(URI.create("/schema"))
-					.withDatacontenttype("text/plain")
+					.withDataContentType("text/plain")
 					.withSubject("subject0")
 					.withData("my-data")
 					.build();
@@ -125,7 +125,7 @@ public class CloudEventJacksonTest {
 					.withSource(URI.create("/source"))
 					.withType("event-type")
 					.withDataschema(URI.create("/schema"))
-					.withDatacontenttype("text/plain")
+					.withDataContentType("text/plain")
 					.withData("my-data")
 					.withExtension(tracing)
 					.build();
@@ -146,7 +146,7 @@ public class CloudEventJacksonTest {
 					.withSource(URI.create("/source"))
 					.withType("event-type")
 					.withDataschema(URI.create("/schema"))
-					.withDatacontenttype("text/plain")
+					.withDataContentType("text/plain")
 					.withSubject("subject0")
 					.withData("my-data")
 					.build();
@@ -320,7 +320,7 @@ public class CloudEventJacksonTest {
 				.withId("0xbin")
 				.withSource(URI.create("/customers/445"))
 				.withType("customers.ordering")
-				.withDatacontenttype("text/plain")
+				.withDataContentType("text/plain")
 				.withDataschema(URI.create("http://schame.server.com/customer/order"))
 				.withSubject("orders.json")
 				.withTime(ZonedDateTime.now())

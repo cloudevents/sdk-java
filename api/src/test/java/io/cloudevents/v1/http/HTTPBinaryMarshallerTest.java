@@ -51,7 +51,7 @@ public class HTTPBinaryMarshallerTest {
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
-					.withDatacontenttype("application/json")
+					.withDataContentType("application/json")
 					.withSubject("subject")
 					.withData(ceData)
 					.build();
@@ -81,7 +81,7 @@ public class HTTPBinaryMarshallerTest {
 				.withId("x10")
 				.withSource(URI.create("/source"))
 				.withType("event-type")
-				.withDatacontenttype("text/plain")
+				.withDataContentType("text/plain")
 				.withSubject("subject")
 				.withData(data)
 				.build();
@@ -109,7 +109,7 @@ public class HTTPBinaryMarshallerTest {
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
-					.withDatacontenttype("application/json")
+					.withDataContentType("application/json")
 					.withSubject("subject")
 					.withData(ceData)
 					.build();
