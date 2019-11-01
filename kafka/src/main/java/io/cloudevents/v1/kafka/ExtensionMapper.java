@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudevents.v03.http;
+package io.cloudevents.v1.kafka;
 
 import java.util.List;
 import java.util.Locale;
@@ -23,45 +23,61 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.apache.kafka.common.serialization.Deserializer;
+import org.apache.kafka.common.serialization.Serdes;
+
 import io.cloudevents.fun.FormatExtensionMapper;
-import io.cloudevents.v03.ContextAttributes;
+import io.cloudevents.v1.ContextAttributes;
+import io.cloudevents.v1.kafka.AttributeMapper;
 
 /**
  * 
  * @author fabiojose
- * @version 0.3
+ * @version 1.0
  */
 public class ExtensionMapper {
-	private ExtensionMapper() {}
+private ExtensionMapper() {}
 	
 	private static final List<String> RESERVED_HEADERS = 
 			ContextAttributes.VALUES.stream()
 				.map(attribute -> AttributeMapper
 						.HEADER_PREFIX + attribute)
 				.collect(Collectors.toList());
-		static {
-			RESERVED_HEADERS.add("content-type");
-		};
+	static {
+		RESERVED_HEADERS.add("content-type");
+	};
+	
+	private static final Deserializer<String> DESERIALIZER = 
+			Serdes.String().deserializer();
+	
+	private static final String NULL_ARG = null;
 
 	/**
 	 * Following the signature of {@link FormatExtensionMapper}
-	 * @param headers The HTTP headers
+	 * @param headers The Kafka headers
 	 * @return The potential extensions without parsing
 	 */
 	public static Map<String, String> map(Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
-		
+	
 		// remove all reserved words and the remaining may be extensions
 		return 
 		headers.entrySet()
 			.stream()
 			.filter(header -> null!= header.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
-					.toLowerCase(Locale.US), header.getValue().toString()))
+					.toLowerCase(Locale.US), header.getValue()))
 			.filter(header -> {
 				return !RESERVED_HEADERS.contains(header.getKey());
 			})
+			.map(header -> new SimpleEntry<>(header.getKey(),
+					(byte[])header.getValue()))
+			.map(header -> {
+				String key = header.getKey();
+				String val = DESERIALIZER.deserialize(NULL_ARG,
+						header.getValue());
+				return new SimpleEntry<>(key, val);
+			})
 			.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 	}
-
 }

@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 TODO
 
+## [1.0.0]
+
+### Added
+
+- Support for [Spec v1.0](https://github.com/cloudevents/spec/tree/v1.0)
+- Improved readme to end request for vertx sample [PR 62](https://github.com/cloudevents/sdk-java/pull/62)
+- Allow providing an external validator [PR 65](https://github.com/cloudevents/sdk-java/pull/65)
+
 ## [0.3.1]
 
 ### Fixed
@@ -56,6 +64,7 @@ abstract envelope signature
 - interface: `io.cloudevents.Extension` in favor of
 `io.cloudevents.extensions.ExtensionFormat`
 
-[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/cloudevents/sdk-java/compare/v0.3.1...v1.0.0
 [0.3.1]: https://github.com/cloudevents/sdk-java/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/cloudevents/sdk-java/compare/v0.2.1...v0.3.0

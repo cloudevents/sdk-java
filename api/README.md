@@ -17,9 +17,9 @@ import java.time.ZonedDateTime;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.format.Wire;
-import io.cloudevents.v02.CloudEventBuilder;
-import io.cloudevents.v02.CloudEventImpl;
-import io.cloudevents.v02.http.Marshallers;
+import io.cloudevents.v1.CloudEventBuilder;
+import io.cloudevents.v1.CloudEventImpl;
+import io.cloudevents.v1.http.Marshallers;
 
 //...
 
@@ -40,9 +40,9 @@ CloudEventImpl<String> ce =
 		.withType("com.github.pull.create")
 		.withSource(URI.create("https://github.com/cloudevents/spec/pull"))
 		.withId("A234-1234-1234")					
-		.withSchemaurl(URI.create("http://my.br"))
+		.withDataschema(URI.create("http://my.br"))
 		.withTime(ZonedDateTime.now())
-		.withContenttype("text/plain")
+		.withDataContentType("text/plain")
 		.withData("my-data")
 		.withExtension(tracing)
 		.build();
@@ -74,9 +74,9 @@ import java.util.Map;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.CloudEventBuilder;
-import io.cloudevents.v02.http.Unmarshallers;
+import io.cloudevents.v1.AttributesImpl;
+import io.cloudevents.v1.CloudEventBuilder;
+import io.cloudevents.v1.http.Unmarshallers;
 
 // . . .
 
@@ -87,7 +87,7 @@ httpHeaders.put("ce-type", "com.github.pull.create");
 httpHeaders.put("ce-source", "https://github.com/cloudevents/spec/pull");
 httpHeaders.put("ce-id", "A234-1234-1234");
 httpHeaders.put("ce-time", "2018-04-05T17:31:00Z");
-httpHeaders.put("ce-schemaurl", "http://my.br");
+httpHeaders.put("ce-dataschema", "http://my.br");
 httpHeaders.put("my-ext", "my-custom extension");
 httpHeaders.put("traceparent", "0");
 httpHeaders.put("tracestate", "congo=4");
@@ -119,9 +119,9 @@ import java.time.ZonedDateTime;
 
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
-import io.cloudevents.v02.CloudEventBuilder;
-import io.cloudevents.v02.CloudEventImpl;
-import io.cloudevents.v02.http.Marshallers;
+import io.cloudevents.v1.CloudEventBuilder;
+import io.cloudevents.v1.CloudEventImpl;
+import io.cloudevents.v1.http.Marshallers;
 
 // . . .
 
@@ -138,9 +138,9 @@ final CloudEventImpl<String> ce =
 			.withType("com.github.pull.create")
 			.withSource(URI.create("https://github.com/cloudevents/spec/pull"))
 			.withId("A234-1234-1234")
-			.withSchemaurl(URI.create("http://my.br"))
+			.withDataschema(URI.create("http://my.br"))
 			.withTime(ZonedDateTime.now())
-			.withContenttype("text/plain")
+			.withDataContentType("text/plain")
 			.withData("my-data")
 			.withExtension(tracing)
 			.build();
@@ -169,8 +169,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.http.Unmarshallers;
+import io.cloudevents.v1.AttributesImpl;
+import io.cloudevents.v1.http.Unmarshallers;
 
 // . . .
 
@@ -184,7 +184,7 @@ httpHeaders.put("tracestate", "congo=9");
 
 
 /* JSON Payload */
-String payload = "{\"data\":{\"wow\":\"yes!\"},\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"contenttype\":\"application/json\"}";
+String payload = "{\"data\":{\"wow\":\"yes!\"},\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"1.0\",\"type\":\"event-type\",\"datacontenttype\":\"application/json\"}";
 
 /* Unmarshalling . . . */
 CloudEvent<AttributesImpl, Map> event =
@@ -230,8 +230,8 @@ import io.cloudevents.format.Wire;
 import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
-import io.cloudevents.v02.Accessor;
-import io.cloudevents.v02.AttributesImpl;
+import io.cloudevents.v1.Accessor;
+import io.cloudevents.v1.AttributesImpl;
 
 // . . .
 
@@ -314,8 +314,8 @@ import io.cloudevents.format.StructuredMarshaller;
 import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
-import io.cloudevents.v02.Accessor;
-import io.cloudevents.v02.AttributesImpl;
+import io.cloudevents.v1.Accessor;
+import io.cloudevents.v1.AttributesImpl;
 
 // . . .
 
@@ -388,8 +388,8 @@ import io.cloudevents.format.BinaryUnmarshaller;
 import io.cloudevents.format.builder.HeadersStep;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.CloudEventBuilder;
+import io.cloudevents.v1.AttributesImpl;
+import io.cloudevents.v1.CloudEventBuilder;
 
 // . . .
 

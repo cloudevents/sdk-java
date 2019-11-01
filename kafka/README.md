@@ -14,7 +14,7 @@ Add the dependency in your project:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-kafka</artifactId>
-    <version>0.3.1</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -34,9 +34,9 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 
 import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
-import io.cloudevents.v02.CloudEventImpl;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.kafka.Marshallers;
+import io.cloudevents.v1.CloudEventImpl;
+import io.cloudevents.v1.AttributesImpl;
+import io.cloudevents.v1.kafka.Marshallers;
 
 // . . .
 
@@ -59,7 +59,7 @@ try(CloudEventsKafkaProducer<String, AttributesImpl, String>
 			.withId("x10")
 			.withSource(URI.create("/source"))
 			.withType("event-type")
-			.withContenttype("application/json")
+			.withDataContentType("application/json")
 			.withData("Event Data")
 			.build();
 
@@ -80,9 +80,9 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 
 import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
-import io.cloudevents.v02.CloudEventImpl;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.kafka.Marshallers;
+import io.cloudevents.v1.CloudEventImpl;
+import io.cloudevents.v1.AttributesImpl;
+import io.cloudevents.v1.kafka.Marshallers;
 
 // . . .
 
@@ -105,7 +105,7 @@ try(CloudEventsKafkaProducer<String, AttributesImpl, String>
 			.withId("x10")
 			.withSource(URI.create("/source"))
 			.withType("event-type")
-			.withContenttype("application/json")
+			.withDataContentType("application/json")
 			.withData("Event Data")
 			.build();
 
@@ -132,8 +132,8 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.kafka.CloudEventsKafkaConsumer;
 import io.cloudevents.types.Much;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.kafka.Unmarshallers;
+import io.cloudevents.v1.AttributesImpl;
+import io.cloudevents.v1.kafka.Unmarshallers;
 
 // . . .
 
@@ -178,8 +178,8 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.kafka.CloudEventsKafkaConsumer;
 import io.cloudevents.types.Much;
-import io.cloudevents.v02.AttributesImpl;
-import io.cloudevents.v02.kafka.Unmarshallers;
+import io.cloudevents.v1.AttributesImpl;
+import io.cloudevents.v1.kafka.Unmarshallers;
 
 // . . .
 
