@@ -18,6 +18,7 @@ package io.cloudevents.v1.http;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import io.cloudevents.extensions.DatarefExtension;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -154,5 +155,28 @@ public class HTTPStructuredUnmarshallerTest {
 		assertTrue(actual.getExtensions().get(
 				DistributedTracingExtension.Format.IN_MEMORY_KEY) 
 					instanceof DistributedTracingExtension);
+	}
+
+	@Test
+	public void should_unmarshal_the_dataref_extension_from_headers() {
+		// setup
+		Map<String, Object> httpHeaders = new HashMap<>();
+		httpHeaders.put("Content-Type", "application/cloudevents+json");
+
+		httpHeaders.put("dataref", "/dataref");
+
+		String json = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"1.0\",\"type\":\"event-type\",\"datacontenttype\":\"text/plain\"}";
+
+		// act
+		CloudEvent<AttributesImpl, String> actual =
+				Unmarshallers.structured(String.class)
+						.withHeaders(() -> httpHeaders)
+						.withPayload(() -> json)
+						.unmarshal();
+
+		// assert
+		assertTrue(actual.getExtensions().containsKey(DatarefExtension.Format.IN_MEMORY_KEY));
+		assertTrue(actual.getExtensions().get(DatarefExtension.Format.IN_MEMORY_KEY)
+				instanceof DatarefExtension);
 	}
 }

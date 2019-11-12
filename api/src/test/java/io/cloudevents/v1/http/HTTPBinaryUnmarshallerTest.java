@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import io.cloudevents.extensions.DatarefExtension;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,5 +112,37 @@ public class HTTPBinaryUnmarshallerTest {
 		assertTrue(actual.getExtensions()
 			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY) 
 				instanceof DistributedTracingExtension);
+	}
+
+	@Test
+	public void should_unmarshal_dataref_extension_from_header() {
+		// setup
+		Much expected = new Much();
+		expected.setWow("yes!");
+
+		Map<String, Object> myHeaders = new HashMap<>();
+		myHeaders.put("ce-id", "0x11");
+		myHeaders.put("ce-source", "/source");
+		myHeaders.put("ce-specversion", "1.0");
+		myHeaders.put("ce-type", "br.my");
+		myHeaders.put("ce-time", "2019-09-16T20:49:00Z");
+		myHeaders.put("ce-schemaurl", "http://my.br");
+		myHeaders.put("Content-Type", "application/json");
+
+		myHeaders.put("dataref", "/dataref");
+
+		String payload = "{\"wow\":\"yes!\"}";
+
+		// act
+		CloudEvent<AttributesImpl, Much> actual =
+				Unmarshallers.binary(Much.class)
+						.withHeaders(() -> myHeaders)
+						.withPayload(() -> payload)
+						.unmarshal();
+
+		// assert
+		assertNotNull(actual.getExtensions().get(DatarefExtension.Format.IN_MEMORY_KEY));
+		assertTrue(actual.getExtensions().get(DatarefExtension.Format.IN_MEMORY_KEY)
+				instanceof DatarefExtension);
 	}
 }

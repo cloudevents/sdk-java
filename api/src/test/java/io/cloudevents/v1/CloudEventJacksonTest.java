@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import io.cloudevents.extensions.DatarefExtension;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -136,6 +137,33 @@ public class CloudEventJacksonTest {
 		// assert
 		assertTrue(actual.contains(expected));
 	}
+
+  @Test
+  public void should_serialize_dataref_extension() {
+    // setup
+    String expected = "\"dataref\":\"/dataref\"";
+    final DatarefExtension datarefExtension = new DatarefExtension();
+    datarefExtension.setDataref(URI.create("/dataref"));
+
+    final ExtensionFormat extension = new DatarefExtension.Format(datarefExtension);
+
+    CloudEvent<AttributesImpl, Object> ce =
+        CloudEventBuilder.builder()
+            .withId("x10")
+            .withSource(URI.create("/source"))
+            .withType("event-type")
+            .withDataschema(URI.create("/schema"))
+            .withDataContentType("text/plain")
+            .withData("my-data")
+            .withExtension(extension)
+            .build();
+
+    // act
+    String actual = Json.encode(ce);
+
+    // assert
+    assertTrue(actual.contains(expected));
+  }
 	
 	@Test
 	public void should_not_serialize_attributes_element() {
@@ -251,7 +279,18 @@ public class CloudEventJacksonTest {
         assertNotNull(ce.getExtensions()
         	.get(DistributedTracingExtension.Format.IN_MEMORY_KEY));
     }
-	
+
+  @Test
+  public void should_have_dataref_extension() {
+    // act
+    CloudEvent<AttributesImpl, Object> ce =
+        Json.fromInputStream(resourceOf("1_extension.json"), CloudEventImpl.class);
+
+    // assert
+    assertNotNull(ce.getExtensions()
+        .get(DatarefExtension.Format.IN_MEMORY_KEY));
+  }
+
 	@Test
     public void should_have_custom_extension() {
 		// setup

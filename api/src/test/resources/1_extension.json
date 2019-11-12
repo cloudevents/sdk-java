@@ -23,5 +23,6 @@
   "distributedTracing": {
   	"traceparent": "0",
   	"tracestate": "congo=4"
-  }
+  },
+  "dataref": "/dataref"
 }

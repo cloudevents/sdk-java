@@ -60,12 +60,12 @@ public class ExtensionMapperTest {
 		myHeaders.put("my-ext", "myextension");
 		myHeaders.put("traceparent", "0");
 		myHeaders.put("tracestate", "congo=4");
+		myHeaders.put("dataref", "/dataref");
 		myHeaders.put("Content-Type", "application/json");
 		myHeaders.put(expected, null);
 		
 		// act
 		Map<String, String> actual = ExtensionMapper.map(myHeaders);
-		
 		
 		// assert
 		assertFalse(actual.containsKey(expected));
@@ -84,6 +84,7 @@ public class ExtensionMapperTest {
 		myHeaders.put("my-ext", "myextension");
 		myHeaders.put("traceparent", "0");
 		myHeaders.put("tracestate", "congo=4");
+		myHeaders.put("dataref", "/dataref");
 		myHeaders.put("Content-Type", "application/json");
 		
 		// act
@@ -91,7 +92,7 @@ public class ExtensionMapperTest {
 		
 		// asset
 		assertFalse(actual.isEmpty());
-		assertEquals(3, actual.keySet().size());
+		assertEquals(4, actual.keySet().size());
 		actual.keySet()
 			.forEach(header -> {
 				assertFalse(header.startsWith("ce-"));
@@ -99,6 +100,7 @@ public class ExtensionMapperTest {
 		
 		assertEquals("0", actual.get("traceparent"));
 		assertEquals("congo=4", actual.get("tracestate"));
+		assertEquals("/dataref", actual.get("dataref"));
 		assertEquals("myextension", actual.get("my-ext"));
 	}
 }

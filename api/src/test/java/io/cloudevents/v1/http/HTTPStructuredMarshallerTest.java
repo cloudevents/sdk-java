@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import io.cloudevents.extensions.DatarefExtension;
 import java.net.URI;
 
 import org.junit.Test;
@@ -94,5 +95,32 @@ public class HTTPStructuredMarshallerTest {
 				.Format.TRACE_PARENT_KEY));
 		assertNotNull(actual.getHeaders().get(DistributedTracingExtension
 				.Format.TRACE_STATE_KEY));
+	}
+
+	@Test
+	public void should_marshal_the_dataref_extension_as_header() {
+		// setup
+		final DatarefExtension datarefExtension = new DatarefExtension();
+		datarefExtension.setDataref(URI.create("/dataref"));
+
+		final ExtensionFormat tracing = new DatarefExtension.Format(datarefExtension);
+
+		CloudEventImpl<String> ce =
+				CloudEventBuilder.<String>builder()
+						.withId("id")
+						.withSource(URI.create("/source"))
+						.withType("type")
+						.withExtension(tracing)
+						.build();
+
+		// act
+		Wire<String, String, String> actual =
+				Marshallers.<String>structured()
+						.withEvent(() -> ce)
+						.marshal();
+
+		// assert
+		assertFalse(actual.getHeaders().isEmpty());
+		assertNotNull(actual.getHeaders().get(DatarefExtension.Format.DATAREF_KEY));
 	}
 }

@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import io.cloudevents.extensions.DatarefExtension;
 import java.net.URI;
 import java.util.Collection;
 
@@ -93,6 +94,37 @@ public class AccessorTest {
 		
 		assertEquals("congo=4", 
 				((DistributedTracingExtension)actual.memory().getValue()).getTracestate());
+	}
+
+	@Test
+	public void should_return_the_dataref_extension() {
+		// setup
+		final DatarefExtension datarefExtension = new DatarefExtension();
+		datarefExtension.setDataref(URI.create("/dataref"));
+
+		final ExtensionFormat expected = new DatarefExtension.Format(datarefExtension);
+
+		CloudEventImpl<Object> ce =
+				CloudEventBuilder.<Object>builder()
+						.withId("x10")
+						.withSource(URI.create("/source"))
+						.withType("event-type")
+						.withDataschema(URI.create("/schema"))
+						.withDataContentType("text/plain")
+						.withData("my-data")
+						.withExtension(expected)
+						.build();
+
+		// act
+		Collection<ExtensionFormat> extensions = Accessor.extensionsOf(ce);
+
+		// assert
+		assertFalse(extensions.isEmpty());
+		ExtensionFormat actual = extensions.iterator().next();
+
+		assertEquals("/dataref", actual.transport().get("dataref"));
+		assertEquals("/dataref",
+				((DatarefExtension)actual.memory().getValue()).getDataref().toString());
 	}
 	
 	@Test

@@ -15,6 +15,7 @@
  */
 package io.cloudevents.v1.http;
 
+import io.cloudevents.extensions.DatarefExtension;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.format.BinaryUnmarshaller;
 import io.cloudevents.format.StructuredUnmarshaller;
@@ -53,6 +54,7 @@ public class Unmarshallers {
 				.next()
 				.map(ExtensionMapper::map)
 				.map(DistributedTracingExtension::unmarshall)
+				.map(DatarefExtension::unmarshall)
 				.next()
 				.builder(CloudEventBuilder.<T>builder()::build);
 	}
@@ -74,6 +76,7 @@ public class Unmarshallers {
 		  builder()
 			.map(ExtensionMapper::map)
 			.map(DistributedTracingExtension::unmarshall)
+			.map(DatarefExtension::unmarshall)
 			.next()
 			.map((payload, extensions) -> {			
 				CloudEventImpl<T> event =

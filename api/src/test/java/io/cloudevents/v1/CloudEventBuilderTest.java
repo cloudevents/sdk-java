@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import io.cloudevents.extensions.DatarefExtension;
 import java.net.URI;
 
 import org.junit.Rule;
@@ -165,6 +166,31 @@ public class CloudEventBuilderTest {
 		// assert
 		assertNotNull(actual);
 		assertTrue(actual instanceof DistributedTracingExtension);
+	}
+
+	@Test
+	public void should_have_dataref_extension() {
+		// setup
+		final DatarefExtension datarefExtension = new DatarefExtension();
+		datarefExtension.setDataref(URI.create("/dataref"));
+
+		final ExtensionFormat tracing = new DatarefExtension.Format(datarefExtension);
+
+		// act
+		CloudEventImpl<Object> ce =
+				CloudEventBuilder.builder()
+						.withId("id")
+						.withSource(URI.create("/source"))
+						.withType("type")
+						.withExtension(tracing)
+						.build();
+
+		Object actual = ce.getExtensions()
+				.get(DatarefExtension.Format.IN_MEMORY_KEY);
+
+		// assert
+		assertNotNull(actual);
+		assertTrue(actual instanceof DatarefExtension);
 	}
 	
 	@Test
