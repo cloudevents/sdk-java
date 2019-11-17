@@ -15,7 +15,11 @@
  */
 package io.cloudevents;
 
+import java.net.URI;
 import java.util.Optional;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,6 +30,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 public interface Attributes {
+
+	/**
+	 * @return Identifies the event. Producers MUST ensure that source + id is unique for each distinct event
+	 */
+	@NotBlank
+	String getId();
+
+	/**
+	 * @return A value describing the type of event related to the originating occurrence.
+	 */
+	@NotBlank
+	String getType();
+
+	/**
+	 * @return The context in which an event happened.
+	 */
+	@NotNull
+	URI getSource();
+
+	/**
+	 * @return The version of the CloudEvents specification which the event uses
+	 */
+	@NotBlank
+	String getSpecversion();
 
 	/**
 	 * A common way to get the media type of CloudEvents 'data';

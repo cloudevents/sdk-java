@@ -44,9 +44,7 @@ public class ExtensionMapper {
 			.filter(header -> null!= header.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.toLowerCase(Locale.US), header.getValue().toString()))
-			.filter(header -> {
-				return !RESERVED_HEADERS.contains(header.getKey());
-			})
+			.filter(header -> !RESERVED_HEADERS.contains(header.getKey()))
 			.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 	}
 }
