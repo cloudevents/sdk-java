@@ -78,10 +78,7 @@ public class StructuredMarshallerTest {
 		
 		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
-		.map((ce) -> {
-			
-			return null;
-		})
+		.map((ce) -> null)
 		.skip()
 		.withEvent(null);
 	}
@@ -91,10 +88,7 @@ public class StructuredMarshallerTest {
 		// act
 		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
-		.map((ce) -> {
-			
-			return null;
-		})
+		.map((ce) -> null)
 		.skip()
 		.withEvent(() -> null);
 	}
@@ -106,10 +100,7 @@ public class StructuredMarshallerTest {
 		
 		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
-		.map((ce) -> {
-			
-			return null;
-		})
+		.map((ce) -> null)
 		.map(null);
 	}
 	
@@ -118,14 +109,8 @@ public class StructuredMarshallerTest {
 		// act		
 		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
-		.map((ce) -> {
-			
-			return null;
-		})
-		.map((event) -> {
-			
-			return null;
-		});
+		.map((ce) -> null)
+		.map((event) -> null);
 	}
 	
 	@Test
@@ -135,14 +120,8 @@ public class StructuredMarshallerTest {
 		
 		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
-		.map((ce) -> {
-			
-			return null;
-		})
-		.map((event) -> {
-			
-			return null;
-		})
+		.map((ce) -> null)
+		.map((event) -> null)
 		.map(null);
 	}
 	
@@ -150,18 +129,9 @@ public class StructuredMarshallerTest {
 	public void should_ok_on_extension_marshaller() {
 		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
-		.map((ce) -> {
-			
-			return null;
-		})
-		.map((event) -> {
-			
-			return null;
-		})
-		.map((extensions) -> {
-			
-			return null;
-		});
+		.map((ce) -> null)
+		.map((event) -> null)
+		.map((extensions) -> null);
 	}
 	
 	@Test
@@ -171,18 +141,9 @@ public class StructuredMarshallerTest {
 		
 		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
-		.map((ce) -> {
-			
-			return null;
-		})
-		.map((event) -> {
-			
-			return null;
-		})
-		.map((extensions) -> {
-			
-			return null;
-		})
+		.map((ce) -> null)
+		.map((event) -> null)
+		.map((extensions) -> null)
 		.map(null);
 	}
 	
@@ -190,18 +151,9 @@ public class StructuredMarshallerTest {
 	public void should_ok_on_header_mapper() {
 		StructuredMarshaller.<Attributes, Much, String, String>builder()
 		.mime("Content-Type", "application/cloudevents+json")
-		.map((ce) -> {
-			
-			return null;
-		})
-		.map((event) -> {
-			
-			return null;
-		})
-		.map((extensions) -> {
-			
-			return null;
-		})
+		.map((ce) -> null)
+		.map((event) -> null)
+		.map((extensions) -> null)
 		.map((attributes, extensions) -> null);
 	}
 }

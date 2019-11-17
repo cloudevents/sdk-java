@@ -58,14 +58,14 @@ public class HeaderMapper {
 					.toLowerCase(Locale.US), header.getValue()))
 			.filter(header -> !header.getKey()
 					.equals(ContextAttributes.datacontenttype.name()))
-			.map(header -> new SimpleEntry<>(HEADER_PREFIX+header.getKey(),
+			.map(header -> new SimpleEntry<>(HEADER_PREFIX + header.getKey(),
 					header.getValue()))
 			.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		
 		result.putAll(
 			extensions.entrySet()
 				.stream()
-				.filter(extension -> null!= extension.getValue())
+				.filter(extension -> null != extension.getValue())
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue))
 		);
 		
