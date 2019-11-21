@@ -103,6 +103,22 @@ public class CloudEventsKafkaConsumer<K, A extends Attributes, T>
 	}
 	
 	/**
+	 * Instantiate a consumer prepared to unmarshal the events from Kafka, but
+	 * using your own consumer.
+	 * @param builder The builder to build the CloudEvent
+	 * @param consumer Your configured consumer
+	 */
+	public CloudEventsKafkaConsumer(HeadersStep<A, T, byte[]> builder,
+			Consumer<K, byte[]> consumer){
+		Objects.requireNonNull(builder);
+		Objects.requireNonNull(consumer);
+		
+		this.builder = builder;
+		this.consumer = consumer;
+	}
+	
+	
+	/**
 	 * Turns Kafka headers into {@code Map<String, Object>}
 	 * @param kafkaHeaders
 	 * @return A {@link Map} with {@link Header} mapped as Object 
