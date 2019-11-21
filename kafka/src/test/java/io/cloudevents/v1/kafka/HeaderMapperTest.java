@@ -15,6 +15,7 @@
  */
 package io.cloudevents.v1.kafka;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import io.cloudevents.v1.ContextAttributes;
 import io.cloudevents.v1.kafka.HeaderMapper;
 
 /**
@@ -68,6 +70,22 @@ public class HeaderMapperTest {
 		
 		//assert
 		assertFalse(actual.containsKey("ce-type"));
+	}
+	
+	@Test
+	public void should_map_datacontenttype_to_content_type() {
+		// setup
+		Map<String, String> attributes = new HashMap<>();
+		attributes.put(ContextAttributes.datacontenttype.name(), "application/json");
+		
+		Map<String, String> extensions = new HashMap<>();
+		
+		// act
+		Map<String, byte[]> actual = HeaderMapper.map(attributes, extensions);
+		
+		//assert
+		assertTrue(actual.containsKey("content-type"));
+		assertEquals("application/json", new String(actual.get("content-type")));
 	}
 	
 	@Test
