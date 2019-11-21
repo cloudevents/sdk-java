@@ -5,6 +5,7 @@ import static io.cloudevents.v1.kafka.AttributeMapper.HEADER_PREFIX;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import org.apache.kafka.common.serialization.Serializer;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.fun.FormatHeaderMapper;
 import io.cloudevents.v1.AttributesImpl;
+import io.cloudevents.v1.ContextAttributes;
 
 /**
  * 
@@ -26,6 +28,8 @@ public class HeaderMapper {
 	
 	private static final Serializer<String> SERIALIZER = 
 			Serdes.String().serializer();
+	
+	private static final String KAFKA_CONTENT_TYPE = "content-type";
 
 	/**
 	 * Following the signature of {@link FormatHeaderMapper}
@@ -46,6 +50,8 @@ public class HeaderMapper {
 			.map(attribute -> 
 				new SimpleEntry<>(attribute.getKey()
 					.toLowerCase(Locale.US), attribute.getValue()))
+			.filter(header -> !header.getKey()
+					.equals(ContextAttributes.datacontenttype.name()))
 			.map(attribute -> 
 				new SimpleEntry<>(HEADER_PREFIX+attribute.getKey(),
 					attribute.getValue()))
@@ -63,6 +69,12 @@ public class HeaderMapper {
 						SERIALIZER.serialize(null, extension.getValue())))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue))
 		);
+		
+		Optional.ofNullable(attributes
+				.get(ContextAttributes.datacontenttype.name()))
+			.ifPresent((dct) -> {
+				result.put(KAFKA_CONTENT_TYPE, SERIALIZER.serialize(null, dct));
+			});
 		
 		return result;
 	}
