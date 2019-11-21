@@ -42,7 +42,6 @@ import io.cloudevents.types.Much;
 import io.cloudevents.v03.AttributesImpl;
 import io.cloudevents.v03.CloudEventBuilder;
 import io.cloudevents.v03.CloudEventImpl;
-import io.debezium.junit.SkipLongRunning;
 
 /**
  * 
@@ -65,7 +64,6 @@ public class KafkaProducerBinaryTest {
 	}
 	
 	@Test
-	@SkipLongRunning
 	public void should_be_ok_with_all_required_attributes() throws Exception {
 		// setup
 		String dataJson = "{\"wow\":\"nice!\"}";
@@ -209,7 +207,6 @@ public class KafkaProducerBinaryTest {
 	}
 	
 	@Test
-	@SkipLongRunning
 	public void should_tracing_extension_ok() throws Exception {
 		// setup
 		final DistributedTracingExtension dt = new DistributedTracingExtension();
