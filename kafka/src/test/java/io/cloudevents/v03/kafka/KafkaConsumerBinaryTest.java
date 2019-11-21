@@ -17,36 +17,26 @@ package io.cloudevents.v03.kafka;
 
 import static io.cloudevents.v03.kafka.AttributeMapper.HEADER_PREFIX;
 import static io.cloudevents.v03.kafka.Unmarshallers.binary;
-import static java.lang.System.getProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Properties;
 import java.util.function.Supplier;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.MockConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.header.internals.RecordHeaders;
-import org.apache.kafka.common.serialization.ByteArrayDeserializer;
-import org.apache.kafka.common.serialization.ByteArraySerializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.kafka.common.record.TimestampType;
 import org.junit.jupiter.api.Test;
 
 import io.cloudevents.CloudEvent;
@@ -56,8 +46,6 @@ import io.cloudevents.format.builder.PayloadStep;
 import io.cloudevents.kafka.CloudEventsKafkaConsumer;
 import io.cloudevents.types.Much;
 import io.cloudevents.v03.AttributesImpl;
-import io.debezium.kafka.KafkaCluster;
-import io.debezium.util.Testing;
 
 /**
  * 
@@ -65,33 +53,9 @@ import io.debezium.util.Testing;
  *
  */
 public class KafkaConsumerBinaryTest {
-	private static final int ONE_BROKER = 1;
-	private static final Integer ANY_PARTITION = null;
+	
 	private static final Duration TIMEOUT = Duration.ofSeconds(8);
 
-	private KafkaCluster kafka;
-	private File data;
-
-	@BeforeEach
-	public void beforeEach() {
-		data = Testing.Files.createTestingDirectory("cluster");
-		
-		int zk = Integer.parseInt(getProperty("zookeeper.port"));
-		int kf = Integer.parseInt(getProperty("kafka.port"));
-		
-		kafka = new KafkaCluster()
-				.usingDirectory(data)
-				.deleteDataPriorToStartup(true)
-				.deleteDataUponShutdown(true)
-				.withPorts(zk, kf);
-	}
-
-	@AfterEach
-	public void afterEach() {
-		kafka.shutdown();
-		Testing.Files.delete(data);
-	}
-	
 	@Test
 	public void should_throws_when_configuration_is_null() {
 		assertThrows(NullPointerException.class, () -> {
@@ -133,36 +97,19 @@ public class KafkaConsumerBinaryTest {
 		
 		final String topic = "binary.c";
 		
-		kafka.addBrokers(ONE_BROKER).startup();
-		kafka.createTopics(topic);
-		
-		Properties producerProperties = 
-				kafka.useTo().getProducerProperties("bin.me");
-			producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
-			producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-					ByteArraySerializer.class);
-			
-		try(KafkaProducer<String, byte[]> producer = 
-				new KafkaProducer<>(producerProperties)){
-			ProducerRecord<String, byte[]> record = 
-				new ProducerRecord<>(topic, ANY_PARTITION, "0xk", payload,
-						kafkaHeaders);
-			
-			producer.send(record);
-		}
-		
-		Properties consumerProperties = kafka.useTo()
-				.getConsumerProperties("consumer", "consumer.id",OffsetResetStrategy.EARLIEST);
-			consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
-			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					ByteArrayDeserializer.class);
+		MockConsumer<String, byte[]> mockConsumer = 
+				new MockConsumer<String, byte[]>(OffsetResetStrategy.EARLIEST);
 		
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumerProperties, binary(Much.class))){
-			ceConsumer.subscribe(Collections.singletonList(topic));
+				new CloudEventsKafkaConsumer<>(binary(Much.class), mockConsumer)){
+			ceConsumer.assign(Collections.singletonList(new TopicPartition(topic, 0)));
+
+			mockConsumer.seek(new TopicPartition(topic, 0), 0);
+			mockConsumer.addRecord(
+				new ConsumerRecord<String, byte[]>(topic, 0, 0L, 0,
+						TimestampType.CREATE_TIME, 0L, 0, 0, "0xk", payload, kafkaHeaders)
+			);
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
 					ceConsumer.poll(TIMEOUT);
@@ -207,36 +154,20 @@ public class KafkaConsumerBinaryTest {
 		
 		final String topic = "binary.c";
 		
-		kafka.addBrokers(ONE_BROKER).startup();
-		kafka.createTopics(topic);
-		
-		Properties producerProperties = 
-				kafka.useTo().getProducerProperties("bin.me");
-			producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
-			producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-					ByteArraySerializer.class);
-			
-		try(KafkaProducer<String, byte[]> producer = 
-				new KafkaProducer<>(producerProperties)){
-			ProducerRecord<String, byte[]> record = 
-				new ProducerRecord<>(topic, ANY_PARTITION, "0xk", payload,
-						kafkaHeaders);
-			
-			producer.send(record);
-		}
-		
-		Properties consumerProperties = kafka.useTo()
-				.getConsumerProperties("consumer", "consumer.id",OffsetResetStrategy.EARLIEST);
-			consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
-			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					ByteArrayDeserializer.class);
+		MockConsumer<String, byte[]> mockConsumer = 
+				new MockConsumer<String, byte[]>(OffsetResetStrategy.EARLIEST);
 		
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumerProperties, binary(Much.class))){
-			ceConsumer.subscribe(Collections.singletonList(topic));
+				new CloudEventsKafkaConsumer<>(binary(Much.class), mockConsumer)){
+			
+			ceConsumer.assign(Collections.singletonList(new TopicPartition(topic, 0)));
+
+			mockConsumer.seek(new TopicPartition(topic, 0), 0);
+			mockConsumer.addRecord(
+				new ConsumerRecord<String, byte[]>(topic, 0, 0L, 0,
+						TimestampType.CREATE_TIME, 0L, 0, 0, "0xk", payload, kafkaHeaders)
+			);
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
 					ceConsumer.poll(TIMEOUT);
@@ -283,36 +214,20 @@ public class KafkaConsumerBinaryTest {
 		
 		final String topic = "binary.c";
 		
-		kafka.addBrokers(ONE_BROKER).startup();
-		kafka.createTopics(topic);
-		
-		Properties producerProperties = 
-				kafka.useTo().getProducerProperties("bin.me");
-			producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
-			producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-					ByteArraySerializer.class);
-			
-		try(KafkaProducer<String, byte[]> producer = 
-				new KafkaProducer<>(producerProperties)){
-			ProducerRecord<String, byte[]> record = 
-				new ProducerRecord<>(topic, ANY_PARTITION, "0xk", payload,
-						kafkaHeaders);
-			
-			producer.send(record);
-		}
-		
-		Properties consumerProperties = kafka.useTo()
-				.getConsumerProperties("consumer", "consumer.id",OffsetResetStrategy.EARLIEST);
-			consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
-			consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					ByteArrayDeserializer.class);
+		MockConsumer<String, byte[]> mockConsumer = 
+				new MockConsumer<String, byte[]>(OffsetResetStrategy.EARLIEST);
 				
 		// act
 		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
-				new CloudEventsKafkaConsumer<>(consumerProperties, binary(Much.class))){
-			ceConsumer.subscribe(Collections.singletonList(topic));
+				new CloudEventsKafkaConsumer<>(binary(Much.class), mockConsumer)){
+			
+			ceConsumer.assign(Collections.singletonList(new TopicPartition(topic, 0)));
+
+			mockConsumer.seek(new TopicPartition(topic, 0), 0);
+			mockConsumer.addRecord(
+				new ConsumerRecord<String, byte[]>(topic, 0, 0L, 0,
+						TimestampType.CREATE_TIME, 0L, 0, 0, "0xk", payload, kafkaHeaders)
+			);
 			
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
 					ceConsumer.poll(TIMEOUT);
