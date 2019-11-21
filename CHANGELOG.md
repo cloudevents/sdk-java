@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
-- Fix for issue [#74](https://github.com/cloudevents/sdk-java/issues/74)
+- Fix for the issue [#74](https://github.com/cloudevents/sdk-java/issues/74)
+- Fix for the issue [#67](https://github.com/cloudevents/sdk-java/issues/67)
 
 ## [1.0.0]
 
