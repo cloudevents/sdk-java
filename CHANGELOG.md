@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
-TODO
+- Fix for issue [#74](https://github.com/cloudevents/sdk-java/issues/74)
 
 ## [1.0.0]
 
