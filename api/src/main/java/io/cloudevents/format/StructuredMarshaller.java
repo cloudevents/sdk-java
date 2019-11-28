@@ -51,7 +51,7 @@ public class StructuredMarshaller {
 		return new Builder<>();
 	}
 		
-	public static interface MediaTypeStep<A extends Attributes, T, P, H> {
+	public interface MediaTypeStep<A extends Attributes, T, P, H> {
 		/**
 		 * Sets the media type of CloudEvents envelope
 		 * @param headerName Example {@code Content-Type} for HTTP
@@ -60,7 +60,7 @@ public class StructuredMarshaller {
 		EnvelopeMarshallerStep<A, T, P, H> mime(String headerName, H mediaType);
 	}
 	
-	public static interface EnvelopeMarshallerStep<A extends Attributes, T, P, H> {
+	public interface EnvelopeMarshallerStep<A extends Attributes, T, P, H> {
 		/**
 		 * Sets the marshaller for the CloudEvent
 		 * @param marshaller
@@ -68,7 +68,7 @@ public class StructuredMarshaller {
 		ExtensionAccessorStep<A, T, P, H> map(EnvelopeMarshaller<A, T, P> marshaller);
 	}
 	
-	public static interface ExtensionAccessorStep<A extends Attributes, T, P, H> {
+	public interface ExtensionAccessorStep<A extends Attributes, T, P, H> {
 		/**
 		 * To skip the extension special handling
 		 */
@@ -76,11 +76,11 @@ public class StructuredMarshaller {
 		ExtensionMarshallerStep<A, T, P, H> map(ExtensionFormatAccessor<A, T> accessor);
 	}
 	
-	public static interface ExtensionMarshallerStep<A extends Attributes, T, P, H> {
+	public interface ExtensionMarshallerStep<A extends Attributes, T, P, H> {
 		HeaderMapperStep<A, T, P, H> map(ExtensionMarshaller marshaller);
 	}
 	
-	public static interface HeaderMapperStep<A extends Attributes, T, P, H> {
+	public interface HeaderMapperStep<A extends Attributes, T, P, H> {
 		EventStep<A, T, P, H> map(FormatHeaderMapper<H> mapper);
 	}
 

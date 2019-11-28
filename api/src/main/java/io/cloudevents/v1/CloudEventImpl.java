@@ -141,7 +141,6 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	public static <T> CloudEventImpl<T> build(
 			@JsonProperty("id") String id,
 			@JsonProperty("source") URI source,
-			@JsonProperty("specversion") String specversion,
 			@JsonProperty("type") String type,
 			@JsonProperty("datacontenttype") String datacontenttype,
 			@JsonProperty("dataschema") URI dataschema,

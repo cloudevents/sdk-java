@@ -56,8 +56,8 @@
 
         <dependency>
              <groupId>org.glassfish</groupId>
-             <artifactId>javax.el</artifactId>
-             <version>${javax.el.version}</version>
+             <artifactId>jakarta.el</artifactId>
+             <version>${jakarta.el.version}</version>
         </dependency>
 
         <dependency>
@@ -79,7 +79,7 @@
     <properties>
         <jackson.version>2.10.1</jackson.version>
         <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
-        <javax.el.version>3.0.1-b11</javax.el.version>
+        <jakarta.el.version>3.0.3</jakarta.el.version>
     </properties>
 
 </project>

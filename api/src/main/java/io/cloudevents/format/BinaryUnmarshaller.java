@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -219,10 +220,8 @@ public final class BinaryUnmarshaller {
 			A attributes = attributeUnmarshaller.unmarshal(attributesMap);
 			
 			T data = attributes.getMediaType()
-				.map((mime) -> {
-					return dataUnmarshallers.get(mime);
-				})
-				.filter((un) -> null != un)
+				.map((mime) -> dataUnmarshallers.get(mime))
+				.filter(Objects::nonNull)
 				.map(unmarshaller -> 
 						unmarshaller.unmarshal(payload, attributes))
 				.orElse(null);

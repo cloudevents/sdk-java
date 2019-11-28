@@ -36,8 +36,7 @@ public enum ContextAttributes {
 	time;
 	
 	public static final List<String> VALUES = 
-		Arrays.asList(ContextAttributes.values())
-		.stream()
+		Arrays.stream(ContextAttributes.values())
 		.map(Enum::name)
 		.collect(Collectors.toList());
 }

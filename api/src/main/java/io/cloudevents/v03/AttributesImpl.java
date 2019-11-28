@@ -168,27 +168,13 @@ public class AttributesImpl implements Attributes {
 		result.put(ContextAttributes.id.name(),
 				attributes.getId());
 		
-		attributes.getTime().ifPresent((value) -> {
-			result.put(ContextAttributes.time.name(), 
-				value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		});
-		
-		attributes.getSchemaurl().ifPresent((schema) -> {
-			result.put(ContextAttributes.schemaurl.name(),
-					schema.toString());
-		});
-		
-		attributes.getDatacontenttype().ifPresent((ct) -> {
-			result.put(ContextAttributes.datacontenttype.name(), ct);
-		});
-		
-		attributes.getDatacontentencoding().ifPresent(dce -> {
-			result.put(ContextAttributes.datacontentencoding.name(), dce);
-		});
-		
-		attributes.getSubject().ifPresent(subject -> {
-			result.put(ContextAttributes.subject.name(), subject);
-		});
+		attributes.getTime().ifPresent((value) -> result.put(ContextAttributes.time.name(),
+														 value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
+		attributes.getSchemaurl().ifPresent((schema) -> result.put(ContextAttributes.schemaurl.name(),
+															   schema.toString()));
+		attributes.getDatacontenttype().ifPresent((ct) -> result.put(ContextAttributes.datacontenttype.name(), ct));
+		attributes.getDatacontentencoding().ifPresent(dce -> result.put(ContextAttributes.datacontentencoding.name(), dce));
+		attributes.getSubject().ifPresent(subject -> result.put(ContextAttributes.subject.name(), subject));
 
 		return result;
 	}
@@ -210,7 +196,7 @@ public class AttributesImpl implements Attributes {
 		
 		URI schemaurl = 
 			Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
-			.map(schema -> URI.create(schema))
+			.map(URI::create)
 			.orElse(null);
 		
 		String id = attributes.get(ContextAttributes.id.name());
