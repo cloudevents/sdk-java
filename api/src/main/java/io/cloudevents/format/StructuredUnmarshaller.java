@@ -144,18 +144,15 @@ public class StructuredUnmarshaller {
 				Optional.ofNullable(extensionMapper)
 					.map(mapper -> mapper.map(headers))
 					.orElse(new HashMap<>());
-			
-			CloudEvent<A, T> result = 
-				unmarshaller.unmarshal(payload, 
-				  () -> 
+
+			return unmarshaller.unmarshal(payload,
+				  () ->
 					extensionUnmarshallers.stream()
 					.map(unmarshaller ->
 						unmarshaller.unmarshal(extensionsMap))
 					.filter(Optional::isPresent)
 					.map(Optional::get)
 					.collect(Collectors.toList()));
-			
-			return result;
 		}
 		
 	}

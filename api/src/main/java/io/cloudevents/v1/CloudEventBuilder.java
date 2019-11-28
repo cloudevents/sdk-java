@@ -44,11 +44,13 @@ public class CloudEventBuilder<T> implements
 	private URI dataschema;
 	private String subject;
 	private ZonedDateTime time;
-	
+
 	private T data;
-	
+
 	private final Set<ExtensionFormat> extensions = new HashSet<>();
-	
+
+	private Validator validator;
+
 	private static Validator getValidator() {
 		if(null== VALIDATOR) {
 			VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
@@ -61,16 +63,16 @@ public class CloudEventBuilder<T> implements
 	 * @param <T> The 'data' type
 	 */
 	public static <T> CloudEventBuilder<T> builder() {
-		return new CloudEventBuilder<T>();
+		return new CloudEventBuilder<>();
 	}
-	
+
 	/**
 	 * Builder with base event to copy attributes
 	 * @param <T> The 'data' type
 	 * @param base The base event to copy attributes
 	 */
 	public static <T> CloudEventBuilder<T> builder(
-			CloudEvent<AttributesImpl, T> base) {
+		            CloudEvent<AttributesImpl, T> base) {
 		Objects.requireNonNull(base);
 		
 		CloudEventBuilder<T> result = new CloudEventBuilder<>();
@@ -82,31 +84,13 @@ public class CloudEventBuilder<T> implements
 			.withSource(attributes.getSource())
 			.withType(attributes.getType());
 		
-		attributes.getDataschema().ifPresent((schema) -> {
-			result.withDataschema(schema);
-		});
-		
-		attributes.getDatacontenttype().ifPresent(dc -> {
-			result.withDataContentType(dc);
-		});
-		
-		attributes.getSubject().ifPresent(subject -> {
-			result.withSubject(subject);
-		});
-		
-		attributes.getTime().ifPresent(time -> {
-			result.withTime(time);
-		});
-		
-		Accessor.extensionsOf(base)
-			.forEach(extension -> {
-				result.withExtension(extension);
-			});
-		
-		base.getData().ifPresent(data -> {
-			result.withData(data);
-		});
-		
+		attributes.getDataschema().ifPresent(result::withDataschema);
+		attributes.getDatacontenttype().ifPresent(result::withDataContentType);
+		attributes.getSubject().ifPresent(result::withSubject);
+		attributes.getTime().ifPresent(result::withTime);
+		Accessor.extensionsOf(base).forEach(result::withExtension);
+		base.getData().ifPresent(result::withData);
+
 		return result;
 	}
 
@@ -120,30 +104,16 @@ public class CloudEventBuilder<T> implements
 				.withSource(attributes.getSource())
 				.withType(attributes.getType());
 			
-		attributes.getTime().ifPresent((time) -> {
-			builder.withTime(time);
-		});
-		
-		attributes.getDataschema().ifPresent((dataschema) -> {
-			builder.withDataschema(dataschema);
-		});
-		
-		attributes.getDatacontenttype().ifPresent((dct) -> {
-			builder.withDataContentType(dct);
-		});
-		
-		attributes.getSubject().ifPresent((subject) -> {
-			builder.withSubject(subject);
-		});
-		
-		extensions.stream()
-			.forEach(extension -> {
-				builder.withExtension(extension);
-			});
-		
-		builder.withData(data);
-		
-		return builder.build();
+		attributes.getTime().ifPresent(builder::withTime);
+		attributes.getDataschema().ifPresent(builder::withDataschema);
+		attributes.getDatacontenttype().ifPresent(builder::withDataContentType);
+		attributes.getSubject().ifPresent(builder::withSubject);
+		extensions.forEach(builder::withExtension);
+
+		return builder
+			.withData(data)
+			.withValidator(validator)
+			.build();
 	}
 	
 	/**
@@ -157,17 +127,19 @@ public class CloudEventBuilder<T> implements
 		AttributesImpl attributes = new AttributesImpl(id, source, SPEC_VERSION, type,
 				datacontenttype, dataschema, subject, time);
 		
-		CloudEventImpl<T> cloudEvent = 
-			new CloudEventImpl<T>(attributes, data, extensions);
+		CloudEventImpl<T> cloudEvent =
+			new CloudEventImpl<>(attributes, data, extensions);
 		
 		if(data instanceof byte[]) {
 			cloudEvent.setDataBase64((byte[])data);
 		}
-		
+		if(validator == null) {
+			validator = getValidator();
+		}
 		Set<ConstraintViolation<Object>> violations =
-				getValidator().validate(cloudEvent);
+				validator.validate(cloudEvent);
 		
-		violations.addAll(getValidator().validate(cloudEvent.getAttributes()));
+		violations.addAll(validator.validate(cloudEvent.getAttributes()));
 		
 		final String errs = 
 			violations.stream()
@@ -229,6 +201,11 @@ public class CloudEventBuilder<T> implements
 	
 	public CloudEventBuilder<T> withExtension(ExtensionFormat extension) {
 		this.extensions.add(extension);
+		return this;
+	}
+
+	public CloudEventBuilder<T> withValidator(Validator validator) {
+		this.validator = validator;
 		return this;
 	}
 }

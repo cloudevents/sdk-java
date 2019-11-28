@@ -170,7 +170,7 @@ public class AttributesImpl implements Attributes {
 		
 		URI schemaurl = 
 			Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
-			.map(schema -> URI.create(schema))
+			.map(URI::create)
 			.orElse(null);
 		
 		String id = attributes.get(ContextAttributes.id.name());
@@ -201,19 +201,11 @@ public class AttributesImpl implements Attributes {
 		result.put(ContextAttributes.id.name(),
 				attributes.getId());
 		
-		attributes.getTime().ifPresent((value) -> {
-			result.put(ContextAttributes.time.name(), 
-				value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		});
-		
-		attributes.getSchemaurl().ifPresent((schema) -> {
-			result.put(ContextAttributes.schemaurl.name(),
-					schema.toString());
-		});
-		
-		attributes.getContenttype().ifPresent((ct) -> {
-			result.put(ContextAttributes.contenttype.name(), ct);
-		});
+		attributes.getTime().ifPresent((value) -> result.put(ContextAttributes.time.name(),
+														 value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
+		attributes.getSchemaurl().ifPresent((schema) -> result.put(ContextAttributes.schemaurl.name(),
+															   schema.toString()));
+		attributes.getContenttype().ifPresent((ct) -> result.put(ContextAttributes.contenttype.name(), ct));
 
 		return result;
 	}

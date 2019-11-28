@@ -165,23 +165,12 @@ public class AttributesImpl implements Attributes {
 		result.put(ContextAttributes.type.name(),
 				attributes.getType());
 		
-		attributes.getDatacontenttype().ifPresent(dct -> {
-			result.put(ContextAttributes.datacontenttype.name(), dct);
-		});
-		
-		attributes.getDataschema().ifPresent(dataschema -> {
-			result.put(ContextAttributes.dataschema.name(),
-					dataschema.toString());
-		});
-		
-		attributes.getSubject().ifPresent(subject -> {
-			result.put(ContextAttributes.subject.name(), subject);
-		});
-		
-		attributes.getTime().ifPresent(time -> {
-			result.put(ContextAttributes.time.name(),
-					time.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		});
+		attributes.getDatacontenttype().ifPresent(dct -> result.put(ContextAttributes.datacontenttype.name(), dct));
+		attributes.getDataschema().ifPresent(dataschema -> result.put(ContextAttributes.dataschema.name(),
+																  dataschema.toString()));
+		attributes.getSubject().ifPresent(subject -> result.put(ContextAttributes.subject.name(), subject));
+		attributes.getTime().ifPresent(time -> result.put(ContextAttributes.time.name(),
+													  time.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
 		
 		return result;
 	}
@@ -203,7 +192,7 @@ public class AttributesImpl implements Attributes {
 		
 		URI dataschema = 
 			Optional.ofNullable(attributes.get(ContextAttributes.dataschema.name()))
-			.map(schema -> URI.create(schema))
+			.map(URI::create)
 			.orElse(null);
 		
 		String id = attributes.get(ContextAttributes.id.name());

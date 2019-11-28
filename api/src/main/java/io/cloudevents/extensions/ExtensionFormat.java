@@ -42,7 +42,7 @@ public interface ExtensionFormat {
 	 */
 	Map<String, String> transport();
 	
-	public static ExtensionFormat of(final InMemoryFormat inMemory,
+	static ExtensionFormat of(final InMemoryFormat inMemory,
 			final String key, final String value) {
 		
 		final Map<String, String> transport = new HashMap<>();
@@ -62,7 +62,7 @@ public interface ExtensionFormat {
 	}
 	
 	@SafeVarargs
-	public static ExtensionFormat of(final InMemoryFormat inMemory,
+	static ExtensionFormat of(final InMemoryFormat inMemory,
 			Entry<String, String> ... transport){
 		Objects.requireNonNull(inMemory);
 		Objects.requireNonNull(transport);
@@ -89,7 +89,7 @@ public interface ExtensionFormat {
 	 * @param extensions
 	 * @return
 	 */
-	public static Map<String, String> marshal(Collection<ExtensionFormat>
+	static Map<String, String> marshal(Collection<ExtensionFormat>
 		extensions) {
 		
 		return extensions.stream()

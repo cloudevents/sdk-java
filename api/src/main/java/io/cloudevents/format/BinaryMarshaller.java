@@ -53,7 +53,7 @@ public final class BinaryMarshaller {
 		return new Builder<A, T, P, H>();
 	}
 	
-	public static interface AttributeMarshalStep<A extends Attributes, T, P, H> {
+	public interface AttributeMarshalStep<A extends Attributes, T, P, H> {
 		/**
 		 * Marshals the {@link Attributes} instance into a 
 		 * {@code Map<String, String>}
@@ -63,7 +63,7 @@ public final class BinaryMarshaller {
 		ExtensionsAccessorStep<A, T, P, H> map(AttributeMarshaller<A> marshaller);
 	}
 	
-	public static interface ExtensionsAccessorStep<A extends Attributes, T, P, H> {
+	public interface ExtensionsAccessorStep<A extends Attributes, T, P, H> {
 		
 		/**
 		 * To get access of internal collection of {@link ExtensionFormat}
@@ -74,7 +74,7 @@ public final class BinaryMarshaller {
 		
 	}
 	
-	public static interface ExtensionsStep<A extends Attributes, T, P, H> {
+	public interface ExtensionsStep<A extends Attributes, T, P, H> {
 		/**
 		 * Marshals the collection of {@link ExtensionFormat} into a
 		 * {@code Map<String, String>}
@@ -84,7 +84,7 @@ public final class BinaryMarshaller {
 		HeaderMapStep<A, T, P, H> map(ExtensionMarshaller marshaller);
 	}
 	
-	public static interface HeaderMapStep<A extends Attributes, T, P, H> {
+	public interface HeaderMapStep<A extends Attributes, T, P, H> {
 		/**
 		 * Marshals the map of attributes and extensions into a map of headers
 		 * @param mapper
@@ -93,7 +93,7 @@ public final class BinaryMarshaller {
 		DataMarshallerStep<A, T, P, H> map(FormatHeaderMapper<H> mapper);
 	}
 	
-	public static interface DataMarshallerStep<A extends Attributes, T, P, H> {
+	public interface DataMarshallerStep<A extends Attributes, T, P, H> {
 		/**
 		 * Marshals the 'data' into payload
 		 * @param marshaller
@@ -102,7 +102,7 @@ public final class BinaryMarshaller {
 		BuilderStep<A, T, P, H> map(DataMarshaller<P, T, H> marshaller);
 	}
 	
-	public static interface BuilderStep<A extends Attributes, T, P, H> {
+	public interface BuilderStep<A extends Attributes, T, P, H> {
 		/**
 		 * Builds the {@link Wire} to use for wire transfer
 		 * @param builder

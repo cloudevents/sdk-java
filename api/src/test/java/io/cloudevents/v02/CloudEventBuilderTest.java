@@ -18,10 +18,15 @@ package io.cloudevents.v02;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 
+import javax.validation.Validator;
+
+import io.cloudevents.validation.MockValidator;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -317,5 +322,40 @@ public class CloudEventBuilderTest {
 		assertTrue(actual.getData().isPresent());
 		assertEquals(expected, actual.getData().get());
 		assertEquals("0x010", actual.getAttributes().getId());
+	}
+
+	@Test
+	public void should_build_event_using_custom_validator() {
+		Validator validator = new MockValidator();
+		String expected = "test";
+
+		CloudEventImpl<String> event = CloudEventBuilder
+			.<String>builder()
+			.withData(expected)
+			.withValidator(validator)
+			.build();
+
+		assertNotNull(event);
+		assertEquals(expected, event.getData().get());
+	}
+
+	@Test
+	public void should_build_event_from_event_using_custom_validator() {
+		Validator validator = new MockValidator();
+		String expected = "test";
+		CloudEvent<AttributesImpl, String> event = CloudEventBuilder.of(
+			expected,
+			new AttributesImpl(null, null, null, null, null, null, null),
+			Collections.emptyList(),
+			validator
+		);
+
+		CloudEvent<AttributesImpl, String> result = CloudEventBuilder
+			.builder(event)
+			.withValidator(validator)
+			.build();
+
+		assertNotNull(result);
+		assertEquals(expected, result.getData().get());
 	}
 }
