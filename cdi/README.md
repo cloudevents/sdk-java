@@ -8,7 +8,7 @@ For Maven based projects, use the following to configure the CloudEvents CDI lib
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cdi</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
