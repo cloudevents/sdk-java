@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.1.0]
+
+### Added
+
+- Support for custom validator: PR [#73](https://github.com/cloudevents/sdk-java/pull/73)
+
+### Fixed
+
 - Fix for the issue [#74](https://github.com/cloudevents/sdk-java/issues/74)
 - Fix for the issue [#67](https://github.com/cloudevents/sdk-java/issues/67)
 
@@ -65,7 +73,8 @@ abstract envelope signature
 - interface: `io.cloudevents.Extension` in favor of
 `io.cloudevents.extensions.ExtensionFormat`
 
-[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/cloudevents/sdk-java/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/cloudevents/sdk-java/compare/v0.3.1...v1.0.0
 [0.3.1]: https://github.com/cloudevents/sdk-java/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/cloudevents/sdk-java/compare/v0.2.1...v0.3.0
