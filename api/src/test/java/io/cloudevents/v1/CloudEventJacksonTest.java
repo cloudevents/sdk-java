@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -78,7 +80,7 @@ public class CloudEventJacksonTest {
 		assertFalse(json.contains("time"));
 		assertFalse(json.contains("schemaurl"));
 		assertFalse(json.contains("contenttype"));
-		assertFalse(json.contains("data"));
+		assertFalse(json.contains("data"));		
 	}
 	
 	@Test
@@ -107,6 +109,15 @@ public class CloudEventJacksonTest {
 		assertTrue(json.contains("\"dataschema\""));
 		assertTrue(json.contains("datacontenttype"));
 		assertTrue(json.contains("\"subject\""));
+		
+		System.out.println(json);
+		Pattern pat = Pattern.compile("(\"data\")");
+		Matcher mat = pat.matcher(json);
+		int counter = 0;
+		while(mat.find()) {
+			counter++;
+		}
+		assertEquals(1, counter);
 	}
 	
 	@Test

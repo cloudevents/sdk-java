@@ -14,21 +14,20 @@
   <parent>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
   </parent>
 
   <groupId>io.cloudevents</groupId>
   <artifactId>cloudevents-kafka</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
 
   <name>CloudEvents - Kafka Transport Binding</name>
 
   <properties>
-    <jackson.version>2.9.6</jackson.version>
+    <jackson.version>2.10.1</jackson.version>
     <junit-jupiter.version>5.3.2</junit-jupiter.version>
     <kafka.version>2.0.1</kafka.version>
-    <debezium-core.version>0.9.0.Final</debezium-core.version>
   </properties>
 
   <dependencies>
@@ -36,21 +35,6 @@
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.12</artifactId>
       <version>${kafka.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.debezium</groupId>
-      <artifactId>debezium-core</artifactId>
-      <version>${debezium-core.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.debezium</groupId>
-      <artifactId>debezium-core</artifactId>
-      <version>${debezium-core.version}</version>
-      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
 
@@ -77,6 +61,12 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
       <version>${jackson.version}</version>
     </dependency>
 

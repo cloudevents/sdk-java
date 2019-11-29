@@ -94,6 +94,22 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 		this.producer = new KafkaProducer<>(configuration);
 	}
 	
+	/**
+	 * Instantiate a producer to emit {@link CloudEvent} instances in Kafka, but using
+	 * your own configured producer.
+	 * 
+	 * @param builder The builder to build the kafka records value
+	 * @param producer Your configured producer
+	 */
+	public CloudEventsKafkaProducer(EventStep<A, T, byte[], byte[]> builder,
+			Producer<K, byte[]> producer) {
+		Objects.requireNonNull(builder);
+		Objects.requireNonNull(producer);
+		
+		this.builder = builder;
+		this.producer = producer;
+	}
+	
 	private Wire<byte[], String, byte[]> marshal(Supplier<CloudEvent<A, T>> event) {
 		
 		return 

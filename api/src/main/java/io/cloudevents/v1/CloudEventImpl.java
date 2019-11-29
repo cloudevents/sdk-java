@@ -102,6 +102,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	}
 
 	@Override
+	@JsonIgnore
 	public Optional<T> getData() {
 		return Optional.ofNullable(data);
 	}
