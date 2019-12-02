@@ -1,8 +1,8 @@
-# CloudEvents Kafka Transport Binding
+# CloudEvents Kafka Protocol Binding
 
-The impl of Kafka Transport Biding for CloudEvents.
+The impl of Kafka Protocol Biding for CloudEvents.
 
-> See spec [here](https://github.com/cloudevents/spec/blob/master/kafka-transport-binding.md)
+> See spec [here](https://github.com/cloudevents/spec/blob/master/kafka-protocol-binding.md)
 
 ## How to Use
 
