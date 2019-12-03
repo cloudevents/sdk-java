@@ -16,9 +16,12 @@
 package io.cloudevents.v1.http;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -128,7 +131,51 @@ public class HTTPStructuredUnmarshallerTest {
 		assertTrue(actual.getData().isPresent());
 		assertEquals(expected.getData().get(), actual.getData().get());
 	}
-	
+
+	@Test
+	public void should_unmarshal_json_envelope_and_text_data_base64() {
+		// setup
+		Map<String, Object> httpHeaders = new HashMap<>();
+		httpHeaders.put("Content-Type", "application/cloudevents+json");
+
+		String ceData = "yes!";
+		byte[] base64Data = Base64.getEncoder().encode(ceData.getBytes());
+		String json = "{\"data_base64\":\"" + new String(base64Data) + "\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"1.0\",\"type\":\"event-type\",\"datacontenttype\":\"text/plain\"}";
+
+		CloudEventImpl<String> expected =
+			CloudEventBuilder.<String>builder()
+				.withId("x10")
+				.withSource(URI.create("/source"))
+				.withType("event-type")
+				.withDataContentType("text/plain")
+				.withDataBase64(ceData.getBytes())
+				.build();
+
+		// act
+		CloudEvent<AttributesImpl, String> actual =
+			Unmarshallers.structured(String.class)
+				.withHeaders(() -> httpHeaders)
+				.withPayload(() -> json)
+				.unmarshal();
+
+		// assert
+		assertEquals(expected.getAttributes().getSpecversion(),
+					 actual.getAttributes().getSpecversion());
+
+		assertEquals(expected.getAttributes().getId(),
+					 actual.getAttributes().getId());
+
+		assertEquals(expected.getAttributes().getSource(),
+					 actual.getAttributes().getSource());
+
+		assertEquals(expected.getAttributes().getType(),
+					 actual.getAttributes().getType());
+
+		assertFalse(actual.getData().isPresent());
+		assertNotNull(actual.getDataBase64());
+		assertEquals(new String(expected.getDataBase64()), new String(actual.getDataBase64()));
+	}
+
 	@Test
 	public void should_unmarshal_the_tracing_extension_from_headers() {
 		// setup

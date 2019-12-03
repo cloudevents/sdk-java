@@ -15,21 +15,19 @@
  */
 package io.cloudevents.v1.http;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.junit.Test;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.json.types.Much;
 import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.http.Unmarshallers;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * 
@@ -56,7 +54,7 @@ public class HTTPBinaryUnmarshallerTest {
 		String payload = "{\"wow\":\"yes!\"}";
 		
 		// act
-		CloudEvent<AttributesImpl, Much> actual = 
+		CloudEvent<AttributesImpl, Much> actual =
 			Unmarshallers.binary(Much.class)
 				.withHeaders(() -> myHeaders)
 				.withPayload(() -> payload)
@@ -99,7 +97,7 @@ public class HTTPBinaryUnmarshallerTest {
 		String payload = "{\"wow\":\"yes!\"}";
 		
 		// act
-		CloudEvent<AttributesImpl, Much> actual = 
+		CloudEvent<AttributesImpl, Much> actual =
 			Unmarshallers.binary(Much.class)
 				.withHeaders(() -> myHeaders)
 				.withPayload(() -> payload)

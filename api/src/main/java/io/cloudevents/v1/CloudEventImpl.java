@@ -18,7 +18,6 @@ package io.cloudevents.v1;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -35,66 +33,63 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.extensions.InMemoryFormat;
 
 /**
- * 
+ *
  * @author fabiojose
  * @version 1.0
  */
 @JsonInclude(value = Include.NON_ABSENT)
 public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
-	
-	public static final String EVENT_DATA_FIELD = "data";
-	public static final String EVENT_DATA_BASE64_FILED = "data_base64";
-	
+
 	@JsonIgnore
 	@NotNull
 	private final AttributesImpl attributes;
-	
+
 	@JsonIgnore
 	private final T data;
-	
+
 	//To use with json binary data
 	@JsonIgnore
-	private byte[] dataBase64;
-	
+	private final byte[] dataBase64;
+
 	@NotNull
 	private final Map<String, Object> extensions;
-	
+
 	private final Set<ExtensionFormat> extensionsFormats;
-	
+
+	CloudEventImpl(AttributesImpl attributes, byte[] dataBase64,
+				   Set<ExtensionFormat> extensions){
+		this(attributes, extensions, null, dataBase64);
+	}
+
 	CloudEventImpl(AttributesImpl attributes, T data,
 			Set<ExtensionFormat> extensions){
+		this(attributes, extensions, data, null);
+	}
+
+	private CloudEventImpl(AttributesImpl attributes, Set<ExtensionFormat> extensions, T data, byte[] dataBase64){
 		this.attributes = attributes;
-		this.data = data;
-		
 		this.extensions = extensions.stream()
-				.map(ExtensionFormat::memory)
-				.collect(Collectors.toMap(InMemoryFormat::getKey,
-						InMemoryFormat::getValue));
-		
+			.map(ExtensionFormat::memory)
+			.collect(Collectors.toMap(InMemoryFormat::getKey,
+									  InMemoryFormat::getValue));
+		this.data = data;
+		this.dataBase64 = dataBase64;
 		this.extensionsFormats = extensions;
 	}
-	
+
 	/**
 	 * Used by the {@link Accessor} to access the set of {@link ExtensionFormat}
 	 */
 	Set<ExtensionFormat> getExtensionsFormats() {
 		return extensionsFormats;
 	}
-	
-	/**
-	 * To handle the JSON base64 serialization
-	 * @param data The byte array to encode as base64
-	 */
-	void setDataBase64(byte[] data) {
-		this.dataBase64 = data;
-	}
-	
+
 	@JsonUnwrapped
 	@Override
 	public AttributesImpl getAttributes() {
@@ -107,25 +102,22 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 		return Optional.ofNullable(data);
 	}
 
+	@Override
+	@JsonProperty("data_base64")
+	public byte[] getDataBase64() {
+		return dataBase64;
+	}
+
 	@JsonAnyGetter
 	@Override
 	public Map<String, Object> getExtensions() {
-		Map<String, Object> result = new HashMap<>(extensions);
-		
-		if(null== dataBase64) {
-			if(null!= data) {
-				result.put(EVENT_DATA_FIELD, data);
-			}
-		} else {
-			result.put(EVENT_DATA_BASE64_FILED, dataBase64);
-		}
-		return Collections.unmodifiableMap(result);
+		return Collections.unmodifiableMap(extensions);
 	}
-	
+
 	/**
 	 * The unique method that allows mutation. Used by
 	 * Jackson Framework to inject the extensions.
-	 * 
+	 *
 	 * @param name Extension name
 	 * @param value Extension value
 	 */
@@ -146,10 +138,9 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 			@JsonProperty("dataschema") URI dataschema,
 			@JsonProperty("subject") String subject,
 			@JsonProperty("time") ZonedDateTime time,
-			@JsonProperty("data")
-			@JsonAlias("data_base64")
-			T data){
-		
+			@JsonProperty("data") T data,
+			@JsonProperty("data_base64") byte[] dataBase64){
+
 		return CloudEventBuilder.<T>builder()
 				.withId(id)
 				.withSource(source)
@@ -158,6 +149,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.withDataschema(dataschema)
 				.withDataContentType(datacontenttype)
 				.withData(data)
+				.withDataBase64(dataBase64)
 				.withSubject(subject)
 				.build();
 	}

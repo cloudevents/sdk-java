@@ -15,12 +15,6 @@
  */
 package io.cloudevents.v1;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.InputStream;
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -28,20 +22,21 @@ import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.CloudEventBuilder;
-import io.cloudevents.v1.CloudEventImpl;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * 
@@ -301,15 +296,13 @@ public class CloudEventJacksonTest {
 		byte[] expected = "mydata".getBytes();
 		
 		// act
-		CloudEvent<AttributesImpl, byte[]> ce = 
+		CloudEvent<AttributesImpl, String> ce =
 	        	Json.fromInputStream(resourceOf("1_base64.json"), 
-	        			new TypeReference<CloudEventImpl<byte[]>>() {});
-		
-		System.out.println(new String(ce.getData().get()));
-        
+	        			new TypeReference<CloudEventImpl<String>>() {});
+
         // assert
-		assertTrue(ce.getData().isPresent());
-		assertArrayEquals(expected, ce.getData().get());
+		assertNotNull(ce.getDataBase64());
+		assertArrayEquals(expected, ce.getDataBase64());
     }
 	
 	@Test
@@ -326,8 +319,8 @@ public class CloudEventJacksonTest {
 		String expected = 
 			Base64.getEncoder().encodeToString(data);
 		
-		CloudEventImpl<byte[]> event = 
-			CloudEventBuilder.<byte[]>builder()
+		CloudEventImpl<String> event =
+			CloudEventBuilder.<String>builder()
 				.withId("0xbin")
 				.withSource(URI.create("/customers/445"))
 				.withType("customers.ordering")
@@ -335,7 +328,7 @@ public class CloudEventJacksonTest {
 				.withDataschema(URI.create("http://schame.server.com/customer/order"))
 				.withSubject("orders.json")
 				.withTime(ZonedDateTime.now())
-				.withData(data)
+				.withDataBase64(data)
 				.build();
 
 		// act

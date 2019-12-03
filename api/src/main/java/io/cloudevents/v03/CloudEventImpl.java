@@ -89,6 +89,11 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 		return Optional.ofNullable(data);
 	}
 
+	@Override
+	public byte[] getDataBase64() {
+		return null;
+	}
+
 	@JsonAnyGetter
 	@Override
 	public Map<String, Object> getExtensions() {

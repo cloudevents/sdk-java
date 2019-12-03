@@ -37,7 +37,9 @@ public interface CloudEvent<A extends Attributes, T> {
 	 * The event data
 	 */
 	Optional<T> getData();
-	
+
+	byte[] getDataBase64();
+
 	/**
 	 * The event extensions
 	 */
