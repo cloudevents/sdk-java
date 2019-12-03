@@ -39,8 +39,6 @@ public final class Json {
         MAPPER.registerModule(new Jdk8Module());
 
         final SimpleModule module = new SimpleModule();
-        module.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
-        module.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
         MAPPER.registerModule(module);
     }
 

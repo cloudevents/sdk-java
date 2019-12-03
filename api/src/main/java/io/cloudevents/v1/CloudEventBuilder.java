@@ -22,6 +22,7 @@ import io.cloudevents.fun.EventBuilder;
 /**
  * 
  * @author fabiojose
+ * @author dturanski
  * @version 1.0
  */
 public class CloudEventBuilder<T> implements 
@@ -188,12 +189,12 @@ public class CloudEventBuilder<T> implements
 		this.subject = subject;
 		return this;
 	}
-	
+
 	public CloudEventBuilder<T> withTime(ZonedDateTime time) {
 		this.time = time;
 		return this;
 	}
-	
+
 	public CloudEventBuilder<T> withData(T data) {
 		this.data = data;
 		return this;

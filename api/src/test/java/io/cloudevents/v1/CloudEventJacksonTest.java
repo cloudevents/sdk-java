@@ -27,7 +27,6 @@ import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -39,9 +38,6 @@ import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.CloudEventBuilder;
-import io.cloudevents.v1.CloudEventImpl;
 
 /**
  * 
@@ -345,5 +341,4 @@ public class CloudEventJacksonTest {
 		assertTrue(encoded.contains("\"data_base64\""));
 		assertTrue(encoded.contains("\"" + expected +"\""));
 	}
-	
 }

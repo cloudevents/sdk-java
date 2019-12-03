@@ -16,7 +16,7 @@
 package io.cloudevents.v1;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +43,7 @@ import io.cloudevents.extensions.InMemoryFormat;
 /**
  * 
  * @author fabiojose
+ * @author dturanski
  * @version 1.0
  */
 @JsonInclude(value = Include.NON_ABSENT)
@@ -145,7 +146,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 			@JsonProperty("datacontenttype") String datacontenttype,
 			@JsonProperty("dataschema") URI dataschema,
 			@JsonProperty("subject") String subject,
-			@JsonProperty("time") ZonedDateTime time,
+			@JsonProperty("time") String time,
 			@JsonProperty("data")
 			@JsonAlias("data_base64")
 			T data){
@@ -154,7 +155,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.withId(id)
 				.withSource(source)
 				.withType(type)
-				.withTime(time)
+				.withTime(AttributesImpl.parseZonedDateTime(time).orElse(null))
 				.withDataschema(dataschema)
 				.withDataContentType(datacontenttype)
 				.withData(data)

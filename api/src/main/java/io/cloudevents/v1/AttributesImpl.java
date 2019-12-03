@@ -15,8 +15,11 @@
  */
 package io.cloudevents.v1;
 
-import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.cloudevents.Attributes;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,24 +27,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import io.cloudevents.Attributes;
-import io.cloudevents.json.ZonedDateTimeDeserializer;
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
 /**
  * 
  * @author fabiojose
+ * @author dturanski
  * @version 1.0
  */
 @JsonInclude(value = Include.NON_ABSENT)
@@ -66,14 +62,12 @@ public class AttributesImpl implements Attributes {
 	
 	@Size(min = 1)
 	private final String subject;
-	
-	@JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+
 	private final ZonedDateTime time;
 
 	public AttributesImpl(String id, URI source, String specversion,
 			String type, String datacontenttype,
 			URI dataschema, String subject, ZonedDateTime time) {
-		
 		this.id = id;
 		this.source = source;
 		this.specversion = specversion;
@@ -142,10 +136,10 @@ public class AttributesImpl implements Attributes {
 			@JsonProperty("datacontenttype") String datacontenttype,
 			@JsonProperty("dataschema") URI dataschema,
 			@JsonProperty("subject") String subject,
-			@JsonProperty("time") ZonedDateTime time) {
+			@JsonProperty("time") String time) {
 		
 		return new AttributesImpl(id, source, specversion, type,
-				datacontenttype, dataschema, subject, time);
+				datacontenttype, dataschema, subject, parseZonedDateTime(time).get());
 	}
 	
 	/**
@@ -181,11 +175,7 @@ public class AttributesImpl implements Attributes {
 	 */
 	public static AttributesImpl unmarshal(Map<String, String> attributes) {
 		String type = attributes.get(ContextAttributes.type.name());
-		ZonedDateTime time =
-			Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
-			.map((t) -> ZonedDateTime.parse(t,
-					ISO_ZONED_DATE_TIME))
-			.orElse(null);
+		String time = attributes.get(ContextAttributes.time.name());
 		
 		String specversion = attributes.get(ContextAttributes.specversion.name()); 
 		URI source = URI.create(attributes.get(ContextAttributes.source.name()));
@@ -204,5 +194,13 @@ public class AttributesImpl implements Attributes {
 		
 		return AttributesImpl.build(id, source, specversion, type,
 				datacontenttype, dataschema, subject, time);
+	}
+
+	static Optional<String> formatZonedDateTime(ZonedDateTime zonedDateTime) {
+		return zonedDateTime == null? Optional.empty() : Optional.of(zonedDateTime.format(ISO_ZONED_DATE_TIME));
+	}
+
+	static Optional<ZonedDateTime> parseZonedDateTime(String zonedDateTime) {
+		return zonedDateTime == null ? Optional.empty(): Optional.of(ZonedDateTime.parse(zonedDateTime));
 	}
 }

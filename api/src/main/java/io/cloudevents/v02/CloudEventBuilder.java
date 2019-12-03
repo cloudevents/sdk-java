@@ -39,6 +39,7 @@ import static java.lang.String.format;
  * CloudEvent instances builder 
  *
  * @author fabiojose
+ * @author dturanski
  * @version 0.2
  */
 public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl>,

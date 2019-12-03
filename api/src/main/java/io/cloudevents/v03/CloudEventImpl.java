@@ -115,7 +115,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 			@JsonProperty("id") String id,
 			@JsonProperty("source") URI source,
 			@JsonProperty("type") String type,
-			@JsonProperty("time") ZonedDateTime time,
+			@JsonProperty("time") String time,
 			@JsonProperty("schemaurl") URI schemaurl,
 			@JsonProperty("datacontentencoding") String datacontentencoding,
 			@JsonProperty("datacontenttype") String datacontenttype,
@@ -126,7 +126,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.withId(id)
 				.withSource(source)
 				.withType(type)
-				.withTime(time)
+				.withTime(AttributesImpl.parseZonedDateTime(time).orElse(null))
 				.withSchemaurl(schemaurl)
 				.withDatacontentencoding(datacontentencoding)
 				.withDatacontenttype(datacontenttype)

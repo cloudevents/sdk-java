@@ -33,14 +33,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
-import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
  * 
  * @author fabiojose
+ * @author dturanski
  * @version 0.2
  */
 @JsonInclude(value = Include.NON_ABSENT)
@@ -58,10 +57,11 @@ public class AttributesImpl implements Attributes {
 	
 	@NotBlank
 	private final String id;
-	
+
 	private final ZonedDateTime time;
 	private final URI schemaurl;
 	private final String contenttype;
+
 	
 	AttributesImpl(String type, String specversion, URI source,
 			String id, ZonedDateTime time, URI schemaurl, String contenttype) {
@@ -113,7 +113,6 @@ public class AttributesImpl implements Attributes {
 	/**
      * Timestamp of when the event happened.
      */
-	@JsonDeserialize(using = ZonedDateTimeDeserializer.class)
 	public Optional<ZonedDateTime> getTime() {
 		return Optional.ofNullable(time);
 	}
@@ -145,11 +144,11 @@ public class AttributesImpl implements Attributes {
 			@JsonProperty("source") URI source,
 			@JsonProperty("specversion") String specversion,
 			@JsonProperty("type") String type,
-			@JsonProperty("time") ZonedDateTime time,
+			@JsonProperty("time") String time,
 			@JsonProperty("schemaurl") URI schemaurl,
 			@JsonProperty("contenttype") String contenttype) {
 		
-		return new AttributesImpl(type, specversion, source, id, time,
+		return new AttributesImpl(type, specversion, source, id, parseZonedDateTime(time).orElse(null),
 				schemaurl, contenttype);
 	}
 	
@@ -159,11 +158,7 @@ public class AttributesImpl implements Attributes {
 	 */
 	public static AttributesImpl unmarshal(Map<String, String> attributes) {
 		String type = attributes.get(ContextAttributes.type.name());
-		ZonedDateTime time =
-			Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
-			.map((t) -> ZonedDateTime.parse(t,
-					ISO_ZONED_DATE_TIME))
-			.orElse(null);
+		String time = attributes.get(ContextAttributes.time.name());
 		
 		String specversion = attributes.get(ContextAttributes.specversion.name()); 
 		URI source = URI.create(attributes.get(ContextAttributes.source.name()));
@@ -208,5 +203,13 @@ public class AttributesImpl implements Attributes {
 		attributes.getContenttype().ifPresent((ct) -> result.put(ContextAttributes.contenttype.name(), ct));
 
 		return result;
+	}
+
+	static Optional<String> formatZonedDateTime(ZonedDateTime zonedDateTime) {
+		return zonedDateTime == null? Optional.empty() : Optional.of(zonedDateTime.format(ISO_ZONED_DATE_TIME));
+	}
+
+	static Optional<ZonedDateTime> parseZonedDateTime(String zonedDateTime) {
+		return zonedDateTime == null ? Optional.empty(): Optional.of(ZonedDateTime.parse(zonedDateTime));
 	}
 }
