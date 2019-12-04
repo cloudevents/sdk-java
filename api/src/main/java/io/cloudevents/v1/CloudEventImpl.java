@@ -30,10 +30,8 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.extensions.InMemoryFormat;
@@ -43,18 +41,16 @@ import io.cloudevents.extensions.InMemoryFormat;
  * @author fabiojose
  * @version 1.0
  */
-@JsonInclude(value = Include.NON_ABSENT)
+@JsonInclude(value = JsonInclude.Include.NON_ABSENT)
 public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 
-	@JsonIgnore
 	@NotNull
+	@JsonIgnore
 	private final AttributesImpl attributes;
 
-	@JsonIgnore
 	private final T data;
 
 	//To use with json binary data
-	@JsonIgnore
 	private final byte[] dataBase64;
 
 	@NotNull
@@ -90,14 +86,14 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 		return extensionsFormats;
 	}
 
-	@JsonUnwrapped
+
 	@Override
+	@JsonUnwrapped
 	public AttributesImpl getAttributes() {
 		return attributes;
 	}
 
 	@Override
-	@JsonIgnore
 	public Optional<T> getData() {
 		return Optional.ofNullable(data);
 	}
@@ -108,8 +104,8 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 		return dataBase64;
 	}
 
-	@JsonAnyGetter
 	@Override
+	@JsonAnyGetter
 	public Map<String, Object> getExtensions() {
 		return Collections.unmodifiableMap(extensions);
 	}

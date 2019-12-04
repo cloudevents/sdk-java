@@ -1,6 +1,5 @@
 package io.cloudevents.v02.http;
 
-import javax.validation.Valid;
 import javax.validation.Validator;
 
 import io.cloudevents.extensions.DistributedTracingExtension;
@@ -93,15 +92,10 @@ public class Unmarshallers {
 			.next()
 			.map((payload, extensions) -> {			
 				CloudEventImpl<T> event =
-					Json.<CloudEventImpl<T>>
-						decodeValue(payload, CloudEventImpl.class, typeOfData);
-				
+					Json.decodeValue(payload, CloudEventImpl.class, typeOfData);
 				CloudEventBuilder<T> builder = 
-					CloudEventBuilder.<T>builder(event);
-				
-				extensions.get().forEach(extension -> {
-					builder.withExtension(extension);
-				});
+					CloudEventBuilder.builder(event);
+				extensions.get().forEach(builder::withExtension);
 
 				return builder.withValidator(validator).build();
 			});

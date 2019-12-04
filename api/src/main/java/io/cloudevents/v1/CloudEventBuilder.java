@@ -140,9 +140,8 @@ public class CloudEventBuilder<T> implements
 		if(validator == null) {
 			validator = getValidator();
 		}
-		Set<ConstraintViolation<Object>> violations =
-				validator.validate(cloudEvent);
-		
+		Set<ConstraintViolation<Object>> violations = new HashSet<>();
+		violations.addAll(validator.validate(cloudEvent));
 		violations.addAll(validator.validate(cloudEvent.getAttributes()));
 		
 		final String errs = 

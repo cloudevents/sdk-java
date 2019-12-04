@@ -64,8 +64,7 @@ public class CloudEventJacksonTest {
 		
 		// act
 		String json = Json.encode(ce);
-		System.out.println(json);
-		
+
 		// assert
 		assertTrue(json.contains("x10"));
 		assertTrue(json.contains("/source"));
@@ -105,7 +104,6 @@ public class CloudEventJacksonTest {
 		assertTrue(json.contains("datacontenttype"));
 		assertTrue(json.contains("\"subject\""));
 		
-		System.out.println(json);
 		Pattern pat = Pattern.compile("(\"data\")");
 		Matcher mat = pat.matcher(json);
 		int counter = 0;

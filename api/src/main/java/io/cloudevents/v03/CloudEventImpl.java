@@ -46,7 +46,7 @@ import io.cloudevents.extensions.InMemoryFormat;
  */
 @JsonInclude(value = Include.NON_ABSENT)
 public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
-	
+
 	@JsonIgnore
 	@NotNull
 	private final AttributesImpl attributes;
@@ -78,8 +78,8 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 		return extensionsFormats;
 	}
 
-	@JsonUnwrapped
 	@Override
+	@JsonUnwrapped
 	public AttributesImpl getAttributes() {
 		return attributes;
 	}
@@ -94,8 +94,8 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 		return null;
 	}
 
-	@JsonAnyGetter
 	@Override
+	@JsonAnyGetter
 	public Map<String, Object> getExtensions() {
 		return Collections.unmodifiableMap(extensions);
 	}
