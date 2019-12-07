@@ -153,7 +153,7 @@ public class CloudEventBuilder<T> implements EventBuilder<T, AttributesImpl>,
     @Override
     public CloudEventImpl<T> build() {
         AttributesImpl attributes = new AttributesImpl(type, SPEC_VERSION,
-                                                       source, id, time, schemaurl, contenttype);
+                source, id, AttributesImpl.formatZonedDateTime(time), schemaurl, contenttype);
 
         CloudEventImpl<T> event = new CloudEventImpl<>(attributes, data, extensions);
 

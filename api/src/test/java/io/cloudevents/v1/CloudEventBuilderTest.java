@@ -18,14 +18,12 @@ package io.cloudevents.v1;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.net.URI;
-import java.util.Collections;
+import java.time.ZonedDateTime;
 
 import javax.validation.Validator;
 
-import io.cloudevents.validation.MockValidator;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -34,9 +32,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.extensions.InMemoryFormat;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.CloudEventBuilder;
-import io.cloudevents.v1.CloudEventImpl;
+import io.cloudevents.validation.MockValidator;
 
 /**
  * 
@@ -144,6 +140,24 @@ public class CloudEventBuilderTest {
 		// assert
 		assertTrue(ce.getAttributes().getSubject().isPresent());
 		assertEquals("subject", ce.getAttributes().getSubject().get());
+	}
+
+	@Test
+	public void should_have_time() {
+		//setup
+		ZonedDateTime expected = ZonedDateTime.now();
+		// act
+		CloudEvent<AttributesImpl, Object> ce =
+				CloudEventBuilder.<Object>builder()
+						.withId("id")
+						.withSource(URI.create("/source"))
+						.withType("type")
+						.withTime(expected)
+						.build();
+
+		// assert
+		assertTrue(ce.getAttributes().getTime().isPresent());
+		assertEquals(expected, ce.getAttributes().getTime().get());
 	}
 
 	@Test

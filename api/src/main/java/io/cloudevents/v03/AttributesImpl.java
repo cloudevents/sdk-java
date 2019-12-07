@@ -15,16 +15,11 @@
  */
 package io.cloudevents.v03;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
 import java.net.URI;
-
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -35,9 +30,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import io.cloudevents.Attributes;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
+import io.cloudevents.Attributes;
+import io.cloudevents.format.DateTimeFormat;
 
 /**
  * The event attributes implementation for v0.3
@@ -62,7 +61,8 @@ public class AttributesImpl implements Attributes {
 	@NotBlank
 	private final String type;
 
-	private final ZonedDateTime time;
+	@DateTimeFormat
+	private final String time;
 	private final URI schemaurl;
 	
 	@Pattern(regexp =  "base64")
@@ -73,7 +73,7 @@ public class AttributesImpl implements Attributes {
 	private final String subject;
 
 	AttributesImpl(String id, URI source, String specversion, String type,
-				   ZonedDateTime time, URI schemaurl, String datacontentencoding,
+				   String time, URI schemaurl, String datacontentencoding,
 				   String datacontenttype, String subject) {
 		this.id = id;
 		this.source = source;
@@ -100,7 +100,7 @@ public class AttributesImpl implements Attributes {
 		return type;
 	}
 	public Optional<ZonedDateTime> getTime() {
-		return Optional.ofNullable(time);
+		return Optional.ofNullable(parseZonedDateTime(time));
 	}
 	public Optional<URI> getSchemaurl() {
 		return Optional.ofNullable(schemaurl);
@@ -146,7 +146,7 @@ public class AttributesImpl implements Attributes {
 			@JsonProperty("datacontenttype") String datacontenttype,
 			@JsonProperty("subject") String subject) {
 		
-		return new AttributesImpl(id, source, specversion, type, parseZonedDateTime(time).orElse(null),
+		return new AttributesImpl(id, source, specversion, type, time,
 				schemaurl, datacontentencoding, datacontenttype, subject);
 	}
 	
@@ -210,11 +210,11 @@ public class AttributesImpl implements Attributes {
 				datacontenttype, subject);
 	}
 
-	static Optional<String> formatZonedDateTime(ZonedDateTime zonedDateTime) {
-		return zonedDateTime == null? Optional.empty() : Optional.of(zonedDateTime.format(ISO_ZONED_DATE_TIME));
+	static String formatZonedDateTime(ZonedDateTime zonedDateTime) {
+		return zonedDateTime == null? null :zonedDateTime.format(ISO_ZONED_DATE_TIME);
 	}
 
-	static Optional<ZonedDateTime> parseZonedDateTime(String zonedDateTime) {
-		return zonedDateTime == null ? Optional.empty(): Optional.of(ZonedDateTime.parse(zonedDateTime));
+	static ZonedDateTime parseZonedDateTime(String zonedDateTime) {
+		return zonedDateTime == null ? null : ZonedDateTime.parse(zonedDateTime);
 	}
 }

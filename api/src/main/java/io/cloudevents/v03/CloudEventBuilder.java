@@ -38,6 +38,7 @@ import io.cloudevents.fun.EventBuilder;
  * The event builder.
  *
  * @author fabiojose
+ * @author dturanski
  *
  */
 public final class CloudEventBuilder<T> implements
@@ -167,7 +168,7 @@ public final class CloudEventBuilder<T> implements
 	public CloudEventImpl<T> build() {
 
 		AttributesImpl attributes = new AttributesImpl(id, source, SPEC_VERSION,
-				type, time, schemaurl, datacontentencoding, datacontenttype,
+				type, AttributesImpl.formatZonedDateTime(time), schemaurl, datacontentencoding, datacontenttype,
 				subject);
 
 		CloudEventImpl<T> cloudEvent =

@@ -17,6 +17,7 @@ package io.cloudevents.v02;
 
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
+import io.cloudevents.format.DateTimeFormat;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -58,13 +59,14 @@ public class AttributesImpl implements Attributes {
 	@NotBlank
 	private final String id;
 
-	private final ZonedDateTime time;
+	@DateTimeFormat
+	private final String time;
 	private final URI schemaurl;
 	private final String contenttype;
-
+	
 	
 	AttributesImpl(String type, String specversion, URI source,
-			String id, ZonedDateTime time, URI schemaurl, String contenttype) {
+			String id, String time, URI schemaurl, String contenttype) {
 		this.type = type;
 		this.specversion = specversion;
 		this.source = source;
@@ -114,7 +116,7 @@ public class AttributesImpl implements Attributes {
      * Timestamp of when the event happened.
      */
 	public Optional<ZonedDateTime> getTime() {
-		return Optional.ofNullable(time);
+		return Optional.ofNullable(parseZonedDateTime(time));
 	}
 	
 	/**
@@ -148,7 +150,7 @@ public class AttributesImpl implements Attributes {
 			@JsonProperty("schemaurl") URI schemaurl,
 			@JsonProperty("contenttype") String contenttype) {
 		
-		return new AttributesImpl(type, specversion, source, id, parseZonedDateTime(time).orElse(null),
+		return new AttributesImpl(type, specversion, source, id, time,
 				schemaurl, contenttype);
 	}
 	
@@ -205,11 +207,11 @@ public class AttributesImpl implements Attributes {
 		return result;
 	}
 
-	static Optional<String> formatZonedDateTime(ZonedDateTime zonedDateTime) {
-		return zonedDateTime == null? Optional.empty() : Optional.of(zonedDateTime.format(ISO_ZONED_DATE_TIME));
+	static String formatZonedDateTime(ZonedDateTime zonedDateTime) {
+		return zonedDateTime == null? null :zonedDateTime.format(ISO_ZONED_DATE_TIME);
 	}
 
-	static Optional<ZonedDateTime> parseZonedDateTime(String zonedDateTime) {
-		return zonedDateTime == null ? Optional.empty(): Optional.of(ZonedDateTime.parse(zonedDateTime));
+	static ZonedDateTime parseZonedDateTime(String zonedDateTime) {
+		return zonedDateTime == null ? null : ZonedDateTime.parse(zonedDateTime);
 	}
 }

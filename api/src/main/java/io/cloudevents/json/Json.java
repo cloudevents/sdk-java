@@ -16,13 +16,11 @@
 package io.cloudevents.json;
 
 import java.io.InputStream;
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
@@ -35,11 +33,8 @@ public final class Json {
     public static final ObjectMapper MAPPER = new ObjectMapper();
 
     static {
-        // add Jackson datatype for ZonedDateTime
+        // add Jackson module to support Optional fields
         MAPPER.registerModule(new Jdk8Module());
-
-        final SimpleModule module = new SimpleModule();
-        MAPPER.registerModule(module);
     }
 
     /**

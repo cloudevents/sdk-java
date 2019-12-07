@@ -155,7 +155,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.withId(id)
 				.withSource(source)
 				.withType(type)
-				.withTime(AttributesImpl.parseZonedDateTime(time).orElse(null))
+				.withTime(AttributesImpl.parseZonedDateTime(time))
 				.withDataschema(dataschema)
 				.withDataContentType(datacontenttype)
 				.withData(data)

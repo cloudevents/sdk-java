@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.net.URI;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -165,6 +166,24 @@ public class CloudEventBuilderTest {
 		// assert
 		assertTrue(ce.getAttributes().getSubject().isPresent());
 		assertEquals("subject", ce.getAttributes().getSubject().get());
+	}
+
+	@Test
+	public void should_have_time() {
+		//setup
+		ZonedDateTime expected = ZonedDateTime.now();
+		// act
+		CloudEvent<io.cloudevents.v1.AttributesImpl, Object> ce =
+				io.cloudevents.v1.CloudEventBuilder.<Object>builder()
+						.withId("id")
+						.withSource(URI.create("/source"))
+						.withType("type")
+						.withTime(expected)
+						.build();
+
+		// assert
+		assertTrue(ce.getAttributes().getTime().isPresent());
+		assertEquals(expected, ce.getAttributes().getTime().get());
 	}
 
 	@Test

@@ -21,17 +21,23 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
@@ -42,6 +48,7 @@ import io.cloudevents.json.types.Much;
 /**
  * 
  * @author fabiojose
+ * @author dturanski
  *
  */
 public class CloudEventJacksonTest {
@@ -340,5 +347,74 @@ public class CloudEventJacksonTest {
 		// assert
 		assertTrue(encoded.contains("\"data_base64\""));
 		assertTrue(encoded.contains("\"" + expected +"\""));
+	}
+
+	@Test
+	public void should_unmarshal_marshalled_object() {
+		//setup
+		CloudEvent<AttributesImpl, Object> expectedCe =
+				Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
+		byte[] json = Json.binaryEncode(expectedCe);
+		//act
+		CloudEvent<AttributesImpl, Object> ce = Json.fromInputStream(new ByteArrayInputStream(json), CloudEventImpl.class);
+		// assert
+		assertEquals(expectedCe.getAttributes().getTime(), ce.getAttributes().getTime());
+		assertEquals(expectedCe.getAttributes().getType(), ce.getAttributes().getType());
+		assertEquals(expectedCe.getAttributes().getSpecversion(), ce.getAttributes().getSpecversion());
+		assertEquals(expectedCe.getAttributes().getDataschema(), ce.getAttributes().getDataschema());
+		assertEquals(expectedCe.getAttributes().getDatacontenttype(), ce.getAttributes().getDatacontenttype());
+		assertEquals(expectedCe.getAttributes().getSubject(), ce.getAttributes().getSubject());
+		assertEquals(expectedCe.getAttributes().getSource(), ce.getAttributes().getSource());
+		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
+		assertEquals(expectedCe.getExtensions(), ce.getExtensions());
+		assertEquals(expectedCe.getData(), ce.getData());
+	}
+
+	@Test
+	public void should_unmarshal_when_marshalled_with_raw_object_mapper() throws JsonProcessingException {
+		//setup
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new Jdk8Module());
+
+		CloudEvent<AttributesImpl, Object> expectedCe =
+				Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
+		byte[] json = objectMapper.writeValueAsBytes(expectedCe);
+		//act
+		CloudEvent<AttributesImpl, Object> ce = Json.fromInputStream(new ByteArrayInputStream(json), CloudEventImpl.class);
+		// assert
+		assertEquals(expectedCe.getAttributes().getTime(), ce.getAttributes().getTime());
+		assertEquals(expectedCe.getAttributes().getType(), ce.getAttributes().getType());
+		assertEquals(expectedCe.getAttributes().getSpecversion(), ce.getAttributes().getSpecversion());
+		assertEquals(expectedCe.getAttributes().getDataschema(), ce.getAttributes().getDataschema());
+		assertEquals(expectedCe.getAttributes().getDatacontenttype(), ce.getAttributes().getDatacontenttype());
+		assertEquals(expectedCe.getAttributes().getSubject(), ce.getAttributes().getSubject());
+		assertEquals(expectedCe.getAttributes().getSource(), ce.getAttributes().getSource());
+		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
+		assertEquals(expectedCe.getExtensions(), ce.getExtensions());
+		assertEquals(expectedCe.getData(), ce.getData());
+	}
+
+	@Test
+	public void should_unmarshal_with_raw_object_mapper() throws IOException {
+		//setup
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new Jdk8Module());
+
+		CloudEvent<AttributesImpl, Object> expectedCe =
+				Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
+		byte[] json = objectMapper.writeValueAsBytes(expectedCe);
+		//act
+		CloudEvent<AttributesImpl, Object> ce = objectMapper.readValue(json, CloudEventImpl.class);
+		// assert
+		assertEquals(expectedCe.getAttributes().getTime(), ce.getAttributes().getTime());
+		assertEquals(expectedCe.getAttributes().getType(), ce.getAttributes().getType());
+		assertEquals(expectedCe.getAttributes().getSpecversion(), ce.getAttributes().getSpecversion());
+		assertEquals(expectedCe.getAttributes().getDataschema(), ce.getAttributes().getDataschema());
+		assertEquals(expectedCe.getAttributes().getDatacontenttype(), ce.getAttributes().getDatacontenttype());
+		assertEquals(expectedCe.getAttributes().getSubject(), ce.getAttributes().getSubject());
+		assertEquals(expectedCe.getAttributes().getSource(), ce.getAttributes().getSource());
+		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
+		assertEquals(expectedCe.getExtensions(), ce.getExtensions());
+		assertEquals(expectedCe.getData(), ce.getData());
 	}
 }

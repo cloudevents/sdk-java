@@ -16,7 +16,6 @@
 package io.cloudevents.v03;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -30,9 +29,9 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
@@ -42,6 +41,7 @@ import io.cloudevents.extensions.InMemoryFormat;
  * The event implementation
  * 
  * @author fabiojose
+ * @author dturanski
  *
  */
 @JsonInclude(value = Include.NON_ABSENT)
@@ -126,7 +126,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.withId(id)
 				.withSource(source)
 				.withType(type)
-				.withTime(AttributesImpl.parseZonedDateTime(time).orElse(null))
+				.withTime(AttributesImpl.parseZonedDateTime(time))
 				.withSchemaurl(schemaurl)
 				.withDatacontentencoding(datacontentencoding)
 				.withDatacontenttype(datacontenttype)
