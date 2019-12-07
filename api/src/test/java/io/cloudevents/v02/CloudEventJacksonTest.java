@@ -20,11 +20,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.v1.AttributesImpl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +29,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+
+import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.json.Json;
@@ -241,18 +241,17 @@ public class CloudEventJacksonTest {
 	@Test
 	public void should_unmarshal_marshalled_object() {
 		//setup
-		CloudEvent<io.cloudevents.v1.AttributesImpl, Object> expectedCe =
-				Json.fromInputStream(resourceOf("1_new.json"), io.cloudevents.v1.CloudEventImpl.class);
+		CloudEvent<AttributesImpl, Object> expectedCe =
+				Json.fromInputStream(resourceOf("02_new.json"), CloudEventImpl.class);
 		byte[] json = Json.binaryEncode(expectedCe);
 		//act
-		CloudEvent<io.cloudevents.v1.AttributesImpl, Object> ce = Json.fromInputStream(new ByteArrayInputStream(json), io.cloudevents.v1.CloudEventImpl.class);
+		CloudEvent<AttributesImpl, Object> ce = Json.fromInputStream(new ByteArrayInputStream(json), CloudEventImpl.class);
 		// assert
 		assertEquals(expectedCe.getAttributes().getTime(), ce.getAttributes().getTime());
 		assertEquals(expectedCe.getAttributes().getType(), ce.getAttributes().getType());
 		assertEquals(expectedCe.getAttributes().getSpecversion(), ce.getAttributes().getSpecversion());
-		assertEquals(expectedCe.getAttributes().getDataschema(), ce.getAttributes().getDataschema());
-		assertEquals(expectedCe.getAttributes().getDatacontenttype(), ce.getAttributes().getDatacontenttype());
-		assertEquals(expectedCe.getAttributes().getSubject(), ce.getAttributes().getSubject());
+		assertEquals(expectedCe.getAttributes().getSchemaurl(), ce.getAttributes().getSchemaurl());
+		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
 		assertEquals(expectedCe.getAttributes().getSource(), ce.getAttributes().getSource());
 		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
 		assertEquals(expectedCe.getExtensions(), ce.getExtensions());
@@ -265,18 +264,17 @@ public class CloudEventJacksonTest {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new Jdk8Module());
 
-		CloudEvent<io.cloudevents.v1.AttributesImpl, Object> expectedCe =
-				Json.fromInputStream(resourceOf("1_new.json"), io.cloudevents.v1.CloudEventImpl.class);
+		CloudEvent<AttributesImpl, Object> expectedCe =
+				Json.fromInputStream(resourceOf("02_new.json"), CloudEventImpl.class);
 		byte[] json = objectMapper.writeValueAsBytes(expectedCe);
 		//act
-		CloudEvent<AttributesImpl, Object> ce = Json.fromInputStream(new ByteArrayInputStream(json), io.cloudevents.v1.CloudEventImpl.class);
+		CloudEvent<AttributesImpl, Object> ce = Json.fromInputStream(new ByteArrayInputStream(json), CloudEventImpl.class);
 		// assert
 		assertEquals(expectedCe.getAttributes().getTime(), ce.getAttributes().getTime());
 		assertEquals(expectedCe.getAttributes().getType(), ce.getAttributes().getType());
 		assertEquals(expectedCe.getAttributes().getSpecversion(), ce.getAttributes().getSpecversion());
-		assertEquals(expectedCe.getAttributes().getDataschema(), ce.getAttributes().getDataschema());
-		assertEquals(expectedCe.getAttributes().getDatacontenttype(), ce.getAttributes().getDatacontenttype());
-		assertEquals(expectedCe.getAttributes().getSubject(), ce.getAttributes().getSubject());
+		assertEquals(expectedCe.getAttributes().getSchemaurl(), ce.getAttributes().getSchemaurl());
+		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
 		assertEquals(expectedCe.getAttributes().getSource(), ce.getAttributes().getSource());
 		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
 		assertEquals(expectedCe.getExtensions(), ce.getExtensions());
@@ -289,18 +287,17 @@ public class CloudEventJacksonTest {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new Jdk8Module());
 
-		CloudEvent<io.cloudevents.v1.AttributesImpl, Object> expectedCe =
-				Json.fromInputStream(resourceOf("1_new.json"), io.cloudevents.v1.CloudEventImpl.class);
+		CloudEvent<AttributesImpl, Object> expectedCe =
+				Json.fromInputStream(resourceOf("02_new.json"), CloudEventImpl.class);
 		byte[] json = objectMapper.writeValueAsBytes(expectedCe);
 		//act
-		CloudEvent<AttributesImpl, Object> ce = objectMapper.readValue(json, io.cloudevents.v1.CloudEventImpl.class);
+		CloudEvent<AttributesImpl, Object> ce = objectMapper.readValue(json, CloudEventImpl.class);
 		// assert
 		assertEquals(expectedCe.getAttributes().getTime(), ce.getAttributes().getTime());
 		assertEquals(expectedCe.getAttributes().getType(), ce.getAttributes().getType());
 		assertEquals(expectedCe.getAttributes().getSpecversion(), ce.getAttributes().getSpecversion());
-		assertEquals(expectedCe.getAttributes().getDataschema(), ce.getAttributes().getDataschema());
-		assertEquals(expectedCe.getAttributes().getDatacontenttype(), ce.getAttributes().getDatacontenttype());
-		assertEquals(expectedCe.getAttributes().getSubject(), ce.getAttributes().getSubject());
+		assertEquals(expectedCe.getAttributes().getSchemaurl(), ce.getAttributes().getSchemaurl());
+		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
 		assertEquals(expectedCe.getAttributes().getSource(), ce.getAttributes().getSource());
 		assertEquals(expectedCe.getAttributes().getMediaType(), ce.getAttributes().getMediaType());
 		assertEquals(expectedCe.getExtensions(), ce.getExtensions());

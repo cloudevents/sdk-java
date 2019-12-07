@@ -17,6 +17,7 @@ package io.cloudevents.v02;
 
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.cloudevents.format.DateTimeFormat;
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -60,6 +61,7 @@ public class AttributesImpl implements Attributes {
 	private final String id;
 
 	@DateTimeFormat
+	@JsonProperty("time")
 	private final String time;
 	private final URI schemaurl;
 	private final String contenttype;
@@ -115,6 +117,7 @@ public class AttributesImpl implements Attributes {
 	/**
      * Timestamp of when the event happened.
      */
+	@JsonIgnore
 	public Optional<ZonedDateTime> getTime() {
 		return Optional.ofNullable(parseZonedDateTime(time));
 	}

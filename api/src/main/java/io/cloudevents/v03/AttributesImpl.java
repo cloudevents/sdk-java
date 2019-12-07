@@ -17,6 +17,7 @@ package io.cloudevents.v03;
 
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,6 +63,7 @@ public class AttributesImpl implements Attributes {
 	private final String type;
 
 	@DateTimeFormat
+	@JsonProperty("time")
 	private final String time;
 	private final URI schemaurl;
 	
@@ -99,6 +101,7 @@ public class AttributesImpl implements Attributes {
 	public String getType() {
 		return type;
 	}
+	@JsonIgnore
 	public Optional<ZonedDateTime> getTime() {
 		return Optional.ofNullable(parseZonedDateTime(time));
 	}
