@@ -73,20 +73,12 @@
             <version>3.10.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <properties>
         <jackson.version>2.10.1</jackson.version>
         <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
         <jakarta.el.version>3.0.3</jakarta.el.version>
-        <gson.version>2.8.6</gson.version>
     </properties>
 
 </project>
