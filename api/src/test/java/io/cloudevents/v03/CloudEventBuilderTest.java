@@ -19,22 +19,13 @@ import static io.cloudevents.v03.CloudEventBuilder.builder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import javax.validation.executable.ExecutableValidator;
-import javax.validation.metadata.BeanDescriptor;
 
-import io.cloudevents.validation.MockValidator;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -43,6 +34,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.extensions.InMemoryFormat;
+import io.cloudevents.validation.MockValidator;
 
 /**
  *
@@ -173,8 +165,8 @@ public class CloudEventBuilderTest {
 		//setup
 		ZonedDateTime expected = ZonedDateTime.now();
 		// act
-		CloudEvent<io.cloudevents.v1.AttributesImpl, Object> ce =
-				io.cloudevents.v1.CloudEventBuilder.<Object>builder()
+		CloudEvent<AttributesImpl, Object> ce =
+				CloudEventBuilder.<Object>builder()
 						.withId("id")
 						.withSource(URI.create("/source"))
 						.withType("type")
