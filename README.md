@@ -94,7 +94,7 @@ and unmarshallers with HTTP transport binding.
 
 ## Kafka
 
-The support for kafka transport binding is available. Read the
+The support for kafka protocol binding is available. Read the
 [documentation and examples](./kafka/README.md) of use.
 
 ## Possible Integrations
