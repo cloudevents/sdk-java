@@ -58,7 +58,7 @@ public class Marshallers {
 				.map(ExtensionFormat::marshal)
 				.map(HeaderMapper::map)
 				.map(Json::binaryMarshal)
-				.builder(Wire<byte[], String, byte[]>::new);
+				.builder(Wire::new);
 	}
 
 	/**

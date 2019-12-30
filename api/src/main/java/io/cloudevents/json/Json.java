@@ -55,7 +55,6 @@ public final class Json {
         try {
             return MAPPER.writeValueAsString(obj);
         } catch (Exception e) {
-        	e.printStackTrace();
             throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
         }
     }
@@ -71,7 +70,6 @@ public final class Json {
         try {
             return MAPPER.writeValueAsBytes(obj);
         } catch (Exception e) {
-        	e.printStackTrace();
             throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
         }
     }
@@ -224,31 +222,18 @@ public final class Json {
      */
     public static <T, A extends Attributes> DataUnmarshaller<String, T, A> 
     umarshaller(Class<T> type) {
-    	return new DataUnmarshaller<String, T, A>() {
-			@Override
-			public T unmarshal(String payload, A attributes) {
-				return Json.decodeValue(payload, type);
-			}
-		};
+    	return (payload, attributes) -> Json.decodeValue(payload, type);
     }
     
     /**
      * Unmarshals a byte array into T type
      * @param <T> The 'data' type
      * @param <A> The attributes type
-     * @param payload The byte array
-     * @param attribues
      * @return The data objects
      */
     public static <T, A extends Attributes> DataUnmarshaller<byte[], T, A> 
     		binaryUmarshaller(Class<T> type) {
-    	
-    	return new DataUnmarshaller<byte[], T, A>() {
-			@Override
-			public T unmarshal(byte[] payload, A attributes) {
-				return Json.binaryDecodeValue(payload, type);
-			}
-		};
+    	return (payload, attributes) -> Json.binaryDecodeValue(payload, type);
     }
     
     /**
@@ -258,12 +243,7 @@ public final class Json {
      * @return A new instance of {@link DataMarshaller}
      */
     public static <T, H> DataMarshaller<String, T, H> marshaller() {
-    	return new DataMarshaller<String, T, H>() {
-			@Override
-			public String marshal(T data, Map<String, H> headers) {
-				return Json.encode(data);
-			}
-		};
+    	return (data, headers) -> Json.encode(data);
     }
     
     /**

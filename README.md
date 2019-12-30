@@ -77,12 +77,12 @@ final String eventType = "My.Cloud.Event.Type";
 final byte[] payload = "a-binary-event-data".getBytes();
 
 // passing in the given attributes
-final CloudEventImpl<byte[]> cloudEvent =
-  CloudEventBuilder.<byte[]>builder()
+final CloudEventImpl<String> cloudEvent =
+  CloudEventBuilder.<String>builder()
     .withType(eventType)
     .withId(eventId)
     .withSource(src)
-    .withData(payload)
+    .withDataBase64(payload)
     .build();
 
 // marshalling as json that will have the data_base64

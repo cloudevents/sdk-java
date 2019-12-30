@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+- Improved base64 marshalling: PR [#79](https://github.com/cloudevents/sdk-java/pull/79)
+
 ## [1.1.0]
 
 ### Added
