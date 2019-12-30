@@ -21,7 +21,7 @@ For Maven based projects, use the following to configure the CloudEvents Java SD
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
