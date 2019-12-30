@@ -23,7 +23,7 @@ import io.cloudevents.v1.http.HeaderMapper;
 public class Marshallers {
 	private Marshallers() {}
 	
-	private static final Map<String, String> NO_HEADERS = 
+	private static final Map<String, String> NO_HEADERS =
 			new HashMap<String, String>();
 		
 	/**
@@ -43,7 +43,7 @@ public class Marshallers {
 				.map(ExtensionFormat::marshal)
 				.map(HeaderMapper::map)
 				.map(Json.<T, String>marshaller()::marshal)
-				.builder(Wire<String, String, String>::new);
+				.builder(Wire::new);
 	}
 	
 	/**
@@ -58,10 +58,8 @@ public class Marshallers {
 		StructuredMarshaller.
 		  <AttributesImpl, T, String, String>builder()
 			.mime("Content-Type", "application/cloudevents+json")
-			.map((event) -> {
-				return Json.<CloudEvent<AttributesImpl, T>, String>
-							marshaller().marshal(event, NO_HEADERS);
-			})
+			.map((event) -> Json.<CloudEvent<AttributesImpl, T>, String>
+						marshaller().marshal(event, NO_HEADERS))
 			.map(Accessor::extensionsOf)
 			.map(ExtensionFormat::marshal)
 			.map(HeaderMapper::map);

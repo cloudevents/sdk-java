@@ -1,13 +1,10 @@
 package io.cloudevents.v1;
 
-import static java.lang.String.format;
-
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,6 +15,8 @@ import javax.validation.Validator;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.fun.EventBuilder;
+
+import static java.lang.String.format;
 
 /**
  * 
@@ -46,6 +45,7 @@ public class CloudEventBuilder<T> implements
 	private ZonedDateTime time;
 
 	private T data;
+	private byte[] dataBase64;
 
 	private final Set<ExtensionFormat> extensions = new HashSet<>();
 
@@ -90,7 +90,9 @@ public class CloudEventBuilder<T> implements
 		attributes.getTime().ifPresent(result::withTime);
 		Accessor.extensionsOf(base).forEach(result::withExtension);
 		base.getData().ifPresent(result::withData);
-
+		if(base.getDataBase64() != null) {
+			result.withDataBase64(base.getDataBase64());
+		}
 		return result;
 	}
 
@@ -112,6 +114,7 @@ public class CloudEventBuilder<T> implements
 
 		return builder
 			.withData(data)
+			.withDataBase64(dataBase64)
 			.withValidator(validator)
 			.build();
 	}
@@ -127,31 +130,28 @@ public class CloudEventBuilder<T> implements
 		AttributesImpl attributes = new AttributesImpl(id, source, SPEC_VERSION, type,
 				datacontenttype, dataschema, subject, time);
 		
-		CloudEventImpl<T> cloudEvent =
-			new CloudEventImpl<>(attributes, data, extensions);
-		
-		if(data instanceof byte[]) {
-			cloudEvent.setDataBase64((byte[])data);
+		CloudEventImpl<T> cloudEvent;
+		if(data != null) {
+			cloudEvent = new CloudEventImpl<>(attributes, data, extensions);
+		} else {
+			cloudEvent = new CloudEventImpl<>(attributes, dataBase64, extensions);
 		}
+
 		if(validator == null) {
 			validator = getValidator();
 		}
-		Set<ConstraintViolation<Object>> violations =
-				validator.validate(cloudEvent);
-		
+		Set<ConstraintViolation<Object>> violations = new HashSet<>();
+		violations.addAll(validator.validate(cloudEvent));
 		violations.addAll(validator.validate(cloudEvent.getAttributes()));
 		
 		final String errs = 
 			violations.stream()
 				.map(v -> format(MESSAGE, v.getPropertyPath(), v.getMessage()))
 				.collect(Collectors.joining(MESSAGE_SEPARATOR));
-		
-		Optional.ofNullable(
-			"".equals(errs) ? null : errs
-					
-		).ifPresent((e) -> {
-			throw new IllegalStateException(format(ERR_MESSAGE, e));
-		});
+
+		if(!errs.trim().isEmpty()) {
+			throw new IllegalStateException(format(ERR_MESSAGE, errs));
+		}
 		
 		return cloudEvent;
 	}
@@ -198,7 +198,12 @@ public class CloudEventBuilder<T> implements
 		this.data = data;
 		return this;
 	}
-	
+
+	public CloudEventBuilder<T> withDataBase64(byte[] dataBase64) {
+		this.dataBase64 = dataBase64;
+		return this;
+	}
+
 	public CloudEventBuilder<T> withExtension(ExtensionFormat extension) {
 		this.extensions.add(extension);
 		return this;
