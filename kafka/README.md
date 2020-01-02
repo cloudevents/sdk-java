@@ -32,7 +32,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
-import io.cloudevents.format.builder.EventStep;
+import io.cloudevents.v1.CloudEventBuilder;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
 import io.cloudevents.v1.CloudEventImpl;
 import io.cloudevents.v1.AttributesImpl;
@@ -78,7 +78,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
-import io.cloudevents.format.builder.EventStep;
+import io.cloudevents.v1.CloudEventBuilder;
 import io.cloudevents.kafka.CloudEventsKafkaProducer;
 import io.cloudevents.v1.CloudEventImpl;
 import io.cloudevents.v1.AttributesImpl;
