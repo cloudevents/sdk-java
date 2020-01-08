@@ -78,7 +78,7 @@
 
     <properties>
         <jackson.version>2.10.1</jackson.version>
-        <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
         <jakarta.el.version>3.0.3</jakarta.el.version>
     </properties>
 
