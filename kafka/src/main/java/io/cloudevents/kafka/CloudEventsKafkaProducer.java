@@ -18,7 +18,6 @@ package io.cloudevents.kafka;
 import static java.util.Optional.ofNullable;
 import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,7 +27,6 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.clients.producer.Callback;
@@ -42,7 +40,6 @@ import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.ProducerFencedException;
 import org.apache.kafka.common.header.Header;
-import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,29 +117,10 @@ public class CloudEventsKafkaProducer<K, A extends Attributes, T> implements
 		
 	}
 	
-	/**
-	 * Casts the Object value of header into byte[]. This is
-	 * guaranteed by the HeaderMapper implementation
-	 * 
-	 * @param headers
-	 * @return
-	 */
-	private Set<Header> marshal(Map<String, byte[]> headers) {
-
-		return 
-		  headers.entrySet()
-			.stream()
-			.map(header -> 
-				new SimpleEntry<>(header.getKey(), header.getValue()))
-			.map(header -> new RecordHeader(header.getKey(), header.getValue()))
-			.collect(Collectors.toSet());
-		
-	}
-	
 	private ProducerRecord<K, byte[]> marshal(ProducerRecord<K, CloudEvent<A, T>>
 			event) {
 		Wire<byte[], String, byte[]> wire = marshal(() -> event.value());
-		Set<Header> headers = marshal(wire.getHeaders());
+		Set<Header> headers = CloudEventsKafkaHeaders.marshal(wire.getHeaders());
 		
 		byte[] payload = wire
 				.getPayload()

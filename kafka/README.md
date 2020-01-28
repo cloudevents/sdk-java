@@ -67,7 +67,6 @@ try(CloudEventsKafkaProducer<String, AttributesImpl, String>
 	ceProducer.send(new ProducerRecord<>("your.topic", ce));
 }
 ```
-
 #### Structured Content Mode
 
 ```java
@@ -112,6 +111,16 @@ try(CloudEventsKafkaProducer<String, AttributesImpl, String>
 	// Produce the event
 	ceProducer.send(new ProducerRecord<>("your.topic", ce));
 }
+```
+
+### Build Kafka headers for CloudEvents
+
+```java
+// for Binary Content Mode
+Iterable<Header> headers = CloudEventsKafkaHeaders.buildHeaders(ce, Marshallers.binary());
+
+// for Structured Content Mode
+Iterable<Header> headers = CloudEventsKafkaHeaders.buildHeaders(ce, Marshallers.structured());
 ```
 
 ### Consumer
