@@ -9,6 +9,11 @@ A Java API for the [CloudEvents specification](https://github.com/cloudevents/sp
 
 __Checkout the [changelog](./CHANGELOG.md)__
 
+## Status
+
+This SDK current supports the following versions of CloudEvents:
+- v1.0
+
 ## Motivation
 
 The [CloudEvents specification](https://github.com/cloudevents/spec) is a vendor-neutral specification for defining the format of event data that is being exchanged between different cloud systems. The specification basically defines an abstract envelope for any event data payload, without knowing specific implementation details of the actual underlying event. The current version of the spec is at `0.3` and it describes a simple event format, which was demonstrated at [KubeCon 2018](https://youtu.be/TZPPjAv12KU) using different _Serverless platforms_, such as [Apache Openwhisk](https://github.com/apache/incubator-openwhisk).
@@ -103,3 +108,15 @@ The API is kept simple, for allowing a wide range of possible integrations:
 
 * [CDI](cdi/)
 * [Eclipse Vert.x](http/vertx/)
+
+## Community
+
+- There are bi-weekly calls immediately following the [Serverless/CloudEvents
+  call](https://github.com/cloudevents/spec#meeting-time) at
+  9am PT (US Pacific). Which means they will typically start at 10am PT, but
+  if the other call ends early then the SDK call will start early as well.
+  See the [CloudEvents meeting minutes](https://docs.google.com/document/d/1OVF68rpuPK5shIHILK9JOqlZBbfe91RNzQ7u_P7YCDE/edit#)
+  to determine which week will have the call.
+- Slack: #cloudeventssdk channel under
+  [CNCF's Slack workspace](https://slack.cncf.io/).
+- Contact for additional information: Fabio José (`@fabiojose` on slack).
