@@ -15,6 +15,7 @@
  */
 package io.cloudevents.v1.kafka;
 
+import static io.cloudevents.v1.kafka.HeaderMapper.HEADER_PREFIX;
 import static java.util.stream.Collectors.toMap;
 
 import java.util.Locale;
@@ -37,9 +38,7 @@ import io.cloudevents.v1.ContextAttributes;
 public class AttributeMapper {
 	private AttributeMapper() {}
 
-	static final String HEADER_PREFIX = "ce_";
-	
-	private static final Deserializer<String> DESERIALIZER = 
+	private static final Deserializer<String> DESERIALIZER =
 			Serdes.String().deserializer();
 	
 	private static final String NULL_ARG = null;
@@ -65,7 +64,6 @@ public class AttributeMapper {
 				
 				String key = header.getKey();
 				key = key.substring(HEADER_PREFIX.length());
-
 				String val = DESERIALIZER.deserialize(NULL_ARG,
 						header.getValue());
 				return new SimpleEntry<>(key, val);

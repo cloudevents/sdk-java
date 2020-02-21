@@ -94,7 +94,7 @@ public class ExtensionMapperTest {
 		// setup
 		String expected = "my-extension";
 		Map<String, Object> headers = new HashMap<>();
-		headers.put("myexp", "my-extension".getBytes());
+		headers.put("ce_myexp", "my-extension".getBytes());
 		
 		//act
 		String actual = ExtensionMapper.map(headers).get("myexp");
@@ -113,9 +113,9 @@ public class ExtensionMapperTest {
 		myHeaders.put("ce_type", "br.my".getBytes());
 		myHeaders.put("ce_time", "2019-09-16T20:49:00Z".getBytes());
 		myHeaders.put("ce_dataschema", "http://my.br".getBytes());
-		myHeaders.put("my-ext", "myextension".getBytes());
-		myHeaders.put("traceparent", "0".getBytes());
-		myHeaders.put("tracestate", "congo=4".getBytes());
+		myHeaders.put("ce_my-ext", "myextension".getBytes());
+		myHeaders.put("ce_traceparent", "0".getBytes());
+		myHeaders.put("ce_tracestate", "congo=4".getBytes());
 		myHeaders.put("Content-Type", "application/json".getBytes());
 		
 		// act
