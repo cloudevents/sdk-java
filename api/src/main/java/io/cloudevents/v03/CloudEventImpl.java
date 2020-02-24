@@ -17,10 +17,7 @@ package io.cloudevents.v03;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -40,7 +37,7 @@ import io.cloudevents.extensions.InMemoryFormat;
 
 /**
  * The event implementation
- * 
+ *
  * @author fabiojose
  *
  */
@@ -50,27 +47,27 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	@JsonIgnore
 	@NotNull
 	private final AttributesImpl attributes;
-	
+
 	private final T data;
-	
+
 	@NotNull
 	private final Map<String, Object> extensions;
-	
+
 	private final Set<ExtensionFormat> extensionsFormats;
-	
+
 	CloudEventImpl(AttributesImpl attributes, T data,
 			Set<ExtensionFormat> extensions) {
 		this.attributes = attributes;
 		this.data = data;
-		
+
 		this.extensions = extensions.stream()
 				.map(ExtensionFormat::memory)
 				.collect(Collectors.toMap(InMemoryFormat::getKey,
 						InMemoryFormat::getValue));
-		
+
 		this.extensionsFormats = extensions;
 	}
-	
+
 	/**
 	 * Used by the {@link Accessor} to access the set of {@link ExtensionFormat}
 	 */
@@ -99,11 +96,11 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	public Map<String, Object> getExtensions() {
 		return Collections.unmodifiableMap(extensions);
 	}
-	
+
 	/**
 	 * The unique method that allows mutation. Used by
 	 * Jackson Framework to inject the extensions.
-	 * 
+	 *
 	 * @param name Extension name
 	 * @param value Extension value
 	 */
@@ -111,7 +108,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 	void addExtension(String name, Object value) {
 		extensions.put(name, value);
 	}
-	
+
 	/**
 	 * Used by the Jackson Framework to unmarshall.
 	 */
@@ -126,7 +123,7 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 			@JsonProperty("datacontenttype") String datacontenttype,
 			@JsonProperty("subject") String subject,
 			@JsonProperty("data") T data) {
-		
+
 		return CloudEventBuilder.<T>builder()
 				.withId(id)
 				.withSource(source)
@@ -140,4 +137,26 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.build();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CloudEventImpl<?> that = (CloudEventImpl<?>) o;
+		return Objects.equals(attributes, that.attributes) &&
+				Objects.equals(data, that.data) &&
+				Objects.equals(extensions, that.extensions) &&
+				Objects.equals(extensionsFormats, that.extensionsFormats);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(attributes, data, extensions, extensionsFormats);
+	}
+
+	@Override
+	public String toString() {
+		return "CloudEventImpl [attributes=" + attributes + ", data=" + data
+				+ ", extensions=" + extensions + ", extensionsFormats=" + extensionsFormats
+				+ "]";
+	}
 }
