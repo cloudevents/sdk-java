@@ -17,10 +17,7 @@ package io.cloudevents.v02;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -139,5 +136,28 @@ public class CloudEventImpl<T> implements CloudEvent<AttributesImpl, T> {
 				.withContenttype(contenttype)
 				.withData(data)
 				.build();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CloudEventImpl<?> that = (CloudEventImpl<?>) o;
+		return Objects.equals(attributes, that.attributes) &&
+				Objects.equals(data, that.data) &&
+				Objects.equals(extensions, that.extensions) &&
+				Objects.equals(extensionsFormats, that.extensionsFormats);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(attributes, data, extensions, extensionsFormats);
+	}
+
+	@Override
+	public String toString() {
+		return "CloudEventImpl [attributes=" + attributes + ", data=" + data
+				+ ", extensions=" + extensions + ", extensionsFormats=" + extensionsFormats
+				+ "]";
 	}
 }

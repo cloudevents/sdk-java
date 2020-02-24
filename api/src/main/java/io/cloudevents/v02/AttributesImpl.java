@@ -39,30 +39,30 @@ import io.cloudevents.Attributes;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
- * 
+ *
  * @author fabiojose
  * @version 0.2
  */
 @JsonInclude(value = Include.NON_ABSENT)
 public class AttributesImpl implements Attributes {
-	
+
 	@NotBlank
 	private final String type;
-	
+
 	@NotBlank
 	@Pattern(regexp = "0\\.2")
 	private final String specversion;
-	
+
 	@NotNull
 	private final URI source;
-	
+
 	@NotBlank
 	private final String id;
-	
+
 	private final ZonedDateTime time;
 	private final URI schemaurl;
 	private final String contenttype;
-	
+
 	AttributesImpl(String type, String specversion, URI source,
 			String id, ZonedDateTime time, URI schemaurl, String contenttype) {
 		this.type = type;
@@ -81,7 +81,7 @@ public class AttributesImpl implements Attributes {
 	public String getType() {
 		return type;
 	}
-	
+
 	/**
      * ID of the event. The semantics of this string are explicitly
      * undefined to ease the implementation of producers. Enables
@@ -90,7 +90,7 @@ public class AttributesImpl implements Attributes {
 	public String getId() {
 		return id;
 	}
-	
+
 	/**
      * The version of the CloudEvents specification which the event uses.
      * This enables the interpretation of the context.
@@ -98,7 +98,7 @@ public class AttributesImpl implements Attributes {
 	public String getSpecversion() {
 		return specversion;
 	}
-	
+
 	/**
      * This describes the event producer. Often this will include
      * information such as the type of the event source, the organization
@@ -117,21 +117,21 @@ public class AttributesImpl implements Attributes {
 	public Optional<ZonedDateTime> getTime() {
 		return Optional.ofNullable(time);
 	}
-	
+
 	/**
      * A link to the schema that the data attribute adheres to.
      */
 	public Optional<URI> getSchemaurl() {
 		return Optional.ofNullable(schemaurl);
 	}
-	
+
 	/**
      * Describe the data encoding format
      */
 	public Optional<String> getContenttype() {
 		return Optional.ofNullable(contenttype);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -148,11 +148,11 @@ public class AttributesImpl implements Attributes {
 			@JsonProperty("time") ZonedDateTime time,
 			@JsonProperty("schemaurl") URI schemaurl,
 			@JsonProperty("contenttype") String contenttype) {
-		
+
 		return new AttributesImpl(type, specversion, source, id, time,
 				schemaurl, contenttype);
 	}
-	
+
 	/**
 	 * The attribute unmarshaller for the binary format, that receives a
 	 * {@code Map} with attributes names as String and values as String.
@@ -164,35 +164,35 @@ public class AttributesImpl implements Attributes {
 			.map((t) -> ZonedDateTime.parse(t,
 					ISO_ZONED_DATE_TIME))
 			.orElse(null);
-		
-		String specversion = attributes.get(ContextAttributes.specversion.name()); 
+
+		String specversion = attributes.get(ContextAttributes.specversion.name());
 		URI source = URI.create(attributes.get(ContextAttributes.source.name()));
-		
-		URI schemaurl = 
+
+		URI schemaurl =
 			Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
 			.map(URI::create)
 			.orElse(null);
-		
+
 		String id = attributes.get(ContextAttributes.id.name());
-		
-		String contenttype = 
+
+		String contenttype =
 			attributes.get(ContextAttributes.contenttype.name());
 
-		
+
 		return AttributesImpl.build(id, source, specversion, type,
 				time, schemaurl, contenttype);
 	}
-	
+
 	/**
-	 * Creates the marshaller instance to marshall {@link AttributesImpl} as 
+	 * Creates the marshaller instance to marshall {@link AttributesImpl} as
 	 * a {@link Map} of strings
 	 */
 	public static Map<String, String> marshal(AttributesImpl attributes) {
 		Objects.requireNonNull(attributes);
-		
+
 		Map<String, String> result = new HashMap<>();
 
-		result.put(ContextAttributes.type.name(), 
+		result.put(ContextAttributes.type.name(),
 				attributes.getType());
 		result.put(ContextAttributes.specversion.name(),
 				attributes.getSpecversion());
@@ -200,7 +200,7 @@ public class AttributesImpl implements Attributes {
 				attributes.getSource().toString());
 		result.put(ContextAttributes.id.name(),
 				attributes.getId());
-		
+
 		attributes.getTime().ifPresent((value) -> result.put(ContextAttributes.time.name(),
 														 value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
 		attributes.getSchemaurl().ifPresent((schema) -> result.put(ContextAttributes.schemaurl.name(),
@@ -208,5 +208,33 @@ public class AttributesImpl implements Attributes {
 		attributes.getContenttype().ifPresent((ct) -> result.put(ContextAttributes.contenttype.name(), ct));
 
 		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AttributesImpl that = (AttributesImpl) o;
+		return Objects.equals(type, that.type) &&
+				Objects.equals(specversion, that.specversion) &&
+				Objects.equals(source, that.source) &&
+				Objects.equals(id, that.id) &&
+				Objects.equals(time, that.time) &&
+				Objects.equals(schemaurl, that.schemaurl) &&
+				Objects.equals(contenttype, that.contenttype);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, specversion, source, id, time, schemaurl, contenttype);
+	}
+
+	@Override
+	public String toString() {
+		return "AttributesImpl [id=" + id + ", source=" + source
+				+ ", specversion=" + specversion + ", type=" + type
+				+ ", time=" + time + ", schemaurl=" + schemaurl
+				+ ", contenttype=" + contenttype
+				+ "]";
 	}
 }
