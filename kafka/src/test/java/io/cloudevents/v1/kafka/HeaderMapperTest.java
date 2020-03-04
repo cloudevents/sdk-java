@@ -125,7 +125,7 @@ public class HeaderMapperTest {
 	}
 	
 	@Test
-	public void should_map_extension_without_prefix() {
+	public void should_map_extension_with_prefix() {
 		// setup
 		Map<String, String> attributes = new HashMap<>();
 		attributes.put("type", "mytype");
@@ -139,7 +139,7 @@ public class HeaderMapperTest {
 		Map<String, byte[]> actual = HeaderMapper.map(attributes, extensions);
 		
 		//assert
-		assertTrue(actual.containsKey("comexampleextension1"));	
+		assertTrue(actual.containsKey("ce_comexampleextension1"));
 	}
 	
 	@Test

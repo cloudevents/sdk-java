@@ -28,7 +28,8 @@ import org.apache.kafka.common.serialization.Serdes;
 
 import io.cloudevents.fun.FormatExtensionMapper;
 import io.cloudevents.v1.ContextAttributes;
-import io.cloudevents.v1.kafka.AttributeMapper;
+
+import static io.cloudevents.v1.kafka.HeaderMapper.HEADER_PREFIX;
 
 /**
  * 
@@ -40,8 +41,7 @@ private ExtensionMapper() {}
 	
 	private static final List<String> RESERVED_HEADERS = 
 			ContextAttributes.VALUES.stream()
-				.map(attribute -> AttributeMapper
-						.HEADER_PREFIX + attribute)
+				.map(attribute -> HEADER_PREFIX + attribute)
 				.collect(Collectors.toList());
 	static {
 		RESERVED_HEADERS.add("content-type");
@@ -67,6 +67,7 @@ private ExtensionMapper() {}
 			.filter(header -> null!= header.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.toLowerCase(Locale.US), header.getValue()))
+			.filter(header -> header.getKey().startsWith(HEADER_PREFIX))
 			.filter(header -> {
 				return !RESERVED_HEADERS.contains(header.getKey());
 			})
@@ -74,6 +75,7 @@ private ExtensionMapper() {}
 					(byte[])header.getValue()))
 			.map(header -> {
 				String key = header.getKey();
+				key = key.substring(HEADER_PREFIX.length());
 				String val = DESERIALIZER.deserialize(NULL_ARG,
 						header.getValue());
 				return new SimpleEntry<>(key, val);
