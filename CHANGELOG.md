@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.3.0]
+
+### Added
+
+- [Editor configuration file](./.editorconfig) - [check it out!](https://editorconfig.org/)
+
+### Fixed
+
+- [Map extensions with prefix for Kafka CloudEvent header](https://github.com/cloudevents/sdk-java/pull/98)
+- [Add new CloudEventsKafkaHeaders class for kafka API](https://github.com/cloudevents/sdk-java/pull/90)
+- [Fix Kafka Transport references](https://github.com/cloudevents/sdk-java/pull/78)
+
 ## [1.2.0]
 
 ### Added
@@ -79,7 +91,8 @@ abstract envelope signature
 - interface: `io.cloudevents.Extension` in favor of
 `io.cloudevents.extensions.ExtensionFormat`
 
-[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/cloudevents/sdk-java/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/cloudevents/sdk-java/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/cloudevents/sdk-java/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/cloudevents/sdk-java/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/cloudevents/sdk-java/compare/v0.3.1...v1.0.0
