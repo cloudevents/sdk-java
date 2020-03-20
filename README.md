@@ -119,4 +119,5 @@ The API is kept simple, for allowing a wide range of possible integrations:
   to determine which week will have the call.
 - Slack: #cloudeventssdk channel under
   [CNCF's Slack workspace](https://slack.cncf.io/).
+- Email: https://lists.cncf.io/g/cncf-cloudevents-sdk
 - Contact for additional information: Fabio José (`@fabiojose` on slack).
