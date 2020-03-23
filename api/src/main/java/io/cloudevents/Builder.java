@@ -16,24 +16,23 @@
 package io.cloudevents;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
-public interface Builder<A extends Attributes, T> {
+public interface Builder {
 
 	/**
 	 * To build a brand new instance of {@link CloudEvent}
 	 */
-	CloudEvent<A, T> build();
-	
+	CloudEvent build();
+
 	/**
 	 * To build a brand new instance of {@link CloudEvent} with another
 	 * type of 'data'
-	 * @param <TT> The new type of 'data'
 	 * @param id The new id for the new instance
 	 * @param base The base {@link CloudEvent} to copy its attributes
 	 * @param newData The new 'data'
 	 */
-	<TT> CloudEvent<A, TT> build(CloudEvent<A, T> base, String id, TT newData);
+	CloudEvent build(CloudEvent base, String id, Data newData);
 }

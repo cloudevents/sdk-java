@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The marker interface for CloudEvents attributes
- *  
+ *
  * @author fabiojose
  *
  */
@@ -53,7 +53,7 @@ public interface Attributes {
 	 * @return The version of the CloudEvents specification which the event uses
 	 */
 	@NotBlank
-	String getSpecversion();
+	SpecVersion getSpecversion();
 
 	/**
 	 * A common way to get the media type of CloudEvents 'data';
@@ -61,5 +61,5 @@ public interface Attributes {
 	 */
 	@JsonIgnore
 	Optional<String> getMediaType();
-	
+
 }

@@ -20,23 +20,19 @@ import java.util.Optional;
 
 /**
  * An abstract event envelope
- * @param <A> The attributes type
- * @param <T> The 'data' type
  * @author fabiojose
  */
-public interface CloudEvent<A extends Attributes, T> {
+public interface CloudEvent {
 
     /**
      * The event context attributes
      */
-    A getAttributes();
+    Attributes getAttributes();
 
     /**
      * The event data
      */
-    Optional<T> getData();
-
-    byte[] getDataBase64();
+    Optional<Data> getData();
 
     /**
      * The event extensions
