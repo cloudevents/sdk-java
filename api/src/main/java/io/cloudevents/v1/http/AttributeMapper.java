@@ -29,13 +29,13 @@ import io.cloudevents.fun.BinaryFormatAttributeMapper;
 import io.cloudevents.v1.ContextAttributes;
 
 /**
- * 
+ *
  * @author fabiojose
  * @version 1.0
  */
 public class AttributeMapper {
 	private AttributeMapper() {}
-	
+
 	static final String HEADER_PREFIX = "ce-";
 
 	/**
@@ -46,12 +46,12 @@ public class AttributeMapper {
 	 */
 	public static Map<String, String> map(final Map<String, Object> headers) {
 		Objects.requireNonNull(headers);
-		
-		final AtomicReference<Optional<Entry<String, Object>>> ct = 
+
+		final AtomicReference<Optional<Entry<String, Object>>> ct =
 				new AtomicReference<>();
-		
+
 		ct.set(Optional.empty());
-		
+
 		Map<String, String> result = headers.entrySet()
 			.stream()
 			.filter(header -> null!= header.getValue())
@@ -68,12 +68,12 @@ public class AttributeMapper {
 			.map(header -> new SimpleEntry<>(header.getKey(),
 					header.getValue().toString()))
 			.collect(toMap(Entry::getKey, Entry::getValue));
-		
+
 		ct.get().ifPresent(contentType -> {
-			result.put(ContextAttributes.datacontenttype.name(),
+			result.put(ContextAttributes.DATACONTENTTYPE.name(),
 					contentType.getValue().toString());
 		});
-			
+
 		return result;
 	}
 

@@ -23,43 +23,41 @@
         <version>1.3.0</version>
     </parent>
 
-    <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
     <name>CloudEvents - API</name>
-    <version>1.3.0</version>
+    <version>${parent.version}</version>
     <packaging>jar</packaging>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
+        <!-- Jackson Module for Option<> -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
-        </dependency>
-
-        <dependency>
-             <groupId>org.glassfish</groupId>
-             <artifactId>jakarta.el</artifactId>
-             <version>${jakarta.el.version}</version>
-        </dependency>
-
+        <!-- Test deps -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -75,11 +73,5 @@
         </dependency>
 
     </dependencies>
-
-    <properties>
-        <jackson.version>2.10.1</jackson.version>
-        <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
-        <jakarta.el.version>3.0.3</jakarta.el.version>
-    </properties>
 
 </project>

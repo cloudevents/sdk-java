@@ -51,7 +51,7 @@ public class HeaderMapper {
 				new SimpleEntry<>(attribute.getKey()
 					.toLowerCase(Locale.US), attribute.getValue()))
 			.filter(header -> !header.getKey()
-					.equals(ContextAttributes.datacontenttype.name()))
+					.equals(ContextAttributes.DATACONTENTTYPE.name()))
 			.map(attribute ->
 				new SimpleEntry<>(HEADER_PREFIX + attribute.getKey(),
 					attribute.getValue()))
@@ -71,7 +71,7 @@ public class HeaderMapper {
 		);
 
 		Optional.ofNullable(attributes
-                .get(ContextAttributes.datacontenttype.name()))
+                .get(ContextAttributes.DATACONTENTTYPE.name()))
 			.ifPresent(dct ->
                     result.put(KAFKA_CONTENT_TYPE, SERIALIZER.serialize(null, dct))
             );

@@ -15,12 +15,15 @@
  */
 package io.cloudevents;
 
+import io.cloudevents.v03.CloudEventBuilder;
+
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * An abstract event envelope
  * @author fabiojose
+ * @author slinkydeveloper
  */
 public interface CloudEvent {
 
@@ -36,6 +39,28 @@ public interface CloudEvent {
 
     /**
      * The event extensions
+     *
+     * Extensions values could be String/Number/Boolean/JsonNode
      */
     Map<String, Object> getExtensions();
+
+    /**
+     * Write an extension into this cloud event
+     * @param e
+     */
+    default void writeExtension(Extension e) {
+        e.writeToEvent(this);
+    }
+
+    static io.cloudevents.v1.CloudEventBuilder build() {
+        return buildV1();
+    }
+
+    static io.cloudevents.v1.CloudEventBuilder buildV1() {
+        return new io.cloudevents.v1.CloudEventBuilder();
+    }
+
+    static io.cloudevents.v03.CloudEventBuilder buildV03() {
+        return new io.cloudevents.v03.CloudEventBuilder();
+    }
 }

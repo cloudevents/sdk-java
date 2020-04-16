@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
@@ -40,7 +40,7 @@ public class HTTPBinaryUnmarshallerTest {
 		// setup
 		Much expected = new Much();
 		expected.setWow("yes!");
-		
+
 		Map<String, Object> myHeaders = new HashMap<>();
     	myHeaders.put("ce-id", "0x11");
 		myHeaders.put("ce-source", "/source");
@@ -50,20 +50,20 @@ public class HTTPBinaryUnmarshallerTest {
 		myHeaders.put("ce-dataschema", "http://my.br");
 		myHeaders.put("ce-subject", "subject");
 		myHeaders.put("Content-Type", "application/json");
-		
+
 		String payload = "{\"wow\":\"yes!\"}";
-		
+
 		// act
 		CloudEvent<AttributesImpl, Much> actual =
 			Unmarshallers.binary(Much.class)
 				.withHeaders(() -> myHeaders)
 				.withPayload(() -> payload)
 				.unmarshal();
-		
+
 		// assert
 		assertEquals("0x11", actual.getAttributes().getId());
 		assertEquals(URI.create("/source"), actual.getAttributes().getSource());
-		assertEquals("1.0", actual.getAttributes().getSpecversion());
+		assertEquals("1.0", actual.getAttributes().getSpecVersion());
 		assertEquals("br.my", actual.getAttributes().getType());
 		assertTrue(actual.getAttributes().getTime().isPresent());
 		assertTrue(actual.getAttributes().getDataschema().isPresent());
@@ -75,13 +75,13 @@ public class HTTPBinaryUnmarshallerTest {
 		assertTrue(actual.getAttributes().getSubject().isPresent());
 		assertEquals("subject", actual.getAttributes().getSubject().get());
 	}
-	
+
 	@Test
 	public void should_unmarshal_tracing_extension_from_header() {
 		// setup
 		Much expected = new Much();
 		expected.setWow("yes!");
-		
+
 		Map<String, Object> myHeaders = new HashMap<>();
     	myHeaders.put("ce-id", "0x11");
 		myHeaders.put("ce-source", "/source");
@@ -90,24 +90,24 @@ public class HTTPBinaryUnmarshallerTest {
 		myHeaders.put("ce-time", "2019-09-16T20:49:00Z");
 		myHeaders.put("ce-schemaurl", "http://my.br");
 		myHeaders.put("Content-Type", "application/json");
-		
+
 		myHeaders.put("traceparent", "0x200");
 		myHeaders.put("tracestate", "congo=9");
-		
+
 		String payload = "{\"wow\":\"yes!\"}";
-		
+
 		// act
 		CloudEvent<AttributesImpl, Much> actual =
 			Unmarshallers.binary(Much.class)
 				.withHeaders(() -> myHeaders)
 				.withPayload(() -> payload)
 				.unmarshal();
-		
+
 		// assert
 		assertNotNull(actual.getExtensions()
 			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY));
 		assertTrue(actual.getExtensions()
-			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY) 
+			.get(DistributedTracingExtension.Format.IN_MEMORY_KEY)
 				instanceof DistributedTracingExtension);
 	}
 }

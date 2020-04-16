@@ -21,24 +21,25 @@ import java.util.stream.Collectors;
 
 /**
  * The specification reserved words: the context attributes
- * 
+ *
  * @author fabiojose
  *
  */
 public enum ContextAttributes {
 
-	id,
-	source,
-	specversion,
-	type,
-	time,
-	schemaurl,
-	datacontenttype,
-	datacontentencoding,
-	subject;
-	
-	public static final List<String> VALUES = 
+    ID,
+    SOURCE,
+    SPECVERSION,
+    TYPE,
+    TIME,
+    SCHEMAURL,
+    DATACONTENTTYPE,
+    DATACONTENTENCODING,
+    SUBJECT;
+
+	public static final List<String> VALUES =
 		Arrays.stream(ContextAttributes.values())
 		.map(Enum::name)
+        .map(String::toLowerCase)
 		.collect(Collectors.toList());
 }

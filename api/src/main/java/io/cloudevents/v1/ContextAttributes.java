@@ -20,23 +20,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 
+ *
  * @author fabiojose
  * @version 1.0
  */
 public enum ContextAttributes {
-
-	id,
-	source,
-	specversion,
-	type,
-	datacontenttype,
-	dataschema,
-	subject,
-	time;
-	
-	public static final List<String> VALUES = 
+    ID,
+    SOURCE,
+    SPECVERSION,
+    TYPE,
+    DATACONTENTTYPE,
+    DATASCHEMA,
+    SUBJECT,
+    TIME;
+	public static final List<String> VALUES =
 		Arrays.stream(ContextAttributes.values())
 		.map(Enum::name)
+        .map(String::toLowerCase)
 		.collect(Collectors.toList());
 }

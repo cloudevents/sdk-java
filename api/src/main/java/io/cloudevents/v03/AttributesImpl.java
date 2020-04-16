@@ -18,6 +18,7 @@ package io.cloudevents.v03;
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
 import java.net.URI;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -31,58 +32,42 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
-import io.cloudevents.json.ZonedDateTimeDeserializer;
+import io.cloudevents.SpecVersion;
 
 /**
  * The event attributes implementation for v0.3
- * 
+ *
  * @author fabiojose
+ * @author slinkydeveloper
  *
  */
-@JsonInclude(value = Include.NON_ABSENT)
 public class AttributesImpl implements Attributes {
-	
-	@NotBlank
+
 	private final String id;
-	
-	@NotNull
+
 	private final URI source;
-	
-	@NotBlank
-	@Pattern(regexp = "0\\.3")
-	private final String specversion;
-	
-	@NotBlank
+
 	private final String type;
-	
-	@JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+
 	private final ZonedDateTime time;
 	private final URI schemaurl;
-	
-	@Pattern(regexp =  "base64")
-	private final String datacontentencoding;
+
 	private final String datacontenttype;
-	
-	@Size(min = 1)
+
 	private final String subject;
-	
-	AttributesImpl(String id, URI source, String specversion, String type,
-			ZonedDateTime time, URI schemaurl, String datacontentencoding,
+
+	AttributesImpl(String id, URI source, String type,
+			ZonedDateTime time, URI schemaurl,
 			String datacontenttype, String subject) {
 		this.id = id;
 		this.source = source;
-		this.specversion = specversion;
 		this.type = type;
-		
+
 		this.time = time;
 		this.schemaurl = schemaurl;
-		this.datacontentencoding = datacontentencoding;
 		this.datacontenttype = datacontenttype;
 		this.subject = subject;
 	}
@@ -93,8 +78,8 @@ public class AttributesImpl implements Attributes {
 	public URI getSource() {
 		return source;
 	}
-	public String getSpecversion() {
-		return specversion;
+	public SpecVersion getSpecVersion() {
+		return SpecVersion.V03;
 	}
 	public String getType() {
 		return type;
@@ -102,32 +87,29 @@ public class AttributesImpl implements Attributes {
 	public Optional<ZonedDateTime> getTime() {
 		return Optional.ofNullable(time);
 	}
-	public Optional<URI> getSchemaurl() {
+    public Optional<URI> getDataSchema() {
+        return getSchemaUrl();
+    }
+	public Optional<URI> getSchemaUrl() {
 		return Optional.ofNullable(schemaurl);
-	}
-	public Optional<String> getDatacontentencoding() {
-		return Optional.ofNullable(datacontentencoding);
-	}
-	public Optional<String> getDatacontenttype() {
-		return Optional.ofNullable(datacontenttype);
 	}
 	/**
 	 * {@inheritDoc}
 	 */
-	public Optional<String> getMediaType() {
-		return getDatacontenttype();
+	public Optional<String> getDataContentType() {
+        return Optional.ofNullable(datacontenttype);
 	}
-	public Optional<String> getSubject() {
+
+    public Optional<String> getSubject() {
 		return Optional.ofNullable(subject);
 	}
-	
+
 	@Override
 	public String toString() {
-		return "AttributesImpl [id=" + id + ", source=" + source 
-				+ ", specversion=" + specversion + ", type=" + type 
-				+ ", time=" + time + ", schemaurl=" + schemaurl 
-				+ ", datacontentencoding=" + datacontentencoding
-				+ ", datacontenttype=" + datacontenttype + ", subject=" 
+		return "AttributesImpl [id=" + id + ", source=" + source
+				+ ", specversion=" + SpecVersion.V03 + ", type=" + type
+				+ ", time=" + time + ", schemaurl=" + schemaurl
+				+ ", datacontenttype=" + datacontenttype + ", subject="
 				+ subject + "]";
 	}
 
@@ -145,70 +127,70 @@ public class AttributesImpl implements Attributes {
 			@JsonProperty("datacontentenconding") String datacontentencoding,
 			@JsonProperty("datacontenttype") String datacontenttype,
 			@JsonProperty("subject") String subject) {
-		
+
 		return new AttributesImpl(id, source, specversion, type, time,
 				schemaurl, datacontentencoding, datacontenttype, subject);
 	}
-	
+
 	/**
-	 * Creates the marshaller instance to marshall {@link AttributesImpl} as 
+	 * Creates the marshaller instance to marshall {@link AttributesImpl} as
 	 * a {@link Map} of strings
 	 */
 	public static Map<String, String> marshal(AttributesImpl attributes) {
 		Objects.requireNonNull(attributes);
-		
+
 		Map<String, String> result = new HashMap<>();
 
-		result.put(ContextAttributes.type.name(), 
+		result.put(ContextAttributes.TYPE.name(),
 				attributes.getType());
-		result.put(ContextAttributes.specversion.name(),
-				attributes.getSpecversion());
-		result.put(ContextAttributes.source.name(),
+		result.put(ContextAttributes.SPECVERSION.name(),
+				attributes.getSpecVersion());
+		result.put(ContextAttributes.SOURCE.name(),
 				attributes.getSource().toString());
-		result.put(ContextAttributes.id.name(),
+		result.put(ContextAttributes.ID.name(),
 				attributes.getId());
-		
-		attributes.getTime().ifPresent((value) -> result.put(ContextAttributes.time.name(),
+
+		attributes.getTime().ifPresent((value) -> result.put(ContextAttributes.TIME.name(),
 														 value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
-		attributes.getSchemaurl().ifPresent((schema) -> result.put(ContextAttributes.schemaurl.name(),
+		attributes.getSchemaurl().ifPresent((schema) -> result.put(ContextAttributes.SCHEMAURL.name(),
 															   schema.toString()));
-		attributes.getDatacontenttype().ifPresent((ct) -> result.put(ContextAttributes.datacontenttype.name(), ct));
-		attributes.getDatacontentencoding().ifPresent(dce -> result.put(ContextAttributes.datacontentencoding.name(), dce));
-		attributes.getSubject().ifPresent(subject -> result.put(ContextAttributes.subject.name(), subject));
+		attributes.getDatacontenttype().ifPresent((ct) -> result.put(ContextAttributes.DATACONTENTTYPE.name(), ct));
+		attributes.getDatacontentencoding().ifPresent(dce -> result.put(ContextAttributes.DATACONTENTENCODING.name(), dce));
+		attributes.getSubject().ifPresent(subject -> result.put(ContextAttributes.SUBJECT.name(), subject));
 
 		return result;
 	}
-	
+
 	/**
 	 * The attribute unmarshaller for the binary format, that receives a
 	 * {@code Map} with attributes names as String and value as String.
 	 */
 	public static AttributesImpl unmarshal(Map<String, String> attributes) {
-		String type = attributes.get(ContextAttributes.type.name());
+		String type = attributes.get(ContextAttributes.TYPE.name());
 		ZonedDateTime time =
-			Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
+			Optional.ofNullable(attributes.get(ContextAttributes.TIME.name()))
 			.map((t) -> ZonedDateTime.parse(t,
 					ISO_ZONED_DATE_TIME))
 			.orElse(null);
-		
-		String specversion = attributes.get(ContextAttributes.specversion.name()); 
-		URI source = URI.create(attributes.get(ContextAttributes.source.name()));
-		
-		URI schemaurl = 
-			Optional.ofNullable(attributes.get(ContextAttributes.schemaurl.name()))
+
+		String specversion = attributes.get(ContextAttributes.SPECVERSION.name());
+		URI source = URI.create(attributes.get(ContextAttributes.SOURCE.name()));
+
+		URI schemaurl =
+			Optional.ofNullable(attributes.get(ContextAttributes.SCHEMAURL.name()))
 			.map(URI::create)
 			.orElse(null);
-		
-		String id = attributes.get(ContextAttributes.id.name());
-		
-		String datacontenttype = 
-			attributes.get(ContextAttributes.datacontenttype.name());
-		
-		String datacontentencoding = 
-			attributes.get(ContextAttributes.datacontentencoding.name());
-		
-		String subject = attributes.get(ContextAttributes.subject.name());
-		
+
+		String id = attributes.get(ContextAttributes.ID.name());
+
+		String datacontenttype =
+			attributes.get(ContextAttributes.DATACONTENTTYPE.name());
+
+		String datacontentencoding =
+			attributes.get(ContextAttributes.DATACONTENTENCODING.name());
+
+		String subject = attributes.get(ContextAttributes.SUBJECT.name());
+
 		return AttributesImpl.build(id, source, specversion, type,
 				time, schemaurl, datacontentencoding,
 				datacontenttype, subject);

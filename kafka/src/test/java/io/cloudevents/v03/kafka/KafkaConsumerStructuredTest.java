@@ -45,7 +45,7 @@ import io.cloudevents.types.Much;
 import io.cloudevents.v03.AttributesImpl;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
@@ -58,28 +58,28 @@ public class KafkaConsumerStructuredTest {
 		// setup
 		Map<String, Object> httpHeaders = new HashMap<>();
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
-		
+
 		String payload = "{\"data\":{\"wow\":\"yes!\"},\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.3\",\"type\":\"event-type\",\"datacontenttype\":\"application/json\",\"subject\":\"subject\"}";
-		
+
 		Much expected = new Much();
 		expected.setWow("yes!");
-		
+
 		RecordHeader contenttype = new RecordHeader(HEADER_PREFIX
 				+ "contenttype", "application/json".getBytes());
-		
+
 		RecordHeaders kafkaHeaders = new RecordHeaders(
 				new RecordHeader[]{contenttype});
-		
+
 		final String topic = "binary.c";
-		
-		MockConsumer<String, byte[]> mockConsumer = 
+
+		MockConsumer<String, byte[]> mockConsumer =
 				new MockConsumer<String, byte[]>(OffsetResetStrategy.EARLIEST);
-			
+
 		// act
-		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
+		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer =
 				new CloudEventsKafkaConsumer<>(structured(Much.class),
 						mockConsumer)){
-			
+
 			ceConsumer.assign(Collections.singletonList(new TopicPartition(topic, 0)));
 
 			mockConsumer.seek(new TopicPartition(topic, 0), 0);
@@ -88,23 +88,23 @@ public class KafkaConsumerStructuredTest {
 						TimestampType.CREATE_TIME, 0L, 0, 0, "0xk",
 						payload.getBytes(), kafkaHeaders)
 			);
-			
+
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
 					ceConsumer.poll(TIMEOUT);
-			
+
 			ConsumerRecord<String, CloudEvent<AttributesImpl, Much>> record =
 					records.iterator().next();
-			
+
 			CloudEvent<AttributesImpl, Much> actual = record.value();
 			assertEquals("x10", actual.getAttributes().getId());
-			assertEquals("0.3", actual.getAttributes().getSpecversion());
+			assertEquals("0.3", actual.getAttributes().getSpecVersion());
 			assertEquals(URI.create("/source"), actual.getAttributes().getSource());
 			assertEquals("event-type", actual.getAttributes().getType());
 			assertTrue(actual.getAttributes().getDatacontenttype().isPresent());
 			assertEquals("application/json", actual.getAttributes().getDatacontenttype().get());
 			assertTrue(actual.getAttributes().getSubject().isPresent());
 			assertEquals("subject", actual.getAttributes().getSubject().get());
-			
+
 			assertTrue(actual.getData().isPresent());
 			assertEquals(expected, actual.getData().get());
 		}
@@ -115,24 +115,24 @@ public class KafkaConsumerStructuredTest {
 		// setup
 		Map<String, Object> httpHeaders = new HashMap<>();
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
-		
+
 		String payload = "{\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.3\",\"type\":\"event-type\",\"datacontenttype\":\"application/json\"}";
 
 		RecordHeader contenttype = new RecordHeader(HEADER_PREFIX
 				+ "contenttype", "application/json".getBytes());
-		
+
 		RecordHeaders kafkaHeaders = new RecordHeaders(
 				new RecordHeader[]{contenttype});
-		
+
 		final String topic = "binary.c";
-		
-		MockConsumer<String, byte[]> mockConsumer = 
+
+		MockConsumer<String, byte[]> mockConsumer =
 				new MockConsumer<String, byte[]>(OffsetResetStrategy.EARLIEST);
-			
+
 		// act
-		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
+		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer =
 				new CloudEventsKafkaConsumer<>(structured(Much.class), mockConsumer)){
-			
+
 			ceConsumer.assign(Collections.singletonList(new TopicPartition(topic, 0)));
 
 			mockConsumer.seek(new TopicPartition(topic, 0), 0);
@@ -141,48 +141,48 @@ public class KafkaConsumerStructuredTest {
 						TimestampType.CREATE_TIME, 0L, 0, 0, "0xk",
 						payload.getBytes(), kafkaHeaders)
 			);
-			
+
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
 					ceConsumer.poll(TIMEOUT);
-			
+
 			ConsumerRecord<String, CloudEvent<AttributesImpl, Much>> record =
 					records.iterator().next();
-			
+
 			CloudEvent<AttributesImpl, Much> actual = record.value();
 			assertEquals("x10", actual.getAttributes().getId());
-			assertEquals("0.3", actual.getAttributes().getSpecversion());
+			assertEquals("0.3", actual.getAttributes().getSpecVersion());
 			assertEquals(URI.create("/source"), actual.getAttributes().getSource());
 			assertEquals("event-type", actual.getAttributes().getType());
 			assertTrue(actual.getAttributes().getDatacontenttype().isPresent());
 			assertEquals("application/json", actual.getAttributes().getDatacontenttype().get());
-			
+
 			assertFalse(actual.getData().isPresent());
 		}
 	}
-	
+
 	@Test
 	public void should_tracing_extension_ok() throws Exception {
 		// setup
 		Map<String, Object> httpHeaders = new HashMap<>();
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
-		
+
 		String payload = "{\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.3\",\"type\":\"event-type\",\"datacontenttype\":\"application/json\",\"distributedTracing\":{\"traceparent\":\"0\",\"tracestate\":\"congo=4\"}}";
-		
+
 		RecordHeader contenttype = new RecordHeader(HEADER_PREFIX
 				+ "contenttype", "application/json".getBytes());
-		
+
 		RecordHeaders kafkaHeaders = new RecordHeaders(
 				new RecordHeader[]{contenttype});
-		
+
 		final String topic = "binary.c";
-		
-		MockConsumer<String, byte[]> mockConsumer = 
+
+		MockConsumer<String, byte[]> mockConsumer =
 				new MockConsumer<String, byte[]>(OffsetResetStrategy.EARLIEST);
-			
+
 		// act
-		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
+		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer =
 				new CloudEventsKafkaConsumer<>(structured(Much.class), mockConsumer)){
-			
+
 			ceConsumer.assign(Collections.singletonList(new TopicPartition(topic, 0)));
 
 			mockConsumer.seek(new TopicPartition(topic, 0), 0);
@@ -191,57 +191,57 @@ public class KafkaConsumerStructuredTest {
 						TimestampType.CREATE_TIME, 0L, 0, 0, "0xk",
 						payload.getBytes(), kafkaHeaders)
 			);
-			
+
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
 					ceConsumer.poll(TIMEOUT);
-			
+
 			ConsumerRecord<String, CloudEvent<AttributesImpl, Much>> record =
 					records.iterator().next();
-			
+
 			CloudEvent<AttributesImpl, Much> actual = record.value();
 			assertEquals("x10", actual.getAttributes().getId());
-			assertEquals("0.3", actual.getAttributes().getSpecversion());
+			assertEquals("0.3", actual.getAttributes().getSpecVersion());
 			assertEquals(URI.create("/source"), actual.getAttributes().getSource());
 			assertEquals("event-type", actual.getAttributes().getType());
 			assertTrue(actual.getAttributes().getDatacontenttype().isPresent());
 			assertEquals("application/json", actual.getAttributes().getDatacontenttype().get());
 			assertFalse(actual.getData().isPresent());
-			
+
 			Object tracing = actual.getExtensions()
 					.get(DistributedTracingExtension.Format.IN_MEMORY_KEY);
-			
+
 			assertNotNull(tracing);
 			assertTrue(tracing instanceof DistributedTracingExtension);
-			DistributedTracingExtension dte = 
+			DistributedTracingExtension dte =
 					(DistributedTracingExtension)tracing;
 			assertEquals("0", dte.getTraceparent());
 			assertEquals("congo=4", dte.getTracestate());
 		}
 	}
-	
+
 	@Test
 	public void should_be_with_wrong_value_deserializer() throws Exception {
 		// setup
 		Map<String, Object> httpHeaders = new HashMap<>();
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
-		
+
 		String payload = "{\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.3\",\"type\":\"event-type\",\"datacontenttype\":\"application/json\",\"distributedTracing\":{\"traceparent\":\"0\",\"tracestate\":\"congo=4\"}}";
-		
+
 		RecordHeader contenttype = new RecordHeader(HEADER_PREFIX
 				+ "contenttype", "application/json".getBytes());
-		
+
 		RecordHeaders kafkaHeaders = new RecordHeaders(
 				new RecordHeader[]{contenttype});
-		
+
 		final String topic = "binary.c";
-		
-		MockConsumer<String, byte[]> mockConsumer = 
+
+		MockConsumer<String, byte[]> mockConsumer =
 				new MockConsumer<String, byte[]>(OffsetResetStrategy.EARLIEST);
-			
+
 		// act
-		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer = 
+		try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer =
 				new CloudEventsKafkaConsumer<>(structured(Much.class), mockConsumer)){
-			
+
 			ceConsumer.assign(Collections.singletonList(new TopicPartition(topic, 0)));
 
 			mockConsumer.seek(new TopicPartition(topic, 0), 0);
@@ -250,28 +250,28 @@ public class KafkaConsumerStructuredTest {
 						TimestampType.CREATE_TIME, 0L, 0, 0, "0xk",
 						payload.getBytes(), kafkaHeaders)
 			);
-			
+
 			ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
 					ceConsumer.poll(TIMEOUT);
-			
+
 			ConsumerRecord<String, CloudEvent<AttributesImpl, Much>> record =
 					records.iterator().next();
-			
+
 			CloudEvent<AttributesImpl, Much> actual = record.value();
 			assertEquals("x10", actual.getAttributes().getId());
-			assertEquals("0.3", actual.getAttributes().getSpecversion());
+			assertEquals("0.3", actual.getAttributes().getSpecVersion());
 			assertEquals(URI.create("/source"), actual.getAttributes().getSource());
 			assertEquals("event-type", actual.getAttributes().getType());
 			assertTrue(actual.getAttributes().getDatacontenttype().isPresent());
 			assertEquals("application/json", actual.getAttributes().getDatacontenttype().get());
 			assertFalse(actual.getData().isPresent());
-			
+
 			Object tracing = actual.getExtensions()
 					.get(DistributedTracingExtension.Format.IN_MEMORY_KEY);
-			
+
 			assertNotNull(tracing);
 			assertTrue(tracing instanceof DistributedTracingExtension);
-			DistributedTracingExtension dte = 
+			DistributedTracingExtension dte =
 					(DistributedTracingExtension)tracing;
 			assertEquals("0", dte.getTraceparent());
 			assertEquals("congo=4", dte.getTracestate());

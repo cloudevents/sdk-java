@@ -32,7 +32,7 @@ import io.cloudevents.v03.CloudEventBuilder;
 import io.cloudevents.v03.CloudEventImpl;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
@@ -42,13 +42,13 @@ public class HTTPStructuredUnmarshaller {
 		// setup
 		Map<String, Object> httpHeaders = new HashMap<>();
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
-		
+
 		String json = "{\"data\":{\"wow\":\"yes!\"},\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.2\",\"type\":\"event-type\",\"datacontenttype\":\"application/json\",\"subject\":\"subject\"}";
-		
+
 		Much ceData = new Much();
 		ceData.setWow("yes!");
-		
-		CloudEventImpl<Much> expected = 
+
+		CloudEventImpl<Much> expected =
 				CloudEventBuilder.<Much>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
@@ -57,45 +57,45 @@ public class HTTPStructuredUnmarshaller {
 					.withSubject("subject")
 					.withData(ceData)
 					.build();
-		
+
 		// act
-		CloudEvent<AttributesImpl, Much> actual = 
+		CloudEvent<AttributesImpl, Much> actual =
 			Unmarshallers.structured(Much.class)
 				.withHeaders(() -> httpHeaders)
 				.withPayload(() -> json)
 				.unmarshal();
-		
+
 		// assert
-		assertEquals(expected.getAttributes().getSpecversion(), 
-				actual.getAttributes().getSpecversion());
-		
+		assertEquals(expected.getAttributes().getSpecVersion(),
+				actual.getAttributes().getSpecVersion());
+
 		assertEquals(expected.getAttributes().getId(),
 				actual.getAttributes().getId());
-		
+
 		assertEquals(expected.getAttributes().getSource(),
 				actual.getAttributes().getSource());
-		
+
 		assertEquals(expected.getAttributes().getType(),
 				actual.getAttributes().getType());
-		
+
 		assertTrue(actual.getData().isPresent());
 		assertEquals(expected.getData().get(), actual.getData().get());
-		
+
 		assertTrue(actual.getAttributes().getSubject().isPresent());
 		assertEquals(expected.getAttributes().getSubject().get(),
 				actual.getAttributes().getSubject().get());
 	}
-	
+
 	@Test
 	public void should_unmarshal_json_envelope_and_text_data() {
 		// setup
 		Map<String, Object> httpHeaders = new HashMap<>();
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
-		
+
 		String json = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.3\",\"type\":\"event-type\",\"datacontenttype\":\"text/plain\"}";
 		String ceData = "yes!";
 
-		CloudEventImpl<String> expected = 
+		CloudEventImpl<String> expected =
 				CloudEventBuilder.<String>builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
@@ -103,55 +103,55 @@ public class HTTPStructuredUnmarshaller {
 					.withDatacontenttype("text/plain")
 					.withData(ceData)
 					.build();
-		
+
 		// act
-		CloudEvent<AttributesImpl, String> actual = 
+		CloudEvent<AttributesImpl, String> actual =
 			Unmarshallers.structured(String.class)
 				.withHeaders(() -> httpHeaders)
 				.withPayload(() -> json)
 				.unmarshal();
-		
+
 		// assert
-		assertEquals(expected.getAttributes().getSpecversion(), 
-				actual.getAttributes().getSpecversion());
-		
+		assertEquals(expected.getAttributes().getSpecVersion(),
+				actual.getAttributes().getSpecVersion());
+
 		assertEquals(expected.getAttributes().getId(),
 				actual.getAttributes().getId());
-		
+
 		assertEquals(expected.getAttributes().getSource(),
 				actual.getAttributes().getSource());
-		
+
 		assertEquals(expected.getAttributes().getType(),
 				actual.getAttributes().getType());
-		
+
 		assertTrue(actual.getData().isPresent());
 		assertEquals(expected.getData().get(), actual.getData().get());
 	}
-	
+
 	@Test
 	public void should_unmarshal_the_tracing_extension_from_headers() {
 		// setup
 		Map<String, Object> httpHeaders = new HashMap<>();
 		httpHeaders.put("Content-Type", "application/cloudevents+json");
-		
+
 		httpHeaders.put("traceparent", "0x200");
 		httpHeaders.put("tracestate", "congo=9");
-		
+
 		String json = "{\"data\":\"yes!\",\"id\":\"x10\",\"source\":\"/source\",\"specversion\":\"0.3\",\"type\":\"event-type\",\"datacontenttype\":\"text/plain\"}";
 
 		// act
-		CloudEvent<AttributesImpl, String> actual = 
+		CloudEvent<AttributesImpl, String> actual =
 			Unmarshallers.structured(String.class)
 				.withHeaders(() -> httpHeaders)
 				.withPayload(() -> json)
 				.unmarshal();
-		
+
 		// assert
 		assertTrue(actual.getExtensions().containsKey(
 				DistributedTracingExtension.Format.IN_MEMORY_KEY));
-		
+
 		assertTrue(actual.getExtensions().get(
-				DistributedTracingExtension.Format.IN_MEMORY_KEY) 
+				DistributedTracingExtension.Format.IN_MEMORY_KEY)
 					instanceof DistributedTracingExtension);
 	}
 }

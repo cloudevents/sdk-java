@@ -18,6 +18,7 @@ package io.cloudevents.v1;
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
 import java.net.URI;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -25,71 +26,55 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.cloudevents.Attributes;
+import io.cloudevents.SpecVersion;
 import io.cloudevents.json.ZonedDateTimeDeserializer;
 
 /**
- * 
+ *
  * @author fabiojose
+ * @author slinkydeveloper
  * @version 1.0
  */
-@JsonInclude(value = Include.NON_ABSENT)
 public class AttributesImpl implements Attributes {
-	
-	@NotBlank
+
 	private final String id;
-	
-	@NotNull
+
 	private final URI source;
-	
-	@NotBlank
-	@Pattern(regexp = "1\\.0")
-	private final String specversion;
-	
-	@NotBlank
+
 	private final String type;
-	
+
 	private final String datacontenttype;
-	
+
 	private final URI dataschema;
-	
-	@Size(min = 1)
+
 	private final String subject;
-	
-	@JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+
 	private final ZonedDateTime time;
 
-	public AttributesImpl(String id, URI source, String specversion,
+	public AttributesImpl(String id, URI source,
 			String type, String datacontenttype,
 			URI dataschema, String subject, ZonedDateTime time) {
-		
+
 		this.id = id;
 		this.source = source;
-		this.specversion = specversion;
 		this.type = type;
 		this.datacontenttype = datacontenttype;
 		this.dataschema = dataschema;
 		this.subject = subject;
 		this.time = time;
 	}
-	
+
 	@Override
-	public Optional<String> getMediaType() {
-		return getDatacontenttype();
+	public Optional<String> getDataContentType() {
+		return Optional.ofNullable(datacontenttype);
 	}
 
-	public String getId() {
+    public String getId() {
 		return id;
 	}
 
@@ -97,21 +82,18 @@ public class AttributesImpl implements Attributes {
 		return source;
 	}
 
-	public String getSpecversion() {
-		return specversion;
+	public SpecVersion getSpecVersion() {
+		return SpecVersion.V1;
 	}
 
 	public String getType() {
 		return type;
 	}
 
-	public Optional<String> getDatacontenttype() {
-		return Optional.ofNullable(datacontenttype);
-	}
-
-	public Optional<URI> getDataschema() {
-		return Optional.ofNullable(dataschema);
-	}
+    @Override
+    public Optional<URI> getDataSchema() {
+        return Optional.ofNullable(dataschema);
+    }
 
 	public Optional<String> getSubject() {
 		return Optional.ofNullable(subject);
@@ -123,13 +105,13 @@ public class AttributesImpl implements Attributes {
 
 	@Override
 	public String toString() {
-		return "AttibutesImpl [id=" + id + ", source=" + source 
-				+ ", specversion=" + specversion + ", type=" + type
-				+ ", datacontenttype=" + datacontenttype + ", dataschema=" 
+		return "Attibutes V1.0 [id=" + id + ", source=" + source
+				+ ", type=" + type
+				+ ", datacontenttype=" + datacontenttype + ", dataschema="
 				+ dataschema + ", subject=" + subject
 				+ ", time=" + time + "]";
 	}
-	
+
 	/**
 	 * Used by the Jackson framework to unmarshall.
 	 */
@@ -137,72 +119,69 @@ public class AttributesImpl implements Attributes {
 	public static AttributesImpl build(
 			@JsonProperty("id") String id,
 			@JsonProperty("source") URI source,
-			@JsonProperty("specversion") String specversion,
 			@JsonProperty("type") String type,
 			@JsonProperty("datacontenttype") String datacontenttype,
 			@JsonProperty("dataschema") URI dataschema,
 			@JsonProperty("subject") String subject,
 			@JsonProperty("time") ZonedDateTime time) {
-		
-		return new AttributesImpl(id, source, specversion, type,
+
+		return new AttributesImpl(id, source, type,
 				datacontenttype, dataschema, subject, time);
 	}
-	
+
 	/**
-	 * Creates the marshaller instance to marshall {@link AttributesImpl} as 
+	 * Creates the marshaller instance to marshall {@link AttributesImpl} as
 	 * a {@link Map} of strings
 	 */
 	public static Map<String, String> marshal(AttributesImpl attributes) {
 		Objects.requireNonNull(attributes);
 		Map<String, String> result = new HashMap<>();
-		
-		result.put(ContextAttributes.id.name(),
+
+		result.put(ContextAttributes.ID.name(),
 				attributes.getId());
-		result.put(ContextAttributes.source.name(),
+		result.put(ContextAttributes.SOURCE.name(),
 				attributes.getSource().toString());
-		result.put(ContextAttributes.specversion.name(),
-				attributes.getSpecversion());
-		result.put(ContextAttributes.type.name(),
+		result.put(ContextAttributes.TYPE.name(),
 				attributes.getType());
-		
-		attributes.getDatacontenttype().ifPresent(dct -> result.put(ContextAttributes.datacontenttype.name(), dct));
-		attributes.getDataschema().ifPresent(dataschema -> result.put(ContextAttributes.dataschema.name(),
+
+		attributes.getDatacontenttype().ifPresent(dct -> result.put(ContextAttributes.DATACONTENTTYPE.name(), dct));
+		attributes.getDataschema().ifPresent(dataschema -> result.put(ContextAttributes.DATASCHEMA.name(),
 																  dataschema.toString()));
-		attributes.getSubject().ifPresent(subject -> result.put(ContextAttributes.subject.name(), subject));
-		attributes.getTime().ifPresent(time -> result.put(ContextAttributes.time.name(),
+		attributes.getSubject().ifPresent(subject -> result.put(ContextAttributes.SUBJECT.name(), subject));
+		attributes.getTime().ifPresent(time -> result.put(ContextAttributes.TIME.name(),
 													  time.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * The attribute unmarshaller for the binary format, that receives a
 	 * {@code Map} with attributes names as String and value as String.
 	 */
 	public static AttributesImpl unmarshal(Map<String, String> attributes) {
-		String type = attributes.get(ContextAttributes.type.name());
+		String type = attributes.get(ContextAttributes.TYPE.name());
 		ZonedDateTime time =
-			Optional.ofNullable(attributes.get(ContextAttributes.time.name()))
+			Optional.ofNullable(attributes.get(ContextAttributes.TIME.name()))
 			.map((t) -> ZonedDateTime.parse(t,
 					ISO_ZONED_DATE_TIME))
 			.orElse(null);
-		
-		String specversion = attributes.get(ContextAttributes.specversion.name()); 
-		URI source = URI.create(attributes.get(ContextAttributes.source.name()));
-		
-		URI dataschema = 
-			Optional.ofNullable(attributes.get(ContextAttributes.dataschema.name()))
+
+		String specversion = attributes.get(ContextAttributes.SPECVERSION.name());
+		URI source = URI.create(attributes.get(ContextAttributes.SOURCE.name()));
+
+		URI dataschema =
+			Optional.ofNullable(attributes.get(ContextAttributes.DATASCHEMA.name()))
 			.map(URI::create)
 			.orElse(null);
-		
-		String id = attributes.get(ContextAttributes.id.name());
-		
-		String datacontenttype = 
-			attributes.get(ContextAttributes.datacontenttype.name());
-		
-		String subject = attributes.get(ContextAttributes.subject.name());
-		
-		return AttributesImpl.build(id, source, specversion, type,
+
+		String id = attributes.get(ContextAttributes.ID.name());
+
+		String datacontenttype =
+			attributes.get(ContextAttributes.DATACONTENTTYPE.name());
+
+		String subject = attributes.get(ContextAttributes.SUBJECT.name());
+
+		return AttributesImpl.build(id, source, type,
 				datacontenttype, dataschema, subject, time);
 	}
 }

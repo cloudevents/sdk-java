@@ -39,7 +39,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
@@ -48,20 +48,20 @@ public class CloudEventJacksonTest {
 	private static InputStream resourceOf(String name) {
 		return Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
 	}
-	
+
 	@Rule
 	public ExpectedException expectedEx = ExpectedException.none();
-	
+
 	@Test
 	public void should_encode_right_with_minimal_attrs() {
 		// setup
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 				CloudEventBuilder.builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
 					.build();
-		
+
 		// act
 		String json = Json.encode(ce);
 
@@ -70,17 +70,17 @@ public class CloudEventJacksonTest {
 		assertTrue(json.contains("/source"));
 		assertTrue(json.contains("event-type"));
 		assertTrue(json.contains("1.0"));
-		
+
 		assertFalse(json.contains("time"));
 		assertFalse(json.contains("schemaurl"));
 		assertFalse(json.contains("contenttype"));
-		assertFalse(json.contains("data"));		
+		assertFalse(json.contains("data"));
 	}
-	
+
 	@Test
 	public void should_have_optional_attrs() {
 		// setup
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 				CloudEventBuilder.builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
@@ -90,20 +90,20 @@ public class CloudEventJacksonTest {
 					.withSubject("subject0")
 					.withData("my-data")
 					.build();
-		
+
 		// act
 		String json = Json.encode(ce);
-		
+
 		// assert
 		assertTrue(json.contains("/schema"));
 		assertTrue(json.contains("text/plain"));
 		assertTrue(json.contains("my-data"));
 		assertTrue(json.contains("subject0"));
-		
+
 		assertTrue(json.contains("\"dataschema\""));
 		assertTrue(json.contains("datacontenttype"));
 		assertTrue(json.contains("\"subject\""));
-		
+
 		Pattern pat = Pattern.compile("(\"data\")");
 		Matcher mat = pat.matcher(json);
 		int counter = 0;
@@ -112,7 +112,7 @@ public class CloudEventJacksonTest {
 		}
 		assertEquals(1, counter);
 	}
-	
+
 	@Test
 	public void should_serialize_trace_extension() {
 		// setup
@@ -120,10 +120,10 @@ public class CloudEventJacksonTest {
 		final DistributedTracingExtension dt = new DistributedTracingExtension();
 		dt.setTraceparent("0");
 		dt.setTracestate("congo=4");
-		
+
 		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
-		
-		CloudEvent<AttributesImpl, Object> ce = 
+
+		CloudEvent<AttributesImpl, Object> ce =
 				CloudEventBuilder.builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
@@ -133,18 +133,18 @@ public class CloudEventJacksonTest {
 					.withData("my-data")
 					.withExtension(tracing)
 					.build();
-		
+
 		// act
 		String actual = Json.encode(ce);
-		
+
 		// assert
 		assertTrue(actual.contains(expected));
 	}
-	
+
 	@Test
 	public void should_not_serialize_attributes_element() {
 		// setup
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 				CloudEventBuilder.builder()
 					.withId("x10")
 					.withSource(URI.create("/source"))
@@ -154,155 +154,155 @@ public class CloudEventJacksonTest {
 					.withSubject("subject0")
 					.withData("my-data")
 					.build();
-		
+
 		// act
 		String actual = Json.encode(ce);
-		
+
 		// assert
 		assertFalse(actual.contains("\"attributes\""));
 	}
-	
+
 	@Test
     public void should_have_type() {
 		// act
-        CloudEvent<AttributesImpl, Object> ce = 
+        CloudEvent<AttributesImpl, Object> ce =
         	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
 
         // assert
         assertEquals("aws.s3.object.created", ce.getAttributes().getType());
     }
-	
+
 	@Test
     public void should_have_id() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
-        
+
         // assert
         assertEquals("C234-1234-1234", ce.getAttributes().getId());
     }
-	
+
 	//should have time
 	@Test
     public void should_have_time() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
-        
+
         // assert
         assertTrue(ce.getAttributes().getTime().isPresent());
     }
-	
+
 	@Test
     public void should_have_source() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
-        
+
         // assert
         assertEquals(URI.create("https://serverless.com"), ce.getAttributes().getSource());
     }
-	
+
 	@Test
     public void should_have_datacontenttype() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
-        
+
         // assert
         assertTrue(ce.getAttributes().getDatacontenttype().isPresent());
         assertEquals("application/json", ce.getAttributes().getDatacontenttype().get());
     }
-	
+
 	@Test
     public void should_have_dataschema() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
-        
+
         // assert
         assertTrue(ce.getAttributes().getDataschema().isPresent());
         assertEquals(URI.create("/my-schema"), ce.getAttributes().getDataschema().get());
     }
-	
+
 	@Test
     public void should_have_specversion() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
-        
+
         // assert
-        assertEquals("1.0", ce.getAttributes().getSpecversion());
+        assertEquals("1.0", ce.getAttributes().getSpecVersion());
     }
-	
+
 	@Test
 	public void should_throw_when_absent() {
 		// setup
 		expectedEx.expect(IllegalStateException.class);
 		expectedEx.expectMessage("invalid payload: 'id' must not be blank");
-		
+
 		// act
 		Json.fromInputStream(resourceOf("1_absent.json"), CloudEventImpl.class);
 	}
-	
+
 	@Test
     public void should_have_tracing_extension() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 	        	Json.fromInputStream(resourceOf("1_extension.json"), CloudEventImpl.class);
-        
+
         // assert
         assertNotNull(ce.getExtensions()
         	.get(DistributedTracingExtension.Format.IN_MEMORY_KEY));
     }
-	
+
 	@Test
     public void should_have_custom_extension() {
 		// setup
 		String extensionKey = "my-extension";
 		String expected = "extension-value";
-		
+
 		// act
-		CloudEvent<AttributesImpl, Object> ce = 
+		CloudEvent<AttributesImpl, Object> ce =
 	        	Json.fromInputStream(resourceOf("1_extension.json"), CloudEventImpl.class);
-        
+
         // assert
         assertEquals(expected, ce.getExtensions()
         	.get(extensionKey));
     }
-	
+
 	@Test
     public void should_have_custom_data() {
 		// setup
 		Much expected = new Much();
 		expected.setWow("kinda");
-		
+
 		String json = "{\"type\":\"aws.s3.object.created\",\"id\":\"C234-1234-1234\",\"time\":\"2019-08-19T19:35:00.000Z\",\"source\":\"https://serverless.com\",\"datacontenttype\":\"application/json\",\"specversion\":\"1.0\",\"data\":{\"wow\":\"kinda\"}}";
-		
-		// act		
-		CloudEvent<AttributesImpl, Much> ce = 
+
+		// act
+		CloudEvent<AttributesImpl, Much> ce =
 			Json.decodeValue(json, new TypeReference<CloudEventImpl<Much>>() {});
-         
+
         // assert
 		assertTrue(ce.getData().isPresent());
         assertEquals(expected.getWow(), ce.getData().get().getWow());
     }
-	
+
 	@Test
     public void should_unmarshal_data_base64() {
 		// setup
 		byte[] expected = "mydata".getBytes();
-		
+
 		// act
 		CloudEvent<AttributesImpl, String> ce =
-	        	Json.fromInputStream(resourceOf("1_base64.json"), 
+	        	Json.fromInputStream(resourceOf("1_base64.json"),
 	        			new TypeReference<CloudEventImpl<String>>() {});
 
         // assert
 		assertNotNull(ce.getDataBase64());
 		assertArrayEquals(expected, ce.getDataBase64());
     }
-	
+
 	@Test
 	public void should_marshal_data_byte_array_as_data_base64() {
 		// setup
@@ -313,10 +313,10 @@ public class CloudEventJacksonTest {
 				+ "invoice=5566"
 				+ "\n"
 				+ "---mydata---").getBytes();
-		
-		String expected = 
+
+		String expected =
 			Base64.getEncoder().encodeToString(data);
-		
+
 		CloudEventImpl<String> event =
 			CloudEventBuilder.<String>builder()
 				.withId("0xbin")
@@ -331,10 +331,10 @@ public class CloudEventJacksonTest {
 
 		// act
 		String encoded = Json.encode(event);
-		
+
 		// assert
 		assertTrue(encoded.contains("\"data_base64\""));
 		assertTrue(encoded.contains("\"" + expected +"\""));
 	}
-	
+
 }

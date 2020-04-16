@@ -27,11 +27,9 @@ import java.util.stream.Collectors;
 
 import io.cloudevents.fun.FormatHeaderMapper;
 import io.cloudevents.v1.ContextAttributes;
-import io.cloudevents.v1.http.AttributeMapper;
-import io.cloudevents.v1.http.ExtensionMapper;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
@@ -50,31 +48,31 @@ public class HeaderMapper {
 			Map<String, String> extensions) {
 		Objects.requireNonNull(attributes);
 		Objects.requireNonNull(extensions);
-		
+
 		Map<String, String> result = attributes.entrySet()
 			.stream()
 			.filter(attribute -> null!= attribute.getValue())
 			.map(header -> new SimpleEntry<>(header.getKey()
 					.toLowerCase(Locale.US), header.getValue()))
 			.filter(header -> !header.getKey()
-					.equals(ContextAttributes.datacontenttype.name()))
+					.equals(ContextAttributes.DATACONTENTTYPE.name()))
 			.map(header -> new SimpleEntry<>(HEADER_PREFIX + header.getKey(),
 					header.getValue()))
 			.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-		
+
 		result.putAll(
 			extensions.entrySet()
 				.stream()
 				.filter(extension -> null != extension.getValue())
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue))
 		);
-		
+
 		Optional.ofNullable(attributes
-				.get(ContextAttributes.datacontenttype.name()))
+				.get(ContextAttributes.DATACONTENTTYPE.name()))
 			.ifPresent((dct) -> {
 				result.put(HTTP_CONTENT_TYPE, dct);
 			});
-		
+
 		return result;
 	}
 

@@ -16,12 +16,8 @@
 package io.cloudevents;
 
 import java.net.URI;
+import java.time.ZonedDateTime;
 import java.util.Optional;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The marker interface for CloudEvents attributes
@@ -31,35 +27,37 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public interface Attributes {
 
+    /**
+     * @return The version of the CloudEvents specification which the event uses
+     */
+    SpecVersion getSpecVersion();
+
 	/**
 	 * @return Identifies the event. Producers MUST ensure that source + id is unique for each distinct event
 	 */
-	@NotBlank
 	String getId();
 
 	/**
 	 * @return A value describing the type of event related to the originating occurrence.
 	 */
-	@NotBlank
 	String getType();
 
 	/**
 	 * @return The context in which an event happened.
 	 */
-	@NotNull
 	URI getSource();
 
 	/**
-	 * @return The version of the CloudEvents specification which the event uses
-	 */
-	@NotBlank
-	SpecVersion getSpecversion();
-
-	/**
+     * TODO
 	 * A common way to get the media type of CloudEvents 'data';
 	 * @return If has a value, it MUST follows the <a href="https://tools.ietf.org/html/rfc2046">RFC2046</a>
 	 */
-	@JsonIgnore
-	Optional<String> getMediaType();
+	Optional<String> getDataContentType();
+
+	Optional<URI> getDataSchema();
+
+	Optional<String> getSubject();
+
+	Optional<ZonedDateTime> getTime();
 
 }

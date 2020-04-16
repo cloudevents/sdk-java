@@ -17,6 +17,7 @@ package io.cloudevents.json;
 
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import io.cloudevents.Attributes;
+import io.cloudevents.CloudEvent;
 import io.cloudevents.fun.DataMarshaller;
 import io.cloudevents.fun.DataUnmarshaller;
 
@@ -38,11 +40,31 @@ public final class Json {
         // add Jackson datatype for ZonedDateTime
         MAPPER.registerModule(new Jdk8Module());
 
-        final SimpleModule module = new SimpleModule();
+        final SimpleModule module = new SimpleModule("Custom ZonedDateTime");
         module.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
         module.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
         MAPPER.registerModule(module);
     }
+
+    protected static final DateTimeFormatter RFC3339_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    public static String encode(final CloudEvent event) throws IllegalStateException {
+
+    }
+
+    public static byte[] encodeToBinary(final CloudEvent event) throws IllegalStateException {
+
+    }
+
+    public static CloudEvent decode(final byte[] binary) {
+
+    }
+
+    public static CloudEvent decode(final String string) {
+
+    }
+
+    // TODO remove all the stuff below
 
     /**
      * Encode a POJO to JSON using the underlying Jackson mapper.
@@ -58,7 +80,7 @@ public final class Json {
             throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
         }
     }
-    
+
     /**
      * Encode a POJO to JSON using the underlying Jackson mapper.
      *
@@ -73,27 +95,27 @@ public final class Json {
             throw new IllegalStateException("Failed to encode as JSON: " + e.getMessage());
         }
     }
-    
+
     public static <T> T fromInputStream(final InputStream inputStream,
     		Class<T> clazz) {
     	try {
             return MAPPER.readValue(inputStream, clazz);
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to encode as JSON: " 
+            throw new IllegalStateException("Failed to encode as JSON: "
             			+ e.getMessage());
         }
     }
-    
+
     public static <T> T fromInputStream(final InputStream inputStream,
     		final TypeReference<T> type) {
     	try {
             return MAPPER.readValue(inputStream, type);
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to encode as JSON: " 
+            throw new IllegalStateException("Failed to encode as JSON: "
             			+ e.getMessage());
         }
     }
- 
+
     /**
      * Decode a given JSON string to a POJO of the given class type.
      *
@@ -104,7 +126,7 @@ public final class Json {
      * @throws IllegalStateException when there is a parsing or invalid mapping.
      */
     protected static <T> T decodeValue(final String str, final Class<T> clazz) throws IllegalStateException {
-    	
+
     	if(null!= str && !"".equals(str.trim())) {
 	        try {
 	            return MAPPER.readValue(str.trim(), clazz);
@@ -112,10 +134,10 @@ public final class Json {
 	            throw new IllegalStateException("Failed to decode: " + e.getMessage());
 	        }
     	}
-    	
+
     	return null;
     }
-    
+
     protected static <T> T binaryDecodeValue(byte[] payload, final Class<T> clazz) {
     	if(null!= payload) {
     		try {
@@ -146,13 +168,13 @@ public final class Json {
     	}
     	return null;
     }
-    
+
     /**
      * Example of use:
      * <pre>
      * String someJson = "...";
      * Class<?> clazz = Much.class;
-     * 
+     *
      * Json.decodeValue(someJson, CloudEventImpl.class, clazz);
      * </pre>
      * @param str The JSON String to parse
@@ -167,11 +189,11 @@ public final class Json {
     		Class<?>...parameterClasses) {
     	if(null!= str && !"".equals(str.trim())) {
     		 try {
-    			 JavaType type = 
+    			 JavaType type =
 	    			 MAPPER.getTypeFactory()
 	    			 	.constructParametricType(parametrized,
 	    			 			parameterClasses);
-    			 
+
     			 return MAPPER.readValue(str.trim(), type);
  	        } catch (Exception e) {
  	            throw new IllegalStateException("Failed to decode: " + e.getMessage(), e);
@@ -179,13 +201,13 @@ public final class Json {
     	}
     	return null;
     }
-    
+
     /**
      * Example of use:
      * <pre>
      * String someJson = "...";
      * Class<?> clazz = Much.class;
-     * 
+     *
      * Json.decodeValue(someJson, CloudEventImpl.class, clazz);
      * </pre>
      * @param json The JSON byte array to parse
@@ -200,11 +222,11 @@ public final class Json {
     		Class<?>...parameterClasses) {
     	if(null!= json) {
     		 try {
-    			 JavaType type = 
+    			 JavaType type =
 	    			 MAPPER.getTypeFactory()
 	    			 	.constructParametricType(parametrized,
 	    			 			parameterClasses);
-    			 
+
     			 return MAPPER.readValue(json, type);
  	        } catch (Exception e) {
  	            throw new IllegalStateException("Failed to decode: " + e.getMessage(), e);
@@ -212,7 +234,7 @@ public final class Json {
     	}
     	return null;
     }
-    
+
     /**
      * Creates a JSON Data Unmarshaller
      * @param <T> The 'data' type
@@ -220,22 +242,22 @@ public final class Json {
      * @param type The type of 'data'
      * @return A new instance of {@link DataUnmarshaller}
      */
-    public static <T, A extends Attributes> DataUnmarshaller<String, T, A> 
+    public static <T, A extends Attributes> DataUnmarshaller<String, T, A>
     umarshaller(Class<T> type) {
     	return (payload, attributes) -> Json.decodeValue(payload, type);
     }
-    
+
     /**
      * Unmarshals a byte array into T type
      * @param <T> The 'data' type
      * @param <A> The attributes type
      * @return The data objects
      */
-    public static <T, A extends Attributes> DataUnmarshaller<byte[], T, A> 
+    public static <T, A extends Attributes> DataUnmarshaller<byte[], T, A>
     		binaryUmarshaller(Class<T> type) {
     	return (payload, attributes) -> Json.binaryDecodeValue(payload, type);
     }
-    
+
     /**
      * Creates a JSON Data Marshaller that produces a {@link String}
      * @param <T> The 'data' type
@@ -245,7 +267,7 @@ public final class Json {
     public static <T, H> DataMarshaller<String, T, H> marshaller() {
     	return (data, headers) -> Json.encode(data);
     }
-    
+
     /**
      * Marshalls the 'data' value as JSON, producing a byte array
      * @param <T> The 'data' type

@@ -26,136 +26,135 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import io.cloudevents.v1.ContextAttributes;
-import io.cloudevents.v1.kafka.HeaderMapper;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
 public class HeaderMapperTest {
 	@Test
 	public void error_when_attributes_map_isnull() {
-		// setup 
+		// setup
 		Map<String, String> extensions = new HashMap<>();
-		
+
 		assertThrows(NullPointerException.class, () -> {
 			// act
 			HeaderMapper.map(null, extensions);
 		});
 	}
-	
+
 	@Test
 	public void error_when_extensions_map_isnull() {
-		// setup 
+		// setup
 		Map<String, String> attributes = new HashMap<>();
-		
+
 		assertThrows(NullPointerException.class, () -> {
 			// act
 			HeaderMapper.map(attributes, null);
 		});
 	}
-	
+
 	@Test
 	public void should_not_map_null_attribute_value() {
 		// setup
 		Map<String, String> attributes = new HashMap<>();
 		attributes.put("type", null);
 		attributes.put("specversion", "1.0");
-		
+
 		Map<String, String> extensions = new HashMap<>();
-		
+
 		// act
 		Map<String, byte[]> actual = HeaderMapper.map(attributes, extensions);
-		
+
 		//assert
 		assertFalse(actual.containsKey("ce-type"));
 	}
-	
+
 	@Test
 	public void should_map_datacontenttype_to_content_type() {
 		// setup
 		Map<String, String> attributes = new HashMap<>();
-		attributes.put(ContextAttributes.datacontenttype.name(), "application/json");
-		
+		attributes.put(ContextAttributes.DATACONTENTTYPE.name(), "application/json");
+
 		Map<String, String> extensions = new HashMap<>();
-		
+
 		// act
 		Map<String, byte[]> actual = HeaderMapper.map(attributes, extensions);
-		
+
 		//assert
 		assertTrue(actual.containsKey("content-type"));
 		assertEquals("application/json", new String(actual.get("content-type")));
 	}
-	
+
 	@Test
 	public void should_not_map_null_extension_value() {
 		// setup
 		Map<String, String> attributes = new HashMap<>();
 		attributes.put("type", "mytype");
 		attributes.put("specversion", "1.0");
-		
+
 		Map<String, String> extensions = new HashMap<>();
 		extensions.put("null-ext", null);
 		extensions.put("comexampleextension1", "value");
-		
+
 		// act
 		Map<String, byte[]> actual = HeaderMapper.map(attributes, extensions);
-		
+
 		//assert
 		assertFalse(actual.containsKey("null-ext"));
 	}
-	
+
 	@Test
 	public void should_not_map_absent_contenttype() {
 		// setup
 		Map<String, String> attributes = new HashMap<>();
 		attributes.put("type", "mytype");
 		attributes.put("specversion", "1.0");
-		
+
 		Map<String, String> extensions = new HashMap<>();
 		extensions.put("null-ext", "null-value");
 		extensions.put("comexampleextension1", "value");
-		
+
 		// act
 		Map<String, byte[]> actual = HeaderMapper.map(attributes, extensions);
-		
+
 		//assert
-		assertFalse(actual.containsKey("Content-Type"));	
+		assertFalse(actual.containsKey("Content-Type"));
 	}
-	
+
 	@Test
 	public void should_map_extension_with_prefix() {
 		// setup
 		Map<String, String> attributes = new HashMap<>();
 		attributes.put("type", "mytype");
 		attributes.put("specversion", "1.0");
-		
+
 		Map<String, String> extensions = new HashMap<>();
 		extensions.put("null-ext", "null-value");
 		extensions.put("comexampleextension1", "value");
-		
+
 		// act
 		Map<String, byte[]> actual = HeaderMapper.map(attributes, extensions);
-		
+
 		//assert
 		assertTrue(actual.containsKey("ce_comexampleextension1"));
 	}
-	
+
 	@Test
 	public void should_all_values_as_byte_array() {
 		// setup
 		Map<String, String> attributes = new HashMap<>();
 		attributes.put("type", "mytype");
 		attributes.put("specversion", "1.0");
-		
+
 		Map<String, String> extensions = new HashMap<>();
 		extensions.put("null-ext", "null-value");
 		extensions.put("comexampleextension1", "value");
-		
+
 		// act
 		Map<String, byte[]> actuals = HeaderMapper.map(attributes, extensions);
-		
+
 		// assert
 		actuals.values()
 			.forEach(actual -> {

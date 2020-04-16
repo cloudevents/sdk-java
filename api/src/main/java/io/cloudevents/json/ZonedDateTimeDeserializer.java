@@ -27,11 +27,11 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
 	private static final long serialVersionUID = 1L;
 
-	public ZonedDateTimeDeserializer() {
+	protected ZonedDateTimeDeserializer() {
         this(null);
     }
 
-    public ZonedDateTimeDeserializer(Class<?> vc) {
+    protected ZonedDateTimeDeserializer(Class<?> vc) {
         super(vc);
     }
 
@@ -39,7 +39,7 @@ public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
     public ZonedDateTime deserialize(JsonParser jsonparser, DeserializationContext ctxt) throws IOException {
         // not serializing timezone data yet
         try {
-            return ZonedDateTime.parse(jsonparser.getText(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            return ZonedDateTime.parse(jsonparser.getText(), Json.RFC3339_DATE_FORMAT);
         } catch (DateTimeException e) {
             throw new IllegalArgumentException("could not parse");
         }

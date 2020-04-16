@@ -27,7 +27,7 @@ public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
 
 	private static final long serialVersionUID = 6245182835980474796L;
 
-	public ZonedDateTimeSerializer() {
+	protected ZonedDateTimeSerializer() {
 		this(null, false);
 	}
 
@@ -39,7 +39,7 @@ public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
 	public void serialize(ZonedDateTime time, JsonGenerator generator,
 			SerializerProvider provider) throws IOException {
 
-		generator.writeString(time.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		generator.writeString(time.format(Json.RFC3339_DATE_FORMAT));
 
 	}
 
