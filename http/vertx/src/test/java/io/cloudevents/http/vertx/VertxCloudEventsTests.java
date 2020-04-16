@@ -94,7 +94,6 @@ class VertxCloudEventsTests {
                         clientCheckpoint.flag();
                     }));
                     VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, req);
-                    req.end();
                 });
     }
 
@@ -147,7 +146,6 @@ class VertxCloudEventsTests {
                         clientCheckpoint.flag();
                     }));
                     VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, req);
-                    req.end();
                 });
     }
 
@@ -243,7 +241,6 @@ class VertxCloudEventsTests {
                         clientCheckpoint.flag();
                     }));
                     VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, req);
-                    req.end();
                 });
     }
 
@@ -282,7 +279,6 @@ class VertxCloudEventsTests {
                         clientCheckpoint.flag();
                     }));
                     VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, Boolean.FALSE,req);
-                    req.end();
                 });
     }
 }

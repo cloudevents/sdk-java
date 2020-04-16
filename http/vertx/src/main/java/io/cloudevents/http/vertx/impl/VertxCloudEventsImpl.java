@@ -108,10 +108,7 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
         	  Marshallers.<String>binary()
 				.withEvent(() -> cloudEvent)
         		.marshal();
-        	
-            // setting the right content-length:
-        	request.putHeader(HttpHeaders.CONTENT_LENGTH, createOptimized("0"));
-            
+
             // read required headers
         	wire.getHeaders().entrySet()
             	.stream()
@@ -120,21 +117,15 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
             			createOptimized(header.getValue()));
             	});
 
-        	wire.getPayload().ifPresent((payload) -> {
-                Buffer buffer = Buffer.buffer(payload, "UTF-8");
-                request.putHeader(HttpHeaders.CONTENT_LENGTH,
-                    createOptimized(String.valueOf(buffer.length())));
-            	request.write(buffer);
-            });
+        	if (wire.getPayload().isPresent()) {
+                request.end(wire.getPayload().get());
+            } else {
+                request.end();
+            }
         } else {
             // read required headers
             request.putHeader(HttpHeaders.CONTENT_TYPE, STRUCTURED_TYPE);
-            final String json = Json.encode(cloudEvent);
-            Buffer buffer = Buffer.buffer(json, "UTF-8");
-            request.putHeader(HttpHeaders.CONTENT_LENGTH,
-            		createOptimized(String.valueOf(buffer.length())));
-            // this the body
-            request.write(buffer);
+            request.end(Json.encode(cloudEvent));
         }
     }
 }
