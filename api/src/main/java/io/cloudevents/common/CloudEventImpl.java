@@ -1,9 +1,14 @@
 package io.cloudevents.common;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.Data;
+import io.cloudevents.DataConversionException;
+import io.cloudevents.json.Json;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -12,10 +17,10 @@ import java.util.Optional;
 public class CloudEventImpl implements CloudEvent {
 
     private final Attributes attributes;
-    private final Data data;
+    private final Object data;
     private final Map<String, Object> extensions;
 
-    public CloudEventImpl(Attributes attributes, Data data, Map<String, Object> extensions) {
+    public CloudEventImpl(Attributes attributes, Object data, Map<String, Object> extensions) {
         Objects.requireNonNull(attributes);
         this.attributes = attributes;
         this.data = data;
@@ -28,8 +33,72 @@ public class CloudEventImpl implements CloudEvent {
     }
 
     @Override
-    public Optional<Data> getData() {
-        return Optional.ofNullable(data);
+    public Optional<String> getDataAsString() {
+        if (data != null) {
+            if (data instanceof String) {
+                return Optional.of((String)data);
+            }
+            if (data instanceof byte[]) {
+                return Optional.of(new String((byte[]) this.data, StandardCharsets.UTF_8));
+            }
+            if (data instanceof JsonNode) {
+                JsonNode d = (JsonNode) this.data;
+                try {
+                    return Optional.of(Json.MAPPER.writeValueAsString(data));
+                } catch (JsonProcessingException e) {
+                    throw new DataConversionException("JsonNode", "String", e);
+                }
+            }
+            throw new IllegalStateException("CloudEventImpl contains an illegal data of class " + data.getClass().getCanonicalName());
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<byte[]> getDataAsBytes() {
+        if (data != null) {
+            if (data instanceof String) {
+                return Optional.of(((String)data).getBytes());
+            }
+            if (data instanceof byte[]) {
+                return Optional.of((byte[])this.data);
+            }
+            if (data instanceof JsonNode) {
+                JsonNode d = (JsonNode) this.data;
+                try {
+                    return Optional.of(Json.MAPPER.writeValueAsBytes(data));
+                } catch (JsonProcessingException e) {
+                    throw new DataConversionException("JsonNode", "byte[]", e);
+                }
+            }
+            throw new IllegalStateException("CloudEventImpl contains an illegal data of class " + data.getClass().getCanonicalName());
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<JsonNode> getDataAsJson() {
+        if (data != null) {
+            if (data instanceof String) {
+                try {
+                    return Optional.of(Json.MAPPER.readTree((String)data));
+                } catch (IOException e) {
+                    throw new DataConversionException("String", "JsonNode", e);
+                }
+            }
+            if (data instanceof byte[]) {
+                try {
+                    return Optional.of(Json.MAPPER.readTree((byte[]) data));
+                } catch (IOException e) {
+                    throw new DataConversionException("[]byte", "JsonNode", e);
+                }
+            }
+            if (data instanceof JsonNode) {
+                return Optional.of((JsonNode)this.data);
+            }
+            throw new IllegalStateException("CloudEventImpl contains an illegal data of class " + data.getClass().getCanonicalName());
+        }
+        return Optional.empty();
     }
 
     @Override

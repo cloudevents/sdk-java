@@ -15,7 +15,7 @@
  */
 package io.cloudevents;
 
-import io.cloudevents.v03.CloudEventBuilder;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Map;
 import java.util.Optional;
@@ -35,7 +35,17 @@ public interface CloudEvent {
     /**
      * The event data
      */
-    Optional<Data> getData();
+    Optional<String> getDataAsString() throws DataConversionException;
+
+    /**
+     * The event data
+     */
+    Optional<byte[]> getDataAsBytes() throws DataConversionException;
+
+    /**
+     * The event data
+     */
+    Optional<JsonNode> getDataAsJson() throws DataConversionException;
 
     /**
      * The event extensions
