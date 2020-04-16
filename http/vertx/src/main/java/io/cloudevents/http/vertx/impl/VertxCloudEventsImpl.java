@@ -46,29 +46,29 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
     private final static CharSequence STRUCTURED_TYPE = HttpHeaders.createOptimized("application/cloudevents+json");
 
     @Override
-    public void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<AttributesImpl, String>>> resultHandler) {
-        this.readFromRequest(request, null, resultHandler);
+    public  <T> void readFromRequest(HttpServerRequest request, Class<T> clazz, Handler<AsyncResult<CloudEvent<AttributesImpl, T>>> resultHandler) {
+        this.readFromRequest(request, clazz, null, resultHandler);
 
     }
 
     @Override
-    public void readFromRequest(HttpServerRequest request, Class[] extensions, Handler<AsyncResult<CloudEvent<AttributesImpl, String>>> resultHandler) {
+    public  <T> void readFromRequest(HttpServerRequest request, Class<T> clazz, Class[] extensions, Handler<AsyncResult<CloudEvent<AttributesImpl, T>>> resultHandler) {
 
         final MultiMap headers = request.headers();
 
         // binary mode
         if (headers.get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(BINARY_TYPE.toString())) {
         	request.bodyHandler((Buffer buff) -> {
-        		CloudEvent<AttributesImpl, String> event = 
-        		  Unmarshallers.binary(String.class)
+        		CloudEvent<AttributesImpl, T> event =
+        		  Unmarshallers.binary(clazz)
     				.withHeaders(() -> {
 	        			final Map<String, Object> result = new HashMap<>();
-	        			
+
 	        			headers.iterator()
 	        				.forEachRemaining(header -> {
 	        					result.put(header.getKey(), header.getValue());
 	        				});
-	        			
+
 	        			return Collections.unmodifiableMap(result);
 	        		})
 	        		.withPayload(() -> {
@@ -78,14 +78,28 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
 
         		resultHandler.handle(Future.succeededFuture(event));
             });
-        	
+
         } else if (headers.get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(STRUCTURED_TYPE.toString())) {
             // structured read of the body
             request.bodyHandler((Buffer buff) -> {
-
                 if (buff.length()>0) {
-                	resultHandler.handle(Future.succeededFuture(Json.decodeValue(buff.toString(),
-                			new TypeReference<CloudEventImpl<String>>() {})));
+                    CloudEvent<AttributesImpl, T> event =
+                        Unmarshallers.structured(clazz)
+                            .withHeaders(() -> {
+                                final Map<String, Object> result = new HashMap<>();
+
+                                headers.iterator()
+                                    .forEachRemaining(header -> {
+                                        result.put(header.getKey(), header.getValue());
+                                    });
+
+                                return Collections.unmodifiableMap(result);
+                            })
+                            .withPayload(() -> {
+                                return buff.toString();
+                            })
+                            .unmarshal();
+                            resultHandler.handle(Future.succeededFuture(event));
                 } else {
                     throw new IllegalArgumentException("no cloudevent body");
                 }
@@ -96,31 +110,31 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
     }
 
     @Override
-    public void writeToHttpClientRequest(CloudEvent<AttributesImpl, String> cloudEvent, HttpClientRequest request) {
+    public  <T> void writeToHttpClientRequest(CloudEvent<AttributesImpl, T> cloudEvent, HttpClientRequest request) {
         writeToHttpClientRequest(cloudEvent, Boolean.TRUE, request);
     }
 
     @Override
-    public void writeToHttpClientRequest(CloudEvent<AttributesImpl, String> cloudEvent, boolean binary, HttpClientRequest request) {
+    public  <T> void writeToHttpClientRequest(CloudEvent<AttributesImpl, T> cloudEvent, boolean binary, HttpClientRequest request) {
 
         if (binary) {
         	Wire<String, String, String> wire =
-        	  Marshallers.<String>binary()
+        	  Marshallers.<T>binary()
 				.withEvent(() -> cloudEvent)
         		.marshal();
-        	
+
             // setting the right content-length:
         	request.putHeader(HttpHeaders.CONTENT_LENGTH, createOptimized("0"));
         	wire.getPayload().ifPresent((payload) -> {
-        		request.putHeader(HttpHeaders.CONTENT_LENGTH, 
+        		request.putHeader(HttpHeaders.CONTENT_LENGTH,
         			createOptimized(String.valueOf(payload.length())));
-        	});            
-            
+        	});
+
             // read required headers
         	wire.getHeaders().entrySet()
             	.stream()
             	.forEach(header -> {
-            		request.putHeader(createOptimized(header.getKey()), 
+            		request.putHeader(createOptimized(header.getKey()),
             			createOptimized(header.getValue()));
             	});
 
@@ -131,7 +145,7 @@ public final class VertxCloudEventsImpl implements VertxCloudEvents {
             // read required headers
             request.putHeader(HttpHeaders.CONTENT_TYPE, STRUCTURED_TYPE);
             final String json = Json.encode(cloudEvent);
-            request.putHeader(HttpHeaders.CONTENT_LENGTH, 
+            request.putHeader(HttpHeaders.CONTENT_LENGTH,
             		createOptimized(String.valueOf(json.length())));
             // this the body
             request.write(json);

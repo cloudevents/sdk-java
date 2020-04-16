@@ -33,14 +33,14 @@ public interface VertxCloudEvents {
     }
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
-    void readFromRequest(HttpServerRequest request, Handler<AsyncResult<CloudEvent<AttributesImpl, String>>> resultHandler);
+    <T>void readFromRequest(HttpServerRequest request, Class<T> clazz, Handler<AsyncResult<CloudEvent<AttributesImpl, T>>> resultHandler);
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
-    void readFromRequest(HttpServerRequest request, Class[] extensions, Handler<AsyncResult<CloudEvent<AttributesImpl, String>>> resultHandler);
+    <T>void readFromRequest(HttpServerRequest request, Class<T> clazz, Class[] extensions, Handler<AsyncResult<CloudEvent<AttributesImpl, T>>> resultHandler);
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
-    void writeToHttpClientRequest(CloudEvent<AttributesImpl, String> ce, HttpClientRequest request);
+    <T>void writeToHttpClientRequest(CloudEvent<AttributesImpl, T> ce, HttpClientRequest request);
 
     @GenIgnore(GenIgnore.PERMITTED_TYPE)
-    void writeToHttpClientRequest(CloudEvent<AttributesImpl, String> ce, boolean binary, HttpClientRequest request);
+    <T>void writeToHttpClientRequest(CloudEvent<AttributesImpl, T> ce, boolean binary, HttpClientRequest request);
 }
