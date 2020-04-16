@@ -1,10 +1,13 @@
-package io.cloudevents.common;
+package io.cloudevents.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.DataConversionException;
+import io.cloudevents.json.CloudEventSerializer;
 import io.cloudevents.json.Json;
 
 import java.io.IOException;
@@ -14,6 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+@JsonSerialize(using = CloudEventSerializer.class)
+@JsonDeserialize(using = CloudEventDeserializer.class)
 public class CloudEventImpl implements CloudEvent {
 
     private final Attributes attributes;

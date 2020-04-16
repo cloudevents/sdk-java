@@ -1,4 +1,4 @@
-package io.cloudevents.common;
+package io.cloudevents.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.cloudevents.Attributes;

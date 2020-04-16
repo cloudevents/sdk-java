@@ -3,7 +3,7 @@ package io.cloudevents.extensions;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
 
-public class DistributedTracingExtension implements Extension {
+public final class DistributedTracingExtension implements Extension {
 
     public static final String TRACEPARENT = "traceparent";
     public static final String TRACESTATE = "tracestate";

@@ -15,31 +15,27 @@
  */
 package io.cloudevents.json;
 
-import java.io.InputStream;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.fun.DataMarshaller;
 import io.cloudevents.fun.DataUnmarshaller;
+
+import java.io.InputStream;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 public final class Json {
 
     public static final ObjectMapper MAPPER = new ObjectMapper();
 
     static {
-        // add Jackson datatype for ZonedDateTime
-        MAPPER.registerModule(new Jdk8Module());
-
+        // add ZonedDateTime ser/de
         final SimpleModule module = new SimpleModule("Custom ZonedDateTime");
         module.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
         module.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());

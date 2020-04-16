@@ -8,9 +8,17 @@ import java.util.function.Supplier;
 
 public class ExtensionsParser {
 
+    private static class SingletonContainer {
+        private final static ExtensionsParser INSTANCE = new ExtensionsParser();
+    }
+
+    public static ExtensionsParser getInstance() {
+        return SingletonContainer.INSTANCE;
+    }
+
     private HashMap<Class<?>, Supplier<Extension>> extensionFactories;
 
-    public ExtensionsParser() {
+    private ExtensionsParser() {
         this.extensionFactories = new HashMap<>();
         registerExtension(DistributedTracingExtension.class, DistributedTracingExtension::new);
     }

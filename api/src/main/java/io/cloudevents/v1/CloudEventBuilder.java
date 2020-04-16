@@ -1,8 +1,9 @@
 package io.cloudevents.v1;
 
+import io.cloudevents.impl.BaseCloudEventBuilder;
+
 import java.net.URI;
 import java.time.ZonedDateTime;
-import io.cloudevents.common.BaseCloudEventBuilder;
 
 /**
  *
