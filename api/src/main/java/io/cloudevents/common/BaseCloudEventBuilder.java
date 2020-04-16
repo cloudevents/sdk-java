@@ -57,7 +57,17 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
         return withData(contentType, dataSchema, (Object) data);
     }
 
-    public B withExtension(String key, Object value) {
+    public B withExtension(String key, String value) {
+        this.extensions.put(key, value);
+        return self;
+    }
+
+    public B withExtension(String key, Number value) {
+        this.extensions.put(key, value);
+        return self;
+    }
+
+    public B withExtension(String key, boolean value) {
         this.extensions.put(key, value);
         return self;
     }
