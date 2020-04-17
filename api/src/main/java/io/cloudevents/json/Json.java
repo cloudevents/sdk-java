@@ -22,12 +22,13 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.format.json.ZonedDateTimeDeserializer;
+import io.cloudevents.format.json.ZonedDateTimeSerializer;
 import io.cloudevents.fun.DataMarshaller;
 import io.cloudevents.fun.DataUnmarshaller;
 
 import java.io.InputStream;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public final class Json {
@@ -41,8 +42,6 @@ public final class Json {
         module.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
         MAPPER.registerModule(module);
     }
-
-    protected static final DateTimeFormatter RFC3339_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
 
     public static String encode(final CloudEvent event) throws IllegalStateException {
 

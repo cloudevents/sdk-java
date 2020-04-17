@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudevents.json;
-
-import java.io.IOException;
-import java.time.DateTimeException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+package io.cloudevents.format.json;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import io.cloudevents.types.Time;
+
+import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.ZonedDateTime;
 
 public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
 	private static final long serialVersionUID = 1L;
@@ -37,9 +37,8 @@ public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
 
     @Override
     public ZonedDateTime deserialize(JsonParser jsonparser, DeserializationContext ctxt) throws IOException {
-        // not serializing timezone data yet
         try {
-            return ZonedDateTime.parse(jsonparser.getText(), Json.RFC3339_DATE_FORMAT);
+            return ZonedDateTime.parse(jsonparser.getText(), Time.RFC3339_DATE_FORMAT);
         } catch (DateTimeException e) {
             throw new IllegalArgumentException("could not parse");
         }

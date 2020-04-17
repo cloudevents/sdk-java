@@ -1,4 +1,4 @@
-package io.cloudevents.json;
+package io.cloudevents.format.json;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

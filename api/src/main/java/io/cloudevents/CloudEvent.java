@@ -50,7 +50,7 @@ public interface CloudEvent {
     /**
      * The event extensions
      *
-     * Extensions values could be String/Number/Boolean/JsonNode
+     * Extensions values could be String/Number/Boolean
      */
     Map<String, Object> getExtensions();
 

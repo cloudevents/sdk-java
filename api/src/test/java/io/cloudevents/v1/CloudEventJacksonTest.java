@@ -15,13 +15,6 @@
  */
 package io.cloudevents.v1;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.time.ZonedDateTime;
-import java.util.Base64;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.DistributedTracingExtension;
@@ -32,11 +25,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import java.io.InputStream;
+import java.net.URI;
+import java.time.ZonedDateTime;
+import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -55,8 +51,8 @@ public class CloudEventJacksonTest {
 	@Test
 	public void should_encode_right_with_minimal_attrs() {
 		// setup
-		CloudEvent<AttributesImpl, Object> ce =
-				CloudEventBuilder.builder()
+		CloudEvent ce =
+				CloudEvent.buildV1()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -80,15 +76,13 @@ public class CloudEventJacksonTest {
 	@Test
 	public void should_have_optional_attrs() {
 		// setup
-		CloudEvent<AttributesImpl, Object> ce =
-				CloudEventBuilder.builder()
+		CloudEvent ce =
+				CloudEvent.buildV1()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
-					.withDataschema(URI.create("/schema"))
-					.withDataContentType("text/plain")
 					.withSubject("subject0")
-					.withData("my-data")
+					.withData("text/plain", URI.create("/schema"), "my-data")
 					.build();
 
 		// act
@@ -123,8 +117,8 @@ public class CloudEventJacksonTest {
 
 		final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
 
-		CloudEvent<AttributesImpl, Object> ce =
-				CloudEventBuilder.builder()
+		CloudEvent ce =
+				CloudEvent.buildV1()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -144,8 +138,8 @@ public class CloudEventJacksonTest {
 	@Test
 	public void should_not_serialize_attributes_element() {
 		// setup
-		CloudEvent<AttributesImpl, Object> ce =
-				CloudEventBuilder.builder()
+		CloudEvent ce =
+				CloudEvent.buildV1()
 					.withId("x10")
 					.withSource(URI.create("/source"))
 					.withType("event-type")
@@ -165,7 +159,7 @@ public class CloudEventJacksonTest {
 	@Test
     public void should_have_type() {
 		// act
-        CloudEvent<AttributesImpl, Object> ce =
+        CloudEvent ce =
         	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
 
         // assert
@@ -175,7 +169,7 @@ public class CloudEventJacksonTest {
 	@Test
     public void should_have_id() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce =
+		CloudEvent ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
 
         // assert
@@ -186,7 +180,7 @@ public class CloudEventJacksonTest {
 	@Test
     public void should_have_time() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce =
+		CloudEvent ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
 
         // assert
@@ -196,7 +190,7 @@ public class CloudEventJacksonTest {
 	@Test
     public void should_have_source() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce =
+		CloudEvent ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
 
         // assert
@@ -206,7 +200,7 @@ public class CloudEventJacksonTest {
 	@Test
     public void should_have_datacontenttype() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce =
+		CloudEvent ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
 
         // assert
@@ -217,7 +211,7 @@ public class CloudEventJacksonTest {
 	@Test
     public void should_have_dataschema() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce =
+		CloudEvent ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
 
         // assert
@@ -228,7 +222,7 @@ public class CloudEventJacksonTest {
 	@Test
     public void should_have_specversion() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce =
+		CloudEvent ce =
 	        	Json.fromInputStream(resourceOf("1_new.json"), CloudEventImpl.class);
 
         // assert
@@ -248,7 +242,7 @@ public class CloudEventJacksonTest {
 	@Test
     public void should_have_tracing_extension() {
 		// act
-		CloudEvent<AttributesImpl, Object> ce =
+		CloudEvent ce =
 	        	Json.fromInputStream(resourceOf("1_extension.json"), CloudEventImpl.class);
 
         // assert
@@ -263,7 +257,7 @@ public class CloudEventJacksonTest {
 		String expected = "extension-value";
 
 		// act
-		CloudEvent<AttributesImpl, Object> ce =
+		CloudEvent ce =
 	        	Json.fromInputStream(resourceOf("1_extension.json"), CloudEventImpl.class);
 
         // assert

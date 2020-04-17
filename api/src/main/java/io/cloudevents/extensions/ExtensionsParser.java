@@ -6,7 +6,7 @@ import io.cloudevents.Extension;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-public class ExtensionsParser {
+public final class ExtensionsParser {
 
     private static class SingletonContainer {
         private final static ExtensionsParser INSTANCE = new ExtensionsParser();
@@ -27,12 +27,13 @@ public class ExtensionsParser {
         this.extensionFactories.put(extensionClass, factory);
     }
 
-    public Extension parseExtension(Class<Extension> extensionClass, CloudEvent event) {
+    @SuppressWarnings("unchecked")
+    public <T extends Extension> T parseExtension(Class<T> extensionClass, CloudEvent event) {
         Supplier<Extension> factory = extensionFactories.get(extensionClass);
         if (factory != null) {
             Extension ext = factory.get();
             ext.readFromEvent(event);
-            return ext;
+            return (T) ext;
         }
         return null;
     }

@@ -1,4 +1,4 @@
-package io.cloudevents.json;
+package io.cloudevents.format.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -18,7 +18,6 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         JsonSerializer<Object> attributesSerializer = provider.findValueSerializer(value.getAttributes().getClass());
         // Serialize attributes
         attributesSerializer.serialize(value.getAttributes(), gen, provider);
-
 
     }
 }

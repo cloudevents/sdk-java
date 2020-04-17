@@ -33,28 +33,31 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
 
     protected abstract T buildAttributes();
 
+    //TODO builder should accept data as Object and use data codecs (that we need to implement)
+    // to encode data
+
     public B withData(String contentType, String data) {
-        return withData(contentType, (Object) data);
+        return withEncodedData(contentType, (Object) data);
     }
 
     public B withData(String contentType, byte[] data) {
-        return withData(contentType, (Object) data);
+        return withEncodedData(contentType, (Object) data);
     }
 
     public B withData(String contentType, JsonNode data) {
-        return withData(contentType, (Object) data);
+        return withEncodedData(contentType, (Object) data);
     }
 
     public B withData(String contentType, URI dataSchema, String data) {
-        return withData(contentType, dataSchema, (Object) data);
+        return withEncodedata(contentType, dataSchema, (Object) data);
     }
 
     public B withData(String contentType, URI dataSchema, byte[] data) {
-        return withData(contentType, dataSchema, (Object) data);
+        return withEncodedata(contentType, dataSchema, (Object) data);
     }
 
     public B withData(String contentType, URI dataSchema, JsonNode data) {
-        return withData(contentType, dataSchema, (Object) data);
+        return withEncodedata(contentType, dataSchema, (Object) data);
     }
 
     public B withExtension(String key, String value) {
@@ -88,13 +91,13 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
         return event;
     }
 
-    private B withData(String contentType, Object data) {
+    private B withEncodedData(String contentType, Object data) {
         withDataContentType(contentType);
         this.data = data;
         return self;
     }
 
-    private B withData(String contentType, URI dataSchema, Object data) {
+    private B withEncodedata(String contentType, URI dataSchema, Object data) {
         withDataContentType(contentType);
         withDataSchema(dataSchema);
         this.data = data;

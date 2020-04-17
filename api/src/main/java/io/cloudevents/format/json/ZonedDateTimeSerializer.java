@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudevents.json;
-
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+package io.cloudevents.format.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import io.cloudevents.types.Time;
+
+import java.io.IOException;
+import java.time.ZonedDateTime;
 
 public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
 
@@ -38,9 +38,7 @@ public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
 	@Override
 	public void serialize(ZonedDateTime time, JsonGenerator generator,
 			SerializerProvider provider) throws IOException {
-
-		generator.writeString(time.format(Json.RFC3339_DATE_FORMAT));
-
+		generator.writeString(time.format(Time.RFC3339_DATE_FORMAT));
 	}
 
 }

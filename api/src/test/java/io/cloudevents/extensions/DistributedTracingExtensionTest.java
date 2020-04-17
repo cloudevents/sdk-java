@@ -15,52 +15,46 @@
  */
 package io.cloudevents.extensions;
 
-import static org.junit.Assert.assertEquals;
+import io.cloudevents.CloudEvent;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * 
+ *
  * @author fabiojose
  *
  */
 public class DistributedTracingExtensionTest {
 
 	@Test
-	public void should_transport_format_ok() {
-		// setup
+	public void writeExtension() {
 		DistributedTracingExtension tracing = new DistributedTracingExtension();
 		tracing.setTraceparent("parent");
 		tracing.setTracestate("state");
-		
-		// act
-		ExtensionFormat format = 
-				new DistributedTracingExtension.Format(tracing);
-		
-		// assert
-		assertEquals("parent", format.transport().get("traceparent"));
-		assertEquals("state", format.transport().get("tracestate"));
+
+        CloudEvent event = CloudEvent.build().build();
+        tracing.writeToEvent(event);
+
+        assertThat(event.getExtensions())
+            .containsEntry(DistributedTracingExtension.TRACEPARENT, "parent")
+            .containsEntry(DistributedTracingExtension.TRACESTATE, "state");
 	}
-	
+
 	@Test
-	public void should_inmemory_format_ok() {
-		// setup
-		DistributedTracingExtension tracing = new DistributedTracingExtension();
-		tracing.setTraceparent("parent");
-		tracing.setTracestate("state");
-		
-		// act
-		ExtensionFormat format = 
-				new DistributedTracingExtension.Format(tracing);
-		
-		// assert	
-		assertEquals("distributedTracing",  format.memory().getKey());
-		assertEquals(DistributedTracingExtension.class, format.memory().getValueType());
-		
-		assertEquals("parent", 
-				((DistributedTracingExtension)format.memory().getValue()).getTraceparent());
-		
-		assertEquals("state", 
-				((DistributedTracingExtension)format.memory().getValue()).getTracestate());
+	public void parseExtension() {
+        CloudEvent event = CloudEvent.build()
+            .withExtension(DistributedTracingExtension.TRACEPARENT, "parent")
+            .withExtension(DistributedTracingExtension.TRACESTATE, "state")
+            .build();
+
+        DistributedTracingExtension tracing = ExtensionsParser
+            .getInstance()
+            .parseExtension(DistributedTracingExtension.class, event);
+
+        assertThat(tracing).isNotNull();
+        assertThat(tracing.getTraceparent()).isEqualTo("parent");
+        assertThat(tracing.getTracestate()).isEqualTo("state");
+
 	}
 }

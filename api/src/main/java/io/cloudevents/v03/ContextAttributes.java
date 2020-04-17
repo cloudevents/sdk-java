@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
  *
  */
 public enum ContextAttributes {
-
     ID,
     SOURCE,
     SPECVERSION,
@@ -36,7 +35,6 @@ public enum ContextAttributes {
     DATACONTENTTYPE,
     DATACONTENTENCODING,
     SUBJECT;
-
 	public static final List<String> VALUES =
 		Arrays.stream(ContextAttributes.values())
 		.map(Enum::name)

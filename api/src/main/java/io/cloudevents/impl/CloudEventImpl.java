@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.DataConversionException;
-import io.cloudevents.json.CloudEventSerializer;
+import io.cloudevents.format.json.CloudEventDeserializer;
+import io.cloudevents.format.json.CloudEventSerializer;
 import io.cloudevents.json.Json;
 
 import java.io.IOException;
