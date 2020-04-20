@@ -3,6 +3,10 @@ package io.cloudevents.extensions;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public final class DistributedTracingExtension implements Extension {
 
     public static final String TRACEPARENT = "traceparent";
@@ -42,13 +46,11 @@ public final class DistributedTracingExtension implements Extension {
     }
 
     @Override
-    public void writeToEvent(CloudEvent event) {
-        if (traceparent != null) {
-            event.getExtensions().put(TRACEPARENT, this.traceparent);
-        }
-        if (tracestate != null) {
-            event.getExtensions().put(TRACESTATE, this.tracestate);
-        }
+    public Map<String, Object> asMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(TRACEPARENT, this.traceparent);
+        map.put(TRACESTATE, this.tracestate);
+        return Collections.unmodifiableMap(map);
     }
 
     @Override

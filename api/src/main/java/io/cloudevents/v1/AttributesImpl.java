@@ -31,17 +31,11 @@ import java.util.Optional;
 public class AttributesImpl implements Attributes {
 
 	private final String id;
-
 	private final URI source;
-
 	private final String type;
-
 	private final String datacontenttype;
-
 	private final URI dataschema;
-
 	private final String subject;
-
 	private final ZonedDateTime time;
 
 	public AttributesImpl(String id, URI source,
@@ -91,7 +85,25 @@ public class AttributesImpl implements Attributes {
 		return Optional.ofNullable(time);
 	}
 
-	@Override
+    @Override
+    public Attributes toV03() {
+        return new io.cloudevents.v03.AttributesImpl(
+            this.id,
+            this.source,
+            this.type,
+            this.time,
+            this.dataschema,
+            this.datacontenttype,
+            this.subject
+        );
+    }
+
+    @Override
+    public Attributes toV1() {
+        return this;
+    }
+
+    @Override
 	public String toString() {
 		return "Attibutes V1.0 [id=" + id + ", source=" + source
 				+ ", type=" + type

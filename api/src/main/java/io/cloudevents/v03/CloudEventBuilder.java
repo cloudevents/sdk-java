@@ -15,6 +15,8 @@
  */
 package io.cloudevents.v03;
 
+import io.cloudevents.Attributes;
+import io.cloudevents.CloudEvent;
 import io.cloudevents.impl.BaseCloudEventBuilder;
 
 import java.net.URI;
@@ -29,19 +31,34 @@ import java.time.ZonedDateTime;
  */
 public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder, AttributesImpl>  {
 
-	public CloudEventBuilder() {
-		super();
-	}
-
 	private String id;
 	private URI source;
-
 	private String type;
-
 	private ZonedDateTime time;
 	private URI schemaurl;
 	private String datacontenttype;
 	private String subject;
+
+    public CloudEventBuilder() {
+        super();
+    }
+
+    public CloudEventBuilder(CloudEvent event) {
+        super(event);
+    }
+
+    @Override
+    protected void setAttributes(Attributes attributes) {
+        AttributesImpl attr = (AttributesImpl) attributes.toV03();
+        this
+            .withId(attr.getId())
+            .withSource(attr.getSource())
+            .withType(attr.getType());
+        attr.getDataContentType().ifPresent(this::withDataContentType);
+        attr.getSchemaUrl().ifPresent(this::withSchemaUrl);
+        attr.getSubject().ifPresent(this::withSubject);
+        attr.getTime().ifPresent(this::withTime);
+    }
 
 	public CloudEventBuilder withId(String id) {
 		this.id = id;

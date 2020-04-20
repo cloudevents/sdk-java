@@ -13,14 +13,11 @@ import io.cloudevents.json.Json;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @JsonSerialize(using = CloudEventSerializer.class)
 @JsonDeserialize(using = CloudEventDeserializer.class)
-public class CloudEventImpl implements CloudEvent {
+public final class CloudEventImpl implements CloudEvent {
 
     private final Attributes attributes;
     private final Object data;
@@ -109,6 +106,28 @@ public class CloudEventImpl implements CloudEvent {
 
     @Override
     public Map<String, Object> getExtensions() {
-        return extensions;
+        return Collections.unmodifiableMap(extensions);
+    }
+
+    @Override
+    public CloudEvent toV03() {
+        return new CloudEventImpl(
+            attributes.toV03(),
+            data,
+            extensions
+        );
+    }
+
+    @Override
+    public CloudEvent toV1() {
+        return new CloudEventImpl(
+            attributes.toV1(),
+            data,
+            extensions
+        );
+    }
+
+    protected Object getRawData() {
+        return data;
     }
 }

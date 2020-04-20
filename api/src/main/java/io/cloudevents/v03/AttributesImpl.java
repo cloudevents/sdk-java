@@ -32,21 +32,16 @@ import java.util.Optional;
 public class AttributesImpl implements Attributes {
 
 	private final String id;
-
 	private final URI source;
-
 	private final String type;
-
 	private final ZonedDateTime time;
 	private final URI schemaurl;
-
 	private final String datacontenttype;
-
 	private final String subject;
 
-	AttributesImpl(String id, URI source, String type,
-			ZonedDateTime time, URI schemaurl,
-			String datacontenttype, String subject) {
+	public AttributesImpl(String id, URI source, String type,
+                          ZonedDateTime time, URI schemaurl,
+                          String datacontenttype, String subject) {
 		this.id = id;
 		this.source = source;
 		this.type = type;
@@ -72,6 +67,25 @@ public class AttributesImpl implements Attributes {
 	public Optional<ZonedDateTime> getTime() {
 		return Optional.ofNullable(time);
 	}
+
+    @Override
+    public Attributes toV03() {
+        return this;
+    }
+
+    @Override
+    public Attributes toV1() {
+        return new io.cloudevents.v1.AttributesImpl(
+            this.id,
+            this.source,
+            this.type,
+            this.datacontenttype,
+            this.schemaurl,
+            this.subject,
+            this.time
+        );
+    }
+
     public Optional<URI> getDataSchema() {
         return getSchemaUrl();
     }

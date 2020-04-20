@@ -18,6 +18,8 @@ public final class ExtensionsParser {
 
     private HashMap<Class<?>, Supplier<Extension>> extensionFactories;
 
+
+    // TODO SPI in future?
     private ExtensionsParser() {
         this.extensionFactories = new HashMap<>();
         registerExtension(DistributedTracingExtension.class, DistributedTracingExtension::new);

@@ -54,23 +54,23 @@ public interface CloudEvent {
      */
     Map<String, Object> getExtensions();
 
-    /**
-     * Write an extension into this cloud event
-     * @param e
-     */
-    default void writeExtension(Extension e) {
-        e.writeToEvent(this);
-    }
+    CloudEvent toV03();
 
-    static io.cloudevents.v1.CloudEventBuilder build() {
-        return buildV1();
-    }
+    CloudEvent toV1();
 
     static io.cloudevents.v1.CloudEventBuilder buildV1() {
         return new io.cloudevents.v1.CloudEventBuilder();
     }
 
+    static io.cloudevents.v1.CloudEventBuilder buildV1(CloudEvent event) {
+        return new io.cloudevents.v1.CloudEventBuilder(event);
+    }
+
     static io.cloudevents.v03.CloudEventBuilder buildV03() {
         return new io.cloudevents.v03.CloudEventBuilder();
+    }
+
+    static io.cloudevents.v03.CloudEventBuilder buildV03(CloudEvent event) {
+        return new io.cloudevents.v03.CloudEventBuilder(event);
     }
 }

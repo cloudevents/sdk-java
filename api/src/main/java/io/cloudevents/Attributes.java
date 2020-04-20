@@ -60,4 +60,8 @@ public interface Attributes {
 
 	Optional<ZonedDateTime> getTime();
 
+    Attributes toV03();
+
+    Attributes toV1();
+
 }

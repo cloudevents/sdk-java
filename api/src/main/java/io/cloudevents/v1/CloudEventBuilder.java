@@ -1,5 +1,7 @@
 package io.cloudevents.v1;
 
+import io.cloudevents.Attributes;
+import io.cloudevents.CloudEvent;
 import io.cloudevents.impl.BaseCloudEventBuilder;
 
 import java.net.URI;
@@ -15,7 +17,6 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
 
 	private String id;
 	private URI source;
-
 	private String type;
 	private String datacontenttype;
 	private URI dataschema;
@@ -24,6 +25,23 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
 
     public CloudEventBuilder() {
         super();
+    }
+
+    public CloudEventBuilder(CloudEvent event) {
+        super(event);
+    }
+
+    @Override
+    protected void setAttributes(Attributes attributes) {
+        AttributesImpl attr = (AttributesImpl) attributes.toV1();
+        this
+            .withId(attr.getId())
+            .withSource(attr.getSource())
+            .withType(attr.getType());
+        attr.getDataContentType().ifPresent(this::withDataContentType);
+        attr.getDataSchema().ifPresent(this::withDataSchema);
+        attr.getSubject().ifPresent(this::withSubject);
+        attr.getTime().ifPresent(this::withTime);
     }
 
     public CloudEventBuilder withId(String id) {

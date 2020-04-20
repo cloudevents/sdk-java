@@ -6,9 +6,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T>, T extends Attributes> {
@@ -18,14 +16,24 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
 
     private Object data;
     private Map<String, Object> extensions;
-    private List<Extension> materializedExtensions;
 
     @SuppressWarnings("unchecked")
     public BaseCloudEventBuilder() {
         this.self = (B)this;
         this.extensions = new HashMap<>();
-        this.materializedExtensions = new ArrayList<>();
     }
+
+    @SuppressWarnings("unchecked")
+    public BaseCloudEventBuilder(CloudEvent event) {
+        this.self = (B)this;
+
+        CloudEventImpl ev = (CloudEventImpl) event;
+        this.setAttributes(ev.getAttributes());
+        this.data = ev.getRawData();
+        this.extensions = new HashMap<>(ev.getExtensions());
+    }
+
+    protected abstract void setAttributes(Attributes attributes);
 
     protected abstract B withDataContentType(String contentType);
 
@@ -49,15 +57,15 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
     }
 
     public B withData(String contentType, URI dataSchema, String data) {
-        return withEncodedata(contentType, dataSchema, (Object) data);
+        return withEncodeData(contentType, dataSchema, (Object) data);
     }
 
     public B withData(String contentType, URI dataSchema, byte[] data) {
-        return withEncodedata(contentType, dataSchema, (Object) data);
+        return withEncodeData(contentType, dataSchema, (Object) data);
     }
 
     public B withData(String contentType, URI dataSchema, JsonNode data) {
-        return withEncodedata(contentType, dataSchema, (Object) data);
+        return withEncodeData(contentType, dataSchema, (Object) data);
     }
 
     public B withExtension(String key, String value) {
@@ -76,19 +84,12 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
     }
 
     public B withExtension(Extension extension) {
-        this.materializedExtensions.add(extension);
+        this.extensions.putAll(extension.asMap());
         return self;
     }
 
     public CloudEvent build() {
-        CloudEvent event = new CloudEventImpl(this.buildAttributes(), data, extensions);
-
-        // Write materialized extensions into the event
-        for (Extension ext : this.materializedExtensions) {
-            ext.writeToEvent(event);
-        }
-
-        return event;
+        return new CloudEventImpl(this.buildAttributes(), data, extensions);
     }
 
     private B withEncodedData(String contentType, Object data) {
@@ -97,7 +98,7 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
         return self;
     }
 
-    private B withEncodedata(String contentType, URI dataSchema, Object data) {
+    private B withEncodeData(String contentType, URI dataSchema, Object data) {
         withDataContentType(contentType);
         withDataSchema(dataSchema);
         this.data = data;
