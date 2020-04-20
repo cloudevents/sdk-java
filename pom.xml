@@ -68,6 +68,7 @@
 
     <modules>
         <module>api</module>
+        <module>formats/json-jackson</module>
         <!--
         <module>cdi</module>
       	<module>http/vertx</module>

@@ -1,11 +1,6 @@
 package io.cloudevents.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.json.JsonFormat;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -22,16 +17,7 @@ public class Data {
     public static final String SUBJECT = "sub";
     public static final ZonedDateTime TIME = ZonedDateTime.now();
 
-    public static final JsonNode DATA_JSON = new ObjectNode(JsonNodeFactory.instance);
-    public static byte[] DATA_JSON_SERIALIZED;
-
-    static {
-        try {
-            DATA_JSON_SERIALIZED = JsonFormat.MAPPER.writeValueAsBytes(DATA_JSON);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
+    public static byte[] DATA_JSON_SERIALIZED = "{}".getBytes();
 
     public static final CloudEvent V1_MIN = CloudEvent.buildV1()
         .withId(ID)

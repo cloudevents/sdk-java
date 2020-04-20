@@ -1,18 +1,12 @@
 package io.cloudevents.impl;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.format.EventFormat;
-import io.cloudevents.format.json.CloudEventDeserializer;
-import io.cloudevents.format.json.CloudEventSerializer;
 import io.cloudevents.message.*;
 
 import java.util.*;
 
-@JsonSerialize(using = CloudEventSerializer.class)
-@JsonDeserialize(using = CloudEventDeserializer.class)
 public final class CloudEventImpl implements CloudEvent, BinaryMessage {
 
     private final AttributesInternal attributes;

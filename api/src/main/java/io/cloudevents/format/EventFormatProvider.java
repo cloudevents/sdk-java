@@ -1,8 +1,8 @@
 package io.cloudevents.format;
 
-import io.cloudevents.format.json.JsonFormat;
-
 import java.util.HashMap;
+import java.util.ServiceLoader;
+import java.util.stream.StreamSupport;
 
 public final class EventFormatProvider {
 
@@ -18,7 +18,10 @@ public final class EventFormatProvider {
 
     //TODO register stuff with SPI
     private EventFormatProvider() {
-        registerFormat(JsonFormat.getInstance());
+        StreamSupport.stream(
+            ServiceLoader.load(EventFormat.class).spliterator(),
+            false
+        ).forEach(this::registerFormat);
     }
 
     public void registerFormat(EventFormat format) {
