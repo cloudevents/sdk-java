@@ -1,12 +1,11 @@
 package io.cloudevents.message;
 
-import io.cloudevents.SpecVersion;
-
-public interface BinaryMessageVisitor extends BinaryMessageAttributesVisitor, BinaryMessageExtensionsVisitor {
-
-    void setSpecVersion(SpecVersion specVersion) throws MessageVisitException;
+public interface BinaryMessageVisitor<V> extends BinaryMessageAttributesVisitor, BinaryMessageExtensionsVisitor {
 
     // TODO one day we'll convert this to some byte stream
     void setBody(byte[] value) throws MessageVisitException;
+
+    // Returns an eventual output value
+    V end();
 
 }

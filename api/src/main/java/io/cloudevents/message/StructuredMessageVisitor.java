@@ -2,9 +2,10 @@ package io.cloudevents.message;
 
 import io.cloudevents.format.EventFormat;
 
-public interface StructuredMessageVisitor {
+@FunctionalInterface
+public interface StructuredMessageVisitor<T> {
 
     // TODO one day we'll convert this to some byte stream
-    void setEvent(EventFormat format, byte[] value) throws MessageVisitException;
+    T setEvent(EventFormat format, byte[] value) throws MessageVisitException;
 
 }

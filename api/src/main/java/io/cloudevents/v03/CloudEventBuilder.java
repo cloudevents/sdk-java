@@ -18,6 +18,7 @@ package io.cloudevents.v03;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.impl.BaseCloudEventBuilder;
+import io.cloudevents.message.MessageVisitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -106,4 +107,21 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
 	protected AttributesImpl buildAttributes() {
 		return new AttributesImpl(id, source, type, time, schemaurl, datacontenttype, subject);
 	}
+
+	// Message impl
+
+    @Override
+    public void setAttribute(String name, String value) throws MessageVisitException {
+
+    }
+
+    @Override
+    public void setAttribute(String name, URI value) throws MessageVisitException {
+
+    }
+
+    @Override
+    public void setAttribute(String name, ZonedDateTime value) throws MessageVisitException {
+
+    }
 }

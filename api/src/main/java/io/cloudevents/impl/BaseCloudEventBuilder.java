@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
+import io.cloudevents.message.BinaryMessageVisitor;
+import io.cloudevents.message.MessageVisitException;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T>, T extends Attributes> {
+public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T>, T extends Attributes> implements BinaryMessageVisitor<CloudEvent> {
 
     // This is a little trick for enabling fluency
     private B self;
@@ -105,4 +107,28 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
         return self;
     }
 
+    @Override
+    public void setExtension(String name, String value) throws MessageVisitException {
+        this.withExtension(name, value);
+    }
+
+    @Override
+    public void setExtension(String name, Number value) throws MessageVisitException {
+        this.withExtension(name, value);
+    }
+
+    @Override
+    public void setExtension(String name, Boolean value) throws MessageVisitException {
+        this.withExtension(name, value);
+    }
+
+    @Override
+    public void setBody(byte[] value) throws MessageVisitException {
+        this.data = value;
+    }
+
+    @Override
+    public CloudEvent end() {
+        return build();
+    }
 }

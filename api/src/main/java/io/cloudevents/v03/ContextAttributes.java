@@ -40,4 +40,8 @@ public enum ContextAttributes {
 		.map(Enum::name)
         .map(String::toLowerCase)
 		.collect(Collectors.toList());
+
+    public static ContextAttributes parse(String value) {
+        return ContextAttributes.valueOf(value.toUpperCase());
+    }
 }

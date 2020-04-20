@@ -17,6 +17,9 @@ package io.cloudevents.v03;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.message.BinaryMessageAttributes;
+import io.cloudevents.message.BinaryMessageAttributesVisitor;
+import io.cloudevents.message.MessageVisitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -29,15 +32,15 @@ import java.util.Optional;
  * @author slinkydeveloper
  *
  */
-public class AttributesImpl implements Attributes {
+public class AttributesImpl implements Attributes, BinaryMessageAttributes {
 
 	private final String id;
 	private final URI source;
 	private final String type;
-	private final ZonedDateTime time;
-	private final URI schemaurl;
 	private final String datacontenttype;
-	private final String subject;
+    private final URI schemaurl;
+    private final String subject;
+    private final ZonedDateTime time;
 
 	public AttributesImpl(String id, URI source, String type,
                           ZonedDateTime time, URI schemaurl,
@@ -52,21 +55,80 @@ public class AttributesImpl implements Attributes {
 		this.subject = subject;
 	}
 
+    public SpecVersion getSpecVersion() {
+        return SpecVersion.V03;
+    }
+
 	public String getId() {
 		return id;
 	}
+
 	public URI getSource() {
 		return source;
 	}
-	public SpecVersion getSpecVersion() {
-		return SpecVersion.V03;
-	}
+
 	public String getType() {
 		return type;
 	}
-	public Optional<ZonedDateTime> getTime() {
-		return Optional.ofNullable(time);
-	}
+
+    public Optional<String> getDataContentType() {
+        return Optional.ofNullable(datacontenttype);
+    }
+    public Optional<URI> getDataSchema() {
+        return getSchemaUrl();
+    }
+
+    public Optional<URI> getSchemaUrl() {
+        return Optional.ofNullable(schemaurl);
+    }
+
+    public Optional<String> getSubject() {
+        return Optional.ofNullable(subject);
+    }
+
+    public Optional<ZonedDateTime> getTime() {
+        return Optional.ofNullable(time);
+    }
+
+    @Override
+    public void visit(BinaryMessageAttributesVisitor visitor) throws MessageVisitException {
+        visitor.setAttribute(
+            ContextAttributes.ID.name().toLowerCase(),
+            this.id
+        );
+        visitor.setAttribute(
+            ContextAttributes.SOURCE.name().toLowerCase(),
+            this.source
+        );
+        visitor.setAttribute(
+            ContextAttributes.TYPE.name().toLowerCase(),
+            this.type
+        );
+        if (this.datacontenttype != null) {
+            visitor.setAttribute(
+                ContextAttributes.DATACONTENTTYPE.name().toLowerCase(),
+                this.datacontenttype
+            );
+        }
+        if (this.schemaurl != null) {
+            visitor.setAttribute(
+                ContextAttributes.SCHEMAURL.name().toLowerCase(),
+                this.schemaurl
+            );
+        }
+        if (this.subject != null) {
+            visitor.setAttribute(
+                ContextAttributes.SUBJECT.name().toLowerCase(),
+                this.subject
+            );
+        }
+        if (this.time != null) {
+            visitor.setAttribute(
+                ContextAttributes.TYPE.name().toLowerCase(),
+                this.time
+            );
+        }
+    }
 
     @Override
     public Attributes toV03() {
@@ -85,19 +147,6 @@ public class AttributesImpl implements Attributes {
             this.time
         );
     }
-
-    public Optional<URI> getDataSchema() {
-        return getSchemaUrl();
-    }
-	public Optional<URI> getSchemaUrl() {
-		return Optional.ofNullable(schemaurl);
-	}
-	public Optional<String> getDataContentType() {
-        return Optional.ofNullable(datacontenttype);
-	}
-    public Optional<String> getSubject() {
-		return Optional.ofNullable(subject);
-	}
 
 	@Override
 	public String toString() {

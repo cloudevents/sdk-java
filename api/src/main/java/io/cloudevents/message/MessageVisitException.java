@@ -3,7 +3,8 @@ package io.cloudevents.message;
 public class MessageVisitException extends RuntimeException {
 
     public enum MessageVisitExceptionKind {
-        INVALID_ATTRIBUTE_TYPE
+        INVALID_ATTRIBUTE_TYPE,
+        INVALID_SPEC_VERSION,
     }
 
     private MessageVisitExceptionKind kind;
@@ -28,5 +29,13 @@ public class MessageVisitException extends RuntimeException {
             "Invalid attribute type for " + attributeName + ": " + clazz.getCanonicalName()
         );
     }
+
+    public static MessageVisitException newInvalidSpecVersion(String specVersion) {
+        return new MessageVisitException(
+            MessageVisitExceptionKind.INVALID_ATTRIBUTE_TYPE,
+            "Invalid specversion: " + specVersion
+        );
+    }
+
 
 }

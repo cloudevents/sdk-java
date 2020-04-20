@@ -17,6 +17,9 @@ package io.cloudevents.v1;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.message.BinaryMessageAttributes;
+import io.cloudevents.message.BinaryMessageAttributesVisitor;
+import io.cloudevents.message.MessageVisitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -28,7 +31,7 @@ import java.util.Optional;
  * @author slinkydeveloper
  * @version 1.0
  */
-public class AttributesImpl implements Attributes {
+public class AttributesImpl implements Attributes, BinaryMessageAttributes {
 
 	private final String id;
 	private final URI source;
@@ -51,10 +54,9 @@ public class AttributesImpl implements Attributes {
 		this.time = time;
 	}
 
-	@Override
-	public Optional<String> getDataContentType() {
-		return Optional.ofNullable(datacontenttype);
-	}
+    public SpecVersion getSpecVersion() {
+        return SpecVersion.V1;
+    }
 
     public String getId() {
 		return id;
@@ -64,13 +66,14 @@ public class AttributesImpl implements Attributes {
 		return source;
 	}
 
-	public SpecVersion getSpecVersion() {
-		return SpecVersion.V1;
-	}
-
 	public String getType() {
 		return type;
 	}
+
+    @Override
+    public Optional<String> getDataContentType() {
+        return Optional.ofNullable(datacontenttype);
+    }
 
     @Override
     public Optional<URI> getDataSchema() {
@@ -104,13 +107,53 @@ public class AttributesImpl implements Attributes {
     }
 
     @Override
-	public String toString() {
-		return "Attibutes V1.0 [id=" + id + ", source=" + source
-				+ ", type=" + type
-				+ ", datacontenttype=" + datacontenttype + ", dataschema="
-				+ dataschema + ", subject=" + subject
-				+ ", time=" + time + "]";
-	}
+    public void visit(BinaryMessageAttributesVisitor visitor) throws MessageVisitException {
+        visitor.setAttribute(
+            ContextAttributes.ID.name().toLowerCase(),
+            this.id
+        );
+        visitor.setAttribute(
+            ContextAttributes.SOURCE.name().toLowerCase(),
+            this.source
+        );
+        visitor.setAttribute(
+            ContextAttributes.TYPE.name().toLowerCase(),
+            this.type
+        );
+        if (this.datacontenttype != null) {
+            visitor.setAttribute(
+                ContextAttributes.DATACONTENTTYPE.name().toLowerCase(),
+                this.datacontenttype
+            );
+        }
+        if (this.dataschema != null) {
+            visitor.setAttribute(
+                ContextAttributes.DATASCHEMA.name().toLowerCase(),
+                this.dataschema
+            );
+        }
+        if (this.subject != null) {
+            visitor.setAttribute(
+                ContextAttributes.SUBJECT.name().toLowerCase(),
+                this.subject
+            );
+        }
+        if (this.time != null) {
+            visitor.setAttribute(
+                ContextAttributes.TYPE.name().toLowerCase(),
+                this.time
+            );
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Attibutes V1.0 [id=" + id + ", source=" + source
+            + ", type=" + type
+            + ", datacontenttype=" + datacontenttype + ", dataschema="
+            + dataschema + ", subject=" + subject
+            + ", time=" + time + "]";
+    }
 
 //	/**
 //	 * Used by the Jackson framework to unmarshall.
