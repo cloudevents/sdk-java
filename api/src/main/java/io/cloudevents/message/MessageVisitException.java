@@ -43,14 +43,14 @@ public class MessageVisitException extends RuntimeException {
     public static MessageVisitException newInvalidAttributeType(String attributeName, Class<?> clazz) {
         return new MessageVisitException(
             MessageVisitExceptionKind.INVALID_ATTRIBUTE_TYPE,
-            "Invalid attribute type for " + attributeName + ": " + clazz.getCanonicalName()
+            "Invalid attribute type for \"" + attributeName + "\": " + clazz.getCanonicalName()
         );
     }
 
     public static MessageVisitException newInvalidAttributeValue(String attributeName, Object value, Throwable cause) {
         return new MessageVisitException(
             MessageVisitExceptionKind.INVALID_ATTRIBUTE_VALUE,
-            "Invalid attribute value for " + attributeName + ": " + value,
+            "Invalid attribute value for \"" + attributeName + "\": " + value,
             cause
         );
     }
@@ -58,7 +58,7 @@ public class MessageVisitException extends RuntimeException {
     public static MessageVisitException newInvalidExtensionType(String extensionName, Class<?> clazz) {
         return new MessageVisitException(
             MessageVisitExceptionKind.INVALID_EXTENSION_TYPE,
-            "Invalid extension type for " + extensionName + ": " + clazz.getCanonicalName()
+            "Invalid extension type for \"" + extensionName + "\": " + clazz.getCanonicalName()
         );
     }
 }

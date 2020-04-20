@@ -15,7 +15,6 @@
  */
 package io.cloudevents;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.message.BinaryMessage;
 import io.cloudevents.message.StructuredMessage;
@@ -38,17 +37,7 @@ public interface CloudEvent {
     /**
      * The event data
      */
-    Optional<String> getDataAsString() throws DataConversionException;
-
-    /**
-     * The event data
-     */
-    Optional<byte[]> getDataAsBytes() throws DataConversionException;
-
-    /**
-     * The event data
-     */
-    Optional<JsonNode> getDataAsJson() throws DataConversionException;
+    Optional<byte[]> getData();
 
     /**
      * The event extensions

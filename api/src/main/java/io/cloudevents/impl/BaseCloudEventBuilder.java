@@ -1,6 +1,5 @@
 package io.cloudevents.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
@@ -16,7 +15,7 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
     // This is a little trick for enabling fluency
     private B self;
 
-    private Object data;
+    private byte[] data;
     private Map<String, Object> extensions;
 
     @SuppressWarnings("unchecked")
@@ -31,7 +30,7 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
 
         CloudEventImpl ev = (CloudEventImpl) event;
         this.setAttributes(ev.getAttributes());
-        this.data = ev.getRawData();
+        this.data = ev.getData().orElse(null);
         this.extensions = new HashMap<>(ev.getExtensions());
     }
 
@@ -46,28 +45,22 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
     //TODO builder should accept data as Object and use data codecs (that we need to implement)
     // to encode data
 
-    public B withData(String contentType, String data) {
-        return withEncodedData(contentType, (Object) data);
+    public B withData(byte[] data) {
+        this.data = data;
+        return this.self;
     }
 
     public B withData(String contentType, byte[] data) {
-        return withEncodedData(contentType, (Object) data);
-    }
-
-    public B withData(String contentType, JsonNode data) {
-        return withEncodedData(contentType, (Object) data);
-    }
-
-    public B withData(String contentType, URI dataSchema, String data) {
-        return withEncodeData(contentType, dataSchema, (Object) data);
+        withDataContentType(contentType);
+        withData(data);
+        return this.self;
     }
 
     public B withData(String contentType, URI dataSchema, byte[] data) {
-        return withEncodeData(contentType, dataSchema, (Object) data);
-    }
-
-    public B withData(String contentType, URI dataSchema, JsonNode data) {
-        return withEncodeData(contentType, dataSchema, (Object) data);
+        withDataContentType(contentType);
+        withDataSchema(dataSchema);
+        withData(data);
+        return this.self;
     }
 
     public B withExtension(String key, String value) {
@@ -92,19 +85,6 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
 
     public CloudEvent build() {
         return new CloudEventImpl(this.buildAttributes(), data, extensions);
-    }
-
-    private B withEncodedData(String contentType, Object data) {
-        withDataContentType(contentType);
-        this.data = data;
-        return self;
-    }
-
-    private B withEncodeData(String contentType, URI dataSchema, Object data) {
-        withDataContentType(contentType);
-        withDataSchema(dataSchema);
-        this.data = data;
-        return self;
     }
 
     @Override

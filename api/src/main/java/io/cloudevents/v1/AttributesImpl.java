@@ -141,7 +141,7 @@ public final class AttributesImpl implements AttributesInternal {
         }
         if (this.time != null) {
             visitor.setAttribute(
-                ContextAttributes.TYPE.name().toLowerCase(),
+                ContextAttributes.TIME.name().toLowerCase(),
                 this.time
             );
         }

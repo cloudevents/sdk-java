@@ -1,7 +1,7 @@
 package io.cloudevents.message;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.json.JsonFormat;
+import io.cloudevents.mock.CSVFormat;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -12,7 +12,7 @@ public class EventMessageRoundtripTest {
     @ParameterizedTest()
     @MethodSource("io.cloudevents.test.Data#allEvents")
     void structuredToEvent(CloudEvent input) {
-        assertThat(input.asStructuredMessage(JsonFormat.getInstance()).toEvent())
+        assertThat(input.asStructuredMessage(CSVFormat.INSTANCE).toEvent())
             .isEqualTo(input);
     }
 

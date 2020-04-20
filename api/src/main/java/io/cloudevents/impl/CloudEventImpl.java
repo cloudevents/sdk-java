@@ -1,20 +1,14 @@
 package io.cloudevents.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.DataConversionException;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.json.CloudEventDeserializer;
 import io.cloudevents.format.json.CloudEventSerializer;
-import io.cloudevents.format.json.JsonFormat;
 import io.cloudevents.message.*;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @JsonSerialize(using = CloudEventSerializer.class)
@@ -22,10 +16,10 @@ import java.util.*;
 public final class CloudEventImpl implements CloudEvent, BinaryMessage {
 
     private final AttributesInternal attributes;
-    private final Object data;
+    private final byte[] data;
     private final Map<String, Object> extensions;
 
-    protected CloudEventImpl(Attributes attributes, Object data, Map<String, Object> extensions) {
+    protected CloudEventImpl(Attributes attributes, byte[] data, Map<String, Object> extensions) {
         Objects.requireNonNull(attributes);
         this.attributes = (AttributesInternal) attributes;
         this.data = data;
@@ -38,72 +32,8 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
     }
 
     @Override
-    public Optional<String> getDataAsString() {
-        if (data != null) {
-            if (data instanceof String) {
-                return Optional.of((String)data);
-            }
-            if (data instanceof byte[]) {
-                return Optional.of(new String((byte[]) this.data, StandardCharsets.UTF_8));
-            }
-            if (data instanceof JsonNode) {
-                JsonNode d = (JsonNode) this.data;
-                try {
-                    return Optional.of(JsonFormat.MAPPER.writeValueAsString(data));
-                } catch (JsonProcessingException e) {
-                    throw new DataConversionException("JsonNode", "String", e);
-                }
-            }
-            throw new IllegalStateException("CloudEventImpl contains an illegal data of class " + data.getClass().getCanonicalName());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<byte[]> getDataAsBytes() {
-        if (data != null) {
-            if (data instanceof String) {
-                return Optional.of(((String)data).getBytes());
-            }
-            if (data instanceof byte[]) {
-                return Optional.of((byte[])this.data);
-            }
-            if (data instanceof JsonNode) {
-                JsonNode d = (JsonNode) this.data;
-                try {
-                    return Optional.of(JsonFormat.MAPPER.writeValueAsBytes(data));
-                } catch (JsonProcessingException e) {
-                    throw new DataConversionException("JsonNode", "byte[]", e);
-                }
-            }
-            throw new IllegalStateException("CloudEventImpl contains an illegal data of class " + data.getClass().getCanonicalName());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<JsonNode> getDataAsJson() {
-        if (data != null) {
-            if (data instanceof String) {
-                try {
-                    return Optional.of(JsonFormat.MAPPER.readTree((String)data));
-                } catch (IOException e) {
-                    throw new DataConversionException("String", "JsonNode", e);
-                }
-            }
-            if (data instanceof byte[]) {
-                try {
-                    return Optional.of(JsonFormat.MAPPER.readTree((byte[]) data));
-                } catch (IOException e) {
-                    throw new DataConversionException("[]byte", "JsonNode", e);
-                }
-            }
-            if (data instanceof JsonNode) {
-                return Optional.of((JsonNode)this.data);
-            }
-            throw new IllegalStateException("CloudEventImpl contains an illegal data of class " + data.getClass().getCanonicalName());
-        }
-        return Optional.empty();
+    public Optional<byte[]> getData() {
+        return Optional.ofNullable(this.data);
     }
 
     @Override
@@ -127,10 +57,6 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
             data,
             extensions
         );
-    }
-
-    protected Object getRawData() {
-        return data;
     }
 
     // Message impl
@@ -169,9 +95,8 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
             }
         }
 
-        // TODO to be improved to remove the allocation of useless optional
         if (this.data != null) {
-            visitor.setBody(this.getDataAsBytes().get());
+            visitor.setBody(this.data);
         }
 
         return visitor.end();
@@ -183,7 +108,7 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
         if (o == null || getClass() != o.getClass()) return false;
         CloudEventImpl that = (CloudEventImpl) o;
         return Objects.equals(attributes, that.attributes) &&
-            Objects.equals(data, that.data) &&
+            Arrays.equals(data, that.data) &&
             Objects.equals(extensions, that.extensions);
     }
 
