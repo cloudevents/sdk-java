@@ -4,9 +4,12 @@ import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.impl.BaseCloudEventBuilder;
 import io.cloudevents.message.MessageVisitException;
+import io.cloudevents.types.Time;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 
 /**
  *
@@ -90,16 +93,63 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
 
     @Override
     public void setAttribute(String name, String value) throws MessageVisitException {
-
+        switch (name) {
+            case "id":
+                withId(value);
+                return;
+            case "source":
+                try {
+                    withSource(new URI(value));
+                } catch (URISyntaxException e) {
+                    throw MessageVisitException.newInvalidAttributeValue("source", value, e);
+                }
+                return;
+            case "type":
+                withType(value);
+                return;
+            case "datacontenttype":
+                withDataContentType(value);
+                return;
+            case "dataschema":
+                try {
+                    withDataSchema(new URI(value));
+                } catch (URISyntaxException e) {
+                    throw MessageVisitException.newInvalidAttributeValue("dataschema", value, e);
+                }
+                return;
+            case "subject":
+                withSubject(value);
+                return;
+            case "time":
+                try {
+                    withTime(Time.parseTime(value));
+                } catch (DateTimeParseException e) {
+                    throw MessageVisitException.newInvalidAttributeValue("time", value, e);
+                }
+                return;
+        }
+        throw MessageVisitException.newInvalidAttributeName(name);
     }
 
     @Override
     public void setAttribute(String name, URI value) throws MessageVisitException {
-
+        switch (name) {
+            case "source":
+                withSource(value);
+                return;
+            case "dataschema":
+                withDataSchema(value);
+                return;
+        }
+        throw MessageVisitException.newInvalidAttributeType(name, URI.class);
     }
 
     @Override
     public void setAttribute(String name, ZonedDateTime value) throws MessageVisitException {
-
+        if ("time".equals(name)) {
+            withTime(value);
+            return;
+        }
+        throw MessageVisitException.newInvalidAttributeType(name, ZonedDateTime.class);
     }
 }

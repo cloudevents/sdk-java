@@ -17,7 +17,7 @@ package io.cloudevents.v03;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.message.BinaryMessageAttributes;
+import io.cloudevents.impl.AttributesInternal;
 import io.cloudevents.message.BinaryMessageAttributesVisitor;
 import io.cloudevents.message.MessageVisitException;
 
@@ -32,7 +32,7 @@ import java.util.Optional;
  * @author slinkydeveloper
  *
  */
-public class AttributesImpl implements Attributes, BinaryMessageAttributes {
+public final class AttributesImpl implements AttributesInternal {
 
 	private final String id;
 	private final URI source;

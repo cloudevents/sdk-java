@@ -35,11 +35,15 @@ public enum ContextAttributes {
     TIME;
 	public static final List<String> VALUES =
 		Arrays.stream(ContextAttributes.values())
-		.map(Enum::name)
-        .map(String::toLowerCase)
+		.map(ContextAttributes::toString)
 		.collect(Collectors.toList());
 
 	public static ContextAttributes parse(String value) {
 	    return ContextAttributes.valueOf(value.toUpperCase());
+    }
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
 }

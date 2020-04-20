@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.DataConversionException;
+import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.json.CloudEventDeserializer;
 import io.cloudevents.format.json.CloudEventSerializer;
 import io.cloudevents.json.Json;
+import io.cloudevents.message.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,15 +19,15 @@ import java.util.*;
 
 @JsonSerialize(using = CloudEventSerializer.class)
 @JsonDeserialize(using = CloudEventDeserializer.class)
-public final class CloudEventImpl implements CloudEvent {
+public final class CloudEventImpl implements CloudEvent, BinaryMessage {
 
-    private final Attributes attributes;
+    private final AttributesInternal attributes;
     private final Object data;
     private final Map<String, Object> extensions;
 
-    public CloudEventImpl(Attributes attributes, Object data, Map<String, Object> extensions) {
+    protected CloudEventImpl(Attributes attributes, Object data, Map<String, Object> extensions) {
         Objects.requireNonNull(attributes);
-        this.attributes = attributes;
+        this.attributes = (AttributesInternal) attributes;
         this.data = data;
         this.extensions = extensions != null ? extensions : new HashMap<>();
     }
@@ -129,5 +131,49 @@ public final class CloudEventImpl implements CloudEvent {
 
     protected Object getRawData() {
         return data;
+    }
+
+    // Message impl
+
+    public BinaryMessage asBinaryMessage() {
+        return this;
+    }
+
+    public StructuredMessage asStructuredMessage(EventFormat format) {
+        CloudEvent ev = this;
+        // TODO This sucks, will improve later
+        return new StructuredMessage() {
+            @Override
+            public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
+                return visitor.setEvent(format, format.serializeToBytes(ev));
+            }
+        };
+    }
+
+    @Override
+    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
+        BinaryMessageVisitor<V> visitor = visitorFactory.apply(this.attributes.getSpecVersion());
+        this.attributes.visit(visitor);
+
+        // TODO to be improved
+        for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
+            if (entry.getValue() instanceof String) {
+                visitor.setExtension(entry.getKey(), (String) entry.getValue());
+            } else if (entry.getValue() instanceof Number) {
+                visitor.setExtension(entry.getKey(), (Number) entry.getValue());
+            } else if (entry.getValue() instanceof Boolean) {
+                visitor.setExtension(entry.getKey(), (Boolean) entry.getValue());
+            } else {
+                // This should never happen because we build that map only through our builders
+                throw new IllegalStateException("Illegal value inside extensions map: " + entry);
+            }
+        }
+
+        // TODO to be improved to remove the allocation of useless optional
+        if (this.data != null) {
+            visitor.setBody(this.getDataAsBytes().get());
+        }
+
+        return visitor.end();
     }
 }

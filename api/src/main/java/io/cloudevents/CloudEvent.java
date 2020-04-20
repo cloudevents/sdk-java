@@ -16,6 +16,9 @@
 package io.cloudevents;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.cloudevents.format.EventFormat;
+import io.cloudevents.message.BinaryMessage;
+import io.cloudevents.message.StructuredMessage;
 
 import java.util.Map;
 import java.util.Optional;
@@ -57,6 +60,10 @@ public interface CloudEvent {
     CloudEvent toV03();
 
     CloudEvent toV1();
+
+    BinaryMessage asBinaryMessage();
+
+    StructuredMessage asStructuredMessage(EventFormat format);
 
     static io.cloudevents.v1.CloudEventBuilder buildV1() {
         return new io.cloudevents.v1.CloudEventBuilder();

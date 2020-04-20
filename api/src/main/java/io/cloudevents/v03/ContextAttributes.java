@@ -44,4 +44,9 @@ public enum ContextAttributes {
     public static ContextAttributes parse(String value) {
         return ContextAttributes.valueOf(value.toUpperCase());
     }
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 }
