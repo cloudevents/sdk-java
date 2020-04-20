@@ -13,7 +13,7 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
     private final byte[] data;
     private final Map<String, Object> extensions;
 
-    protected CloudEventImpl(Attributes attributes, byte[] data, Map<String, Object> extensions) {
+    public CloudEventImpl(Attributes attributes, byte[] data, Map<String, Object> extensions) {
         Objects.requireNonNull(attributes);
         this.attributes = (AttributesInternal) attributes;
         this.data = data;

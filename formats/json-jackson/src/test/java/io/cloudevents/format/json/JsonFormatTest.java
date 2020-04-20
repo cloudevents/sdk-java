@@ -66,6 +66,14 @@ class JsonFormatTest {
     }
 
     private static Stream<Arguments> serializeTestArguments() {
+        return deserializeTestArguments().map(a -> {
+            List<Object> vals = new ArrayList<>(Arrays.asList(a.get()));
+            Collections.reverse(vals);
+            return Arguments.of(vals.toArray());
+        });
+    }
+
+    private static Stream<Arguments> deserializeTestArguments() {
         return Stream.of(
             Arguments.of("v03/min.json", V03_MIN),
             Arguments.of("v03/json_data.json", V03_WITH_JSON_DATA),
@@ -82,14 +90,6 @@ class JsonFormatTest {
             Arguments.of("v1/text_data.xml", V1_WITH_TEXT_DATA),
             Arguments.of("v1/base64_text_data.xml", V1_WITH_TEXT_DATA)
         );
-    }
-
-    private static Stream<Arguments> deserializeTestArguments() {
-        return serializeTestArguments().map(a -> {
-            List<Object> vals = new ArrayList<>(Arrays.asList(a.get()));
-            Collections.reverse(vals);
-            return Arguments.of(vals.toArray());
-        });
     }
 
     private static Stream<String> roundTripTestArguments() {
@@ -123,7 +123,7 @@ class JsonFormatTest {
     }
 
     private EventFormat getFormat() {
-        return EventFormatProvider.getInstance().resolveFormat("application/json");
+        return EventFormatProvider.getInstance().resolveFormat("application/cloudevents+json");
     }
 
 }

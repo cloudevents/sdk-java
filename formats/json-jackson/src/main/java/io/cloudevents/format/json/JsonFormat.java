@@ -15,11 +15,16 @@
  */
 package io.cloudevents.format.json;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.format.EventDeserializationException;
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.format.EventSerializationException;
+import io.cloudevents.impl.CloudEventImpl;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Set;
@@ -36,18 +41,39 @@ public final class JsonFormat implements EventFormat {
         MAPPER.registerModule(module);
     }
 
+    private boolean forceDataBase64Serialization = false;
+    private boolean forceStringSerialization = false;
+
     @Override
-    public byte[] serialize(CloudEvent event) {
-        return new byte[0];
+    public byte[] serialize(CloudEvent event) throws EventSerializationException {
+        try {
+            return MAPPER.writeValueAsBytes(event);
+        } catch (JsonProcessingException e) {
+            throw new EventSerializationException(e);
+        }
     }
 
     @Override
-    public CloudEvent deserialize(byte[] event) {
-        return null;
+    public CloudEvent deserialize(byte[] event) throws EventDeserializationException {
+        try {
+            return MAPPER.readValue(event, CloudEventImpl.class);
+        } catch (IOException e) {
+            throw new EventDeserializationException(e);
+        }
     }
 
     @Override
     public Set<String> supportedContentTypes() {
         return Collections.singleton("application/cloudevents+json");
+    }
+
+    public JsonFormat forceDataBase64Serialization(boolean forceBase64Serialization) {
+        this.forceDataBase64Serialization = forceBase64Serialization;
+        return this;
+    }
+
+    public JsonFormat forceDataStringSerialization(boolean forceStringSerialization) {
+        this.forceStringSerialization = forceStringSerialization;
+        return this;
     }
 }

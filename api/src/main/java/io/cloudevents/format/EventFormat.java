@@ -6,9 +6,9 @@ import java.util.Set;
 
 public interface EventFormat {
 
-    byte[] serialize(CloudEvent event);
+    byte[] serialize(CloudEvent event) throws EventSerializationException;
 
-    CloudEvent deserialize(byte[] event);
+    CloudEvent deserialize(byte[] event) throws EventDeserializationException;
 
     Set<String> supportedContentTypes();
 
