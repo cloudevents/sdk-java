@@ -23,6 +23,7 @@ import io.cloudevents.message.MessageVisitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -155,76 +156,22 @@ public final class AttributesImpl implements AttributesInternal {
             + ", time=" + time + "]";
     }
 
-//	/**
-//	 * Used by the Jackson framework to unmarshall.
-//	 */
-//	@JsonCreator
-//	public static AttributesImpl build(
-//			@JsonProperty("id") String id,
-//			@JsonProperty("source") URI source,
-//			@JsonProperty("type") String type,
-//			@JsonProperty("datacontenttype") String datacontenttype,
-//			@JsonProperty("dataschema") URI dataschema,
-//			@JsonProperty("subject") String subject,
-//			@JsonProperty("time") ZonedDateTime time) {
-//
-//		return new AttributesImpl(id, source, type,
-//				datacontenttype, dataschema, subject, time);
-//	}
-//
-//	/**
-//	 * Creates the marshaller instance to marshall {@link AttributesImpl} as
-//	 * a {@link Map} of strings
-//	 */
-//	public static Map<String, String> marshal(AttributesImpl attributes) {
-//		Objects.requireNonNull(attributes);
-//		Map<String, String> result = new HashMap<>();
-//
-//		result.put(ContextAttributes.ID.name(),
-//				attributes.getId());
-//		result.put(ContextAttributes.SOURCE.name(),
-//				attributes.getSource().toString());
-//		result.put(ContextAttributes.TYPE.name(),
-//				attributes.getType());
-//
-//		attributes.getDatacontenttype().ifPresent(dct -> result.put(ContextAttributes.DATACONTENTTYPE.name(), dct));
-//		attributes.getDataschema().ifPresent(dataschema -> result.put(ContextAttributes.DATASCHEMA.name(),
-//																  dataschema.toString()));
-//		attributes.getSubject().ifPresent(subject -> result.put(ContextAttributes.SUBJECT.name(), subject));
-//		attributes.getTime().ifPresent(time -> result.put(ContextAttributes.TIME.name(),
-//													  time.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
-//
-//		return result;
-//	}
-//
-//	/**
-//	 * The attribute unmarshaller for the binary format, that receives a
-//	 * {@code Map} with attributes names as String and value as String.
-//	 */
-//	public static AttributesImpl unmarshal(Map<String, String> attributes) {
-//		String type = attributes.get(ContextAttributes.TYPE.name());
-//		ZonedDateTime time =
-//			Optional.ofNullable(attributes.get(ContextAttributes.TIME.name()))
-//			.map((t) -> ZonedDateTime.parse(t,
-//					ISO_ZONED_DATE_TIME))
-//			.orElse(null);
-//
-//		String specversion = attributes.get(ContextAttributes.SPECVERSION.name());
-//		URI source = URI.create(attributes.get(ContextAttributes.SOURCE.name()));
-//
-//		URI dataschema =
-//			Optional.ofNullable(attributes.get(ContextAttributes.DATASCHEMA.name()))
-//			.map(URI::create)
-//			.orElse(null);
-//
-//		String id = attributes.get(ContextAttributes.ID.name());
-//
-//		String datacontenttype =
-//			attributes.get(ContextAttributes.DATACONTENTTYPE.name());
-//
-//		String subject = attributes.get(ContextAttributes.SUBJECT.name());
-//
-//		return AttributesImpl.build(id, source, type,
-//				datacontenttype, dataschema, subject, time);
-//	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AttributesImpl that = (AttributesImpl) o;
+        return Objects.equals(id, that.id) &&
+            Objects.equals(source, that.source) &&
+            Objects.equals(type, that.type) &&
+            Objects.equals(datacontenttype, that.datacontenttype) &&
+            Objects.equals(dataschema, that.dataschema) &&
+            Objects.equals(subject, that.subject) &&
+            Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, source, type, datacontenttype, dataschema, subject, time);
+    }
 }

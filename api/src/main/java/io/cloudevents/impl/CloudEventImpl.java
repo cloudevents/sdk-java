@@ -10,7 +10,7 @@ import io.cloudevents.DataConversionException;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.json.CloudEventDeserializer;
 import io.cloudevents.format.json.CloudEventSerializer;
-import io.cloudevents.json.Json;
+import io.cloudevents.format.json.JsonFormat;
 import io.cloudevents.message.*;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
             if (data instanceof JsonNode) {
                 JsonNode d = (JsonNode) this.data;
                 try {
-                    return Optional.of(Json.MAPPER.writeValueAsString(data));
+                    return Optional.of(JsonFormat.MAPPER.writeValueAsString(data));
                 } catch (JsonProcessingException e) {
                     throw new DataConversionException("JsonNode", "String", e);
                 }
@@ -71,7 +71,7 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
             if (data instanceof JsonNode) {
                 JsonNode d = (JsonNode) this.data;
                 try {
-                    return Optional.of(Json.MAPPER.writeValueAsBytes(data));
+                    return Optional.of(JsonFormat.MAPPER.writeValueAsBytes(data));
                 } catch (JsonProcessingException e) {
                     throw new DataConversionException("JsonNode", "byte[]", e);
                 }
@@ -86,14 +86,14 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
         if (data != null) {
             if (data instanceof String) {
                 try {
-                    return Optional.of(Json.MAPPER.readTree((String)data));
+                    return Optional.of(JsonFormat.MAPPER.readTree((String)data));
                 } catch (IOException e) {
                     throw new DataConversionException("String", "JsonNode", e);
                 }
             }
             if (data instanceof byte[]) {
                 try {
-                    return Optional.of(Json.MAPPER.readTree((byte[]) data));
+                    return Optional.of(JsonFormat.MAPPER.readTree((byte[]) data));
                 } catch (IOException e) {
                     throw new DataConversionException("[]byte", "JsonNode", e);
                 }
@@ -152,7 +152,7 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
 
     @Override
     public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
-        BinaryMessageVisitor<V> visitor = visitorFactory.apply(this.attributes.getSpecVersion());
+        BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(this.attributes.getSpecVersion());
         this.attributes.visit(visitor);
 
         // TODO to be improved
@@ -175,5 +175,20 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
         }
 
         return visitor.end();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CloudEventImpl that = (CloudEventImpl) o;
+        return Objects.equals(attributes, that.attributes) &&
+            Objects.equals(data, that.data) &&
+            Objects.equals(extensions, that.extensions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attributes, data, extensions);
     }
 }

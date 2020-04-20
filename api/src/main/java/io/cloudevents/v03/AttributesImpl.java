@@ -23,6 +23,7 @@ import io.cloudevents.message.MessageVisitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -74,6 +75,7 @@ public final class AttributesImpl implements AttributesInternal {
     public Optional<String> getDataContentType() {
         return Optional.ofNullable(datacontenttype);
     }
+
     public Optional<URI> getDataSchema() {
         return getSchemaUrl();
     }
@@ -156,85 +158,24 @@ public final class AttributesImpl implements AttributesInternal {
 				+ ", datacontenttype=" + datacontenttype + ", subject="
 				+ subject + "]";
 	}
-//
-//	/**
-//	 * Used by the Jackson framework to unmarshall.
-//	 */
-//	@JsonCreator
-//	public static AttributesImpl build(
-//			@JsonProperty("id") String id,
-//			@JsonProperty("source") URI source,
-//			@JsonProperty("type") String type,
-//			@JsonProperty("time") ZonedDateTime time,
-//			@JsonProperty("schemaurl") URI schemaurl,
-//			@JsonProperty("datacontenttype") String datacontenttype,
-//			@JsonProperty("subject") String subject) {
-//
-//		return new AttributesImpl(id, source, type, time,
-//				schemaurl, datacontenttype, subject);
-//	}
-//
-//	/**
-//	 * Creates the marshaller instance to marshall {@link AttributesImpl} as
-//	 * a {@link Map} of strings
-//	 */
-//	public static Map<String, String> marshal(AttributesImpl attributes) {
-//		Objects.requireNonNull(attributes);
-//
-//		Map<String, String> result = new HashMap<>();
-//
-//		result.put(ContextAttributes.TYPE.name(),
-//				attributes.getType());
-//		result.put(ContextAttributes.SPECVERSION.name(),
-//				attributes.getSpecVersion());
-//		result.put(ContextAttributes.SOURCE.name(),
-//				attributes.getSource().toString());
-//		result.put(ContextAttributes.ID.name(),
-//				attributes.getId());
-//
-//		attributes.getTime().ifPresent((value) -> result.put(ContextAttributes.TIME.name(),
-//														 value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
-//		attributes.getSchemaurl().ifPresent((schema) -> result.put(ContextAttributes.SCHEMAURL.name(),
-//															   schema.toString()));
-//		attributes.getDatacontenttype().ifPresent((ct) -> result.put(ContextAttributes.DATACONTENTTYPE.name(), ct));
-//		attributes.getDatacontentencoding().ifPresent(dce -> result.put(ContextAttributes.DATACONTENTENCODING.name(), dce));
-//		attributes.getSubject().ifPresent(subject -> result.put(ContextAttributes.SUBJECT.name(), subject));
-//
-//		return result;
-//	}
-//
-//	/**
-//	 * The attribute unmarshaller for the binary format, that receives a
-//	 * {@code Map} with attributes names as String and value as String.
-//	 */
-//	public static AttributesImpl unmarshal(Map<String, String> attributes) {
-//		String type = attributes.get(ContextAttributes.TYPE.name());
-//		ZonedDateTime time =
-//			Optional.ofNullable(attributes.get(ContextAttributes.TIME.name()))
-//			.map((t) -> ZonedDateTime.parse(t,
-//					ISO_ZONED_DATE_TIME))
-//			.orElse(null);
-//
-//		String specversion = attributes.get(ContextAttributes.SPECVERSION.name());
-//		URI source = URI.create(attributes.get(ContextAttributes.SOURCE.name()));
-//
-//		URI schemaurl =
-//			Optional.ofNullable(attributes.get(ContextAttributes.SCHEMAURL.name()))
-//			.map(URI::create)
-//			.orElse(null);
-//
-//		String id = attributes.get(ContextAttributes.ID.name());
-//
-//		String datacontenttype =
-//			attributes.get(ContextAttributes.DATACONTENTTYPE.name());
-//
-//		String datacontentencoding =
-//			attributes.get(ContextAttributes.DATACONTENTENCODING.name());
-//
-//		String subject = attributes.get(ContextAttributes.SUBJECT.name());
-//
-//		return AttributesImpl.build(id, source, specversion, type,
-//				time, schemaurl, datacontentencoding,
-//				datacontenttype, subject);
-//	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AttributesImpl that = (AttributesImpl) o;
+        return Objects.equals(id, that.id) &&
+            Objects.equals(source, that.source) &&
+            Objects.equals(type, that.type) &&
+            Objects.equals(datacontenttype, that.datacontenttype) &&
+            Objects.equals(schemaurl, that.schemaurl) &&
+            Objects.equals(subject, that.subject) &&
+            Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, source, type, datacontenttype, schemaurl, subject, time);
+    }
+
 }
