@@ -65,7 +65,7 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
         return new StructuredMessage() {
             @Override
             public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
-                return visitor.setEvent(format, format.serializeToBytes(ev));
+                return visitor.setEvent(format, format.serialize(ev));
             }
         };
     }

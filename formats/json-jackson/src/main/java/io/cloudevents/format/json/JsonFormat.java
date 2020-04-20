@@ -36,34 +36,13 @@ public final class JsonFormat implements EventFormat {
         MAPPER.registerModule(module);
     }
 
-
-    private static class SingletonContainer {
-        private final static JsonFormat INSTANCE = new JsonFormat();
-    }
-
-    public static JsonFormat getInstance() {
-        return JsonFormat.SingletonContainer.INSTANCE;
-    }
-
-    private JsonFormat() {}
-
     @Override
-    public byte[] serializeToBytes(CloudEvent event) {
+    public byte[] serialize(CloudEvent event) {
         return new byte[0];
     }
 
     @Override
-    public String serializeToString(CloudEvent event) {
-        return null;
-    }
-
-    @Override
     public CloudEvent deserialize(byte[] event) {
-        return null;
-    }
-
-    @Override
-    public CloudEvent deserialize(String event) {
         return null;
     }
 

@@ -14,8 +14,6 @@ public class EventMessageRoundtripTest {
     @ParameterizedTest()
     @MethodSource("io.cloudevents.test.Data#allEvents")
     void structuredToEvent(CloudEvent input) {
-        CloudEvent event = input.asStructuredMessage(CSVFormat.INSTANCE).toEvent();
-
         assertThat(input.asStructuredMessage(CSVFormat.INSTANCE).toEvent())
             .isEqualTo(input);
     }

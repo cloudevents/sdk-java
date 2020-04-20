@@ -1,0 +1,11 @@
+{
+    "specversion": "0.3",
+    "id": "1",
+    "type": "mock.test",
+    "source": "http://localhost/source",
+    "datacontenttype": "text/plain",
+    "datacontentencoding": "base64",
+    "data": "SGVsbG8gV29ybGQgTG9yZW5hIQ==",
+    "subject": "sub",
+    "time": "2018-04-26T14:48:09+02:00"
+}

@@ -19,12 +19,7 @@ public class CSVFormat implements EventFormat {
     public static final CSVFormat INSTANCE = new CSVFormat();
 
     @Override
-    public byte[] serializeToBytes(CloudEvent event) {
-        return serializeToString(event).getBytes();
-    }
-
-    @Override
-    public String serializeToString(CloudEvent event) {
+    public byte[] serialize(CloudEvent event) {
         return String.join(
             ",",
             event.getAttributes().getSpecVersion().toString(),
@@ -36,17 +31,12 @@ public class CSVFormat implements EventFormat {
             event.getAttributes().getSubject().orElse("null"),
             event.getAttributes().getTime().map(Time.RFC3339_DATE_FORMAT::format).orElse("null"),
             event.getData().map(d -> new String(Base64.getEncoder().encode(d), StandardCharsets.UTF_8)).orElse("null")
-        );
+        ).getBytes();
     }
 
     @Override
     public CloudEvent deserialize(byte[] event) {
-        return deserialize(new String(event, StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public CloudEvent deserialize(String event) {
-        String[] splitted = event.split(Pattern.quote(","));
+        String[] splitted = new String(event, StandardCharsets.UTF_8).split(Pattern.quote(","));
         SpecVersion sv = SpecVersion.parse(splitted[0]);
 
         String id = splitted[1];

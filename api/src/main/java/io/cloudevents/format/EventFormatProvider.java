@@ -18,6 +18,8 @@ public final class EventFormatProvider {
 
     //TODO register stuff with SPI
     private EventFormatProvider() {
+        this.formats = new HashMap<>();
+
         StreamSupport.stream(
             ServiceLoader.load(EventFormat.class).spliterator(),
             false
