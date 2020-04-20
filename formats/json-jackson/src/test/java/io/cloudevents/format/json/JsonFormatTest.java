@@ -78,17 +78,17 @@ class JsonFormatTest {
             Arguments.of("v03/min.json", V03_MIN),
             Arguments.of("v03/json_data.json", V03_WITH_JSON_DATA),
             Arguments.of("v03/base64_json_data.json", V03_WITH_JSON_DATA),
-            Arguments.of("v03/xml_data.xml", V03_WITH_XML_DATA),
-            Arguments.of("v03/base64_xml_data.xml", V03_WITH_XML_DATA),
-            Arguments.of("v03/text_data.xml", V03_WITH_TEXT_DATA),
-            Arguments.of("v03/base64_text_data.xml", V03_WITH_TEXT_DATA),
+            Arguments.of("v03/xml_data.json", V03_WITH_XML_DATA),
+            Arguments.of("v03/base64_xml_data.json", V03_WITH_XML_DATA),
+            Arguments.of("v03/text_data.json", V03_WITH_TEXT_DATA),
+            Arguments.of("v03/base64_text_data.json", V03_WITH_TEXT_DATA),
             Arguments.of("v1/min.json", V1_MIN),
             Arguments.of("v1/json_data.json", V1_WITH_JSON_DATA),
             Arguments.of("v1/base64_json_data.json", V1_WITH_JSON_DATA),
-            Arguments.of("v1/xml_data.xml", V1_WITH_XML_DATA),
-            Arguments.of("v1/base64_xml_data.xml", V1_WITH_XML_DATA),
-            Arguments.of("v1/text_data.xml", V1_WITH_TEXT_DATA),
-            Arguments.of("v1/base64_text_data.xml", V1_WITH_TEXT_DATA)
+            Arguments.of("v1/xml_data.json", V1_WITH_XML_DATA),
+            Arguments.of("v1/base64_xml_data.json", V1_WITH_XML_DATA),
+            Arguments.of("v1/text_data.json", V1_WITH_TEXT_DATA),
+            Arguments.of("v1/base64_text_data.json", V1_WITH_TEXT_DATA)
         );
     }
 
@@ -97,17 +97,17 @@ class JsonFormatTest {
             "v03/min.json",
             "v03/json_data.json",
             "v03/base64_json_data.json",
-            "v03/xml_data.xml",
-            "v03/base64_xml_data.xml",
-            "v03/text_data.text",
-            "v03/base64_text_data.text",
+            "v03/xml_data.json",
+            "v03/base64_xml_data.json",
+            "v03/text_data.json",
+            "v03/base64_text_data.json",
             "v1/min.json",
             "v1/json_data.json",
             "v1/base64_json_data.json",
-            "v1/xml_data.xml",
-            "v1/base64_xml_data.xml",
-            "v1/text_data.text",
-            "v1/base64_text_data.text"
+            "v1/xml_data.json",
+            "v1/base64_xml_data.json",
+            "v1/text_data.json",
+            "v1/base64_text_data.json"
         );
     }
 
