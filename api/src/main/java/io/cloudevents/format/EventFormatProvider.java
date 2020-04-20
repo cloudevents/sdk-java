@@ -16,7 +16,6 @@ public final class EventFormatProvider {
 
     private HashMap<String, EventFormat> formats;
 
-    //TODO register stuff with SPI
     private EventFormatProvider() {
         this.formats = new HashMap<>();
 

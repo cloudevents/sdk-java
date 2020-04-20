@@ -5,6 +5,7 @@ import io.cloudevents.types.Time;
 import java.net.URI;
 import java.time.ZonedDateTime;
 
+@FunctionalInterface
 public interface BinaryMessageAttributesVisitor {
 
     void setAttribute(String name, String value) throws MessageVisitException;

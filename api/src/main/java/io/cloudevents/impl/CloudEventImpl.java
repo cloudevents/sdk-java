@@ -7,7 +7,7 @@ import io.cloudevents.message.*;
 
 import java.util.*;
 
-public final class CloudEventImpl implements CloudEvent, BinaryMessage {
+public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMessageExtensions {
 
     private final AttributesInternal attributes;
     private final byte[] data;
@@ -71,10 +71,7 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
     }
 
     @Override
-    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
-        BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(this.attributes.getSpecVersion());
-        this.attributes.visit(visitor);
-
+    public void visitExtensions(BinaryMessageExtensionsVisitor visitor) throws MessageVisitException {
         // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {
@@ -88,6 +85,13 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage {
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
             }
         }
+    }
+
+    @Override
+    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
+        BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(this.attributes.getSpecVersion());
+        this.attributes.visitAttributes(visitor);
+        this.visitExtensions(visitor);
 
         if (this.data != null) {
             visitor.setBody(this.data);

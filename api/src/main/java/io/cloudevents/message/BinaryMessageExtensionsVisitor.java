@@ -1,5 +1,6 @@
 package io.cloudevents.message;
 
+@FunctionalInterface
 public interface BinaryMessageExtensionsVisitor {
 
     void setExtension(String name, String value) throws MessageVisitException;

@@ -123,7 +123,7 @@ class JsonFormatTest {
     }
 
     private EventFormat getFormat() {
-        return EventFormatProvider.getInstance().resolveFormat("application/cloudevents+json");
+        return EventFormatProvider.getInstance().resolveFormat(JsonFormat.CONTENT_TYPE);
     }
 
 }

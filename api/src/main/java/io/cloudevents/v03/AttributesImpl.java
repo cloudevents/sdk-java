@@ -93,7 +93,7 @@ public final class AttributesImpl implements AttributesInternal {
     }
 
     @Override
-    public void visit(BinaryMessageAttributesVisitor visitor) throws MessageVisitException {
+    public void visitAttributes(BinaryMessageAttributesVisitor visitor) throws MessageVisitException {
         visitor.setAttribute(
             ContextAttributes.ID.name().toLowerCase(),
             this.id
