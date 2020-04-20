@@ -15,8 +15,6 @@ public final class DistributedTracingExtension implements Extension {
     private String traceparent;
     private String tracestate;
 
-    public DistributedTracingExtension() { }
-
     public String getTraceparent() {
         return traceparent;
     }

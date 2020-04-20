@@ -17,9 +17,12 @@ public enum SpecVersion {
 
     public static SpecVersion parse(String sv) {
         switch (sv) {
-            case "0.3": return SpecVersion.V03;
-            case "1.0": return SpecVersion.V1;
-            default: throw new IllegalArgumentException("Unrecognized SpecVersion "+ sv);
+            case "0.3":
+                return SpecVersion.V03;
+            case "1.0":
+                return SpecVersion.V1;
+            default:
+                throw new IllegalArgumentException("Unrecognized SpecVersion " + sv);
         }
     }
 }

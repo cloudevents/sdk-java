@@ -15,7 +15,7 @@ public class Data {
     public static final String DATACONTENTTYPE_JSON = "application/json";
     public static final URI DATASCHEMA = URI.create("http://localhost/schema");
     public static final String SUBJECT = "sub";
-    public static final ZonedDateTime TIME = ZonedDateTime.now();
+    public static final ZonedDateTime TIME = ZonedDateTime.now().withFixedOffsetZone().withNano(0);
 
     public static byte[] DATA_JSON_SERIALIZED = "{}".getBytes();
 

@@ -42,13 +42,13 @@ public class MockBinaryMessage implements Message, BinaryMessageVisitorFactory<M
         for (Map.Entry<String, Object> e: this.attributes.entrySet()) {
             if (e.getValue() instanceof String) {
                 visitor.setAttribute(e.getKey(), (String) e.getValue());
-            } else if (e.getValue() instanceof Number) {
-                visitor.setExtension(e.getKey(), (Number) e.getValue());
-            } else if (e.getValue() instanceof Boolean) {
-                visitor.setExtension(e.getKey(), (Boolean) e.getValue());
+            } else if (e.getValue() instanceof ZonedDateTime) {
+                visitor.setAttribute(e.getKey(), (ZonedDateTime) e.getValue());
+            } else if (e.getValue() instanceof URI) {
+                visitor.setAttribute(e.getKey(), (URI) e.getValue());
             } else {
                 // This should never happen because we build that map only through our builders
-                throw new IllegalStateException("Illegal value inside extensions map: " + e);
+                throw new IllegalStateException("Illegal value inside attributes map: " + e);
             }
         }
 
@@ -72,7 +72,7 @@ public class MockBinaryMessage implements Message, BinaryMessageVisitorFactory<M
 
     @Override
     public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
-        throw Encoding.UNKNOWN_ENCODING_EXCEPTION;
+        throw Encoding.WRONG_ENCODING_EXCEPTION;
     }
 
     @Override
@@ -117,6 +117,8 @@ public class MockBinaryMessage implements Message, BinaryMessageVisitorFactory<M
 
     @Override
     public MockBinaryMessage createBinaryMessageVisitor(SpecVersion version) {
+        this.version = version;
+
         return this;
     }
 }

@@ -152,12 +152,12 @@ public final class AttributesImpl implements AttributesInternal {
 
 	@Override
 	public String toString() {
-		return "AttributesImpl [id=" + id + ", source=" + source
-				+ ", specversion=" + SpecVersion.V03 + ", type=" + type
-				+ ", time=" + time + ", schemaurl=" + schemaurl
-				+ ", datacontenttype=" + datacontenttype + ", subject="
-				+ subject + "]";
-	}
+        return "Attributes V0.3 [id=" + id + ", source=" + source
+            + ", specversion=" + SpecVersion.V03 + ", type=" + type
+            + ", time=" + time + ", schemaurl=" + schemaurl
+            + ", datacontenttype=" + datacontenttype + ", subject="
+            + subject + "]";
+    }
 
     @Override
     public boolean equals(Object o) {
