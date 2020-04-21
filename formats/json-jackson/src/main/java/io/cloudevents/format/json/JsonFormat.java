@@ -25,7 +25,6 @@ import io.cloudevents.format.EventSerializationException;
 import io.cloudevents.impl.CloudEventImpl;
 
 import java.io.IOException;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,26 +32,39 @@ public final class JsonFormat implements EventFormat {
 
     public static final String CONTENT_TYPE = "application/cloudevents+json";
 
-    public static final ObjectMapper MAPPER = new ObjectMapper();
+    private final ObjectMapper mapper;
+    private final boolean forceDataBase64Serialization;
+    private final boolean forceStringSerialization;
 
-    static {
-        // Add CloudEvent serializer/deserializer
-        MAPPER.registerModule(getCloudEventJacksonModule());
-
-        // add ZonedDateTime ser/de
-        final SimpleModule module = new SimpleModule("Custom ZonedDateTime");
-        module.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
-        module.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
-        MAPPER.registerModule(module);
+    public JsonFormat(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
+        this.mapper = new ObjectMapper();
+        this.mapper.registerModule(getCloudEventJacksonModule(forceDataBase64Serialization, forceStringSerialization));
+        this.forceDataBase64Serialization = forceDataBase64Serialization;
+        this.forceStringSerialization = forceStringSerialization;
     }
 
-    private static boolean forceDataBase64Serialization = false;
-    private static boolean forceStringSerialization = false;
+    public JsonFormat() {
+        this(false, false);
+    }
+
+    /**
+     * @return a copy of this JsonFormat that serialize events with json data with Base64 encoding
+     */
+    public JsonFormat withForceJsonDataToBase64() {
+        return new JsonFormat(true, this.forceStringSerialization);
+    }
+
+    /**
+     * @return a copy of this JsonFormat that serialize events with non-json data as string
+     */
+    public JsonFormat withForceNonJsonDataToString() {
+        return new JsonFormat(this.forceDataBase64Serialization, true);
+    }
 
     @Override
     public byte[] serialize(CloudEvent event) throws EventSerializationException {
         try {
-            return MAPPER.writeValueAsBytes(event);
+            return mapper.writeValueAsBytes(event);
         } catch (JsonProcessingException e) {
             throw new EventSerializationException(e);
         }
@@ -61,7 +73,7 @@ public final class JsonFormat implements EventFormat {
     @Override
     public CloudEvent deserialize(byte[] event) throws EventDeserializationException {
         try {
-            return MAPPER.readValue(event, CloudEventImpl.class);
+            return mapper.readValue(event, CloudEventImpl.class);
         } catch (IOException e) {
             throw new EventDeserializationException(e);
         }
@@ -72,31 +84,22 @@ public final class JsonFormat implements EventFormat {
         return Collections.singleton(CONTENT_TYPE);
     }
 
+    /**
+     * @return a JacksonModule with CloudEvent serializer/deserializer with default values
+     */
     public static SimpleModule getCloudEventJacksonModule() {
+        return getCloudEventJacksonModule(false, false);
+    }
+
+    public static SimpleModule getCloudEventJacksonModule(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
         final SimpleModule ceModule = new SimpleModule("CloudEvent");
-        ceModule.addSerializer(CloudEvent.class, new CloudEventSerializer());
+        ceModule.addSerializer(CloudEvent.class, new CloudEventSerializer(forceDataBase64Serialization, forceStringSerialization));
         ceModule.addDeserializer(CloudEvent.class, new CloudEventDeserializer());
         return ceModule;
     }
 
-    public static void forceDataBase64Serialization(boolean forceBase64Serialization) {
-        JsonFormat.forceDataBase64Serialization = forceBase64Serialization;
-    }
-
-    public static void forceDataStringSerialization(boolean forceStringSerialization) {
-        JsonFormat.forceStringSerialization = forceStringSerialization;
-    }
-
-    protected static boolean isJsonContentType(String contentType) {
+    protected static boolean dataIsJsonContentType(String contentType) {
         // If content type, spec states that we should assume is json
         return contentType == null || contentType.startsWith("application/json") || contentType.startsWith("text/json");
-    }
-
-    protected static boolean shouldSerializeBase64(String contentType) {
-        if (isJsonContentType(contentType)) {
-            return JsonFormat.forceDataBase64Serialization;
-        } else {
-            return !JsonFormat.forceStringSerialization;
-        }
     }
 }

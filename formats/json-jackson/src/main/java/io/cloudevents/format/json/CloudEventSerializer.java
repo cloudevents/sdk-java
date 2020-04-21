@@ -15,8 +15,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class CloudEventSerializer extends StdSerializer<CloudEvent> {
-    protected CloudEventSerializer() {
+
+    private final boolean forceDataBase64Serialization;
+    private final boolean forceStringSerialization;
+
+    protected CloudEventSerializer(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
         super(CloudEvent.class);
+        this.forceDataBase64Serialization = forceDataBase64Serialization;
+        this.forceStringSerialization = forceStringSerialization;
     }
 
     private static class AttributesSerializer implements BinaryMessageAttributesVisitor {
@@ -100,7 +106,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         Optional<byte[]> dataOptional = value.getData();
         String contentType = attributesInternal.getDataContentType().orElse(null);
         if (dataOptional.isPresent()) {
-            if (JsonFormat.shouldSerializeBase64(contentType)) {
+            if (shouldSerializeBase64(contentType)) {
                 switch (attributesInternal.getSpecVersion()) {
                     case V03:
                         gen.writeStringField("datacontentencoding", "base64");
@@ -112,8 +118,8 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
                         gen.writeBinary(dataOptional.get());
                         break;
                 }
-            } else if (JsonFormat.isJsonContentType(contentType)) {
-                // TODO really bad, is there another solution out there?
+            } else if (JsonFormat.dataIsJsonContentType(contentType)) {
+                // TODO really bad b/c it allocates stuff, is there another solution out there?
                 char[] data = new String(dataOptional.get(), StandardCharsets.UTF_8).toCharArray();
                 gen.writeFieldName("data");
                 gen.writeRawValue(data, 0, data.length);
@@ -125,4 +131,13 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
         gen.writeEndObject();
     }
+
+    private boolean shouldSerializeBase64(String contentType) {
+        if (JsonFormat.dataIsJsonContentType(contentType)) {
+            return this.forceDataBase64Serialization;
+        } else {
+            return !this.forceStringSerialization;
+        }
+    }
+
 }
