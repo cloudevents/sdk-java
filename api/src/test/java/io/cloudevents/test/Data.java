@@ -78,6 +78,10 @@ public class Data {
         return Stream.concat(v1Events(), v03Events());
     }
 
+    public static Stream<CloudEvent> allEventsWithoutExtensions() {
+        return Stream.concat(v1Events(), v03Events()).filter(e -> e.getExtensions().isEmpty());
+    }
+
     public static Stream<CloudEvent> v1Events() {
         return Stream.of(
             Data.V1_MIN,

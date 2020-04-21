@@ -11,15 +11,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class EventMessageRoundtripTest {
 
+    /**
+     * This test doesn't test extensions in event because the CSVFormat doesn't support it
+     *
+     * @param input
+     */
     @ParameterizedTest()
-    @MethodSource("io.cloudevents.test.Data#allEvents")
+    @MethodSource("io.cloudevents.test.Data#allEventsWithoutExtensions")
     void structuredToEvent(CloudEvent input) {
         assertThat(input.asStructuredMessage(CSVFormat.INSTANCE).toEvent())
             .isEqualTo(input);
     }
 
+    /**
+     * This test doesn't test extensions in event because the CSVFormat doesn't support it
+     *
+     * @param input
+     */
     @ParameterizedTest()
-    @MethodSource("io.cloudevents.test.Data#allEvents")
+    @MethodSource("io.cloudevents.test.Data#allEventsWithoutExtensions")
     void structuredToMockStructuredMessageToEvent(CloudEvent input) {
         assertThat(input.asStructuredMessage(CSVFormat.INSTANCE).visit(new MockStructuredMessage()).toEvent())
             .isEqualTo(input);
