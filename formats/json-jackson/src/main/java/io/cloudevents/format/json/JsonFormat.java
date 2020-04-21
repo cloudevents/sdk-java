@@ -22,7 +22,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.format.EventDeserializationException;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.EventSerializationException;
-import io.cloudevents.impl.CloudEventImpl;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -73,7 +72,7 @@ public final class JsonFormat implements EventFormat {
     @Override
     public CloudEvent deserialize(byte[] event) throws EventDeserializationException {
         try {
-            return mapper.readValue(event, CloudEventImpl.class);
+            return mapper.readValue(event, CloudEvent.class);
         } catch (IOException e) {
             throw new EventDeserializationException(e);
         }

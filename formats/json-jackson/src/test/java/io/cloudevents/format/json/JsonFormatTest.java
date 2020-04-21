@@ -89,14 +89,29 @@ class JsonFormatTest {
         assertThat(output).isEqualTo(input);
     }
 
-    private static Stream<Arguments> serializeTestArgumentsString() {
+    private static Stream<Arguments> serializeTestArgumentsDefault() {
         return Stream.of(
             Arguments.of(V03_MIN, "v03/min.json"),
             Arguments.of(V03_WITH_JSON_DATA, "v03/json_data.json"),
-            Arguments.of(V03_WITH_XML_DATA, "v03/xml_data.json"),
-            Arguments.of(V03_WITH_TEXT_DATA, "v03/text_data.json"),
+            Arguments.of(V03_WITH_JSON_DATA_WITH_EXT, "v03/json_data_with_ext.json"),
+            Arguments.of(V03_WITH_XML_DATA, "v03/base64_xml_data.json"),
+            Arguments.of(V03_WITH_TEXT_DATA, "v03/base64_text_data.json"),
             Arguments.of(V1_MIN, "v1/min.json"),
             Arguments.of(V1_WITH_JSON_DATA, "v1/json_data.json"),
+            Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/json_data_with_ext.json"),
+            Arguments.of(V1_WITH_XML_DATA, "v1/base64_xml_data.json"),
+            Arguments.of(V1_WITH_TEXT_DATA, "v1/base64_text_data.json")
+        );
+    }
+
+    private static Stream<Arguments> serializeTestArgumentsString() {
+        return Stream.of(
+            Arguments.of(V03_WITH_JSON_DATA, "v03/json_data.json"),
+            Arguments.of(V03_WITH_JSON_DATA_WITH_EXT, "v03/json_data_with_ext.json"),
+            Arguments.of(V03_WITH_XML_DATA, "v03/xml_data.json"),
+            Arguments.of(V03_WITH_TEXT_DATA, "v03/text_data.json"),
+            Arguments.of(V1_WITH_JSON_DATA, "v1/json_data.json"),
+            Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/json_data_with_ext.json"),
             Arguments.of(V1_WITH_XML_DATA, "v1/xml_data.json"),
             Arguments.of(V1_WITH_TEXT_DATA, "v1/text_data.json")
         );
@@ -104,25 +119,12 @@ class JsonFormatTest {
 
     private static Stream<Arguments> serializeTestArgumentsBase64() {
         return Stream.of(
-            Arguments.of(V03_MIN, "v03/min.json"),
             Arguments.of(V03_WITH_JSON_DATA, "v03/base64_json_data.json"),
+            Arguments.of(V03_WITH_JSON_DATA_WITH_EXT, "v03/base64_json_data_with_ext.json"),
             Arguments.of(V03_WITH_XML_DATA, "v03/base64_xml_data.json"),
             Arguments.of(V03_WITH_TEXT_DATA, "v03/base64_text_data.json"),
-            Arguments.of(V1_MIN, "v1/min.json"),
             Arguments.of(V1_WITH_JSON_DATA, "v1/base64_json_data.json"),
-            Arguments.of(V1_WITH_XML_DATA, "v1/base64_xml_data.json"),
-            Arguments.of(V1_WITH_TEXT_DATA, "v1/base64_text_data.json")
-        );
-    }
-
-    private static Stream<Arguments> serializeTestArgumentsDefault() {
-        return Stream.of(
-            Arguments.of(V03_MIN, "v03/min.json"),
-            Arguments.of(V03_WITH_JSON_DATA, "v03/json_data.json"),
-            Arguments.of(V03_WITH_XML_DATA, "v03/base64_xml_data.json"),
-            Arguments.of(V03_WITH_TEXT_DATA, "v03/base64_text_data.json"),
-            Arguments.of(V1_MIN, "v1/min.json"),
-            Arguments.of(V1_WITH_JSON_DATA, "v1/json_data.json"),
+            Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/base64_json_data_with_ext.json"),
             Arguments.of(V1_WITH_XML_DATA, "v1/base64_xml_data.json"),
             Arguments.of(V1_WITH_TEXT_DATA, "v1/base64_text_data.json")
         );
@@ -132,14 +134,18 @@ class JsonFormatTest {
         return Stream.of(
             Arguments.of("v03/min.json", V03_MIN),
             Arguments.of("v03/json_data.json", V03_WITH_JSON_DATA),
+            Arguments.of("v03/json_data_with_ext.json", V03_WITH_JSON_DATA_WITH_EXT),
             Arguments.of("v03/base64_json_data.json", V03_WITH_JSON_DATA),
+            Arguments.of("v03/base64_json_data_with_ext.json", V03_WITH_JSON_DATA_WITH_EXT),
             Arguments.of("v03/xml_data.json", V03_WITH_XML_DATA),
             Arguments.of("v03/base64_xml_data.json", V03_WITH_XML_DATA),
             Arguments.of("v03/text_data.json", V03_WITH_TEXT_DATA),
             Arguments.of("v03/base64_text_data.json", V03_WITH_TEXT_DATA),
             Arguments.of("v1/min.json", V1_MIN),
             Arguments.of("v1/json_data.json", V1_WITH_JSON_DATA),
+            Arguments.of("v1/json_data_with_ext.json", V1_WITH_JSON_DATA_WITH_EXT),
             Arguments.of("v1/base64_json_data.json", V1_WITH_JSON_DATA),
+            Arguments.of("v1/base64_json_data_with_ext.json", V1_WITH_JSON_DATA_WITH_EXT),
             Arguments.of("v1/xml_data.json", V1_WITH_XML_DATA),
             Arguments.of("v1/base64_xml_data.json", V1_WITH_XML_DATA),
             Arguments.of("v1/text_data.json", V1_WITH_TEXT_DATA),
@@ -151,17 +157,12 @@ class JsonFormatTest {
         return Stream.of(
             "v03/min.json",
             "v03/json_data.json",
-            "v03/base64_json_data.json",
-            "v03/xml_data.json",
+            "v03/json_data_with_ext.json",
             "v03/base64_xml_data.json",
-            "v03/text_data.json",
             "v03/base64_text_data.json",
             "v1/min.json",
             "v1/json_data.json",
-            "v1/base64_json_data.json",
-            "v1/xml_data.json",
             "v1/base64_xml_data.json",
-            "v1/text_data.json",
             "v1/base64_text_data.json"
         );
     }

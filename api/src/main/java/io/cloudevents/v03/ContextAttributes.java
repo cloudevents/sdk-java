@@ -16,7 +16,7 @@
 package io.cloudevents.v03;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -35,11 +35,11 @@ public enum ContextAttributes {
     DATACONTENTTYPE,
     DATACONTENTENCODING,
     SUBJECT;
-	public static final List<String> VALUES =
-		Arrays.stream(ContextAttributes.values())
-		.map(Enum::name)
-        .map(String::toLowerCase)
-		.collect(Collectors.toList());
+    public static final Set<String> VALUES =
+        Arrays.stream(ContextAttributes.values())
+            .map(Enum::name)
+            .map(String::toLowerCase)
+            .collect(Collectors.toSet());
 
     public static ContextAttributes parse(String value) {
         return ContextAttributes.valueOf(value.toUpperCase());

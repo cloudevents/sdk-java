@@ -132,6 +132,9 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
             case "datacontenttype":
                 withDataContentType(value);
                 return;
+            case "datacontentencoding":
+                // No-op, this information is not saved in the event because it's useful only for parsing
+                return;
             case "schemaurl":
                 try {
                     withSchemaUrl(new URI(value));

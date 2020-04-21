@@ -38,6 +38,18 @@ public class Data {
         .withTime(TIME)
         .build();
 
+    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT = CloudEvent.buildV1()
+        .withId(ID)
+        .withType(TYPE)
+        .withSource(SOURCE)
+        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+        .withSubject(SUBJECT)
+        .withTime(TIME)
+        .withExtension("astring", "aaa")
+        .withExtension("aboolean", true)
+        .withExtension("anumber", 10)
+        .build();
+
     public static final CloudEvent V1_WITH_XML_DATA = CloudEvent.buildV1()
         .withId(ID)
         .withType(TYPE)
@@ -58,6 +70,7 @@ public class Data {
 
     public static final CloudEvent V03_MIN = V1_MIN.toV03();
     public static final CloudEvent V03_WITH_JSON_DATA = V1_WITH_JSON_DATA.toV03();
+    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT = V1_WITH_JSON_DATA_WITH_EXT.toV03();
     public static final CloudEvent V03_WITH_XML_DATA = V1_WITH_XML_DATA.toV03();
     public static final CloudEvent V03_WITH_TEXT_DATA = V1_WITH_TEXT_DATA.toV03();
 
@@ -69,6 +82,7 @@ public class Data {
         return Stream.of(
             Data.V1_MIN,
             Data.V1_WITH_JSON_DATA,
+            Data.V1_WITH_JSON_DATA_WITH_EXT,
             Data.V1_WITH_XML_DATA,
             Data.V1_WITH_TEXT_DATA
         );
@@ -78,6 +92,7 @@ public class Data {
         return Stream.of(
             Data.V03_MIN,
             Data.V03_WITH_JSON_DATA,
+            Data.V03_WITH_JSON_DATA_WITH_EXT,
             Data.V03_WITH_XML_DATA,
             Data.V03_WITH_TEXT_DATA
         );

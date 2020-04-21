@@ -16,7 +16,7 @@
 package io.cloudevents.v1;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -33,13 +33,13 @@ public enum ContextAttributes {
     DATASCHEMA,
     SUBJECT,
     TIME;
-	public static final List<String> VALUES =
-		Arrays.stream(ContextAttributes.values())
-		.map(ContextAttributes::toString)
-		.collect(Collectors.toList());
+    public static final Set<String> VALUES =
+        Arrays.stream(ContextAttributes.values())
+            .map(ContextAttributes::toString)
+            .collect(Collectors.toSet());
 
-	public static ContextAttributes parse(String value) {
-	    return ContextAttributes.valueOf(value.toUpperCase());
+    public static ContextAttributes parse(String value) {
+        return ContextAttributes.valueOf(value.toUpperCase());
     }
 
     @Override
