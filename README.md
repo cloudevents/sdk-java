@@ -11,8 +11,16 @@ __Checkout the [changelog](./CHANGELOG.md)__
 
 ## Status
 
+This SDK is considered **work in progress**. The community is working hard to bring you a new major version of the SDK with major enhancements both to APIs and to implementation.
+
+If you want to know more about v1 of this SDK, check out the [v1 readme](./README_v1.md)
+
+Stay tuned!
+
 This SDK current supports the following versions of CloudEvents:
-- v1.0
+
+- 0.3
+- 1.0
 
 ## Motivation
 
@@ -26,88 +34,9 @@ For Maven based projects, use the following to configure the CloudEvents Java SD
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
-    <version>1.3.0</version>
+    <version>2.0.0-SNAPSHOT</version>
 </dependency>
 ```
-
-Application developers can now create strongly-typed CloudEvents, such as:
-
-```java
-import io.cloudevents.v1.CloudEventBuilder;
-import io.cloudevents.v1.CloudEventImpl;
-import io.cloudevents.extensions.ExtensionFormat;
-import io.cloudevents.json.Json;
-import io.cloudevents.extensions.DistributedTracingExtension;
-
-// given
-final String eventId = UUID.randomUUID().toString();
-final URI src = URI.create("/trigger");
-final String eventType = "My.Cloud.Event.Type";
-final MyCustomEvent payload = ...
-
-// add trace extension usin the in-memory format
-final DistributedTracingExtension dt = new DistributedTracingExtension();
-dt.setTraceparent("00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01");
-dt.setTracestate("rojo=00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01");
-
-final ExtensionFormat tracing = new DistributedTracingExtension.Format(dt);
-
-// passing in the given attributes
-final CloudEventImpl<MyCustomEvent> cloudEvent =
-  CloudEventBuilder.<MyCustomEvent>builder()
-    .withType(eventType)
-    .withId(eventId)
-    .withSource(src)
-    .withData(payload)
-    .withExtension(tracing)
-    .build();
-
-// marshalling as json
-final String json = Json.encode(cloudEvent);
-```
-
-Or, an event with binary event data:
-
-```java
-import io.cloudevents.v1.CloudEventBuilder;
-import io.cloudevents.v1.CloudEventImpl;
-import io.cloudevents.extensions.ExtensionFormat;
-import io.cloudevents.json.Json;
-import io.cloudevents.extensions.DistributedTracingExtension;
-
-// given
-final String eventId = UUID.randomUUID().toString();
-final URI src = URI.create("/trigger");
-final String eventType = "My.Cloud.Event.Type";
-final byte[] payload = "a-binary-event-data".getBytes();
-
-// passing in the given attributes
-final CloudEventImpl<String> cloudEvent =
-  CloudEventBuilder.<String>builder()
-    .withType(eventType)
-    .withId(eventId)
-    .withSource(src)
-    .withDataBase64(payload)
-    .build();
-
-// marshalling as json that will have the data_base64
-final String json = Json.encode(cloudEvent);
-```
-
-There are [other detailed ways](./api/README.md) of how to use the marshallers
-and unmarshallers with HTTP transport binding.
-
-## Kafka
-
-The support for kafka protocol binding is available. Read the
-[documentation and examples](./kafka/README.md) of use.
-
-## Possible Integrations
-
-The API is kept simple, for allowing a wide range of possible integrations:
-
-* [CDI](cdi/)
-* [Eclipse Vert.x](http/vertx/)
 
 ## Community
 
