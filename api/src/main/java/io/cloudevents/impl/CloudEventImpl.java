@@ -5,6 +5,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.message.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMessageExtensions {
@@ -113,5 +114,14 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMe
     @Override
     public int hashCode() {
         return Objects.hash(attributes, data, extensions);
+    }
+
+    @Override
+    public String toString() {
+        return "CloudEvent{" +
+            "attributes=" + attributes +
+            ", data=" + new String(this.data, StandardCharsets.UTF_8) +
+            ", extensions=" + extensions +
+            '}';
     }
 }
