@@ -29,6 +29,10 @@
     <version>${parent.version}</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <jackson.version>2.10.1</jackson.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
