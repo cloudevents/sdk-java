@@ -11,13 +11,10 @@ Here we will see how to use the pre-configure marshallers and unmarshallers.
 The high-level API to marshal CloudEvents as binary content mode.
 
 ```java
-import java.net.URI;
-import java.time.ZonedDateTime;
 
-import io.cloudevents.extensions.DistributedTracingExtension;
+
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.format.Wire;
-import io.cloudevents.v1.CloudEventBuilder;
 import io.cloudevents.v1.CloudEventImpl;
 import io.cloudevents.v1.http.Marshallers;
 
@@ -39,7 +36,7 @@ CloudEventImpl<String> ce =
 	CloudEventBuilder.<String>builder()
 		.withType("com.github.pull.create")
 		.withSource(URI.create("https://github.com/cloudevents/spec/pull"))
-		.withId("A234-1234-1234")					
+		.withId("A234-1234-1234")
 		.withDataschema(URI.create("http://my.br"))
 		.withTime(ZonedDateTime.now())
 		.withDataContentType("text/plain")
@@ -69,13 +66,8 @@ wire.getPayload(); //Optional<String> which has the JSON
 The high-level API to unmarshal CloudEvents from binary content mode.
 
 ```java
-import java.util.HashMap;
-import java.util.Map;
 
-import io.cloudevents.CloudEvent;
-import io.cloudevents.extensions.DistributedTracingExtension;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.CloudEventBuilder;
+
 import io.cloudevents.v1.http.Unmarshallers;
 
 // . . .
@@ -114,12 +106,9 @@ event.getExtensions();
 The high-level API to marshal CloudEvents as structured content mode.
 
 ```java
-import java.net.URI;
-import java.time.ZonedDateTime;
 
-import io.cloudevents.extensions.DistributedTracingExtension;
+
 import io.cloudevents.extensions.ExtensionFormat;
-import io.cloudevents.v1.CloudEventBuilder;
 import io.cloudevents.v1.CloudEventImpl;
 import io.cloudevents.v1.http.Marshallers;
 
@@ -382,14 +371,9 @@ Wire<String, String, String> wire =
 /*
 * The imports used by the example bellow
 */
-import io.cloudevents.CloudEvent;
-import io.cloudevents.extensions.DistributedTracingExtension;
 import io.cloudevents.format.BinaryUnmarshaller;
 import io.cloudevents.format.builder.HeadersStep;
-import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.CloudEventBuilder;
 
 // . . .
 
@@ -520,7 +504,7 @@ HeadersStep<AttributesImpl, Much, String> step =
 		 *   - now we get the HeadersStep<AttributesImpl, Much, String>, a common step that event unmarshaller must returns
 		 *   - from here we just call withHeaders(), withPayload() and unmarshal()
 		 */
-		.map((payload, extensions) -> {			
+		.map((payload, extensions) -> {
 			CloudEventImpl<Much> event =
 				Json.<CloudEventImpl<Much>>
 					decodeValue(payload, CloudEventImpl.class, Much.class);

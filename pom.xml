@@ -46,6 +46,11 @@
 
     <developers>
         <developer>
+            <id>slinkydeveloper</id>
+            <name>Francesco Guardiani</name>
+        </developer>
+
+        <developer>
             <id>matzew</id>
             <name>Matthias Wessendorf</name>
         </developer>
@@ -60,6 +65,23 @@
       	    <name>Fabio José de Moraes</name>
       	</developer>
     </developers>
+
+    <modules>
+        <module>api</module>
+        <module>formats/json-jackson</module>
+        <!--
+        <module>cdi</module>
+      	<module>http/vertx</module>
+      	<module>kafka</module>
+      	-->
+    </modules>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jackson.version>2.10.1</jackson.version>
+    </properties>
 
     <distributionManagement>
         <site>
@@ -77,19 +99,6 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
-    <modules>
-        <module>api</module>
-        <module>cdi</module>
-      	<module>http/vertx</module>
-      	<module>kafka</module>
-    </modules>
-
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <profiles>
         <profile>

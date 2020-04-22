@@ -1,0 +1,6 @@
+{
+    "specversion": "1.0",
+    "id": "1",
+    "type": "mock.test",
+    "source": "http://localhost/source"
+}

@@ -15,31 +15,58 @@
  */
 package io.cloudevents;
 
+import io.cloudevents.format.EventFormat;
+import io.cloudevents.message.BinaryMessage;
+import io.cloudevents.message.StructuredMessage;
+
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * An abstract event envelope
- * @param <A> The attributes type
- * @param <T> The 'data' type
  * @author fabiojose
+ * @author slinkydeveloper
  */
-public interface CloudEvent<A extends Attributes, T> {
+public interface CloudEvent {
 
     /**
      * The event context attributes
      */
-    A getAttributes();
+    Attributes getAttributes();
 
     /**
      * The event data
      */
-    Optional<T> getData();
-
-    byte[] getDataBase64();
+    Optional<byte[]> getData();
 
     /**
      * The event extensions
+     *
+     * Extensions values could be String/Number/Boolean
      */
     Map<String, Object> getExtensions();
+
+    CloudEvent toV03();
+
+    CloudEvent toV1();
+
+    BinaryMessage asBinaryMessage();
+
+    StructuredMessage asStructuredMessage(EventFormat format);
+
+    static io.cloudevents.v1.CloudEventBuilder buildV1() {
+        return new io.cloudevents.v1.CloudEventBuilder();
+    }
+
+    static io.cloudevents.v1.CloudEventBuilder buildV1(CloudEvent event) {
+        return new io.cloudevents.v1.CloudEventBuilder(event);
+    }
+
+    static io.cloudevents.v03.CloudEventBuilder buildV03() {
+        return new io.cloudevents.v03.CloudEventBuilder();
+    }
+
+    static io.cloudevents.v03.CloudEventBuilder buildV03(CloudEvent event) {
+        return new io.cloudevents.v03.CloudEventBuilder(event);
+    }
 }
