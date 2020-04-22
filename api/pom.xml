@@ -25,7 +25,7 @@
 
     <artifactId>cloudevents-api</artifactId>
     <name>CloudEvents - API</name>
-    <version>${parent.version}</version>
+    <version>${project.parent.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>
