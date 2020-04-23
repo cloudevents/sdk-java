@@ -8,6 +8,7 @@ import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClient;
+import io.vertx.core.http.HttpClientRequest;
 import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -22,85 +23,88 @@ import static io.cloudevents.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(VertxExtension.class)
-public class VertxHttpServerResponseMessageVisitorTest {
+public class VertxHttpClientRequestMessageVisitorTest {
 
     @ParameterizedTest
     @MethodSource("io.cloudevents.test.Data#allEventsWithoutExtensions")
-    void testReplyWithStructured(CloudEvent event, Vertx vertx, VertxTestContext testContext) {
-        Checkpoint checkpoint = testContext.checkpoint(2);
+    void testRequestWithStructured(CloudEvent event, Vertx vertx, VertxTestContext testContext) {
+        String expectedContentType = CSVFormat.INSTANCE.serializedContentType();
+        byte[] expectedBuffer = CSVFormat.INSTANCE.serialize(event);
+
+        Checkpoint checkpoint = testContext.checkpoint(3);
 
         vertx
             .createHttpServer()
             .requestHandler(httpServerRequest -> {
-                try {
-                    event.asStructuredMessage(CSVFormat.INSTANCE).visit(
-                        VertxHttpServerResponseMessageVisitor.create(httpServerRequest.response())
-                    );
+                httpServerRequest.bodyHandler(buf -> {
+                    testContext.verify(() -> {
+                        assertThat(httpServerRequest.getHeader("content-type"))
+                            .isEqualTo(expectedContentType);
+                        assertThat(buf.getBytes())
+                            .isEqualTo(expectedBuffer);
+                    });
                     checkpoint.flag();
-                } catch (Throwable e) {
-                    testContext.failNow(e);
-                }
+                });
+                httpServerRequest.response().end();
             })
             .listen(9000, testContext.succeeding(server -> {
                 HttpClient client = vertx.createHttpClient();
-                client
-                    .get(server.actualPort(), "localhost", "/")
-                    .handler(res -> {
-                        res.bodyHandler(buf -> {
-                            testContext.verify(() -> {
-                                assertThat(res.statusCode())
-                                    .isEqualTo(200);
-                                assertThat(res.getHeader("content-type"))
-                                    .isEqualTo(CSVFormat.INSTANCE.serializedContentType());
-                                assertThat(buf.getBytes())
-                                    .isEqualTo(CSVFormat.INSTANCE.serialize(event));
-
-                                checkpoint.flag();
-                            });
-                        });
-                    })
-                    .end();
+                HttpClientRequest req = client.get(server.actualPort(), "localhost", "/", httpClientResponse -> {
+                    testContext.verify(() -> {
+                        assertThat(httpClientResponse.statusCode())
+                            .isEqualTo(200);
+                    });
+                    checkpoint.flag();
+                });
+                try {
+                    event.asStructuredMessage(CSVFormat.INSTANCE)
+                        .visit(VertxHttpClientRequestMessageVisitor.create(req));
+                } catch (Throwable e) {
+                    testContext.failNow(e);
+                }
+                checkpoint.flag();
             }));
     }
 
     @ParameterizedTest
     @MethodSource("binaryTestArguments")
-    void testReplyWithBinary(CloudEvent event, MultiMap headers, Buffer body, Vertx vertx, VertxTestContext testContext) {
-        Checkpoint checkpoint = testContext.checkpoint(2);
+    void testRequestWithBinary(CloudEvent event, MultiMap headers, Buffer body, Vertx vertx, VertxTestContext testContext) {
+        Checkpoint checkpoint = testContext.checkpoint(3);
 
         vertx
             .createHttpServer()
             .requestHandler(httpServerRequest -> {
-                try {
-                    event.asBinaryMessage().visit(
-                        VertxHttpServerResponseMessageVisitor.create(httpServerRequest.response())
-                    );
+                httpServerRequest.bodyHandler(buf -> {
+                    testContext.verify(() -> {
+                        headers.forEach(e -> {
+                            assertThat(httpServerRequest.getHeader(e.getKey()))
+                                .isEqualTo(e.getValue());
+                        });
+                        if (body != null) {
+                            assertThat(buf.getBytes())
+                                .isEqualTo(body.getBytes());
+                        }
+                    });
                     checkpoint.flag();
-                } catch (Throwable e) {
-                    testContext.failNow(e);
-                }
+                });
+                httpServerRequest.response().end();
             })
             .listen(9000, testContext.succeeding(server -> {
                 HttpClient client = vertx.createHttpClient();
-                client
-                    .get(server.actualPort(), "localhost", "/")
-                    .handler(res -> {
-                        res.bodyHandler(buf -> {
-                            testContext.verify(() -> {
-                                assertThat(res.statusCode())
-                                    .isEqualTo(200);
-                                headers.forEach(e -> {
-                                    assertThat(res.getHeader(e.getKey())).isEqualTo(e.getValue());
-                                });
-                                if (body != null) {
-                                    assertThat(buf.getBytes())
-                                        .isEqualTo(body.getBytes());
-                                }
-                            });
-                            checkpoint.flag();
-                        });
-                    })
-                    .end();
+                HttpClientRequest req = client.get(server.actualPort(), "localhost", "/", httpClientResponse -> {
+                    testContext.verify(() -> {
+                        assertThat(httpClientResponse.statusCode())
+                            .isEqualTo(200);
+                    });
+                    checkpoint.flag();
+                });
+                try {
+                    event.asBinaryMessage()
+                        .visit(VertxHttpClientRequestMessageVisitor.create(req));
+                } catch (Throwable e) {
+                    testContext.failNow(e);
+                }
+                checkpoint.flag();
             }));
     }
 

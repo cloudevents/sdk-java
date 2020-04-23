@@ -120,7 +120,7 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMe
     public String toString() {
         return "CloudEvent{" +
             "attributes=" + attributes +
-            ", data=" + new String(this.data, StandardCharsets.UTF_8) +
+            ((this.data != null) ? ", data=" + new String(this.data, StandardCharsets.UTF_8) : "") +
             ", extensions=" + extensions +
             '}';
     }

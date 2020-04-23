@@ -38,11 +38,17 @@ public class VertxHttpServerResponseMessageVisitorImpl implements VertxHttpServe
 
     @Override
     public void setBody(byte[] value) throws MessageVisitException {
+        if (this.response.ended()) {
+            throw MessageVisitException.newOther(new IllegalStateException("Cannot set the body because the response is already ended"));
+        }
         this.response.end(Buffer.buffer(value));
     }
 
     @Override
     public HttpServerResponse end() {
+        if (!this.response.ended()) {
+            this.response.end();
+        }
         return this.response;
     }
 

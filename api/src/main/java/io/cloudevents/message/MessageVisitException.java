@@ -8,9 +8,15 @@ public class MessageVisitException extends RuntimeException {
         INVALID_ATTRIBUTE_TYPE,
         INVALID_ATTRIBUTE_VALUE,
         INVALID_EXTENSION_TYPE,
+        OTHER
     }
 
     private MessageVisitExceptionKind kind;
+
+    public MessageVisitException(MessageVisitExceptionKind kind, Throwable cause) {
+        super(cause);
+        this.kind = kind;
+    }
 
     public MessageVisitException(MessageVisitExceptionKind kind, String message) {
         super(message);
@@ -59,6 +65,13 @@ public class MessageVisitException extends RuntimeException {
         return new MessageVisitException(
             MessageVisitExceptionKind.INVALID_EXTENSION_TYPE,
             "Invalid extension type for \"" + extensionName + "\": " + clazz.getCanonicalName()
+        );
+    }
+
+    public static MessageVisitException newOther(Throwable cause) {
+        return new MessageVisitException(
+            MessageVisitExceptionKind.OTHER,
+            cause
         );
     }
 }

@@ -11,9 +11,11 @@ import io.vertx.core.http.HttpHeaders;
 public class VertxHttpClientRequestMessageVisitorImpl implements VertxHttpClientRequestMessageVisitor {
 
     private final HttpClientRequest request;
+    private boolean ended;
 
     public VertxHttpClientRequestMessageVisitorImpl(HttpClientRequest request) {
         this.request = request;
+        this.ended = false;
     }
 
     // Binary visitor factory
@@ -38,11 +40,18 @@ public class VertxHttpClientRequestMessageVisitorImpl implements VertxHttpClient
 
     @Override
     public void setBody(byte[] value) throws MessageVisitException {
+        if (ended) {
+            throw MessageVisitException.newOther(new IllegalStateException("Cannot set the body because the request is already ended"));
+        }
         this.request.end(Buffer.buffer(value));
+        this.ended = true;
     }
 
     @Override
     public HttpClientRequest end() {
+        if (!ended) {
+            this.request.end();
+        }
         return this.request;
     }
 

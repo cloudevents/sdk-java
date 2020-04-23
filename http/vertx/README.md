@@ -1,61 +1,96 @@
 # HTTP Transport Util for Eclipse Vert.x
 
-## Receiving CloudEvents
-
 For Maven based projects, use the following to configure the CloudEvents Vertx HTTP Transport:
 
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>http-vertx</artifactId>
-    <version>1.3.0</version>
+    <version>2.0.0-SNAPSHOT </version>
 </dependency>
 ```
 
-Below is a sample on how to use [Vert.x API for RxJava 2](https://vertx.io/docs/vertx-rx/java2/) for reading CloudEvents from an HttpServerRequest:
+## Receiving CloudEvents
+
+Below is a sample on how to read and write CloudEvents:
 
 ```java
-import io.cloudevents.http.reactivex.vertx.VertxCloudEvents;
+import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
+import io.cloudevents.http.vertx.VertxMessage;
+import io.cloudevents.CloudEvent;
 import io.vertx.core.http.HttpHeaders;
-import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.core.AbstractVerticle;
 
-public class CloudEventVerticle extends AbstractVerticle {
+public class CloudEventServerVerticle extends AbstractVerticle {
 
   public void start() {
-
     vertx.createHttpServer()
-      .requestHandler(req -> { 
-        VertxCloudEvents.create().rxReadFromRequest(req)
-          .subscribe((receivedEvent, throwable) -> {
-            if (receivedEvent != null) {
-              // I got a CloudEvent object:
-              System.out.println("The event type: " + receivedEvent.getEventType());
+      .requestHandler(req -> {
+        VertxMessage.fromHttpServerRequest(req)
+          .onComplete(result -> {
+            // If decoding succeeded, we should write the event back
+            if (result.succeeded()) {
+              CloudEvent event = result.result().toEvent();
+              // Echo the message, as binary mode
+              event
+                .asBinaryMessage()
+                .visit(VertxHttpServerResponseMessageVisitor.create(req.response()));
             }
+            req.response().setStatusCode(500).end();
           });
-          req.response().end();
+      })
+      .listen(8080, serverResult -> {
+        if (serverResult.succeeded()) {
+          System.out.println("Server started on port " + serverResult.result().actualPort());
+        } else {
+          System.out.println("Error starting the server");
+          serverResult.cause().printStackTrace();
         }
-      )
-      .rxListen(8080)
-      .subscribe(server -> {
-        System.out.println("Server running!");
-    });
+      });
   }
 }
 ```
 
 ## Sending CloudEvents
 
-Below is a sample on how to use the client to send a CloudEvent:
+Below is a sample on how to use the client to send and receive a CloudEvent:
 
 ```java
-final HttpClientRequest request = vertx.createHttpClient().post(8080, "localhost", "/");
+import io.cloudevents.http.vertx.VertxHttpClientRequestMessageVisitor;import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
+import io.cloudevents.http.vertx.VertxMessage;
+import io.cloudevents.CloudEvent;
+import io.vertx.core.http.HttpClientRequest;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpClient;
+import io.vertx.core.AbstractVerticle;
+import java.net.URI;
 
-// add a client response handler
-request.handler(resp -> {
-    // react on the server response
-});
+public class CloudEventClientVerticle extends AbstractVerticle {
 
-// write the CloudEvent to the given HTTP Post request object
-VertxCloudEvents.create().writeToHttpClientRequest(cloudEvent, request);
-request.end();
+  public void start() {
+    HttpClient client = vertx.createHttpClient();
+
+    HttpClientRequest request = client.postAbs("http://localhost:8080")
+        .handler(httpClientResponse -> {
+          VertxMessage
+            .fromHttpClientResponse(httpClientResponse)
+            .onComplete(result -> {
+              if (result.succeeded()) {
+                CloudEvent event = result.result().toEvent();
+              }
+          });
+        });
+
+    CloudEvent event = CloudEvent.buildV1()
+     .withId("hello")
+     .withType("example.vertx")
+     .withSource(URI.create("http://localhost"))
+     .build();
+
+    // Write request as binary
+    event
+      .asBinaryMessage()
+      .visit(VertxHttpClientRequestMessageVisitor.create(request));
+  }
+}
 ```

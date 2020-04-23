@@ -15,7 +15,12 @@ public class CloudEventsHeaders {
         Stream.concat(SpecVersion.V03.getMandatoryAttributes().stream(), SpecVersion.V03.getOptionalAttributes().stream())
     )
         .distinct()
-        .collect(Collectors.toMap(Function.identity(), v -> HttpHeaders.createOptimized("ce-" + v)));
+        .collect(Collectors.toMap(Function.identity(), v -> {
+            if (v.equals("datacontenttype")) {
+                return HttpHeaders.CONTENT_TYPE;
+            }
+            return HttpHeaders.createOptimized("ce-" + v);
+        }));
 
     public static final CharSequence SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
 
