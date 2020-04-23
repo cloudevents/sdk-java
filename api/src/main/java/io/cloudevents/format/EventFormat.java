@@ -15,8 +15,6 @@ public interface EventFormat {
         return Collections.singleton(serializedContentType());
     }
 
-    ;
-
     String serializedContentType();
 
 }

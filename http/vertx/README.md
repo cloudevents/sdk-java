@@ -1,4 +1,4 @@
-# HTTP Transport Util for Eclipse Vert.x
+# HTTP Transport for Eclipse Vert.x
 
 For Maven based projects, use the following to configure the CloudEvents Vertx HTTP Transport:
 
@@ -82,10 +82,10 @@ public class CloudEventClientVerticle extends AbstractVerticle {
         });
 
     CloudEvent event = CloudEvent.buildV1()
-     .withId("hello")
-     .withType("example.vertx")
-     .withSource(URI.create("http://localhost"))
-     .build();
+      .withId("hello")
+      .withType("example.vertx")
+      .withSource(URI.create("http://localhost"))
+      .build();
 
     // Write request as binary
     event
