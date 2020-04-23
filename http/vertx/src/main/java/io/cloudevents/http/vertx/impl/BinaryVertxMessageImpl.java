@@ -51,16 +51,20 @@ public class BinaryVertxMessageImpl implements VertxMessage {
 
         // Grab from headers the attributes and extensions
         this.headers.forEach(e -> {
-            if (e.getKey().startsWith(CE_PREFIX)) {
-                String name = e.getKey().substring(3);
-                if (name.equals("specversion")) {
-                    return;
+            try {
+                if (e.getKey().substring(0, 3).equalsIgnoreCase(CE_PREFIX)) {
+                    String name = e.getKey().substring(3).toLowerCase();
+                    if (name.equals("specversion")) {
+                        return;
+                    }
+                    if (this.version.getAllAttributes().contains(name)) {
+                        visitor.setAttribute(name, e.getValue());
+                    } else {
+                        visitor.setExtension(name, e.getValue());
+                    }
                 }
-                if (this.version.getAllAttributes().contains(name)) {
-                    visitor.setAttribute(name, e.getValue());
-                } else {
-                    visitor.setExtension(name, e.getValue());
-                }
+            } catch (StringIndexOutOfBoundsException ex) {
+                // String is smaller than 3 characters and it's not equal for sure to CE_PREFIX
             }
         });
 

@@ -183,6 +183,18 @@ public class VertxMessageTest {
                     .add("ignored", "ignored"),
                 Buffer.buffer(DATA_TEXT_SERIALIZED),
                 V1_WITH_TEXT_DATA
+            ),
+            // Headers case insensitivity
+            Arguments.of(
+                MultiMap.caseInsensitiveMultiMap()
+                    .add("Ce-sPecversion", SpecVersion.V03.toString())
+                    .add("cE-id", ID)
+                    .add("CE-Type", TYPE)
+                    .add("ce-source", SOURCE.toString())
+                    .add("ignored", "ignored")
+                    .add("ab", "should-not-break-anything"),
+                null,
+                V03_MIN
             )
         );
     }
