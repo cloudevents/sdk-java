@@ -89,7 +89,7 @@ class JsonFormatTest {
         assertThat(output).isEqualTo(input);
     }
 
-    private static Stream<Arguments> serializeTestArgumentsDefault() {
+    public static Stream<Arguments> serializeTestArgumentsDefault() {
         return Stream.of(
             Arguments.of(V03_MIN, "v03/min.json"),
             Arguments.of(V03_WITH_JSON_DATA, "v03/json_data.json"),
@@ -104,7 +104,7 @@ class JsonFormatTest {
         );
     }
 
-    private static Stream<Arguments> serializeTestArgumentsString() {
+    public static Stream<Arguments> serializeTestArgumentsString() {
         return Stream.of(
             Arguments.of(V03_WITH_JSON_DATA, "v03/json_data.json"),
             Arguments.of(V03_WITH_JSON_DATA_WITH_EXT, "v03/json_data_with_ext.json"),
@@ -117,7 +117,7 @@ class JsonFormatTest {
         );
     }
 
-    private static Stream<Arguments> serializeTestArgumentsBase64() {
+    public static Stream<Arguments> serializeTestArgumentsBase64() {
         return Stream.of(
             Arguments.of(V03_WITH_JSON_DATA, "v03/base64_json_data.json"),
             Arguments.of(V03_WITH_JSON_DATA_WITH_EXT, "v03/base64_json_data_with_ext.json"),
@@ -130,7 +130,7 @@ class JsonFormatTest {
         );
     }
 
-    private static Stream<Arguments> deserializeTestArguments() {
+    public static Stream<Arguments> deserializeTestArguments() {
         return Stream.of(
             Arguments.of("v03/min.json", V03_MIN),
             Arguments.of("v03/json_data.json", V03_WITH_JSON_DATA),
@@ -153,7 +153,7 @@ class JsonFormatTest {
         );
     }
 
-    private static Stream<String> roundTripTestArguments() {
+    public static Stream<String> roundTripTestArguments() {
         return Stream.of(
             "v03/min.json",
             "v03/json_data.json",
@@ -167,7 +167,7 @@ class JsonFormatTest {
         );
     }
 
-    private static byte[] loadFile(String input) {
+    public static byte[] loadFile(String input) {
         try {
             return String.join(
                 "",

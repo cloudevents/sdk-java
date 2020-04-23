@@ -63,9 +63,9 @@
     <modules>
         <module>api</module>
         <module>formats/json-jackson</module>
+        <module>http/vertx</module>
         <!--
         <module>cdi</module>
-      	<module>http/vertx</module>
       	<module>kafka</module>
       	-->
     </modules>
@@ -74,6 +74,9 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <assertj-core.version>3.11.0</assertj-core.version>
+        <junit-jupiter.version>5.5.2</junit-jupiter.version>
+        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
     </properties>
 
     <distributionManagement>

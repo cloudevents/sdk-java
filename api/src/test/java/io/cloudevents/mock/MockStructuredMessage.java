@@ -14,7 +14,7 @@ public class MockStructuredMessage implements Message, StructuredMessageVisitor<
     }
 
     @Override
-    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitor) throws MessageVisitException, IllegalStateException {
+    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
         throw Encoding.WRONG_ENCODING_EXCEPTION;
     }
 

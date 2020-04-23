@@ -69,14 +69,21 @@ public class CSVFormat implements EventFormat {
             builder.withData(data);
         }
         switch (sv) {
-            case V03: return builder.build().toV03();
-            case V1: return builder.build().toV1();
+            case V03:
+                return builder.build().toV03();
+            case V1:
+                return builder.build().toV1();
         }
         return null;
     }
 
     @Override
-    public Set<String> supportedContentTypes() {
-        return Collections.singleton("text/csv");
+    public Set<String> deserializableContentTypes() {
+        return Collections.singleton(serializedContentType());
+    }
+
+    @Override
+    public String serializedContentType() {
+        return "application/cloudevents+csv";
     }
 }

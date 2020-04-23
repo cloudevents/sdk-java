@@ -24,8 +24,6 @@ import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.EventSerializationException;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 
 public final class JsonFormat implements EventFormat {
 
@@ -79,8 +77,8 @@ public final class JsonFormat implements EventFormat {
     }
 
     @Override
-    public Set<String> supportedContentTypes() {
-        return Collections.singleton(CONTENT_TYPE);
+    public String serializedContentType() {
+        return CONTENT_TYPE;
     }
 
     /**

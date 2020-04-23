@@ -6,12 +6,11 @@ import io.cloudevents.CloudEvent;
 public interface BinaryMessage {
 
     /**
-     *
-     * @param visitor
+     * @param visitorFactory
      * @throws MessageVisitException
      * @throws IllegalStateException If the message is not a valid binary message
      */
-    <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitor) throws MessageVisitException, IllegalStateException;
+    <V extends BinaryMessageVisitor<R>, R> R visit(BinaryMessageVisitorFactory<V, R> visitorFactory) throws MessageVisitException, IllegalStateException;
 
     default CloudEvent toEvent() throws MessageVisitException, IllegalStateException {
         return this.visit(specVersion -> {
