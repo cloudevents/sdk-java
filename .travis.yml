@@ -5,9 +5,6 @@ cache:
     - ".autoconf"
     - "$HOME/.m2"
 
-before_install:
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
-
 env:
   global:
     - secure: P+bDfjq+RCVmZjkwqC2m1eV2jr2VbR3NA8o9BcJFDduwKHboflzp92sL/Risp9QGwdRomPIfzUBL8Dq13lgDSgflfkZpbLhRamXi06E74MOHIZeV3EYbhOTmWa7DbBueUCTVmxmfgNI+207EtlKkW9ZBsqky/tUuLXdFCjjonDN3f3PmRI7odxZ4r5di46h73yynh+8+pAx7T6K52PJNGXtAZflKU2NHnfAUainAHMOY3UAOfL0vSVhKvW7s6i9/qrqUAXgN0PUeiAwKi0RnuoTEAe8n+GILYH8xRkkkTLZj3uxwI9lTYdtN2wOCJZ8U7bmy8jQxFCaes/LgyfL5F4e4r3FUPrFpgPOBqiP+7T20aoCxbMFQ2EUkRbwXsNXEQu1FCBNH/sMdw7FEfOfE43jIe4yQIoWlmz+Su0RGqgwOiolMb0O10M31apKqKmmyPBb9c9AWwraKZ1FRe+tTVVRRBlWUAxYjLhha4uczW3oY+sE2yY8k5gPN5JNWqvy92UZUupfAKoxh21C2K5ygeQR7crEnwwtw1flu9QUWfFYBvUKK7aC33WwRq+4RKB3oPeD9b/+Ix5jUcad9wqy5rw0rKJRHJzvYoAaJ+kIlnD9nZLq52fj5gs/+1JOlRpE3rP0z9M6qUPE5QWHa8DGYvXwe8s93gZbcBPqxVNv1U6o=
@@ -31,13 +28,13 @@ jobs:
       if: type != pull_request
       os: linux
       dist: xenial
-      install: . ./install-jdk.sh --url "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.0.0/graalvm-ce-java8-linux-amd64-20.0.0.tar.gz"
+      install: $TRAVIS_BUILD_DIR/install-jdk.sh --url "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.0.0/graalvm-ce-java8-linux-amd64-20.0.0.tar.gz"
       script: mvn -q clean verify -B
     - name: "GraalVM 20.0.0 (11)"
       if: type != pull_request
       os: linux
       dist: xenial
-      install: . ./install-jdk.sh --url "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.0.0/graalvm-ce-java11-linux-amd64-20.0.0.tar.gz"
+      install: $TRAVIS_BUILD_DIR/install-jdk.sh --url "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.0.0/graalvm-ce-java11-linux-amd64-20.0.0.tar.gz"
       script: mvn -q clean verify -B
     - stage: deploy
       name: Maven Central Release
