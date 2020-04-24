@@ -37,7 +37,7 @@ jobs:
       script: mvn -q clean verify -B
     - stage: deploy
       if: type != pull_request
-      name: Deploy to OSSRH
+      name: Deploy to Maven Repository
       jdk: openjdk8
       script: skip
       deploy:
