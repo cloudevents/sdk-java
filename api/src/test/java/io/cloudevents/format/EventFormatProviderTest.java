@@ -9,7 +9,13 @@ public class EventFormatProviderTest {
 
     @Test
     void resolveCSV() {
-        assertThat(EventFormatProvider.getInstance().resolveFormat("text/csv"))
+        assertThat(EventFormatProvider.getInstance().resolveFormat(CSVFormat.INSTANCE.serializedContentType()))
+            .isInstanceOf(CSVFormat.class);
+    }
+
+    @Test
+    void resolveCSVWithParams() {
+        assertThat(EventFormatProvider.getInstance().resolveFormat(CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8"))
             .isInstanceOf(CSVFormat.class);
     }
 

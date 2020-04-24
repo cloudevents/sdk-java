@@ -2,6 +2,7 @@ package io.cloudevents.format;
 
 import io.cloudevents.CloudEvent;
 
+import java.util.Collections;
 import java.util.Set;
 
 public interface EventFormat {
@@ -10,6 +11,10 @@ public interface EventFormat {
 
     CloudEvent deserialize(byte[] event) throws EventDeserializationException;
 
-    Set<String> supportedContentTypes();
+    default Set<String> deserializableContentTypes() {
+        return Collections.singleton(serializedContentType());
+    }
+
+    String serializedContentType();
 
 }

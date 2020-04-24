@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum SpecVersion {
     V03(
@@ -20,11 +22,15 @@ public enum SpecVersion {
     private final String stringValue;
     private final Set<String> mandatoryAttributes;
     private final Set<String> optionalAttributes;
+    private final Set<String> allAttributes;
 
     SpecVersion(String stringValue, Set<String> mandatoryAttributes, Set<String> optionalAttributes) {
         this.stringValue = stringValue;
         this.mandatoryAttributes = mandatoryAttributes;
         this.optionalAttributes = optionalAttributes;
+        this.allAttributes = Collections.unmodifiableSet(
+            Stream.concat(mandatoryAttributes.stream(), optionalAttributes.stream()).collect(Collectors.toSet())
+        );
     }
 
     @Override
@@ -43,11 +49,24 @@ public enum SpecVersion {
         }
     }
 
+    /**
+     * @return mandatory attributes of the spec version
+     */
     public Set<String> getMandatoryAttributes() {
         return mandatoryAttributes;
     }
 
+    /**
+     * @return optional attributes of the spec version
+     */
     public Set<String> getOptionalAttributes() {
         return optionalAttributes;
+    }
+
+    /**
+     * @return all attributes for this spec
+     */
+    public Set<String> getAllAttributes() {
+        return allAttributes;
     }
 }
