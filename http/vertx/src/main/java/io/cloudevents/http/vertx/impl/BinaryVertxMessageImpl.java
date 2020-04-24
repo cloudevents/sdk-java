@@ -1,8 +1,10 @@
 package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.http.vertx.VertxMessage;
-import io.cloudevents.message.*;
+import io.cloudevents.message.BinaryMessageVisitor;
+import io.cloudevents.message.BinaryMessageVisitorFactory;
+import io.cloudevents.message.MessageVisitException;
+import io.cloudevents.message.impl.BaseBinaryMessage;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
@@ -12,7 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class BinaryVertxMessageImpl implements VertxMessage {
+public class BinaryVertxMessageImpl extends BaseBinaryMessage {
 
     public static final Map<String, CharSequence> OPTIMIZED_ATTRIBUTES_TO_HEADERS = Stream.concat(
         Stream.concat(SpecVersion.V1.getMandatoryAttributes().stream(), SpecVersion.V1.getOptionalAttributes().stream()),
@@ -38,11 +40,6 @@ public class BinaryVertxMessageImpl implements VertxMessage {
         this.version = version;
         this.headers = headers;
         this.body = body;
-    }
-
-    @Override
-    public Encoding getEncoding() {
-        return Encoding.BINARY;
     }
 
     @Override
@@ -79,10 +76,5 @@ public class BinaryVertxMessageImpl implements VertxMessage {
         }
 
         return visitor.end();
-    }
-
-    @Override
-    public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
-        throw Encoding.WRONG_ENCODING_EXCEPTION;
     }
 }

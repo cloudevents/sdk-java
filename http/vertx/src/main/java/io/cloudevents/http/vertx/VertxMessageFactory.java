@@ -4,8 +4,8 @@ import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.EventFormatProvider;
 import io.cloudevents.http.vertx.impl.BinaryVertxMessageImpl;
-import io.cloudevents.http.vertx.impl.StructuredVertxMessageImpl;
 import io.cloudevents.message.Message;
+import io.cloudevents.message.impl.GenericStructuredMessage;
 import io.cloudevents.message.impl.UnknownEncodingMessage;
 import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
@@ -16,7 +16,7 @@ import io.vertx.core.http.HttpServerRequest;
 /**
  * Interface representing a Message implementation using Vert.x types
  */
-public interface VertxMessage extends Message {
+public interface VertxMessageFactory {
 
     /**
      * Create a new Message using Vert.x headers and body.
@@ -32,7 +32,7 @@ public interface VertxMessage extends Message {
         if (ct != null) {
             EventFormat format = EventFormatProvider.getInstance().resolveFormat(ct);
             if (format != null) {
-                return new StructuredVertxMessageImpl(format, body);
+                return new GenericStructuredMessage(format, body.getBytes());
             }
 
         }
@@ -67,7 +67,7 @@ public interface VertxMessage extends Message {
     }
 
     /**
-     * Like {@link VertxMessage#fromHttpServerRequest(HttpServerRequest)}
+     * Like {@link VertxMessageFactory#fromHttpServerRequest(HttpServerRequest)}
      *
      * @param request
      * @param handler
@@ -97,7 +97,7 @@ public interface VertxMessage extends Message {
     }
 
     /**
-     * Like {@link VertxMessage#fromHttpClientResponse(HttpClientResponse)}
+     * Like {@link VertxMessageFactory#fromHttpClientResponse(HttpClientResponse)}
      *
      * @param response
      * @param handler

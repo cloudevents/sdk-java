@@ -15,58 +15,36 @@
  */
 package io.cloudevents.kafka;
 
-import io.cloudevents.Attributes;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.format.Wire;
-import io.cloudevents.format.builder.EventStep;
-import org.apache.kafka.common.header.Header;
-import org.apache.kafka.common.header.internals.RecordHeader;
+import io.cloudevents.SpecVersion;
 
-import java.util.AbstractMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Helper class for building the Kafka headers that should be attached either a binary or structured event message.
  *
+ * @author Francesco Guardiani
  * @author Florian Hussonnois
  */
 public class CloudEventsKafkaHeaders {
 
-    /**
-     * Static helper to create Kafka {@link org.apache.kafka.common.header.Headers} for the given {@link CloudEvent}.
-     *
-     * @param event     the {@link CloudEvent} to be used for creating corresponding Kafka headers.
-     * @param builder   the {@link EventStep} to be used for building the headers.
-     * @return  the {@link org.apache.kafka.common.header.Headers}
-     */
-    public static <T, A extends Attributes> Iterable<Header> buildHeaders(final CloudEvent<A, T> event,
-                                                                          final EventStep<A, T, byte[], byte[]> builder) {
-        return getHeaders(event, builder);
-    }
+    public static final String CONTENT_TYPE = "content-type";
 
-    private static <T, A extends Attributes> Iterable<Header> getHeaders(final CloudEvent<A, T> event,
-                                                                         final EventStep<A, T, byte[], byte[]> marshaller) {
-        Wire<byte[], String, byte[]> marshal = marshaller.withEvent(() -> event).marshal();
-        Map<String, byte[]> headers = marshal.getHeaders();
-        return marshal(headers);
-    }
+    public static final Map<String, String> ATTRIBUTES_TO_HEADERS = Stream.concat(
+        Stream.concat(SpecVersion.V1.getMandatoryAttributes().stream(), SpecVersion.V1.getOptionalAttributes().stream()),
+        Stream.concat(SpecVersion.V03.getMandatoryAttributes().stream(), SpecVersion.V03.getOptionalAttributes().stream())
+    )
+        .distinct()
+        .collect(Collectors.toMap(Function.identity(), v -> {
+            if (v.equals("datacontenttype")) {
+                return CONTENT_TYPE;
+            }
+            return "ce_" + v;
+        }));
 
-    /**
-     * Casts the Object value of header into byte[]. This is
-     * guaranteed by the HeaderMapper implementation
-     *
-     * @param headers   the headers to convert.
-     * @return          the set of {@link Header}.
-     */
-    static Set<Header> marshal(Map<String, byte[]> headers) {
-        return headers.entrySet()
-            .stream()
-            .map(header ->
-                    new AbstractMap.SimpleEntry<>(header.getKey(), header.getValue()))
-            .map(header -> new RecordHeader(header.getKey(), header.getValue()))
-            .collect(Collectors.toSet());
-    }
+    public static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
+
 }
 
