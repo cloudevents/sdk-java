@@ -37,9 +37,10 @@ jobs:
       script: mvn -q clean verify -B
     - stage: deploy
       name: Deploy to OSSRH
-      if: branch = master
       jdk: openjdk8
       script: skip
       deploy:
         provider: script
         script: bash .travis.deploy.sh
+        on:
+          branch: master
