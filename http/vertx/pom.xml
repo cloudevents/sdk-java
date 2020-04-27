@@ -24,7 +24,7 @@
         <relativePath>../../</relativePath>
     </parent>
 
-    <artifactId>http-vertx</artifactId>
+    <artifactId>cloudevents-http-vertx</artifactId>
     <name>CloudEvents - Vert.x Http Integration</name>
     <packaging>jar</packaging>
 
