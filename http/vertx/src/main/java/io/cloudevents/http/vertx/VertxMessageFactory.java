@@ -1,11 +1,10 @@
 package io.cloudevents.http.vertx;
 
-import io.cloudevents.SpecVersion;
-import io.cloudevents.format.EventFormat;
-import io.cloudevents.format.EventFormatProvider;
 import io.cloudevents.http.vertx.impl.BinaryVertxMessageImpl;
+import io.cloudevents.http.vertx.impl.CloudEventsHeaders;
 import io.cloudevents.message.Message;
 import io.cloudevents.message.impl.GenericStructuredMessage;
+import io.cloudevents.message.impl.MessageUtils;
 import io.cloudevents.message.impl.UnknownEncodingMessage;
 import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
@@ -27,23 +26,13 @@ public interface VertxMessageFactory {
      * @throws IllegalArgumentException If, in case of binary mode, the spec version is invalid
      */
     static Message create(MultiMap headers, Buffer body) throws IllegalArgumentException {
-        // Let's try structured mode
-        String ct = headers.get(HttpHeaders.CONTENT_TYPE);
-        if (ct != null) {
-            EventFormat format = EventFormatProvider.getInstance().resolveFormat(ct);
-            if (format != null) {
-                return new GenericStructuredMessage(format, body.getBytes());
-            }
-
-        }
-
-        // Let's try binary mode
-        String specVersionUnparsed = headers.get(BinaryVertxMessageImpl.CE_SPEC_VERSION_HEADER);
-        if (specVersionUnparsed != null) {
-            return new BinaryVertxMessageImpl(SpecVersion.parse(specVersionUnparsed), headers, body);
-        }
-
-        return new UnknownEncodingMessage();
+        return MessageUtils.parseStructuredOrBinaryMessage(
+            () -> headers.get(HttpHeaders.CONTENT_TYPE),
+            format -> new GenericStructuredMessage(format, body.getBytes()),
+            () -> headers.get(CloudEventsHeaders.SPEC_VERSION),
+            sv -> new BinaryVertxMessageImpl(sv, headers, body),
+            UnknownEncodingMessage::new
+        );
     }
 
     /**
