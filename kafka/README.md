@@ -1,220 +1,91 @@
-# CloudEvents Kafka Protocol Binding
+# Kafka Protocol Binding
 
-The impl of Kafka Protocol Biding for CloudEvents.
-
-> See spec [here](https://github.com/cloudevents/spec/blob/master/kafka-protocol-binding.md)
-
-## How to Use
-
-See some examples of how to use with Kafka Consumer and Kafka Producer.
-
-Add the dependency in your project:
+For Maven based projects, use the following to configure the [Kafka Protocol Binding](https://github.com/cloudevents/spec/blob/master/kafka-protocol-binding.md):
 
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
-    <artifactId>cloudevents-kafka</artifactId>
-    <version>1.3.0</version>
+    <artifactId>http-vertx</artifactId>
+    <version>2.0.0-SNAPSHOT </version>
 </dependency>
 ```
 
-### Producer
+### Producing CloudEvents
 
-Producing CloudEvents in Kafka.
-
-#### Binary Content Mode
+To produce CloudEvents in Kafka, configure the KafkaProducer to use the provided [`CloudEventSerializer`](src/main/java/io/cloudevents/kafka/CloudEventSerializer.java):
 
 ```java
-import java.net.URI;
 import java.util.Properties;
-
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.ByteArraySerializer;
-
-import io.cloudevents.format.builder.EventStep;
-import io.cloudevents.kafka.CloudEventsKafkaProducer;
-import io.cloudevents.v1.CloudEventImpl;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.kafka.Marshallers;
-
-// . . .
-
-Properties props = new Properties();
-
-/* all other properties */
-
-// But, the value serializer MUST be ByteArraySerializer
-props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-			ByteArraySerializer.class);
-
-// Then, instantiate the CloudEvents Kafka Producer
-try(CloudEventsKafkaProducer<String, AttributesImpl, String>
-		ceProducer = new CloudEventsKafkaProducer<>(props,
-			Marshallers.binary())){
-
-	// Build an event
-	CloudEventImpl<String> ce =
-		CloudEventBuilder.<String>builder()
-			.withId("x10")
-			.withSource(URI.create("/source"))
-			.withType("event-type")
-			.withDataContentType("application/json")
-			.withData("Event Data")
-			.build();
-
-	// Produce the event
-	ceProducer.send(new ProducerRecord<>("your.topic", ce));
-}
-```
-#### Structured Content Mode
-
-```java
-import java.net.URI;
-import java.util.Properties;
-
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.ByteArraySerializer;
-
-import io.cloudevents.format.builder.EventStep;
-import io.cloudevents.kafka.CloudEventsKafkaProducer;
-import io.cloudevents.v1.CloudEventImpl;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.kafka.Marshallers;
-
-// . . .
-
-Properties props = new Properties();
-
-/* all other properties */
-
-// But, the value serializer MUST be ByteArraySerializer
-props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-			ByteArraySerializer.class);
-
-// Then, instantiate the CloudEvents Kafka Producer
-try(CloudEventsKafkaProducer<String, AttributesImpl, String>
-		ceProducer = new CloudEventsKafkaProducer<>(props,
-			Marshallers.structured())){
-
-	// Build an event
-	CloudEventImpl<String> ce =
-		CloudEventBuilder.<String>builder()
-			.withId("x10")
-			.withSource(URI.create("/source"))
-			.withType("event-type")
-			.withDataContentType("application/json")
-			.withData("Event Data")
-			.build();
-
-	// Produce the event
-	ceProducer.send(new ProducerRecord<>("your.topic", ce));
-}
-```
-
-### Build Kafka headers for CloudEvents
-
-```java
-// for Binary Content Mode
-Iterable<Header> headers = CloudEventsKafkaHeaders.buildHeaders(ce, Marshallers.binary());
-
-// for Structured Content Mode
-Iterable<Header> headers = CloudEventsKafkaHeaders.buildHeaders(ce, Marshallers.structured());
-```
-
-### Consumer
-
-Consuming CloudEvents from Kafka.
-
-#### Binary Content Mode
-
-```java
-import java.time.Duration;
-import java.util.Collections;
-import java.util.Properties;
-
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.kafka.CloudEventsKafkaConsumer;
-import io.cloudevents.types.Much;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.kafka.Unmarshallers;
+import io.cloudevents.kafka.CloudEventSerializer;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 
-// . . .
+public class CloudEventProducer {
 
-Properties props = new Properties();
+    public static void main(String[] args) {
+        Properties props = new Properties();
 
-/* all other properties */
+        // Other config props
 
-// But, the value deserializer MUST be ByteArraySerializer		
-props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-		ByteArrayDeserializer.class);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CloudEventSerializer.class);
 
-// Then, instantiate the CloudEvents Kafka Consumer
-try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer =
-		new CloudEventsKafkaConsumer<>(props,
-				Unmarshallers.binary(Much.class))){
+        try(KafkaProducer<String, CloudEvent> producer = new KafkaProducer<>(props)){
 
-	// Subscribe . . .
-	ceConsumer.subscribe(Collections.singletonList("the.topic.name"));
+            // Build an event
+            CloudEvent event = CloudEvent.buildV1()
+              .withId("hello")
+              .withType("example.kafka")
+              .withSource(URI.create("http://localhost"))
+              .build();
 
-	// Pool . . .
-	ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
-			ceConsumer.poll(Duration.ofMillis(800));
+        	// Produce the event
+        	ceProducer.send(new ProducerRecord<>("your.topic", event));
+        }
+    }
 
-	// Use the records
-	records.forEach(cloudevent -> {
-		// Do something useful . . .
-	});
 }
 ```
 
-#### Structured Content Mode
+You can configure the Encoding and EventFormat to use to emit the event.
+Check out the [`CloudEventSerializer`](src/main/java/io/cloudevents/kafka/CloudEventSerializer.java)
+javadoc for more info.
+
+## Consuming CloudEvents
+
+To consume CloudEvents in Kafka, configure the KafkaConsumer to use the provided [`CloudEventDeserializer`](src/main/java/io/cloudevents/kafka/CloudEventDeserializer.java):
 
 ```java
-import java.time.Duration;
-import java.util.Collections;
-import java.util.Properties;
-
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import java.time.Duration;import java.util.Properties;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.kafka.CloudEventsKafkaConsumer;
-import io.cloudevents.types.Much;
-import io.cloudevents.v1.AttributesImpl;
-import io.cloudevents.v1.kafka.Unmarshallers;
+import io.cloudevents.kafka.CloudEventDeserializer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecords;import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 
-// . . .
+public class CloudEventConsumer {
 
-Properties props = new Properties();
+    public static void main(String[] args) {
+        Properties props = new Properties();
 
-/* all other properties */
+        // Other config props
 
-// But, the value deserializer MUST be ByteArraySerializer		
-props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-		ByteArrayDeserializer.class);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, CloudEventDeserializer.class);
 
-// Then, instantiate the CloudEvents Kafka Consumer
-try(CloudEventsKafkaConsumer<String, AttributesImpl, Much> ceConsumer =
-		new CloudEventsKafkaConsumer<>(props,
-				Unmarshallers.structured(Much.class))){
+        try(KafkaConsumer<String, CloudEvent> consumer = new KafkaConsumer<>(props)){
 
-	// Subscribe . . .
-	ceConsumer.subscribe(Collections.singletonList("the.topic.name"));
+            ConsumerRecords<String, CloudEvent> records = consumer.poll(Duration.ofSeconds(10));
 
-	// Pool . . .
-	ConsumerRecords<String, CloudEvent<AttributesImpl, Much>> records =
-			ceConsumer.poll(Duration.ofMillis(800));
+            records.forEach(rec -> {
+                System.out.println(rec.value().toString());
+            });
+        }
+    }
 
-	// Use the records
-	records.forEach(cloudevent -> {
-		// Do something useful . . .
-	});
 }
 ```

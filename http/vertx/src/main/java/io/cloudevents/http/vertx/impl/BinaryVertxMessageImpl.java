@@ -9,7 +9,7 @@ import io.vertx.core.http.HttpHeaders;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class BinaryVertxMessageImpl extends BaseGenericBinaryMessageImpl<String> {
+public class BinaryVertxMessageImpl extends BaseGenericBinaryMessageImpl<String, String> {
 
     private final MultiMap headers;
 
@@ -21,13 +21,18 @@ public class BinaryVertxMessageImpl extends BaseGenericBinaryMessageImpl<String>
     }
 
     @Override
-    protected String getContentTypeHeaderKey() {
-        return HttpHeaders.CONTENT_TYPE.toString();
+    protected boolean isContentTypeHeader(String key) {
+        return key.equalsIgnoreCase(HttpHeaders.CONTENT_TYPE.toString());
     }
 
     @Override
-    protected String getHeaderKeyPrefix() {
-        return CloudEventsHeaders.CE_PREFIX;
+    protected boolean isCEPrefixed(String key) {
+        return key.length() > 3 && key.substring(0, CloudEventsHeaders.CE_PREFIX.length()).toLowerCase().startsWith(CloudEventsHeaders.CE_PREFIX);
+    }
+
+    @Override
+    protected String stripKeyPrefixAndParse(String key) {
+        return key.substring(CloudEventsHeaders.CE_PREFIX.length());
     }
 
     @Override

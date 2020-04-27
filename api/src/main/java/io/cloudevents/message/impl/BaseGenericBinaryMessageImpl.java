@@ -13,9 +13,10 @@ import java.util.function.BiConsumer;
  * which supports both Binary and Structured mode.
  * Content-type is handled separately using a key not prefixed with CloudEvents header prefix.
  *
+ * @param <HK> Header key type
  * @param <HV> Header value type
  */
-public abstract class BaseGenericBinaryMessageImpl<HV> extends BaseBinaryMessage {
+public abstract class BaseGenericBinaryMessageImpl<HK, HV> extends BaseBinaryMessage {
 
     private final SpecVersion version;
     private final byte[] body;
@@ -31,24 +32,19 @@ public abstract class BaseGenericBinaryMessageImpl<HV> extends BaseBinaryMessage
         BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(this.version);
 
         // Grab from headers the attributes and extensions
-        this.forEachHeader((k, v) -> {
-            try {
-                if (k.substring(0, getHeaderKeyPrefix().length()).equalsIgnoreCase(getHeaderKeyPrefix())) {
-                    String name = k.substring(getHeaderKeyPrefix().length()).toLowerCase();
-                    if (name.equals("specversion")) {
-                        return;
-                    }
-                    if (this.version.getAllAttributes().contains(name)) {
-                        visitor.setAttribute(name, headerValueToString(v));
-                    } else {
-                        visitor.setExtension(name, headerValueToString(v));
-                    }
+        this.forEachHeader((key, value) -> {
+            if (isCEPrefixed(key)) {
+                String name = stripKeyPrefixAndParse(key).toLowerCase();
+                if (name.equals("specversion")) {
+                    return;
                 }
-                if (k.equalsIgnoreCase(getContentTypeHeaderKey())) {
-                    visitor.setAttribute("datacontenttype", headerValueToString(v));
+                if (this.version.getAllAttributes().contains(name)) {
+                    visitor.setAttribute(name, headerValueToString(value));
+                } else {
+                    visitor.setExtension(name, headerValueToString(value));
                 }
-            } catch (StringIndexOutOfBoundsException ex) {
-                // String is smaller than 3 characters and it's not equal for sure to CE_PREFIX
+            } else if (isContentTypeHeader(key)) {
+                visitor.setAttribute("datacontenttype", headerValueToString(value));
             }
         });
 
@@ -60,11 +56,13 @@ public abstract class BaseGenericBinaryMessageImpl<HV> extends BaseBinaryMessage
         return visitor.end();
     }
 
-    protected abstract String getContentTypeHeaderKey();
+    protected abstract boolean isContentTypeHeader(HK key);
 
-    protected abstract String getHeaderKeyPrefix();
+    protected abstract boolean isCEPrefixed(HK key);
 
-    protected abstract void forEachHeader(BiConsumer<String, HV> fn);
+    protected abstract String stripKeyPrefixAndParse(HK key);
+
+    protected abstract void forEachHeader(BiConsumer<HK, HV> fn);
 
     protected abstract String headerValueToString(HV value);
 

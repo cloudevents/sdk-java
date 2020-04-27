@@ -1,4 +1,4 @@
-# HTTP Transport for Eclipse Vert.x
+# HTTP Protocol Binding for Eclipse Vert.x
 
 For Maven based projects, use the following to configure the CloudEvents Vertx HTTP Transport:
 

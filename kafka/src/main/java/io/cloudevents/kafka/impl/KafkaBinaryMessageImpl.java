@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class KafkaBinaryMessageImpl extends BaseGenericBinaryMessageImpl<byte[]> {
+public class KafkaBinaryMessageImpl extends BaseGenericBinaryMessageImpl<String, byte[]> {
 
     private final Headers headers;
 
@@ -20,13 +20,18 @@ public class KafkaBinaryMessageImpl extends BaseGenericBinaryMessageImpl<byte[]>
     }
 
     @Override
-    protected String getContentTypeHeaderKey() {
-        return KafkaHeaders.CONTENT_TYPE;
+    protected boolean isContentTypeHeader(String key) {
+        return key.equals(KafkaHeaders.CONTENT_TYPE);
     }
 
     @Override
-    protected String getHeaderKeyPrefix() {
-        return KafkaHeaders.CE_PREFIX;
+    protected boolean isCEPrefixed(String key) {
+        return key.length() > 3 && key.substring(0, KafkaHeaders.CE_PREFIX.length()).startsWith(KafkaHeaders.CE_PREFIX);
+    }
+
+    @Override
+    protected String stripKeyPrefixAndParse(String key) {
+        return key.substring(KafkaHeaders.CE_PREFIX.length());
     }
 
     @Override
