@@ -64,6 +64,7 @@
         <module>api</module>
         <module>formats/json-jackson</module>
         <module>http/vertx</module>
+        <module>http/restful-ws</module>
         <module>kafka</module>
     </modules>
 
