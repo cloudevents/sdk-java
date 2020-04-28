@@ -24,7 +24,6 @@ import io.cloudevents.message.MessageVisitException;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  *
@@ -72,21 +71,21 @@ public final class AttributesImpl implements AttributesInternal {
 	}
 
     @Override
-    public Optional<String> getDataContentType() {
-        return Optional.ofNullable(datacontenttype);
+    public String getDataContentType() {
+        return datacontenttype;
     }
 
     @Override
-    public Optional<URI> getDataSchema() {
-        return Optional.ofNullable(dataschema);
+    public URI getDataSchema() {
+        return dataschema;
     }
 
-	public Optional<String> getSubject() {
-		return Optional.ofNullable(subject);
+    public String getSubject() {
+        return subject;
 	}
 
-	public Optional<ZonedDateTime> getTime() {
-		return Optional.ofNullable(time);
+    public ZonedDateTime getTime() {
+        return time;
 	}
 
     @Override

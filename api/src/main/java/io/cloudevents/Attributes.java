@@ -15,9 +15,11 @@
  */
 package io.cloudevents;
 
+import io.cloudevents.lang.Nullable;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.URI;
 import java.time.ZonedDateTime;
-import java.util.Optional;
 
 /**
  * The marker interface for CloudEvents attributes
@@ -25,6 +27,7 @@ import java.util.Optional;
  * @author fabiojose
  *
  */
+@ParametersAreNonnullByDefault
 public interface Attributes {
 
     /**
@@ -52,13 +55,17 @@ public interface Attributes {
 	 * A common way to get the media type of CloudEvents 'data';
 	 * @return If has a value, it MUST follows the <a href="https://tools.ietf.org/html/rfc2046">RFC2046</a>
 	 */
-	Optional<String> getDataContentType();
+	@Nullable
+	String getDataContentType();
 
-	Optional<URI> getDataSchema();
+	@Nullable
+	URI getDataSchema();
 
-	Optional<String> getSubject();
+	@Nullable
+	String getSubject();
 
-	Optional<ZonedDateTime> getTime();
+	@Nullable
+	ZonedDateTime getTime();
 
     Attributes toV03();
 
