@@ -33,18 +33,18 @@ public abstract class BaseGenericBinaryMessageImpl<HK, HV> extends BaseBinaryMes
 
         // Grab from headers the attributes and extensions
         this.forEachHeader((key, value) -> {
-            if (isCEPrefixed(key)) {
-                String name = stripKeyPrefixAndParse(key).toLowerCase();
+            if (isContentTypeHeader(key)) {
+                visitor.setAttribute("datacontenttype", toCloudEventsValue(value));
+            } else if (isCloudEventsHeader(key)) {
+                String name = toCloudEventsKey(key);
                 if (name.equals("specversion")) {
                     return;
                 }
                 if (this.version.getAllAttributes().contains(name)) {
-                    visitor.setAttribute(name, headerValueToString(value));
+                    visitor.setAttribute(name, toCloudEventsValue(value));
                 } else {
-                    visitor.setExtension(name, headerValueToString(value));
+                    visitor.setExtension(name, toCloudEventsValue(value));
                 }
-            } else if (isContentTypeHeader(key)) {
-                visitor.setAttribute("datacontenttype", headerValueToString(value));
             }
         });
 
@@ -58,12 +58,12 @@ public abstract class BaseGenericBinaryMessageImpl<HK, HV> extends BaseBinaryMes
 
     protected abstract boolean isContentTypeHeader(HK key);
 
-    protected abstract boolean isCEPrefixed(HK key);
+    protected abstract boolean isCloudEventsHeader(HK key);
 
-    protected abstract String stripKeyPrefixAndParse(HK key);
+    protected abstract String toCloudEventsKey(HK key);
 
     protected abstract void forEachHeader(BiConsumer<HK, HV> fn);
 
-    protected abstract String headerValueToString(HV value);
+    protected abstract String toCloudEventsValue(HV value);
 
 }

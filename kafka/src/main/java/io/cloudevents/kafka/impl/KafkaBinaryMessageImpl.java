@@ -25,13 +25,13 @@ public class KafkaBinaryMessageImpl extends BaseGenericBinaryMessageImpl<String,
     }
 
     @Override
-    protected boolean isCEPrefixed(String key) {
+    protected boolean isCloudEventsHeader(String key) {
         return key.length() > 3 && key.substring(0, KafkaHeaders.CE_PREFIX.length()).startsWith(KafkaHeaders.CE_PREFIX);
     }
 
     @Override
-    protected String stripKeyPrefixAndParse(String key) {
-        return key.substring(KafkaHeaders.CE_PREFIX.length());
+    protected String toCloudEventsKey(String key) {
+        return key.substring(KafkaHeaders.CE_PREFIX.length()).toLowerCase();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class KafkaBinaryMessageImpl extends BaseGenericBinaryMessageImpl<String,
     }
 
     @Override
-    protected String headerValueToString(byte[] value) {
+    protected String toCloudEventsValue(byte[] value) {
         return new String(value, StandardCharsets.UTF_8);
     }
 }
