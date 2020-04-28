@@ -19,6 +19,7 @@ package io.cloudevents.message;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.impl.CloudEventUtils;
 
 public interface Message extends StructuredMessage, BinaryMessage {
 
@@ -35,18 +36,12 @@ public interface Message extends StructuredMessage, BinaryMessage {
         }
     }
 
-    default CloudEvent toEvent() throws MessageVisitException, IllegalStateException {
+    @SuppressWarnings("unchecked")
+	@Override
+	default CloudEvent toEvent() throws MessageVisitException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
-                return this.visit(specVersion -> {
-                    switch (specVersion) {
-                        case V1:
-                            return CloudEvent.buildV1();
-                        case V03:
-                            return CloudEvent.buildV03();
-                    }
-                    return null; // This can never happen
-                });
+                return (CloudEvent) this.visit(CloudEventUtils.defaultBinaryMessageVisitorFactory());
             case STRUCTURED:
                 return this.visit(EventFormat::deserialize);
             default:

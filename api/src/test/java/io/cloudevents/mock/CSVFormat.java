@@ -20,6 +20,7 @@ package io.cloudevents.mock;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.impl.CloudEventUtils;
 import io.cloudevents.types.Time;
 import io.cloudevents.v1.CloudEventBuilder;
 
@@ -40,15 +41,15 @@ public class CSVFormat implements EventFormat {
     public byte[] serialize(CloudEvent event) {
         return String.join(
             ",",
-            event.getAttributes().getSpecVersion().toString(),
-            event.getAttributes().getId(),
-            event.getAttributes().getType(),
-            event.getAttributes().getSource().toString(),
-            Objects.toString(event.getAttributes().getDataContentType()),
-            Objects.toString(event.getAttributes().getDataSchema()),
-            Objects.toString(event.getAttributes().getSubject()),
-            event.getAttributes().getTime() != null
-                ? Time.RFC3339_DATE_FORMAT.format(event.getAttributes().getTime())
+            event.getSpecVersion().toString(),
+            event.getId(),
+            event.getType(),
+            event.getSource().toString(),
+            Objects.toString(event.getDataContentType()),
+            Objects.toString(event.getDataSchema()),
+            Objects.toString(event.getSubject()),
+            event.getTime() != null
+                ? Time.RFC3339_DATE_FORMAT.format(event.getTime())
                 : "null",
             event.getData() != null
                 ? new String(Base64.getEncoder().encode(event.getData()), StandardCharsets.UTF_8)
@@ -70,7 +71,7 @@ public class CSVFormat implements EventFormat {
         ZonedDateTime time = splitted[7].equals("null") ? null : Time.parseTime(splitted[7]);
         byte[] data = splitted[8].equals("null") ? null : Base64.getDecoder().decode(splitted[8].getBytes());
 
-        CloudEventBuilder builder = CloudEvent.buildV1()
+        CloudEventBuilder builder = CloudEventUtils.buildV1()
             .withId(id)
             .withType(type)
             .withSource(source);
@@ -90,12 +91,12 @@ public class CSVFormat implements EventFormat {
         if (data != null) {
             builder.withData(data);
         }
-        switch (sv) {
-            case V03:
-                return builder.build().toV03();
-            case V1:
-                return builder.build().toV1();
-        }
+		switch (sv) {
+			case V03:
+				return CloudEventUtils.toV03(builder.build());
+			case V1:
+				return CloudEventUtils.toV1(builder.build());
+		}
         return null;
     }
 

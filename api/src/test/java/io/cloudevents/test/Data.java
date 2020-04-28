@@ -17,12 +17,13 @@
 
 package io.cloudevents.test;
 
-import io.cloudevents.CloudEvent;
-import io.cloudevents.types.Time;
-
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.stream.Stream;
+
+import io.cloudevents.CloudEvent;
+import io.cloudevents.impl.CloudEventUtils;
+import io.cloudevents.types.Time;
 
 public class Data {
 
@@ -40,13 +41,13 @@ public class Data {
     public static byte[] DATA_XML_SERIALIZED = "<stuff></stuff>".getBytes();
     public static byte[] DATA_TEXT_SERIALIZED = "Hello World Lorena!".getBytes();
 
-    public static final CloudEvent V1_MIN = CloudEvent.buildV1()
+    public static final CloudEvent V1_MIN = CloudEventUtils.buildV1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
         .build();
 
-    public static final CloudEvent V1_WITH_JSON_DATA = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_JSON_DATA = CloudEventUtils.buildV1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -55,7 +56,7 @@ public class Data {
         .withTime(TIME)
         .build();
 
-    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT = CloudEventUtils.buildV1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -67,7 +68,7 @@ public class Data {
         .withExtension("anumber", 10)
         .build();
 
-    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT_STRING = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT_STRING = CloudEventUtils.buildV1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -79,7 +80,7 @@ public class Data {
         .withExtension("anumber", "10")
         .build();
 
-    public static final CloudEvent V1_WITH_XML_DATA = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_XML_DATA = CloudEventUtils.buildV1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -88,7 +89,7 @@ public class Data {
         .withTime(TIME)
         .build();
 
-    public static final CloudEvent V1_WITH_TEXT_DATA = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_TEXT_DATA = CloudEventUtils.buildV1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -97,12 +98,12 @@ public class Data {
         .withTime(TIME)
         .build();
 
-    public static final CloudEvent V03_MIN = V1_MIN.toV03();
-    public static final CloudEvent V03_WITH_JSON_DATA = V1_WITH_JSON_DATA.toV03();
-    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT = V1_WITH_JSON_DATA_WITH_EXT.toV03();
-    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT_STRING = V1_WITH_JSON_DATA_WITH_EXT_STRING.toV03();
-    public static final CloudEvent V03_WITH_XML_DATA = V1_WITH_XML_DATA.toV03();
-    public static final CloudEvent V03_WITH_TEXT_DATA = V1_WITH_TEXT_DATA.toV03();
+    public static final CloudEvent V03_MIN = CloudEventUtils.toV03(V1_MIN);
+    public static final CloudEvent V03_WITH_JSON_DATA = CloudEventUtils.toV03(V1_WITH_JSON_DATA);
+    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT =  CloudEventUtils.toV03(V1_WITH_JSON_DATA_WITH_EXT);
+    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT_STRING = CloudEventUtils.toV03(V1_WITH_JSON_DATA_WITH_EXT_STRING);
+    public static final CloudEvent V03_WITH_XML_DATA = CloudEventUtils.toV03(V1_WITH_XML_DATA);
+    public static final CloudEvent V03_WITH_TEXT_DATA = CloudEventUtils.toV03(V1_WITH_TEXT_DATA);
 
     public static Stream<CloudEvent> allEvents() {
         return Stream.concat(v1Events(), v03Events());
@@ -138,7 +139,7 @@ public class Data {
 
     public static Stream<CloudEvent> v1EventsWithStringExt() {
         return v1Events().map(ce -> {
-            io.cloudevents.v1.CloudEventBuilder builder = CloudEvent.buildV1(ce);
+            io.cloudevents.v1.CloudEventBuilder builder = CloudEventUtils.buildV1(ce);
             ce.getExtensions().forEach((k, v) -> builder.withExtension(k, v.toString()));
             return builder.build();
         });
@@ -146,7 +147,7 @@ public class Data {
 
     public static Stream<CloudEvent> v03EventsWithStringExt() {
         return v03Events().map(ce -> {
-            io.cloudevents.v03.CloudEventBuilder builder = CloudEvent.buildV03(ce);
+            io.cloudevents.v03.CloudEventBuilder builder = CloudEventUtils.buildV03(ce);
             ce.getExtensions().forEach((k, v) -> builder.withExtension(k, v.toString()));
             return builder.build();
         });

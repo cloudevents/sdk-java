@@ -27,7 +27,7 @@ public class CloudEventImplTest {
 
     @Test
     public void testEqualityV03() {
-        CloudEvent event1 = CloudEvent.buildV03()
+        CloudEvent event1 = CloudEventUtils.buildV03()
             .withId(ID)
             .withType(TYPE)
             .withSource(SOURCE)
@@ -36,7 +36,7 @@ public class CloudEventImplTest {
             .withTime(TIME)
             .build();
 
-        CloudEvent event2 = CloudEvent.buildV03()
+        CloudEvent event2 = CloudEventUtils.buildV03()
             .withId(ID)
             .withType(TYPE)
             .withSource(SOURCE)
@@ -50,7 +50,7 @@ public class CloudEventImplTest {
 
     @Test
     public void testEqualityV1() {
-        CloudEvent event1 = CloudEvent.buildV1()
+        CloudEvent event1 = CloudEventUtils.buildV1()
             .withId(ID)
             .withType(TYPE)
             .withSource(SOURCE)
@@ -59,7 +59,7 @@ public class CloudEventImplTest {
             .withTime(TIME)
             .build();
 
-        CloudEvent event2 = CloudEvent.buildV1()
+        CloudEvent event2 = CloudEventUtils.buildV1()
             .withId(ID)
             .withType(TYPE)
             .withSource(SOURCE)

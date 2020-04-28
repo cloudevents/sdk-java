@@ -17,6 +17,9 @@
 package io.cloudevents.extensions;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.impl.BaseCloudEventBuilder;
+import io.cloudevents.impl.CloudEventUtils;
+
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,16 +35,17 @@ public class DistributedTracingExtensionTest {
         tracing.setTraceparent("parent");
         tracing.setTracestate("state");
 
-        CloudEvent event = CloudEvent.buildV1().withExtension(tracing).build();
+        CloudEvent event = CloudEventUtils.buildV1().withExtension(tracing).build();
 
         assertThat(event.getExtensions())
             .containsEntry(DistributedTracingExtension.TRACEPARENT, "parent")
             .containsEntry(DistributedTracingExtension.TRACESTATE, "state");
     }
 
-    @Test
-    public void parseExtension() {
-        CloudEvent event = CloudEvent.buildV1()
+
+	@Test
+	public void parseExtension() {
+        CloudEvent event = CloudEventUtils.buildV1()
             .withExtension(DistributedTracingExtension.TRACEPARENT, "parent")
             .withExtension(DistributedTracingExtension.TRACESTATE, "state")
             .build();

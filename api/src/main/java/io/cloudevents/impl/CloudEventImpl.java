@@ -19,13 +19,14 @@ package io.cloudevents.impl;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.EventFormat;
-import io.cloudevents.message.*;
+import io.cloudevents.SpecVersion;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
 import java.util.*;
 
-public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMessageExtensions {
+public final class CloudEventImpl implements CloudEvent {
 
     private final AttributesInternal attributes;
     private final byte[] data;
@@ -39,21 +40,59 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMe
     }
 
     @Override
-    public Attributes getAttributes() {
-        return attributes;
-    }
-
-    @Override
     public byte[] getData() {
         return this.data;
     }
+
+    @Override
+	public SpecVersion getSpecVersion() {
+		return this.attributes.getSpecVersion();
+	}
+
+	@Override
+	public String getId() {
+		return this.attributes.getId();
+	}
+
+	@Override
+	public String getType() {
+		return this.attributes.getType();
+	}
+
+	@Override
+	public URI getSource() {
+		return this.attributes.getSource();
+	}
+
+	@Override
+	public String getDataContentType() {
+		return this.attributes.getDataContentType();
+	}
+
+	@Override
+	public URI getDataSchema() {
+		return this.attributes.getDataSchema();
+	}
+
+	@Override
+	public String getSubject() {
+		return this.attributes.getSubject();
+	}
+
+	@Override
+	public ZonedDateTime getTime() {
+		return this.attributes.getTime();
+	}
 
     @Override
     public Map<String, Object> getExtensions() {
         return Collections.unmodifiableMap(extensions);
     }
 
-    @Override
+    Attributes getAttributes() {
+        return this.attributes;
+    }
+
     public CloudEvent toV03() {
         return new CloudEventImpl(
             attributes.toV03(),
@@ -62,60 +101,12 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMe
         );
     }
 
-    @Override
     public CloudEvent toV1() {
         return new CloudEventImpl(
             attributes.toV1(),
             data,
             extensions
         );
-    }
-
-    // Message impl
-
-    public BinaryMessage asBinaryMessage() {
-        return this;
-    }
-
-    public StructuredMessage asStructuredMessage(EventFormat format) {
-        CloudEvent ev = this;
-        // TODO This sucks, will improve later
-        return new StructuredMessage() {
-            @Override
-            public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
-                return visitor.setEvent(format, format.serialize(ev));
-            }
-        };
-    }
-
-    @Override
-    public void visitExtensions(BinaryMessageExtensionsVisitor visitor) throws MessageVisitException {
-        // TODO to be improved
-        for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
-            if (entry.getValue() instanceof String) {
-                visitor.setExtension(entry.getKey(), (String) entry.getValue());
-            } else if (entry.getValue() instanceof Number) {
-                visitor.setExtension(entry.getKey(), (Number) entry.getValue());
-            } else if (entry.getValue() instanceof Boolean) {
-                visitor.setExtension(entry.getKey(), (Boolean) entry.getValue());
-            } else {
-                // This should never happen because we build that map only through our builders
-                throw new IllegalStateException("Illegal value inside extensions map: " + entry);
-            }
-        }
-    }
-
-    @Override
-    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
-        BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(this.attributes.getSpecVersion());
-        this.attributes.visitAttributes(visitor);
-        this.visitExtensions(visitor);
-
-        if (this.data != null) {
-            visitor.setBody(this.data);
-        }
-
-        return visitor.end();
     }
 
     @Override

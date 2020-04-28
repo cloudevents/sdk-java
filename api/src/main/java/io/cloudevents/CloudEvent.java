@@ -16,13 +16,13 @@
  */
 package io.cloudevents;
 
-import io.cloudevents.format.EventFormat;
-import io.cloudevents.lang.Nullable;
-import io.cloudevents.message.BinaryMessage;
-import io.cloudevents.message.StructuredMessage;
+import java.net.URI;
+import java.time.ZonedDateTime;
+import java.util.Map;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Map;
+
+import io.cloudevents.lang.Nullable;
 
 /**
  * An abstract event envelope
@@ -33,45 +33,60 @@ import java.util.Map;
 @ParametersAreNonnullByDefault
 public interface CloudEvent {
 
-    /**
-     * The event context attributes
-     */
-    Attributes getAttributes();
-
-    /**
-     * The event data
-     */
+	/**
+	 *
+	 * @return the event data, effectively representing the payload of this event.
+	 */
     @Nullable
     byte[] getData();
 
     /**
-     * The event extensions
-     * <p>
-     * Extensions values could be String/Number/Boolean
+     * @return the version of the Cloud Events specification which this event uses.
      */
+    SpecVersion getSpecVersion();
+
+	/**
+	 * @return  The identifier of this event. Producers MUST ensure that {@link #getSource()} + {@link #getId()} is unique for each distinct event.
+	 */
+	String getId();
+
+	/**
+	 * @return a value describing the type of event related to the originating occurrence.
+	 */
+	String getType();
+
+	/**
+	 * @return the context in which an event happened.
+	 */
+	URI getSource();
+
+	/**
+	 * @return the content type of data value. It MUST follows the <a href="https://tools.ietf.org/html/rfc2046">RFC2046</a>
+	 */
+	@Nullable
+	String getDataContentType();
+
+	/**
+	 * @return the schema that data adheres to.
+	 */
+	@Nullable
+	URI getDataSchema();
+
+	/**
+	 * @return the subject of the event in the context of the event producer (identified by {@link #getSource()}).
+	 */
+	@Nullable
+	String getSubject();
+
+	/**
+	 * @return Timestamp of when the occurrence happened.
+	 */
+	@Nullable
+	ZonedDateTime getTime();
+
+	/**
+	 *
+	 * @return the event extensions. Extensions values could be String/Number/Boolean
+	 */
     Map<String, Object> getExtensions();
-
-    CloudEvent toV03();
-
-    CloudEvent toV1();
-
-    BinaryMessage asBinaryMessage();
-
-    StructuredMessage asStructuredMessage(EventFormat format);
-
-    static io.cloudevents.v1.CloudEventBuilder buildV1() {
-        return new io.cloudevents.v1.CloudEventBuilder();
-    }
-
-    static io.cloudevents.v1.CloudEventBuilder buildV1(CloudEvent event) {
-        return new io.cloudevents.v1.CloudEventBuilder(event);
-    }
-
-    static io.cloudevents.v03.CloudEventBuilder buildV03() {
-        return new io.cloudevents.v03.CloudEventBuilder();
-    }
-
-    static io.cloudevents.v03.CloudEventBuilder buildV03(CloudEvent event) {
-        return new io.cloudevents.v03.CloudEventBuilder(event);
-    }
 }
