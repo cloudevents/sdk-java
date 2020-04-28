@@ -26,19 +26,29 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 @Path("/")
-public class TestEventServer {
+public class TestResource {
 
     @GET
-    public CloudEvent getEventWithoutBody() {
+    @Path("getMinEvent")
+    public CloudEvent getMinEvent() {
         return Data.V1_MIN;
     }
 
     @GET
+    @Path("getStructuredEvent")
+    @StructuredEncoding("application/cloudevents+csv")
+    public CloudEvent getStructuredEvent() {
+        return Data.V1_MIN;
+    }
+
+    @GET
+    @Path("getEvent")
     public CloudEvent getEvent() {
         return Data.V1_WITH_JSON_DATA_WITH_EXT_STRING;
     }
 
     @POST
+    @Path("postEventWithoutBody")
     public Response postEventWithoutBody(CloudEvent inputEvent) {
         if (inputEvent.equals(Data.V1_MIN)) {
             return Response.ok().build();
@@ -47,6 +57,7 @@ public class TestEventServer {
     }
 
     @POST
+    @Path("postEvent")
     public Response postEvent(CloudEvent inputEvent) {
         if (inputEvent.equals(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING)) {
             return Response.ok().build();

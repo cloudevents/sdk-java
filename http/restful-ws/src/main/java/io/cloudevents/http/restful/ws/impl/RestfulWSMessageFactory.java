@@ -22,7 +22,7 @@ import io.cloudevents.message.impl.GenericStructuredMessage;
 import io.cloudevents.message.impl.MessageUtils;
 import io.cloudevents.message.impl.UnknownEncodingMessage;
 
-import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 public final class RestfulWSMessageFactory {
@@ -30,9 +30,9 @@ public final class RestfulWSMessageFactory {
     private RestfulWSMessageFactory() {
     }
 
-    public static Message create(MultivaluedMap<String, String> headers, byte[] payload) throws IllegalArgumentException {
+    public static Message create(MediaType mediaType, MultivaluedMap<String, String> headers, byte[] payload) throws IllegalArgumentException {
         return MessageUtils.parseStructuredOrBinaryMessage(
-            () -> headers.getFirst(HttpHeaders.CONTENT_TYPE),
+            mediaType::getType,
             format -> new GenericStructuredMessage(format, payload),
             () -> headers.getFirst(CloudEventsHeaders.SPEC_VERSION),
             sv -> new BinaryRestfulWSMessageImpl(sv, headers, payload),

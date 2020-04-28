@@ -36,6 +36,9 @@ public final class RestfulWSMessageVisitor implements BinaryMessageVisitor<Void>
     public RestfulWSMessageVisitor(MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) {
         this.httpHeaders = httpHeaders;
         this.entityStream = entityStream;
+
+        // http headers could contain a content type, so let's remove it
+        this.httpHeaders.remove(HttpHeaders.CONTENT_TYPE);
     }
 
     @Override

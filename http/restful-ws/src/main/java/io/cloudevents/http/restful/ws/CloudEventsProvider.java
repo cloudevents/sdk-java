@@ -52,7 +52,7 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
 
     @Override
     public CloudEvent readFrom(Class<CloudEvent> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
-        return RestfulWSMessageFactory.create(httpHeaders, bufferBodyInput(entityStream)).toEvent();
+        return RestfulWSMessageFactory.create(mediaType, httpHeaders, bufferBodyInput(entityStream)).toEvent();
     }
 
     private byte[] bufferBodyInput(InputStream inputStream) throws IOException {
