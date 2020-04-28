@@ -1,3 +1,20 @@
+/*
+ * Copyright 2020 The CloudEvents Authors
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package io.cloudevents.extensions;
 
 import io.cloudevents.CloudEvent;
@@ -54,41 +71,41 @@ public final class DistributedTracingExtension implements Extension {
     @Override
     public String toString() {
         return "DistributedTracingExtension{" +
-                "traceparent='" + traceparent + '\'' +
-                ", tracestate='" + tracestate + '\'' +
-                '}';
+            "traceparent='" + traceparent + '\'' +
+            ", tracestate='" + tracestate + '\'' +
+            '}';
     }
 
     @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((traceparent == null) ? 0
-				: traceparent.hashCode());
-		result = prime * result + ((tracestate == null) ? 0
-				: tracestate.hashCode());
-		return result;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((traceparent == null) ? 0
+            : traceparent.hashCode());
+        result = prime * result + ((tracestate == null) ? 0
+            : tracestate.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DistributedTracingExtension other = (DistributedTracingExtension) obj;
-		if (traceparent == null) {
-			if (other.traceparent != null)
-				return false;
-		} else if (!traceparent.equals(other.traceparent))
-			return false;
-		if (tracestate == null) {
-			if (other.tracestate != null)
-				return false;
-		} else if (!tracestate.equals(other.tracestate))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DistributedTracingExtension other = (DistributedTracingExtension) obj;
+        if (traceparent == null) {
+            if (other.traceparent != null)
+                return false;
+        } else if (!traceparent.equals(other.traceparent))
+            return false;
+        if (tracestate == null) {
+            if (other.tracestate != null)
+                return false;
+        } else if (!tracestate.equals(other.tracestate))
+            return false;
+        return true;
+    }
 }

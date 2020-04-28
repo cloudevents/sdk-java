@@ -1,5 +1,5 @@
-/**
- * Copyright 2019 The CloudEvents Authors
+/*
+ * Copyright 2020 The CloudEvents Authors
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 package io.cloudevents;
 
@@ -25,6 +26,7 @@ import java.util.Map;
 
 /**
  * An abstract event envelope
+ *
  * @author fabiojose
  * @author slinkydeveloper
  */
@@ -44,7 +46,7 @@ public interface CloudEvent {
 
     /**
      * The event extensions
-     *
+     * <p>
      * Extensions values could be String/Number/Boolean
      */
     Map<String, Object> getExtensions();
