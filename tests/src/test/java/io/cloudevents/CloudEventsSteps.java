@@ -1,13 +1,8 @@
 package io.cloudevents;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudevents.v1.AttributesImpl;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java8.En;
-import io.cucumber.java8.Ru;
 import org.assertj.core.api.SoftAssertions;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -30,8 +25,8 @@ public class CloudEventsSteps implements En {
         ATTRIBUTE_GETTERS.put("specversion", attributes -> attributes.getSpecVersion().toString());
         ATTRIBUTE_GETTERS.put("type", Attributes::getType);
         ATTRIBUTE_GETTERS.put("source", it -> it.getSource().toString());
-        ATTRIBUTE_GETTERS.put("time", it -> it.getTime().map(Object::toString).orElse(null));
-        ATTRIBUTE_GETTERS.put("datacontenttype", it -> it.getDataContentType().orElse(null));
+        ATTRIBUTE_GETTERS.put("time", it -> it.getTime() != null ? it.getTime().toString() : null);
+        ATTRIBUTE_GETTERS.put("datacontenttype", Attributes::getDataContentType);
     }
 
     public Optional<CloudEvent> cloudEvent = Optional.empty();
@@ -77,9 +72,9 @@ public class CloudEventsSteps implements En {
         Then("the data is equal to the following JSON:", (String expected) -> {
             assertThat(cloudEvent).hasValueSatisfying(cloudEvent -> {
                 try {
-                    String actual = cloudEvent.getData()
-                        .map(String::new)
-                        .orElse(null);
+                    String actual = cloudEvent.getData() != null
+                        ? new String(cloudEvent.getData())
+                        : null;
 
                     JSONAssert.assertEquals(expected, actual, true);
                 } catch (JSONException e) {
