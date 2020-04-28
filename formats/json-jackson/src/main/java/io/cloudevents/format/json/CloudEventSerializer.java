@@ -12,7 +12,6 @@ import io.cloudevents.message.MessageVisitException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
@@ -103,28 +102,27 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         // Serialize data
-        Optional<byte[]> dataOptional = value.getData();
-        String contentType = attributesInternal.getDataContentType().orElse(null);
-        if (dataOptional.isPresent()) {
+        byte[] data = value.getData();
+        String contentType = attributesInternal.getDataContentType();
+        if (data != null) {
             if (shouldSerializeBase64(contentType)) {
                 switch (attributesInternal.getSpecVersion()) {
                     case V03:
                         gen.writeStringField("datacontentencoding", "base64");
                         gen.writeFieldName("data");
-                        gen.writeBinary(dataOptional.get());
+                        gen.writeBinary(data);
                         break;
                     case V1:
                         gen.writeFieldName("data_base64");
-                        gen.writeBinary(dataOptional.get());
+                        gen.writeBinary(data);
                         break;
                 }
             } else if (JsonFormat.dataIsJsonContentType(contentType)) {
                 // TODO really bad b/c it allocates stuff, is there another solution out there?
-                char[] data = new String(dataOptional.get(), StandardCharsets.UTF_8).toCharArray();
+                char[] dataAsString = new String(data, StandardCharsets.UTF_8).toCharArray();
                 gen.writeFieldName("data");
-                gen.writeRawValue(data, 0, data.length);
+                gen.writeRawValue(dataAsString, 0, dataAsString.length);
             } else {
-                byte[] data = dataOptional.get();
                 gen.writeFieldName("data");
                 gen.writeUTF8String(data, 0, data.length);
             }

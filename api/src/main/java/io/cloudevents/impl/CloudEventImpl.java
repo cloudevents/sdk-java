@@ -27,8 +27,8 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMe
     }
 
     @Override
-    public Optional<byte[]> getData() {
-        return Optional.ofNullable(this.data);
+    public byte[] getData() {
+        return this.data;
     }
 
     @Override

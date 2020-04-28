@@ -65,9 +65,6 @@
         <module>tests</module>
         <module>formats/json-jackson</module>
         <module>http/vertx</module>
-        <!--
-        <module>cdi</module>
-      	-->
         <module>kafka</module>
     </modules>
 

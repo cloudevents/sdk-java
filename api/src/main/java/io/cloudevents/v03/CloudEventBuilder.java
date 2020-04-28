@@ -57,11 +57,11 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         this
             .withId(attr.getId())
             .withSource(attr.getSource())
-            .withType(attr.getType());
-        attr.getDataContentType().ifPresent(this::withDataContentType);
-        attr.getSchemaUrl().ifPresent(this::withSchemaUrl);
-        attr.getSubject().ifPresent(this::withSubject);
-        attr.getTime().ifPresent(this::withTime);
+            .withType(attr.getType())
+            .withDataContentType(attr.getDataContentType())
+            .withSubject(attr.getSubject())
+            .withTime(attr.getTime())
+            .withSchemaUrl(attr.getSchemaUrl());
     }
 
 	public CloudEventBuilder withId(String id) {
