@@ -25,7 +25,7 @@
     </parent>
 
     <artifactId>cloudevents-http-vertx</artifactId>
-    <name>CloudEvents - Vert.x Http Integration</name>
+    <name>CloudEvents - Vert.x Http Binding</name>
     <packaging>jar</packaging>
 
     <properties>

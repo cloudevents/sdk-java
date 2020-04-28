@@ -66,8 +66,8 @@
         <module>http/vertx</module>
         <!--
         <module>cdi</module>
-      	<module>kafka</module>
       	-->
+        <module>kafka</module>
     </modules>
 
     <properties>

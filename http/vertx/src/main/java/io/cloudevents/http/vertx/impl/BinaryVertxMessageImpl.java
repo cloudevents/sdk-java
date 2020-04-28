@@ -1,88 +1,47 @@
 package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.http.vertx.VertxMessage;
-import io.cloudevents.message.*;
+import io.cloudevents.message.impl.BaseGenericBinaryMessageImpl;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Objects;
+import java.util.function.BiConsumer;
 
-public class BinaryVertxMessageImpl implements VertxMessage {
+public class BinaryVertxMessageImpl extends BaseGenericBinaryMessageImpl<String, String> {
 
-    public static final Map<String, CharSequence> OPTIMIZED_ATTRIBUTES_TO_HEADERS = Stream.concat(
-        Stream.concat(SpecVersion.V1.getMandatoryAttributes().stream(), SpecVersion.V1.getOptionalAttributes().stream()),
-        Stream.concat(SpecVersion.V03.getMandatoryAttributes().stream(), SpecVersion.V03.getOptionalAttributes().stream())
-    )
-        .distinct()
-        .collect(Collectors.toMap(Function.identity(), v -> HttpHeaders.createOptimized("ce-" + v)));
-
-    public static final Map<CharSequence, String> OPTIMIZED_HEADERS_TO_ATTRIBUTES = OPTIMIZED_ATTRIBUTES_TO_HEADERS
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-
-    public static final String CE_PREFIX = "ce-";
-
-    public static final CharSequence CE_SPEC_VERSION_HEADER = HttpHeaders.createOptimized("ce-specversion");
-
-    private final SpecVersion version;
     private final MultiMap headers;
-    private final Buffer body;
 
     public BinaryVertxMessageImpl(SpecVersion version, MultiMap headers, Buffer body) {
-        this.version = version;
+        super(version, (body != null) ? body.getBytes() : null);
+
+        Objects.requireNonNull(headers);
         this.headers = headers;
-        this.body = body;
     }
 
     @Override
-    public Encoding getEncoding() {
-        return Encoding.BINARY;
+    protected boolean isContentTypeHeader(String key) {
+        return key.equalsIgnoreCase(HttpHeaders.CONTENT_TYPE.toString());
     }
 
     @Override
-    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
-        BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(this.version);
-
-        // Grab from headers the attributes and extensions
-        this.headers.forEach(e -> {
-            try {
-                if (e.getKey().substring(0, 3).equalsIgnoreCase(CE_PREFIX)) {
-                    String name = e.getKey().substring(3).toLowerCase();
-                    if (name.equals("specversion")) {
-                        return;
-                    }
-                    if (this.version.getAllAttributes().contains(name)) {
-                        visitor.setAttribute(name, e.getValue());
-                    } else {
-                        visitor.setExtension(name, e.getValue());
-                    }
-                }
-            } catch (StringIndexOutOfBoundsException ex) {
-                // String is smaller than 3 characters and it's not equal for sure to CE_PREFIX
-            }
-        });
-
-        String ct = this.headers.get(HttpHeaders.CONTENT_TYPE);
-        if (ct != null) {
-            visitor.setAttribute("datacontenttype", ct);
-        }
-
-        // Set the payload
-        if (this.body != null && this.body.length() != 0) {
-            visitor.setBody(this.body.getBytes());
-        }
-
-        return visitor.end();
+    protected boolean isCloudEventsHeader(String key) {
+        return key.length() > 3 && key.substring(0, CloudEventsHeaders.CE_PREFIX.length()).toLowerCase().startsWith(CloudEventsHeaders.CE_PREFIX);
     }
 
     @Override
-    public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
-        throw Encoding.WRONG_ENCODING_EXCEPTION;
+    protected String toCloudEventsKey(String key) {
+        return key.substring(CloudEventsHeaders.CE_PREFIX.length()).toLowerCase();
+    }
+
+    @Override
+    protected void forEachHeader(BiConsumer<String, String> fn) {
+        this.headers.forEach(e -> fn.accept(e.getKey(), e.getValue()));
+    }
+
+    @Override
+    protected String toCloudEventsValue(String value) {
+        return value;
     }
 }

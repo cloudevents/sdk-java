@@ -1,11 +1,11 @@
-# HTTP Transport for Eclipse Vert.x
+# HTTP Protocol Binding for Eclipse Vert.x
 
 For Maven based projects, use the following to configure the CloudEvents Vertx HTTP Transport:
 
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
-    <artifactId>http-vertx</artifactId>
+    <artifactId>cloudevents-http-vertx</artifactId>
     <version>2.0.0-SNAPSHOT </version>
 </dependency>
 ```
@@ -16,9 +16,8 @@ Below is a sample on how to read and write CloudEvents:
 
 ```java
 import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
-import io.cloudevents.http.vertx.VertxMessage;
+import io.cloudevents.http.vertx.VertxMessageFactory;
 import io.cloudevents.CloudEvent;
-import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.AbstractVerticle;
 
 public class CloudEventServerVerticle extends AbstractVerticle {
@@ -26,7 +25,7 @@ public class CloudEventServerVerticle extends AbstractVerticle {
   public void start() {
     vertx.createHttpServer()
       .requestHandler(req -> {
-        VertxMessage.fromHttpServerRequest(req)
+        VertxMessageFactory.fromHttpServerRequest(req)
           .onComplete(result -> {
             // If decoding succeeded, we should write the event back
             if (result.succeeded()) {
@@ -56,11 +55,10 @@ public class CloudEventServerVerticle extends AbstractVerticle {
 Below is a sample on how to use the client to send and receive a CloudEvent:
 
 ```java
-import io.cloudevents.http.vertx.VertxHttpClientRequestMessageVisitor;import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
-import io.cloudevents.http.vertx.VertxMessage;
+import io.cloudevents.http.vertx.VertxHttpClientRequestMessageVisitor;
+import io.cloudevents.http.vertx.VertxMessageFactory;
 import io.cloudevents.CloudEvent;
 import io.vertx.core.http.HttpClientRequest;
-import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.AbstractVerticle;
 import java.net.URI;
@@ -72,7 +70,7 @@ public class CloudEventClientVerticle extends AbstractVerticle {
 
     HttpClientRequest request = client.postAbs("http://localhost:8080")
         .handler(httpClientResponse -> {
-          VertxMessage
+          VertxMessageFactory
             .fromHttpClientResponse(httpClientResponse)
             .onComplete(result -> {
               if (result.succeeded()) {
