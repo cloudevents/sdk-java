@@ -20,7 +20,7 @@ Supported features of the specification:
 | - [Vert.x](https://github.com/cloudevents/sdk-java/tree/master/http/vertx)        | :heavy_check_mark: | :heavy_check_mark: |
 | JSON Event Format             | :heavy_check_mark: | :heavy_check_mark: |
 | - [Jackson](https://github.com/cloudevents/sdk-java/tree/master/formats/json-jackson) | :heavy_check_mark: | :heavy_check_mark: |
-| Kafka Protocol Binding        | :x: | :x: |
+| [Kafka Protocol Binding](https://github.com/cloudevents/sdk-java/tree/master/kafka)        | :heavy_check_mark: | :heavy_check_mark: |
 | MQTT Protocol Binding         | :x: | :x: |
 | NATS Protocol Binding         | :x: | :x: |
 | Web hook                      | :x: | :x: |
@@ -36,6 +36,7 @@ The CloudEvents SDK for Java is composed by several modules, each one providing 
   * `Message`/`MessageVisitor`, the abstractions to implement [Protocol bindings](https://github.com/cloudevents/spec/blob/v1.0/spec.md#protocol-binding)
 * [`cloudevents-json-jackson`](https://github.com/cloudevents/sdk-java/tree/master/formats/json-jackson): Implementation of [JSON Event format] with [Jackson](https://github.com/FasterXML/jackson)
 * [`cloudevents-http-vertx`](https://github.com/cloudevents/sdk-java/tree/master/http/vertx): Implementation of [HTTP Protocol Binding] with [Vert.x Core](https://vertx.io/)
+* [`cloudevents-kafka`](https://github.com/cloudevents/sdk-java/tree/master/kafka): Implementation of [Kafka Protocol Binding]
 
 The latest SDK version is _2.0.0-SNAPSHOT_.
 
@@ -45,3 +46,4 @@ The latest SDK version is _2.0.0-SNAPSHOT_.
 
 [JSON Event Format]: https://github.com/cloudevents/spec/blob/v1.0/json-format.md
 [HTTP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/http-protocol-binding.md
+[Kafka Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/kafka-protocol-binding.md
