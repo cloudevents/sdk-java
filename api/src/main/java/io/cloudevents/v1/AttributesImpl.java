@@ -1,17 +1,18 @@
-/**
- * Copyright 2019 The CloudEvents Authors
- *
+/*
+ * Copyright 2018-Present The CloudEvents Authors
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 package io.cloudevents.v1;
 
@@ -26,49 +27,48 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
- *
  * @author fabiojose
  * @author slinkydeveloper
  * @version 1.0
  */
 public final class AttributesImpl implements AttributesInternal {
 
-	private final String id;
-	private final URI source;
-	private final String type;
-	private final String datacontenttype;
-	private final URI dataschema;
-	private final String subject;
-	private final ZonedDateTime time;
+    private final String id;
+    private final URI source;
+    private final String type;
+    private final String datacontenttype;
+    private final URI dataschema;
+    private final String subject;
+    private final ZonedDateTime time;
 
-	public AttributesImpl(String id, URI source,
-			String type, String datacontenttype,
-			URI dataschema, String subject, ZonedDateTime time) {
+    public AttributesImpl(String id, URI source,
+                          String type, String datacontenttype,
+                          URI dataschema, String subject, ZonedDateTime time) {
 
-		this.id = id;
-		this.source = source;
-		this.type = type;
-		this.datacontenttype = datacontenttype;
-		this.dataschema = dataschema;
-		this.subject = subject;
-		this.time = time;
-	}
+        this.id = id;
+        this.source = source;
+        this.type = type;
+        this.datacontenttype = datacontenttype;
+        this.dataschema = dataschema;
+        this.subject = subject;
+        this.time = time;
+    }
 
     public SpecVersion getSpecVersion() {
         return SpecVersion.V1;
     }
 
     public String getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public URI getSource() {
-		return source;
-	}
+    public URI getSource() {
+        return source;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
     @Override
     public String getDataContentType() {
@@ -82,11 +82,11 @@ public final class AttributesImpl implements AttributesInternal {
 
     public String getSubject() {
         return subject;
-	}
+    }
 
     public ZonedDateTime getTime() {
         return time;
-	}
+    }
 
     @Override
     public Attributes toV03() {

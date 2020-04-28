@@ -1,17 +1,18 @@
-/**
- * Copyright 2019 The CloudEvents Authors
- *
+/*
+ * Copyright 2018-Present The CloudEvents Authors
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 package io.cloudevents.v03;
 
@@ -31,46 +32,45 @@ import java.util.Objects;
  *
  * @author fabiojose
  * @author slinkydeveloper
- *
  */
 public final class AttributesImpl implements AttributesInternal {
 
-	private final String id;
-	private final URI source;
-	private final String type;
-	private final String datacontenttype;
+    private final String id;
+    private final URI source;
+    private final String type;
+    private final String datacontenttype;
     private final URI schemaurl;
     private final String subject;
     private final ZonedDateTime time;
 
-	public AttributesImpl(String id, URI source, String type,
+    public AttributesImpl(String id, URI source, String type,
                           ZonedDateTime time, URI schemaurl,
                           String datacontenttype, String subject) {
-		this.id = id;
-		this.source = source;
-		this.type = type;
+        this.id = id;
+        this.source = source;
+        this.type = type;
 
-		this.time = time;
-		this.schemaurl = schemaurl;
-		this.datacontenttype = datacontenttype;
-		this.subject = subject;
-	}
+        this.time = time;
+        this.schemaurl = schemaurl;
+        this.datacontenttype = datacontenttype;
+        this.subject = subject;
+    }
 
     public SpecVersion getSpecVersion() {
         return SpecVersion.V03;
     }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public URI getSource() {
-		return source;
-	}
+    public URI getSource() {
+        return source;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
     public String getDataContentType() {
         return datacontenttype;
@@ -151,8 +151,8 @@ public final class AttributesImpl implements AttributesInternal {
         );
     }
 
-	@Override
-	public String toString() {
+    @Override
+    public String toString() {
         return "Attributes V0.3 [id=" + id + ", source=" + source
             + ", specversion=" + SpecVersion.V03 + ", type=" + type
             + ", time=" + time + ", schemaurl=" + schemaurl
