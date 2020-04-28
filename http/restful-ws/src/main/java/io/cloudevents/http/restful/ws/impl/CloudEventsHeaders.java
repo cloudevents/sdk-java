@@ -15,24 +15,24 @@
  *
  */
 
-package io.cloudevents.http.vertx.impl;
+package io.cloudevents.http.restful.ws.impl;
 
 import io.cloudevents.message.impl.MessageUtils;
-import io.vertx.core.http.HttpHeaders;
 
+import javax.ws.rs.core.HttpHeaders;
 import java.util.Map;
 
-public class CloudEventsHeaders {
+class CloudEventsHeaders {
 
-    public static final String CE_PREFIX = "ce-";
+    static final String CE_PREFIX = "ce-";
 
-    public static final Map<String, CharSequence> ATTRIBUTES_TO_HEADERS = MessageUtils.generateAttributesToHeadersMapping(v -> {
+    static final Map<String, String> ATTRIBUTES_TO_HEADERS = MessageUtils.generateAttributesToHeadersMapping(v -> {
         if (v.equals("datacontenttype")) {
             return HttpHeaders.CONTENT_TYPE;
         }
-        return HttpHeaders.createOptimized(CE_PREFIX + v);
+        return CE_PREFIX + v;
     });
 
-    public static final CharSequence SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
+    static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
 
 }
