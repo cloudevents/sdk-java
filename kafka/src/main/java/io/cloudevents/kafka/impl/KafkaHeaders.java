@@ -33,11 +33,11 @@ import java.util.stream.Stream;
  */
 public class KafkaHeaders {
 
-    public static final String CE_PREFIX = "ce_";
+    protected static final String CE_PREFIX = "ce_";
 
     public static final String CONTENT_TYPE = "content-type";
 
-    public static final Map<String, String> ATTRIBUTES_TO_HEADERS = Stream.concat(
+    protected static final Map<String, String> ATTRIBUTES_TO_HEADERS = Stream.concat(
         Stream.concat(SpecVersion.V1.getMandatoryAttributes().stream(), SpecVersion.V1.getOptionalAttributes().stream()),
         Stream.concat(SpecVersion.V03.getMandatoryAttributes().stream(), SpecVersion.V03.getOptionalAttributes().stream())
     )
