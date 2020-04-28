@@ -62,6 +62,7 @@
 
     <modules>
         <module>api</module>
+        <module>tests</module>
         <module>formats/json-jackson</module>
         <module>http/vertx</module>
         <!--
