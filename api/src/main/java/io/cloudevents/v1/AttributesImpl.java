@@ -80,12 +80,12 @@ public final class AttributesImpl implements AttributesInternal {
         return dataschema;
     }
 
-	public String getSubject() {
-		return subject;
+    public String getSubject() {
+        return subject;
 	}
 
-	public ZonedDateTime getTime() {
-		return time;
+    public ZonedDateTime getTime() {
+        return time;
 	}
 
     @Override
