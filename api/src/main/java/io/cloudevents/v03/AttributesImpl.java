@@ -18,13 +18,13 @@ package io.cloudevents.v03;
 import io.cloudevents.Attributes;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.impl.AttributesInternal;
+import io.cloudevents.lang.Nullable;
 import io.cloudevents.message.BinaryMessageAttributesVisitor;
 import io.cloudevents.message.MessageVisitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * The event attributes implementation for v0.3
@@ -72,24 +72,25 @@ public final class AttributesImpl implements AttributesInternal {
 		return type;
 	}
 
-    public Optional<String> getDataContentType() {
-        return Optional.ofNullable(datacontenttype);
+    public String getDataContentType() {
+        return datacontenttype;
     }
 
-    public Optional<URI> getDataSchema() {
-        return getSchemaUrl();
+    public URI getDataSchema() {
+        return schemaurl;
     }
 
-    public Optional<URI> getSchemaUrl() {
-        return Optional.ofNullable(schemaurl);
+    @Nullable
+    public URI getSchemaUrl() {
+        return schemaurl;
     }
 
-    public Optional<String> getSubject() {
-        return Optional.ofNullable(subject);
+    public String getSubject() {
+        return subject;
     }
 
-    public Optional<ZonedDateTime> getTime() {
-        return Optional.ofNullable(time);
+    public ZonedDateTime getTime() {
+        return time;
     }
 
     @Override

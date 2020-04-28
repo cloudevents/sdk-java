@@ -16,17 +16,19 @@
 package io.cloudevents;
 
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.lang.Nullable;
 import io.cloudevents.message.BinaryMessage;
 import io.cloudevents.message.StructuredMessage;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * An abstract event envelope
  * @author fabiojose
  * @author slinkydeveloper
  */
+@ParametersAreNonnullByDefault
 public interface CloudEvent {
 
     /**
@@ -37,7 +39,8 @@ public interface CloudEvent {
     /**
      * The event data
      */
-    Optional<byte[]> getData();
+    @Nullable
+    byte[] getData();
 
     /**
      * The event extensions

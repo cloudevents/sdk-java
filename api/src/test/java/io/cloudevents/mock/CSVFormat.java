@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -26,11 +27,15 @@ public class CSVFormat implements EventFormat {
             event.getAttributes().getId(),
             event.getAttributes().getType(),
             event.getAttributes().getSource().toString(),
-            event.getAttributes().getDataContentType().orElse("null"),
-            event.getAttributes().getDataSchema().map(URI::toString).orElse("null"),
-            event.getAttributes().getSubject().orElse("null"),
-            event.getAttributes().getTime().map(Time.RFC3339_DATE_FORMAT::format).orElse("null"),
-            event.getData().map(d -> new String(Base64.getEncoder().encode(d), StandardCharsets.UTF_8)).orElse("null")
+            Objects.toString(event.getAttributes().getDataContentType()),
+            Objects.toString(event.getAttributes().getDataSchema()),
+            Objects.toString(event.getAttributes().getSubject()),
+            event.getAttributes().getTime() != null
+                ? Time.RFC3339_DATE_FORMAT.format(event.getAttributes().getTime())
+                : "null",
+            event.getData() != null
+                ? new String(Base64.getEncoder().encode(event.getData()), StandardCharsets.UTF_8)
+                : "null"
         ).getBytes();
     }
 

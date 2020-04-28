@@ -30,7 +30,7 @@ public abstract class BaseCloudEventBuilder<B extends BaseCloudEventBuilder<B, T
 
         CloudEventImpl ev = (CloudEventImpl) event;
         this.setAttributes(ev.getAttributes());
-        this.data = ev.getData().orElse(null);
+        this.data = ev.getData();
         this.extensions = new HashMap<>(ev.getExtensions());
     }
 
