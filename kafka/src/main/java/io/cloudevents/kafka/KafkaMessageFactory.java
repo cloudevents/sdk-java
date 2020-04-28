@@ -9,7 +9,10 @@ import io.cloudevents.message.impl.UnknownEncodingMessage;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.header.Headers;
 
-public interface KafkaMessageFactory {
+public final class KafkaMessageFactory {
+
+    private KafkaMessageFactory() {
+    }
 
     static <K> Message create(ConsumerRecord<K, byte[]> record) throws IllegalArgumentException {
         return create(record.headers(), record.value());

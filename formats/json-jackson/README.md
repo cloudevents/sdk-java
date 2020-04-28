@@ -7,7 +7,7 @@ For Maven:
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
-    <artifactId>json-jackson</artifactId>
+    <artifactId>cloudevents-json-jackson</artifactId>
     <version>2.0.0-SNAPSHOT </version>
 </dependency>
 ```

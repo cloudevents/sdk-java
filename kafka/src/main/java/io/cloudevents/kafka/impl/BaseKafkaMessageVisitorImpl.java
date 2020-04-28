@@ -7,7 +7,7 @@ import io.cloudevents.message.MessageVisitor;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeader;
 
-public abstract class BaseKafkaMessageVisitorImpl<S extends MessageVisitor<S, R> & BinaryMessageVisitor<R>, R> implements MessageVisitor<S, R>, BinaryMessageVisitor<R> {
+abstract class BaseKafkaMessageVisitorImpl<S extends MessageVisitor<S, R> & BinaryMessageVisitor<R>, R> implements MessageVisitor<S, R>, BinaryMessageVisitor<R> {
 
     byte[] value;
     final Headers headers;
