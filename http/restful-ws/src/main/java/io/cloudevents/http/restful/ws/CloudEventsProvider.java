@@ -51,6 +51,8 @@ import java.util.Optional;
 @Produces(MediaType.WILDCARD)
 public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, MessageBodyWriter<CloudEvent>, ClientRequestFilter {
 
+    public static MediaType CLOUDEVENT_TYPE = MediaType.valueOf("application/cloudevents");
+
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return CloudEvent.class.isAssignableFrom(type);

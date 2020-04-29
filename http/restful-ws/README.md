@@ -66,6 +66,7 @@ Below is a sample on how to use the client to send a CloudEvent:
 
 ```java
 import io.cloudevents.CloudEvent;
+import io.cloudevents.http.restful.ws.CloudEventsProvider;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -78,7 +79,7 @@ public class CloudEventSender {
         return target
             .path("postEvent")
             .request()
-            .buildPost(Entity.entity(event, "application/cloudevents"))
+            .buildPost(Entity.entity(event, CloudEventsProvider.CLOUDEVENT_TYPE))
             .invoke();
     }
 

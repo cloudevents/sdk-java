@@ -97,7 +97,7 @@ public class TestServerJersey {
         Response res = target
             .path("postEventWithoutBody")
             .request()
-            .buildPost(Entity.entity(Data.V1_MIN, "application/cloudevents"))
+            .buildPost(Entity.entity(Data.V1_MIN, CloudEventsProvider.CLOUDEVENT_TYPE))
             .invoke();
 
         assertThat(res.getStatus())
@@ -121,7 +121,7 @@ public class TestServerJersey {
         Response res = target
             .path("postEvent")
             .request()
-            .buildPost(Entity.entity(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, "application/cloudevents"))
+            .buildPost(Entity.entity(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, CloudEventsProvider.CLOUDEVENT_TYPE))
             .invoke();
 
         assertThat(res.getStatus())
