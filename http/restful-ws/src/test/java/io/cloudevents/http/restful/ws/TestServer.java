@@ -29,8 +29,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,6 +85,30 @@ public class TestServer {
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
         assertThat(outEvent)
             .isEqualTo(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING);
+    }
+
+    @Test
+    void postEventWithoutBody(WebTarget target) {
+        Response res = target
+            .path("postEventWithoutBody")
+            .request()
+            .buildPost(Entity.entity(Data.V1_MIN, ""))
+            .invoke();
+
+        assertThat(res.getStatus())
+            .isEqualTo(200);
+    }
+
+    @Test
+    void postEvent(WebTarget target) {
+        Response res = target
+            .path("postEvent")
+            .request()
+            .buildPost(Entity.entity(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, MediaType.WILDCARD))
+            .invoke();
+
+        assertThat(res.getStatus())
+            .isEqualTo(200);
     }
 
 
