@@ -17,49 +17,47 @@
 
 package io.cloudevents.http.restful.ws;
 
-import com.github.hanleyt.JerseyExtension;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.format.EventFormatProvider;
 import io.cloudevents.mock.CSVFormat;
 import io.cloudevents.test.Data;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.jupiter.api.BeforeAll;
+import org.jboss.resteasy.plugins.server.vertx.VertxContainer;
+import org.jboss.resteasy.plugins.server.vertx.VertxResteasyDeployment;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.jboss.resteasy.test.TestPortProvider.generateURL;
 
 public class TestServer {
 
-    @BeforeAll
-    public static void beforeAll() {
+    VertxResteasyDeployment resteasyDeployment;
+    WebTarget target;
+
+    @BeforeEach
+    public void before() throws Exception {
         EventFormatProvider.getInstance().registerFormat(CSVFormat.INSTANCE);
+        this.resteasyDeployment = VertxContainer.start();
+        this.resteasyDeployment.getProviderFactory().register(CloudEventsProvider.class);
+        this.resteasyDeployment.getRegistry().addPerRequestResource(TestResource.class);
+
+        this.target = ClientBuilder.newClient().register(CloudEventsProvider.class).target(generateURL("/"));
     }
 
-    @RegisterExtension
-    JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
-
-    private Application configureJersey() {
-        return new ResourceConfig(TestResource.class)
-            .register(CloudEventsProvider.class);
-    }
-
-
-    private ClientConfig configureJerseyClient(ExtensionContext extensionContext, ClientConfig clientConfig) {
-        clientConfig.register(CloudEventsProvider.class);
-        return clientConfig;
+    @AfterEach
+    public void after() throws Exception {
+        resteasyDeployment.stop();
     }
 
     @Test
-    void getMinEvent(WebTarget target) {
+    void getMinEvent() {
         Response res = target.path("getMinEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
@@ -68,7 +66,7 @@ public class TestServer {
     }
 
     @Test
-    void getStructuredEvent(WebTarget target) {
+    void getStructuredEvent() {
         Response res = target.path("getStructuredEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
@@ -79,7 +77,7 @@ public class TestServer {
     }
 
     @Test
-    void getEvent(WebTarget target) {
+    void getEvent() {
         Response res = target.path("getEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
@@ -88,11 +86,11 @@ public class TestServer {
     }
 
     @Test
-    void postEventWithoutBody(WebTarget target) {
+    void postEventWithoutBody() {
         Response res = target
             .path("postEventWithoutBody")
             .request()
-            .buildPost(Entity.entity(Data.V1_MIN, ""))
+            .buildPost(Entity.entity(Data.V1_MIN, MediaType.WILDCARD))
             .invoke();
 
         assertThat(res.getStatus())
@@ -100,7 +98,7 @@ public class TestServer {
     }
 
     @Test
-    void postEvent(WebTarget target) {
+    void postEvent() {
         Response res = target
             .path("postEvent")
             .request()
