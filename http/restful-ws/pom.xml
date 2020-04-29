@@ -72,17 +72,24 @@
             <scope>test</scope>
         </dependency>
 
-
+        <!-- Jersey -->
         <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-core</artifactId>
-            <version>${vertx.version}</version>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-jetty</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-vertx</artifactId>
-            <version>${resteasy.version}</version>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hanleyt</groupId>
+            <artifactId>jersey-junit</artifactId>
+            <version>2.1.0</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

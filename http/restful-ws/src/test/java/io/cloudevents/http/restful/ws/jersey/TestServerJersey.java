@@ -15,51 +15,53 @@
  *
  */
 
-package io.cloudevents.http.restful.ws;
+package io.cloudevents.http.restful.ws.jersey;
 
+import com.github.hanleyt.JerseyExtension;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.http.restful.ws.CloudEventsProvider;
+import io.cloudevents.http.restful.ws.TestResource;
 import io.cloudevents.mock.CSVFormat;
 import io.cloudevents.test.Data;
-import org.jboss.resteasy.plugins.server.vertx.VertxContainer;
-import org.jboss.resteasy.plugins.server.vertx.VertxResteasyDeployment;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jboss.resteasy.test.TestPortProvider.generateURL;
 
-public class TestServer {
+public class TestServerJersey {
 
-    private VertxResteasyDeployment resteasyDeployment;
-    private WebTarget target;
-
-    @BeforeEach
-    public void before() throws Exception {
+    @BeforeAll
+    public static void beforeAll() {
         EventFormatProvider.getInstance().registerFormat(CSVFormat.INSTANCE);
-        this.resteasyDeployment = VertxContainer.start();
-        this.resteasyDeployment.getProviderFactory().register(CloudEventsProvider.class);
-        this.resteasyDeployment.getRegistry().addPerRequestResource(TestResource.class);
-
-        this.target = ClientBuilder
-            .newClient()
-            .register(CloudEventsProvider.class)
-            .target(generateURL("/"));
     }
 
-    @AfterEach
-    public void after() throws Exception {
-        this.resteasyDeployment.stop();
+    @RegisterExtension
+    JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
+
+    private Application configureJersey() {
+        return new ResourceConfig(TestResource.class)
+            .register(CloudEventsProvider.class);
+    }
+
+
+    private ClientConfig configureJerseyClient(ExtensionContext extensionContext, ClientConfig clientConfig) {
+        clientConfig.register(CloudEventsProvider.class);
+        return clientConfig;
     }
 
     @Test
-    void getMinEvent() {
+    void getMinEvent(WebTarget target) {
         Response res = target.path("getMinEvent").request().buildGet().invoke();
 
         assertThat(res.getHeaderString("ce-specversion"))
@@ -71,18 +73,18 @@ public class TestServer {
     }
 
     @Test
-    void getStructuredEvent() {
+    void getStructuredEvent(WebTarget target) {
         Response res = target.path("getStructuredEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
         assertThat(outEvent)
             .isEqualTo(Data.V1_MIN);
-        assertThat(res.getMediaType().getType())
+        assertThat(res.getHeaderString(HttpHeaders.CONTENT_TYPE))
             .isEqualTo(CSVFormat.INSTANCE.serializedContentType());
     }
 
     @Test
-    void getEvent() {
+    void getEvent(WebTarget target) {
         Response res = target.path("getEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
@@ -91,7 +93,7 @@ public class TestServer {
     }
 
     @Test
-    void postEventWithoutBody() {
+    void postEventWithoutBody(WebTarget target) {
         Response res = target
             .path("postEventWithoutBody")
             .request()
@@ -103,7 +105,19 @@ public class TestServer {
     }
 
     @Test
-    void postEvent() {
+    void postEventStructured(WebTarget target) {
+        Response res = target
+            .path("postEventWithoutBody")
+            .request()
+            .buildPost(Entity.entity(Data.V1_MIN, "application/cloudevents+csv"))
+            .invoke();
+
+        assertThat(res.getStatus())
+            .isEqualTo(200);
+    }
+
+    @Test
+    void postEvent(WebTarget target) {
         Response res = target
             .path("postEvent")
             .request()

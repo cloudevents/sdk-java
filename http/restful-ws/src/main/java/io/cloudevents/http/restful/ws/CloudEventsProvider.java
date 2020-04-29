@@ -20,12 +20,18 @@ package io.cloudevents.http.restful.ws;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.http.restful.ws.impl.RestfulWSClientMessageVisitor;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageFactory;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageVisitor;
+import io.cloudevents.http.restful.ws.impl.Utils;
+import io.cloudevents.message.BinaryMessageVisitor;
+import io.cloudevents.message.MessageVisitor;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.ClientRequestContext;
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -43,7 +49,7 @@ import java.util.Optional;
 @Provider
 @Consumes(MediaType.WILDCARD)
 @Produces(MediaType.WILDCARD)
-public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, MessageBodyWriter<CloudEvent> {
+public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, MessageBodyWriter<CloudEvent>, ClientRequestFilter {
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -89,23 +95,27 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
             writeStructured(
                 event,
                 structuredEncodingFormat.get(),
-                httpHeaders,
-                entityStream
+                new RestfulWSMessageVisitor(httpHeaders, entityStream)
             );
         } else {
             writeBinary(
                 event,
-                httpHeaders,
-                entityStream
+                new RestfulWSMessageVisitor(httpHeaders, entityStream)
             );
         }
     }
 
-    private void writeBinary(CloudEvent input, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) {
-        input.asBinaryMessage().visit(new RestfulWSMessageVisitor(httpHeaders, entityStream));
+    private <V extends MessageVisitor<V, Void> & BinaryMessageVisitor<Void>> void writeBinary(CloudEvent input, V visitor) {
+        input.asBinaryMessage().visit(visitor);
     }
 
-    private void writeStructured(CloudEvent input, String formatString, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) {
+    private <V extends MessageVisitor<V, Void> & BinaryMessageVisitor<Void>> void writeStructured(CloudEvent input, EventFormat format, V visitor) {
+        input
+            .asStructuredMessage(format)
+            .visit(visitor);
+    }
+
+    private <V extends MessageVisitor<V, Void> & BinaryMessageVisitor<Void>> void writeStructured(CloudEvent input, String formatString, V visitor) {
         EventFormat format = EventFormatProvider.getInstance().resolveFormat(formatString);
 
         if (format == null) {
@@ -114,6 +124,26 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
 
         input
             .asStructuredMessage(format)
-            .visit(new RestfulWSMessageVisitor(httpHeaders, entityStream));
+            .visit(visitor);
+    }
+
+    @Override
+    public void filter(ClientRequestContext requestContext) throws IOException {
+        if (Utils.isCloudEventEntity(requestContext.getEntity())) {
+            EventFormat format = EventFormatProvider.getInstance().resolveFormat(requestContext.getMediaType().toString());
+
+            if (format != null) {
+                writeStructured(
+                    (CloudEvent) requestContext.getEntity(),
+                    format,
+                    new RestfulWSClientMessageVisitor(requestContext)
+                );
+            } else {
+                writeBinary(
+                    (CloudEvent) requestContext.getEntity(),
+                    new RestfulWSClientMessageVisitor(requestContext)
+                );
+            }
+        }
     }
 }
