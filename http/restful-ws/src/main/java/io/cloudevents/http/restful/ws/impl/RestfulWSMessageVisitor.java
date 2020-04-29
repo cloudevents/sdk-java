@@ -68,6 +68,11 @@ public final class RestfulWSMessageVisitor implements BinaryMessageVisitor<Void>
 
     @Override
     public Void end() {
+        try {
+            this.entityStream.flush();
+        } catch (IOException e) {
+            throw MessageVisitException.newOther(e);
+        }
         return null;
     }
 

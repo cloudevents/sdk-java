@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,8 +37,8 @@ import static org.jboss.resteasy.test.TestPortProvider.generateURL;
 
 public class TestServer {
 
-    VertxResteasyDeployment resteasyDeployment;
-    WebTarget target;
+    private VertxResteasyDeployment resteasyDeployment;
+    private WebTarget target;
 
     @BeforeEach
     public void before() throws Exception {
@@ -48,17 +47,23 @@ public class TestServer {
         this.resteasyDeployment.getProviderFactory().register(CloudEventsProvider.class);
         this.resteasyDeployment.getRegistry().addPerRequestResource(TestResource.class);
 
-        this.target = ClientBuilder.newClient().register(CloudEventsProvider.class).target(generateURL("/"));
+        this.target = ClientBuilder
+            .newClient()
+            .register(CloudEventsProvider.class)
+            .target(generateURL("/"));
     }
 
     @AfterEach
     public void after() throws Exception {
-        resteasyDeployment.stop();
+        this.resteasyDeployment.stop();
     }
 
     @Test
     void getMinEvent() {
         Response res = target.path("getMinEvent").request().buildGet().invoke();
+
+        assertThat(res.getHeaderString("ce-specversion"))
+            .isEqualTo("1.0");
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
         assertThat(outEvent)
@@ -90,7 +95,7 @@ public class TestServer {
         Response res = target
             .path("postEventWithoutBody")
             .request()
-            .buildPost(Entity.entity(Data.V1_MIN, MediaType.WILDCARD))
+            .buildPost(Entity.entity(Data.V1_MIN, "application/cloudevents"))
             .invoke();
 
         assertThat(res.getStatus())
@@ -102,7 +107,7 @@ public class TestServer {
         Response res = target
             .path("postEvent")
             .request()
-            .buildPost(Entity.entity(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, MediaType.WILDCARD))
+            .buildPost(Entity.entity(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, "application/cloudevents"))
             .invoke();
 
         assertThat(res.getStatus())
