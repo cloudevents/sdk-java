@@ -25,12 +25,8 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.SpecVersion;
+import io.cloudevents.*;
 import io.cloudevents.message.BinaryMessage;
-import io.cloudevents.message.BinaryMessageVisitor;
-import io.cloudevents.message.BinaryMessageVisitorFactory;
-import io.cloudevents.message.MessageVisitException;
 
 import java.io.IOException;
 
@@ -51,10 +47,10 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
+        public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
             try {
                 SpecVersion specVersion = SpecVersion.parse(getStringNode(this.node, this.p, "specversion"));
-                BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(specVersion);
+                CloudEventVisitor<V> visitor = visitorFactory.create(specVersion);
 
                 // Read mandatory attributes
                 for (String attr : specVersion.getMandatoryAttributes()) {

@@ -15,9 +15,9 @@
  *
  */
 
-package io.cloudevents.message;
+package io.cloudevents;
 
-public class MessageVisitException extends RuntimeException {
+public class CloudEventVisitException extends RuntimeException {
 
     public enum MessageVisitExceptionKind {
         INVALID_SPEC_VERSION,
@@ -30,17 +30,17 @@ public class MessageVisitException extends RuntimeException {
 
     private MessageVisitExceptionKind kind;
 
-    public MessageVisitException(MessageVisitExceptionKind kind, Throwable cause) {
+    public CloudEventVisitException(MessageVisitExceptionKind kind, Throwable cause) {
         super(cause);
         this.kind = kind;
     }
 
-    public MessageVisitException(MessageVisitExceptionKind kind, String message) {
+    public CloudEventVisitException(MessageVisitExceptionKind kind, String message) {
         super(message);
         this.kind = kind;
     }
 
-    public MessageVisitException(MessageVisitExceptionKind kind, String message, Throwable cause) {
+    public CloudEventVisitException(MessageVisitExceptionKind kind, String message, Throwable cause) {
         super(message, cause);
         this.kind = kind;
     }
@@ -49,44 +49,44 @@ public class MessageVisitException extends RuntimeException {
         return kind;
     }
 
-    public static MessageVisitException newInvalidSpecVersion(String specVersion) {
-        return new MessageVisitException(
+    public static CloudEventVisitException newInvalidSpecVersion(String specVersion) {
+        return new CloudEventVisitException(
             MessageVisitExceptionKind.INVALID_ATTRIBUTE_TYPE,
             "Invalid specversion: " + specVersion
         );
     }
 
-    public static MessageVisitException newInvalidAttributeName(String attributeName) {
-        return new MessageVisitException(
+    public static CloudEventVisitException newInvalidAttributeName(String attributeName) {
+        return new CloudEventVisitException(
             MessageVisitExceptionKind.INVALID_ATTRIBUTE_NAME,
             "Invalid attribute: " + attributeName
         );
     }
 
-    public static MessageVisitException newInvalidAttributeType(String attributeName, Class<?> clazz) {
-        return new MessageVisitException(
+    public static CloudEventVisitException newInvalidAttributeType(String attributeName, Class<?> clazz) {
+        return new CloudEventVisitException(
             MessageVisitExceptionKind.INVALID_ATTRIBUTE_TYPE,
             "Invalid attribute type for \"" + attributeName + "\": " + clazz.getCanonicalName()
         );
     }
 
-    public static MessageVisitException newInvalidAttributeValue(String attributeName, Object value, Throwable cause) {
-        return new MessageVisitException(
+    public static CloudEventVisitException newInvalidAttributeValue(String attributeName, Object value, Throwable cause) {
+        return new CloudEventVisitException(
             MessageVisitExceptionKind.INVALID_ATTRIBUTE_VALUE,
             "Invalid attribute value for \"" + attributeName + "\": " + value,
             cause
         );
     }
 
-    public static MessageVisitException newInvalidExtensionType(String extensionName, Class<?> clazz) {
-        return new MessageVisitException(
+    public static CloudEventVisitException newInvalidExtensionType(String extensionName, Class<?> clazz) {
+        return new CloudEventVisitException(
             MessageVisitExceptionKind.INVALID_EXTENSION_TYPE,
             "Invalid extension type for \"" + extensionName + "\": " + clazz.getCanonicalName()
         );
     }
 
-    public static MessageVisitException newOther(Throwable cause) {
-        return new MessageVisitException(
+    public static CloudEventVisitException newOther(Throwable cause) {
+        return new CloudEventVisitException(
             MessageVisitExceptionKind.OTHER,
             cause
         );

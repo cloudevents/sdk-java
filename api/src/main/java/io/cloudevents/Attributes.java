@@ -69,8 +69,10 @@ public interface Attributes {
     @Nullable
     ZonedDateTime getTime();
 
+    //TODO to be moved
     Attributes toV03();
 
+    //TODO to be moved
     Attributes toV1();
 
 }

@@ -17,7 +17,12 @@
 
 package io.cloudevents.message.impl;
 
-import io.cloudevents.message.*;
+import io.cloudevents.CloudEventAttributesVisitor;
+import io.cloudevents.CloudEventExtensionsVisitor;
+import io.cloudevents.CloudEventVisitor;
+import io.cloudevents.CloudEventVisitorFactory;
+import io.cloudevents.message.Encoding;
+import io.cloudevents.message.Message;
 
 public abstract class BaseStructuredMessage implements Message {
 
@@ -27,7 +32,17 @@ public abstract class BaseStructuredMessage implements Message {
     }
 
     @Override
-    public <V extends BinaryMessageVisitor<R>, R> R visit(BinaryMessageVisitorFactory<V, R> visitorFactory) throws MessageVisitException, IllegalStateException {
-        throw Encoding.UNKNOWN_ENCODING_EXCEPTION;
+    public <V extends CloudEventVisitor<R>, R> R visit(CloudEventVisitorFactory<V, R> visitorFactory) {
+        throw MessageUtils.generateWrongEncoding(Encoding.BINARY, Encoding.STRUCTURED);
+    }
+
+    @Override
+    public void visitAttributes(CloudEventAttributesVisitor visitor) throws RuntimeException {
+        throw MessageUtils.generateWrongEncoding(Encoding.BINARY, Encoding.STRUCTURED);
+    }
+
+    @Override
+    public void visitExtensions(CloudEventExtensionsVisitor visitor) throws RuntimeException {
+        throw MessageUtils.generateWrongEncoding(Encoding.BINARY, Encoding.STRUCTURED);
     }
 }

@@ -18,6 +18,7 @@
 package io.cloudevents.message;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
 
 @FunctionalInterface
@@ -25,15 +26,13 @@ public interface StructuredMessage {
 
     /**
      * @param visitor
-     * @throws MessageVisitException
-     * @throws IllegalStateException If the message is not a valid structured message
+     * @throws CloudEventVisitException
+     * @throws IllegalStateException    If the message is not a valid structured message
      */
-    <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException;
+    <T> T visit(StructuredMessageVisitor<T> visitor) throws CloudEventVisitException, IllegalStateException;
 
-    default CloudEvent toEvent() throws MessageVisitException, IllegalStateException {
+    default CloudEvent toEvent() throws CloudEventVisitException, IllegalStateException {
         return this.visit(EventFormat::deserialize);
     }
-
-    ;
 
 }

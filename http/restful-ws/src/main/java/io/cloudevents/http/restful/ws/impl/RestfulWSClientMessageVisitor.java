@@ -17,17 +17,17 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
+import io.cloudevents.CloudEventVisitException;
+import io.cloudevents.CloudEventVisitor;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
-import io.cloudevents.message.BinaryMessageVisitor;
-import io.cloudevents.message.MessageVisitException;
 import io.cloudevents.message.MessageVisitor;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
-public final class RestfulWSClientMessageVisitor implements BinaryMessageVisitor<Void>, MessageVisitor<RestfulWSClientMessageVisitor, Void> {
+public final class RestfulWSClientMessageVisitor implements CloudEventVisitor<Void>, MessageVisitor<RestfulWSClientMessageVisitor, Void> {
 
     private final ClientRequestContext context;
 
@@ -40,23 +40,23 @@ public final class RestfulWSClientMessageVisitor implements BinaryMessageVisitor
     }
 
     @Override
-    public RestfulWSClientMessageVisitor createBinaryMessageVisitor(SpecVersion version) {
+    public RestfulWSClientMessageVisitor create(SpecVersion version) {
         this.context.getHeaders().add(CloudEventsHeaders.SPEC_VERSION, version.toString());
         return this;
     }
 
     @Override
-    public void setAttribute(String name, String value) throws MessageVisitException {
+    public void setAttribute(String name, String value) throws CloudEventVisitException {
         this.context.getHeaders().add(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
     }
 
     @Override
-    public void setExtension(String name, String value) throws MessageVisitException {
+    public void setExtension(String name, String value) throws CloudEventVisitException {
         this.context.getHeaders().add(CloudEventsHeaders.CE_PREFIX + name, value);
     }
 
     @Override
-    public void setBody(byte[] value) throws MessageVisitException {
+    public void setBody(byte[] value) throws CloudEventVisitException {
         this.context.setEntity(value);
     }
 
@@ -66,7 +66,7 @@ public final class RestfulWSClientMessageVisitor implements BinaryMessageVisitor
     }
 
     @Override
-    public Void setEvent(EventFormat format, byte[] value) throws MessageVisitException {
+    public Void setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
         this.context.setEntity(value, null, MediaType.valueOf(format.serializedContentType()));
         return null;
     }
