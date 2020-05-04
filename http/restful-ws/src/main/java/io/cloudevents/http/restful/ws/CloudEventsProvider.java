@@ -26,6 +26,7 @@ import io.cloudevents.http.restful.ws.impl.RestfulWSMessageFactory;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageVisitor;
 import io.cloudevents.http.restful.ws.impl.Utils;
 import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.message.StructuredMessage;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -108,12 +109,12 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
     }
 
     private <V extends MessageVisitor<V, Void> & CloudEventVisitor<Void>> void writeBinary(CloudEvent input, V visitor) {
-        input.asBinaryMessage().visit(visitor);
+        input.visit(visitor);
     }
 
     private <V extends MessageVisitor<V, Void> & CloudEventVisitor<Void>> void writeStructured(CloudEvent input, EventFormat format, V visitor) {
-        input
-            .asStructuredMessage(format)
+        StructuredMessage
+            .fromEvent(format, input)
             .visit(visitor);
     }
 
@@ -124,9 +125,7 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
             throw new IllegalArgumentException("Cannot resolve format " + formatString);
         }
 
-        input
-            .asStructuredMessage(format)
-            .visit(visitor);
+        writeStructured(input, format, visitor);
     }
 
     @Override

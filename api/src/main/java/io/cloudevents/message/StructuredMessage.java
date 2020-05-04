@@ -20,6 +20,7 @@ package io.cloudevents.message;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.message.impl.GenericStructuredMessage;
 
 @FunctionalInterface
 public interface StructuredMessage {
@@ -33,6 +34,28 @@ public interface StructuredMessage {
 
     default CloudEvent toEvent() throws CloudEventVisitException, IllegalStateException {
         return this.visit(EventFormat::deserialize);
+    }
+
+    /**
+     * Create a generic structured message from a {@link CloudEvent}
+     *
+     * @param contentType content type to use to resolve the {@link EventFormat}
+     * @param event
+     * @return null if format was not found, otherwise returns the built message
+     */
+    static StructuredMessage fromEvent(String contentType, CloudEvent event) {
+        return GenericStructuredMessage.fromEvent(contentType, event);
+    }
+
+    /**
+     * Create a generic structured message from a {@link CloudEvent}
+     *
+     * @param format
+     * @param event
+     * @return null if format was not found, otherwise returns the built message
+     */
+    static StructuredMessage fromEvent(EventFormat format, CloudEvent event) {
+        return GenericStructuredMessage.fromEvent(format, event);
     }
 
 }

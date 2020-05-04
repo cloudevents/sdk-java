@@ -36,7 +36,7 @@ public class CloudEventMessageDeserializerTest {
         CloudEventMessageDeserializer deserializer = new CloudEventMessageDeserializer();
 
         // Serialize the event first
-        ProducerRecord<Void, byte[]> inRecord = inEvent.asBinaryMessage().visit(KafkaProducerMessageVisitor.create(topic));
+        ProducerRecord<Void, byte[]> inRecord = inEvent.visit(KafkaProducerMessageVisitor.create(topic));
         Message outMessage = deserializer.deserialize(topic, inRecord.headers(), inRecord.value());
 
         assertThat(outMessage.getEncoding())
