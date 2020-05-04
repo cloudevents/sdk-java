@@ -15,24 +15,15 @@
  *
  */
 
-package io.cloudevents.http.vertx.impl;
+package io.cloudevents.http.restful.ws;
 
-import io.cloudevents.message.impl.MessageUtils;
-import io.vertx.core.http.HttpHeaders;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.Map;
-
-public class CloudEventsHeaders {
-
-    public static final String CE_PREFIX = "ce-";
-
-    public static final Map<String, CharSequence> ATTRIBUTES_TO_HEADERS = MessageUtils.generateAttributesToHeadersMapping(v -> {
-        if (v.equals("datacontenttype")) {
-            return HttpHeaders.CONTENT_TYPE;
-        }
-        return HttpHeaders.createOptimized(CE_PREFIX + v);
-    });
-
-    public static final CharSequence SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
-
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface StructuredEncoding {
+    String value();
 }

@@ -16,15 +16,12 @@
  */
 package io.cloudevents.kafka.impl;
 
-import io.cloudevents.SpecVersion;
+import io.cloudevents.message.impl.MessageUtils;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Helper class that contains Kafka headers that should be attached either a binary or structured event message.
@@ -38,17 +35,13 @@ public class KafkaHeaders {
 
     public static final String CONTENT_TYPE = "content-type";
 
-    protected static final Map<String, String> ATTRIBUTES_TO_HEADERS = Stream.concat(
-        Stream.concat(SpecVersion.V1.getMandatoryAttributes().stream(), SpecVersion.V1.getOptionalAttributes().stream()),
-        Stream.concat(SpecVersion.V03.getMandatoryAttributes().stream(), SpecVersion.V03.getOptionalAttributes().stream())
-    )
-        .distinct()
-        .collect(Collectors.toMap(Function.identity(), v -> {
+    protected static final Map<String, String> ATTRIBUTES_TO_HEADERS = MessageUtils.generateAttributesToHeadersMapping(
+        v -> {
             if (v.equals("datacontenttype")) {
                 return CONTENT_TYPE;
             }
             return CE_PREFIX + v;
-        }));
+        });
 
     public static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
 

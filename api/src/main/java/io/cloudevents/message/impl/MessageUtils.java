@@ -22,11 +22,24 @@ import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.EventFormatProvider;
 import io.cloudevents.message.Message;
 
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MessageUtils {
 
+    /**
+     * Common flow to parse an incoming message that could be structured or binary
+     *
+     * @param contentTypeHeaderReader
+     * @param structuredMessageFactory
+     * @param specVersionHeaderReader
+     * @param binaryMessageFactory
+     * @param unknownMessageFactory
+     * @return
+     */
     public static Message parseStructuredOrBinaryMessage(
         Supplier<String> contentTypeHeaderReader,
         Function<EventFormat, Message> structuredMessageFactory,
@@ -51,6 +64,22 @@ public class MessageUtils {
         }
 
         return unknownMessageFactory.get();
+    }
+
+    /**
+     * Generate a map with cloudevents attributes as keys and header keys as values
+     *
+     * @param headerNameMapping mapper to generate the header name
+     * @param <V>               Header key type
+     * @return
+     */
+    public static <V> Map<String, V> generateAttributesToHeadersMapping(Function<String, V> headerNameMapping) {
+        return Stream.concat(
+            Stream.concat(SpecVersion.V1.getMandatoryAttributes().stream(), SpecVersion.V1.getOptionalAttributes().stream()),
+            Stream.concat(SpecVersion.V03.getMandatoryAttributes().stream(), SpecVersion.V03.getOptionalAttributes().stream())
+        )
+            .distinct()
+            .collect(Collectors.toMap(Function.identity(), headerNameMapping));
     }
 
 }
