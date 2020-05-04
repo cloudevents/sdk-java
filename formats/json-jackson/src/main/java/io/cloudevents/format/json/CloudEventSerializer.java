@@ -24,8 +24,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventAttributesVisitor;
 import io.cloudevents.CloudEventExtensionsVisitor;
 import io.cloudevents.CloudEventVisitException;
-import io.cloudevents.impl.AttributesInternal;
-import io.cloudevents.impl.CloudEventImpl;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -41,12 +39,14 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         this.forceStringSerialization = forceStringSerialization;
     }
 
-    private static class AttributesSerializer implements CloudEventAttributesVisitor {
+    private static class FieldsSerializer implements CloudEventAttributesVisitor, CloudEventExtensionsVisitor {
 
-        private JsonGenerator gen;
+        private final JsonGenerator gen;
+        private final SerializerProvider provider;
 
-        public AttributesSerializer(JsonGenerator gen) {
+        public FieldsSerializer(JsonGenerator gen, SerializerProvider provider) {
             this.gen = gen;
+            this.provider = provider;
         }
 
         @Override
@@ -56,17 +56,6 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
-    }
-
-    private static class ExtensionsSerializer implements CloudEventExtensionsVisitor {
-
-        private JsonGenerator gen;
-        private SerializerProvider provider;
-
-        public ExtensionsSerializer(JsonGenerator gen, SerializerProvider provider) {
-            this.gen = gen;
-            this.provider = provider;
         }
 
         @Override
@@ -104,26 +93,20 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         gen.writeStringField("specversion", value.getAttributes().getSpecVersion().toString());
 
         // Serialize attributes
-        AttributesInternal attributesInternal = (AttributesInternal) value.getAttributes();
         try {
-            attributesInternal.visitAttributes(new AttributesSerializer(gen));
-        } catch (RuntimeException e) {
-            throw (IOException) e.getCause();
-        }
-
-        // Serialize extensions
-        try {
-            ((CloudEventImpl) value).visitExtensions(new ExtensionsSerializer(gen, provider));
+            FieldsSerializer serializer = new FieldsSerializer(gen, provider);
+            value.visitAttributes(serializer);
+            value.visitExtensions(serializer);
         } catch (RuntimeException e) {
             throw (IOException) e.getCause();
         }
 
         // Serialize data
         byte[] data = value.getData();
-        String contentType = attributesInternal.getDataContentType();
+        String contentType = value.getAttributes().getDataContentType();
         if (data != null) {
             if (shouldSerializeBase64(contentType)) {
-                switch (attributesInternal.getSpecVersion()) {
+                switch (value.getAttributes().getSpecVersion()) {
                     case V03:
                         gen.writeStringField("datacontentencoding", "base64");
                         gen.writeFieldName("data");

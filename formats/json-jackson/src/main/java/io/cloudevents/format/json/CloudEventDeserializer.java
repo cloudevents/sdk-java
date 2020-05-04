@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cloudevents.*;
-import io.cloudevents.message.BinaryMessage;
 
 import java.io.IOException;
 
@@ -36,7 +35,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         super(CloudEvent.class);
     }
 
-    private static class JsonMessage implements BinaryMessage {
+    private static class JsonMessage implements CloudEventVisitable {
 
         private final JsonParser p;
         private final ObjectNode node;
@@ -142,6 +141,16 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
             }
         }
 
+        @Override
+        public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
+            // no-op no need for that
+        }
+
+        @Override
+        public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException {
+            // no-op no need for that
+        }
+
         private String getStringNode(ObjectNode objNode, JsonParser p, String attributeName) throws JsonProcessingException {
             String val = getOptionalStringNode(objNode, p, attributeName);
             if (val == null) {
@@ -177,7 +186,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         ObjectNode node = ctxt.readValue(p, ObjectNode.class);
 
         try {
-            return new JsonMessage(p, node).toEvent();
+            return new JsonMessage(p, node).visit(CloudEventBuilder::fromSpecVersion);
         } catch (RuntimeException e) {
             // Yeah this is bad but it's needed to support checked exceptions...
             if (e.getCause() instanceof IOException) {

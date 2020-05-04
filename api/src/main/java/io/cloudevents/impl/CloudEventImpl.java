@@ -69,6 +69,24 @@ public final class CloudEventImpl implements CloudEvent {
     }
 
     @Override
+    public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
+        CloudEventVisitor<V> visitor = visitorFactory.create(this.attributes.getSpecVersion());
+        this.attributes.visitAttributes(visitor);
+        this.visitExtensions(visitor);
+
+        if (this.data != null) {
+            visitor.setBody(this.data);
+        }
+
+        return visitor.end();
+    }
+
+    @Override
+    public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
+        this.attributes.visitAttributes(visitor);
+    }
+
+    @Override
     public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException {
         // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
@@ -83,19 +101,6 @@ public final class CloudEventImpl implements CloudEvent {
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
             }
         }
-    }
-
-    @Override
-    public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
-        CloudEventVisitor<V> visitor = visitorFactory.create(this.attributes.getSpecVersion());
-        this.attributes.visitAttributes(visitor);
-        this.visitExtensions(visitor);
-
-        if (this.data != null) {
-            visitor.setBody(this.data);
-        }
-
-        return visitor.end();
     }
 
     @Override
