@@ -21,6 +21,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.lang.Nullable;
 import io.cloudevents.message.StructuredMessageVisitor;
 
 public class GenericStructuredMessage extends BaseStructuredMessage {
@@ -61,6 +62,7 @@ public class GenericStructuredMessage extends BaseStructuredMessage {
      * @param event
      * @return null if format was not found, otherwise returns the built message
      */
+    @Nullable
     public static GenericStructuredMessage fromEvent(String contentType, CloudEvent event) {
         EventFormat format = EventFormatProvider.getInstance().resolveFormat(contentType);
         if (format == null) {
@@ -75,7 +77,7 @@ public class GenericStructuredMessage extends BaseStructuredMessage {
      *
      * @param format
      * @param event
-     * @return null if format was not found, otherwise returns the built message
+     * @return returns the built message
      */
     public static GenericStructuredMessage fromEvent(EventFormat format, CloudEvent event) {
         return new GenericStructuredMessage(format, format.serialize(event));

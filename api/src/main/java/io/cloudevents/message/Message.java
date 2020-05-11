@@ -19,6 +19,7 @@ package io.cloudevents.message;
 
 import io.cloudevents.*;
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.message.impl.GenericStructuredMessage;
 
 public interface Message extends StructuredMessage, CloudEventVisitable {
 
@@ -80,6 +81,24 @@ public interface Message extends StructuredMessage, CloudEventVisitable {
             default:
                 throw new IllegalStateException("Unknown encoding");
         }
+    }
+
+    static <BV extends CloudEventVisitor<R>, R> R writeStructuredEvent(CloudEvent event, String format, MessageVisitor<BV, R> visitor) {
+        GenericStructuredMessage message = GenericStructuredMessage.fromEvent(format, event);
+        if (message == null) {
+            throw new IllegalArgumentException("Format " + format + " not found");
+        }
+
+        return message.visit(visitor);
+    }
+
+    static <BV extends CloudEventVisitor<R>, R> R writeStructuredEvent(CloudEvent event, EventFormat format, MessageVisitor<BV, R> visitor) {
+        return GenericStructuredMessage.fromEvent(format, event).visit(visitor);
+    }
+
+
+    static <BV extends CloudEventVisitor<R>, R> R writeBinaryEvent(CloudEvent event, MessageVisitor<BV, R> visitor) {
+        return event.visit(visitor);
     }
 
 }

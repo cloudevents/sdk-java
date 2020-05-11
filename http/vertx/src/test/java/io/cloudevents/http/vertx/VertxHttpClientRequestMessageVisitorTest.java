@@ -19,7 +19,7 @@ package io.cloudevents.http.vertx;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.message.impl.GenericStructuredMessage;
+import io.cloudevents.message.Message;
 import io.cloudevents.mock.CSVFormat;
 import io.cloudevents.types.Time;
 import io.vertx.core.MultiMap;
@@ -75,8 +75,8 @@ public class VertxHttpClientRequestMessageVisitorTest {
                     checkpoint.flag();
                 });
                 try {
-                    GenericStructuredMessage.fromEvent(CSVFormat.INSTANCE, event)
-                        .visit(VertxHttpClientRequestMessageVisitor.create(req));
+                    Message
+                        .writeStructuredEvent(event, CSVFormat.INSTANCE, VertxHttpClientRequestMessageVisitor.create(req));
                 } catch (Throwable e) {
                     testContext.failNow(e);
                 }
@@ -117,8 +117,8 @@ public class VertxHttpClientRequestMessageVisitorTest {
                     checkpoint.flag();
                 });
                 try {
-                    event
-                        .visit(VertxHttpClientRequestMessageVisitor.create(req));
+                    Message
+                        .writeBinaryEvent(event, VertxHttpClientRequestMessageVisitor.create(req));
                 } catch (Throwable e) {
                     testContext.failNow(e);
                 }

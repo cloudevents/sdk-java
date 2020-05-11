@@ -25,8 +25,8 @@ import io.cloudevents.http.restful.ws.impl.RestfulWSClientMessageVisitor;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageFactory;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageVisitor;
 import io.cloudevents.http.restful.ws.impl.Utils;
+import io.cloudevents.message.Message;
 import io.cloudevents.message.MessageVisitor;
-import io.cloudevents.message.StructuredMessage;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -109,13 +109,11 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
     }
 
     private <V extends MessageVisitor<V, Void> & CloudEventVisitor<Void>> void writeBinary(CloudEvent input, V visitor) {
-        input.visit(visitor);
+        Message.writeBinaryEvent(input, visitor);
     }
 
     private <V extends MessageVisitor<V, Void> & CloudEventVisitor<Void>> void writeStructured(CloudEvent input, EventFormat format, V visitor) {
-        StructuredMessage
-            .fromEvent(format, input)
-            .visit(visitor);
+        Message.writeStructuredEvent(input, format, visitor);
     }
 
     private <V extends MessageVisitor<V, Void> & CloudEventVisitor<Void>> void writeStructured(CloudEvent input, String formatString, V visitor) {

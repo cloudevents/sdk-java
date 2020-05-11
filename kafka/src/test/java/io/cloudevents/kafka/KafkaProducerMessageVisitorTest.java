@@ -20,6 +20,7 @@ package io.cloudevents.kafka;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.kafka.impl.KafkaHeaders;
+import io.cloudevents.message.Message;
 import io.cloudevents.message.StructuredMessage;
 import io.cloudevents.mock.CSVFormat;
 import io.cloudevents.types.Time;
@@ -76,8 +77,8 @@ public class KafkaProducerMessageVisitorTest {
         Long timestamp = System.currentTimeMillis();
         String key = "aaa";
 
-        ProducerRecord<String, byte[]> producerRecord = event
-            .visit(KafkaProducerMessageVisitor.create(topic, partition, timestamp, key));
+        ProducerRecord<String, byte[]> producerRecord = Message
+            .writeBinaryEvent(event, KafkaProducerMessageVisitor.create(topic, partition, timestamp, key));
 
         assertThat(producerRecord.topic())
             .isEqualTo(topic);
