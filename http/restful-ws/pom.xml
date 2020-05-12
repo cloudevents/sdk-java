@@ -28,11 +28,6 @@
     <artifactId>cloudevents-http-restful-ws</artifactId>
     <name>CloudEvents - Jakarta RESTful Web Services Http Binding</name>
     <packaging>pom</packaging>
-    <!--
-        <modules>
-            <module>resteasy-test</module>
-        </modules>
-        -->
 
     <properties>
         <jakarta-ee.version>2.1.6</jakarta-ee.version>
