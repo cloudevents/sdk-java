@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2018-Present The CloudEvents Authors
  * <p>
@@ -16,54 +15,47 @@
  *
  */
 
-package io.cloudevents.http.restful.ws.resteasy;
+package io.cloudevents.http.restful.ws.spring;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.EventFormatProvider;
-import io.cloudevents.http.restful.ws.CloudEventsProvider;
-import io.cloudevents.http.restful.ws.TestResource;
 import io.cloudevents.mock.CSVFormat;
 import io.cloudevents.test.Data;
-import org.jboss.resteasy.plugins.server.vertx.VertxContainer;
-import org.jboss.resteasy.plugins.server.vertx.VertxResteasyDeployment;
-import org.jboss.resteasy.test.TestPortProvider;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestResteasy {
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class TestSpringBootWithJersey {
 
-    private static VertxResteasyDeployment resteasyDeployment;
-    private static WebTarget target;
+    @LocalServerPort
+    private int port;
 
-    @BeforeAll
-    public static void beforeClass() throws Exception {
-        EventFormatProvider.getInstance().registerFormat(CSVFormat.INSTANCE);
+    private WebTarget target;
 
-        String base = TestPortProvider.generateBaseUrl();
-        TestResteasy.resteasyDeployment = VertxContainer.start(base);
-        TestResteasy.resteasyDeployment.getProviderFactory().register(CloudEventsProvider.class);
-        TestResteasy.resteasyDeployment.getRegistry().addPerRequestResource(TestResource.class);
-
-        TestResteasy.target = ClientBuilder.newClient().register(CloudEventsProvider.class).target(base);
-    }
-
-    @AfterAll
-    public static void after() throws Exception {
-        TestResteasy.resteasyDeployment.stop();
+    @Before
+    public void setUp() throws Exception {
+        this.target = ClientBuilder.newClient().target(new URI("http://localhost:" + this.port));
     }
 
     @Test
-    void getMinEvent() {
+    public void contextLoads() {
+    }
+
+    @Test
+    public void getMinEvent() {
         Response res = target.path("getMinEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
@@ -72,8 +64,7 @@ public class TestResteasy {
     }
 
     @Test
-    @Disabled("This test doesn't work on Resteasy")
-    void getStructuredEvent() {
+    public void getStructuredEvent() {
         Response res = target.path("getStructuredEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
@@ -84,7 +75,7 @@ public class TestResteasy {
     }
 
     @Test
-    void getEvent() {
+    public void getEvent() {
         Response res = target.path("getEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
@@ -93,7 +84,7 @@ public class TestResteasy {
     }
 
     @Test
-    void postEventWithoutBody() {
+    public void postEventWithoutBody() {
         Response res = target
             .path("postEventWithoutBody")
             .request()
@@ -105,7 +96,7 @@ public class TestResteasy {
     }
 
     @Test
-    void postEvent() {
+    public void postEvent() {
         Response res = target
             .path("postEvent")
             .request()
@@ -115,5 +106,4 @@ public class TestResteasy {
         assertThat(res.getStatus())
             .isEqualTo(200);
     }
-
 }
