@@ -134,9 +134,8 @@
                         <configuration>
                             <test>io.cloudevents.http.restful.ws.jersey.**</test>
                             <classpathDependencyExcludes>
-                                <classpathDependencyExclude>org.jboss.resteasy:resteasy-vertx
-                                </classpathDependencyExclude>
-                                <classpathDependencyExclude>io.vertx:vertx-core</classpathDependencyExclude>
+                                <exclude>org.jboss.resteasy:*</exclude>
+                                <exclude>io.vertx:*</exclude>
                             </classpathDependencyExcludes>
                         </configuration>
                     </execution>
@@ -150,12 +149,9 @@
                         <configuration>
                             <test>io.cloudevents.http.restful.ws.resteasy.**</test>
                             <classpathDependencyExcludes>
-                                <classpathDependencyExclude>
-                                    org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty
-                                </classpathDependencyExclude>
-                                <classpathDependencyExclude>org.glassfish.jersey.inject:jersey-hk2
-                                </classpathDependencyExclude>
-                                <classpathDependencyExclude>com.github.hanleyt:jersey-junit</classpathDependencyExclude>
+                                <exclude>org.glassfish.jersey.test-framework.providers:*</exclude>
+                                <exclude>org.glassfish.jersey.inject:*</exclude>
+                                <exclude>com.github.hanleyt:jersey-junit</exclude>
                             </classpathDependencyExcludes>
                         </configuration>
                     </execution>
