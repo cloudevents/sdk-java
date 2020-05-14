@@ -83,7 +83,7 @@ public interface Message extends StructuredMessage, CloudEventVisitable {
         }
     }
 
-    static <BV extends CloudEventVisitor<R>, R> R writeStructuredEvent(CloudEvent event, String format, MessageVisitor<BV, R> visitor) {
+    static <R> R writeStructuredEvent(CloudEvent event, String format, StructuredMessageVisitor<R> visitor) {
         GenericStructuredMessage message = GenericStructuredMessage.fromEvent(format, event);
         if (message == null) {
             throw new IllegalArgumentException("Format " + format + " not found");
@@ -92,12 +92,12 @@ public interface Message extends StructuredMessage, CloudEventVisitable {
         return message.visit(visitor);
     }
 
-    static <BV extends CloudEventVisitor<R>, R> R writeStructuredEvent(CloudEvent event, EventFormat format, MessageVisitor<BV, R> visitor) {
+    static <R> R writeStructuredEvent(CloudEvent event, EventFormat format, StructuredMessageVisitor<R> visitor) {
         return GenericStructuredMessage.fromEvent(format, event).visit(visitor);
     }
 
 
-    static <BV extends CloudEventVisitor<R>, R> R writeBinaryEvent(CloudEvent event, MessageVisitor<BV, R> visitor) {
+    static <V extends CloudEventVisitor<R>, R> R writeBinaryEvent(CloudEvent event, CloudEventVisitorFactory<V, R> visitor) {
         return event.visit(visitor);
     }
 
