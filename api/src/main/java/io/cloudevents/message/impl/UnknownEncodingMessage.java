@@ -17,10 +17,7 @@
 
 package io.cloudevents.message.impl;
 
-import io.cloudevents.*;
-import io.cloudevents.message.Encoding;
-import io.cloudevents.message.Message;
-import io.cloudevents.message.StructuredMessageVisitor;
+import io.cloudevents.message.*;
 
 public class UnknownEncodingMessage implements Message {
     @Override
@@ -29,22 +26,12 @@ public class UnknownEncodingMessage implements Message {
     }
 
     @Override
-    public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
-        throw new IllegalStateException("Unknown encoding");
+    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
+        throw Encoding.WRONG_ENCODING_EXCEPTION;
     }
 
     @Override
-    public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
-        throw new IllegalStateException("Unknown encoding");
-    }
-
-    @Override
-    public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException {
-        throw new IllegalStateException("Unknown encoding");
-    }
-
-    @Override
-    public <T> T visit(StructuredMessageVisitor<T> visitor) throws CloudEventVisitException, IllegalStateException {
-        throw new IllegalStateException("Unknown encoding");
+    public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
+        throw Encoding.WRONG_ENCODING_EXCEPTION;
     }
 }

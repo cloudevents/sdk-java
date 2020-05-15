@@ -15,26 +15,14 @@
  *
  */
 
-package io.cloudevents.kafka.impl;
+package io.cloudevents.message;
 
-import io.cloudevents.SpecVersion;
-import org.apache.kafka.common.header.Headers;
+public interface BinaryMessageExtensions {
 
-public final class KafkaSerializerMessageVisitorImpl extends BaseKafkaMessageVisitorImpl<KafkaSerializerMessageVisitorImpl, byte[]> {
-
-    public KafkaSerializerMessageVisitorImpl(Headers headers) {
-        super(headers);
-    }
-
-    @Override
-    public KafkaSerializerMessageVisitorImpl createBinaryMessageVisitor(SpecVersion version) {
-        this.setAttribute("specversion", version.toString());
-        return this;
-    }
-
-    @Override
-    public byte[] end() {
-        return this.value;
-    }
+    /**
+     * @param visitor
+     * @throws MessageVisitException
+     */
+    void visitExtensions(BinaryMessageExtensionsVisitor visitor) throws MessageVisitException;
 
 }

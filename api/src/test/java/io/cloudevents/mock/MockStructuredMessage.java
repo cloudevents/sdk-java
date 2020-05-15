@@ -17,19 +17,26 @@
 
 package io.cloudevents.mock;
 
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
-import io.cloudevents.message.Message;
-import io.cloudevents.message.StructuredMessageVisitor;
-import io.cloudevents.message.impl.BaseStructuredMessage;
+import io.cloudevents.message.*;
 
-public class MockStructuredMessage extends BaseStructuredMessage implements Message, StructuredMessageVisitor<MockStructuredMessage> {
+public class MockStructuredMessage implements Message, StructuredMessageVisitor<MockStructuredMessage> {
 
     private EventFormat format;
     private byte[] payload;
 
     @Override
-    public <T> T visit(StructuredMessageVisitor<T> visitor) throws CloudEventVisitException, IllegalStateException {
+    public Encoding getEncoding() {
+        return Encoding.STRUCTURED;
+    }
+
+    @Override
+    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
+        throw Encoding.WRONG_ENCODING_EXCEPTION;
+    }
+
+    @Override
+    public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
         if (this.format == null) {
             throw new IllegalStateException("MockStructuredMessage is empty");
         }
@@ -38,7 +45,7 @@ public class MockStructuredMessage extends BaseStructuredMessage implements Mess
     }
 
     @Override
-    public MockStructuredMessage setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
+    public MockStructuredMessage setEvent(EventFormat format, byte[] value) throws MessageVisitException {
         this.format = format;
         this.payload = value;
 

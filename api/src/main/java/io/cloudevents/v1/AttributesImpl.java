@@ -17,10 +17,10 @@
 package io.cloudevents.v1;
 
 import io.cloudevents.Attributes;
-import io.cloudevents.CloudEventAttributesVisitor;
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.impl.AttributesInternal;
+import io.cloudevents.message.BinaryMessageAttributesVisitor;
+import io.cloudevents.message.MessageVisitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -107,7 +107,7 @@ public final class AttributesImpl implements AttributesInternal {
     }
 
     @Override
-    public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
+    public void visitAttributes(BinaryMessageAttributesVisitor visitor) throws MessageVisitException {
         visitor.setAttribute(
             ContextAttributes.ID.name().toLowerCase(),
             this.id

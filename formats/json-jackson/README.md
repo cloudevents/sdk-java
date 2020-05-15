@@ -17,7 +17,7 @@ For Maven:
 You don't need to perform any operation to configure the module, more than adding the dependency to your project:
 
 ```java
-CloudEvent event = CloudEventBuilder.v1()
+CloudEvent event = CloudEvent.buildV1()
   .withId("hello")
   .withType("example.vertx")
   .withSource(URI.create("http://localhost"))

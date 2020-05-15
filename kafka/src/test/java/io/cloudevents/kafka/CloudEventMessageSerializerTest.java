@@ -40,7 +40,7 @@ public class CloudEventMessageSerializerTest {
         Headers headers = new RecordHeaders();
 
         MockBinaryMessage inMessage = new MockBinaryMessage();
-        event.visit(inMessage);
+        event.asBinaryMessage().visit(inMessage);
 
         byte[] payload = serializer.serialize(topic, headers, inMessage);
 

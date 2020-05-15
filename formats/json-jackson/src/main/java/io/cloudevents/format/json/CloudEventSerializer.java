@@ -21,9 +21,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventAttributesVisitor;
-import io.cloudevents.CloudEventExtensionsVisitor;
-import io.cloudevents.CloudEventVisitException;
+import io.cloudevents.impl.AttributesInternal;
+import io.cloudevents.impl.CloudEventImpl;
+import io.cloudevents.message.BinaryMessageAttributesVisitor;
+import io.cloudevents.message.BinaryMessageExtensionsVisitor;
+import io.cloudevents.message.MessageVisitException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,18 +41,36 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         this.forceStringSerialization = forceStringSerialization;
     }
 
-    private static class FieldsSerializer implements CloudEventAttributesVisitor, CloudEventExtensionsVisitor {
+    private static class AttributesSerializer implements BinaryMessageAttributesVisitor {
 
-        private final JsonGenerator gen;
-        private final SerializerProvider provider;
+        private JsonGenerator gen;
 
-        public FieldsSerializer(JsonGenerator gen, SerializerProvider provider) {
+        public AttributesSerializer(JsonGenerator gen) {
+            this.gen = gen;
+        }
+
+        @Override
+        public void setAttribute(String name, String value) throws MessageVisitException {
+            try {
+                gen.writeStringField(name, value);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static class ExtensionsSerializer implements BinaryMessageExtensionsVisitor {
+
+        private JsonGenerator gen;
+        private SerializerProvider provider;
+
+        public ExtensionsSerializer(JsonGenerator gen, SerializerProvider provider) {
             this.gen = gen;
             this.provider = provider;
         }
 
         @Override
-        public void setAttribute(String name, String value) throws CloudEventVisitException {
+        public void setExtension(String name, String value) throws MessageVisitException {
             try {
                 gen.writeStringField(name, value);
             } catch (IOException e) {
@@ -59,16 +79,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public void setExtension(String name, String value) throws CloudEventVisitException {
-            try {
-                gen.writeStringField(name, value);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void setExtension(String name, Number value) throws CloudEventVisitException {
+        public void setExtension(String name, Number value) throws MessageVisitException {
             try {
                 gen.writeFieldName(name);
                 provider.findValueSerializer(value.getClass()).serialize(value, gen, provider);
@@ -78,7 +89,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public void setExtension(String name, Boolean value) throws CloudEventVisitException {
+        public void setExtension(String name, Boolean value) throws MessageVisitException {
             try {
                 gen.writeBooleanField(name, value);
             } catch (IOException e) {
@@ -93,20 +104,26 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         gen.writeStringField("specversion", value.getAttributes().getSpecVersion().toString());
 
         // Serialize attributes
+        AttributesInternal attributesInternal = (AttributesInternal) value.getAttributes();
         try {
-            FieldsSerializer serializer = new FieldsSerializer(gen, provider);
-            value.visitAttributes(serializer);
-            value.visitExtensions(serializer);
+            attributesInternal.visitAttributes(new AttributesSerializer(gen));
+        } catch (RuntimeException e) {
+            throw (IOException) e.getCause();
+        }
+
+        // Serialize extensions
+        try {
+            ((CloudEventImpl) value).visitExtensions(new ExtensionsSerializer(gen, provider));
         } catch (RuntimeException e) {
             throw (IOException) e.getCause();
         }
 
         // Serialize data
         byte[] data = value.getData();
-        String contentType = value.getAttributes().getDataContentType();
+        String contentType = attributesInternal.getDataContentType();
         if (data != null) {
             if (shouldSerializeBase64(contentType)) {
-                switch (value.getAttributes().getSpecVersion()) {
+                switch (attributesInternal.getSpecVersion()) {
                     case V03:
                         gen.writeStringField("datacontentencoding", "base64");
                         gen.writeFieldName("data");

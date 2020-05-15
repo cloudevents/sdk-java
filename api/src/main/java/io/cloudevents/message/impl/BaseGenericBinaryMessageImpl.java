@@ -17,7 +17,10 @@
 
 package io.cloudevents.message.impl;
 
-import io.cloudevents.*;
+import io.cloudevents.SpecVersion;
+import io.cloudevents.message.BinaryMessageVisitor;
+import io.cloudevents.message.BinaryMessageVisitorFactory;
+import io.cloudevents.message.MessageVisitException;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -42,12 +45,10 @@ public abstract class BaseGenericBinaryMessageImpl<HK, HV> extends BaseBinaryMes
     }
 
     @Override
-    public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
-        CloudEventVisitor<V> visitor = visitorFactory.create(this.version);
+    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
+        BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(this.version);
 
         // Grab from headers the attributes and extensions
-        // This implementation avoids to use visitAttributes and visitExtensions
-        // in order to complete the visit in one loop
         this.forEachHeader((key, value) -> {
             if (isContentTypeHeader(key)) {
                 visitor.setAttribute("datacontenttype", toCloudEventsValue(value));
@@ -70,36 +71,6 @@ public abstract class BaseGenericBinaryMessageImpl<HK, HV> extends BaseBinaryMes
         }
 
         return visitor.end();
-    }
-
-    @Override
-    public void visitAttributes(CloudEventAttributesVisitor visitor) throws RuntimeException {
-        this.forEachHeader((key, value) -> {
-            if (isContentTypeHeader(key)) {
-                visitor.setAttribute("datacontenttype", toCloudEventsValue(value));
-            } else if (isCloudEventsHeader(key)) {
-                String name = toCloudEventsKey(key);
-                if (name.equals("specversion")) {
-                    return;
-                }
-                if (this.version.getAllAttributes().contains(name)) {
-                    visitor.setAttribute(name, toCloudEventsValue(value));
-                }
-            }
-        });
-    }
-
-    @Override
-    public void visitExtensions(CloudEventExtensionsVisitor visitor) throws RuntimeException {
-        // Grab from headers the attributes and extensions
-        this.forEachHeader((key, value) -> {
-            if (isCloudEventsHeader(key)) {
-                String name = toCloudEventsKey(key);
-                if (!this.version.getAllAttributes().contains(name)) {
-                    visitor.setExtension(name, toCloudEventsValue(value));
-                }
-            }
-        });
     }
 
     protected abstract boolean isContentTypeHeader(HK key);
