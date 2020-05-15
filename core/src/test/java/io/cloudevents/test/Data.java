@@ -98,12 +98,12 @@ public class Data {
         .withTime(TIME)
         .build();
 
-    public static final CloudEvent V03_MIN = V1_MIN.toV03();
-    public static final CloudEvent V03_WITH_JSON_DATA = V1_WITH_JSON_DATA.toV03();
-    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT = V1_WITH_JSON_DATA_WITH_EXT.toV03();
-    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT_STRING = V1_WITH_JSON_DATA_WITH_EXT_STRING.toV03();
-    public static final CloudEvent V03_WITH_XML_DATA = V1_WITH_XML_DATA.toV03();
-    public static final CloudEvent V03_WITH_TEXT_DATA = V1_WITH_TEXT_DATA.toV03();
+    public static final CloudEvent V03_MIN = CloudEventBuilder.v03(V1_MIN).build();
+    public static final CloudEvent V03_WITH_JSON_DATA = CloudEventBuilder.v03(V1_WITH_JSON_DATA).build();
+    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT = CloudEventBuilder.v03(V1_WITH_JSON_DATA_WITH_EXT).build();
+    public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT_STRING = CloudEventBuilder.v03(V1_WITH_JSON_DATA_WITH_EXT_STRING).build();
+    public static final CloudEvent V03_WITH_XML_DATA = CloudEventBuilder.v03(V1_WITH_XML_DATA).build();
+    public static final CloudEvent V03_WITH_TEXT_DATA = CloudEventBuilder.v03(V1_WITH_TEXT_DATA).build();
 
     public static Stream<CloudEvent> allEvents() {
         return Stream.concat(v1Events(), v03Events());

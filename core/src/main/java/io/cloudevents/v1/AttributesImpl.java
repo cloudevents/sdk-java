@@ -16,7 +16,6 @@
  */
 package io.cloudevents.v1;
 
-import io.cloudevents.Attributes;
 import io.cloudevents.CloudEventAttributesVisitor;
 import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
@@ -86,24 +85,6 @@ public final class AttributesImpl implements AttributesInternal {
 
     public ZonedDateTime getTime() {
         return time;
-    }
-
-    @Override
-    public Attributes toV03() {
-        return new io.cloudevents.v03.AttributesImpl(
-            this.id,
-            this.source,
-            this.type,
-            this.time,
-            this.dataschema,
-            this.datacontenttype,
-            this.subject
-        );
-    }
-
-    @Override
-    public Attributes toV1() {
-        return this;
     }
 
     @Override

@@ -51,24 +51,6 @@ public final class CloudEventImpl implements CloudEvent {
     }
 
     @Override
-    public CloudEvent toV03() {
-        return new CloudEventImpl(
-            attributes.toV03(),
-            data,
-            extensions
-        );
-    }
-
-    @Override
-    public CloudEvent toV1() {
-        return new CloudEventImpl(
-            attributes.toV1(),
-            data,
-            extensions
-        );
-    }
-
-    @Override
     public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
         CloudEventVisitor<V> visitor = visitorFactory.create(this.attributes.getSpecVersion());
         this.attributes.visitAttributes(visitor);

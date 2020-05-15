@@ -19,9 +19,11 @@ package io.cloudevents.v1;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.SpecVersion;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import static io.cloudevents.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -36,15 +38,37 @@ public class CloudEventBuilderTest {
         assertThat(CloudEventBuilder.v1(event).build()).isEqualTo(event);
     }
 
-    @ParameterizedTest()
-    @MethodSource("io.cloudevents.test.Data#v1Events")
-    void testToV03(CloudEvent event) {
-        CloudEvent eventV03 = CloudEventBuilder.v03(event).build();
+    @Test
+    void testToV03() {
+        CloudEvent input = CloudEventBuilder.v1()
+            .withId(ID)
+            .withType(TYPE)
+            .withSource(SOURCE)
+            .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+            .withSubject(SUBJECT)
+            .withTime(TIME)
+            .withExtension("astring", "aaa")
+            .withExtension("aboolean", "true")
+            .withExtension("anumber", "10")
+            .build();
 
-        assertThat(eventV03.getAttributes().getSpecVersion())
+        CloudEvent expected = CloudEventBuilder.v03()
+            .withId(ID)
+            .withType(TYPE)
+            .withSource(SOURCE)
+            .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+            .withSubject(SUBJECT)
+            .withTime(TIME)
+            .withExtension("astring", "aaa")
+            .withExtension("aboolean", "true")
+            .withExtension("anumber", "10")
+            .build();
+
+        CloudEvent actual = CloudEventBuilder.v03(input).build();
+
+        assertThat(expected.getAttributes().getSpecVersion())
             .isEqualTo(SpecVersion.V03);
-
-        assertThat(eventV03).isEqualTo(event.toV03());
+        assertThat(actual).isEqualTo(expected);
     }
 
 }
