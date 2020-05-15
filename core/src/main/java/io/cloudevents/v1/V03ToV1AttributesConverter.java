@@ -17,10 +17,8 @@
 
 package io.cloudevents.v1;
 
-import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventAttributesVisitor;
 import io.cloudevents.CloudEventVisitException;
-import io.cloudevents.SpecVersion;
-import io.cloudevents.impl.BaseCloudEventBuilder;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
@@ -28,113 +26,46 @@ import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
-/**
- * @author fabiojose
- * @author slinkydeveloper
- * @version 1.0
- */
-public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder, AttributesImpl> {
+class V03ToV1AttributesConverter implements CloudEventAttributesVisitor {
 
-    private String id;
-    private URI source;
-    private String type;
-    private String datacontenttype;
-    private URI dataschema;
-    private String subject;
-    private ZonedDateTime time;
+    private final CloudEventBuilder builder;
 
-    public CloudEventBuilder() {
-        super();
+    V03ToV1AttributesConverter(CloudEventBuilder builder) {
+        this.builder = builder;
     }
-
-    public CloudEventBuilder(CloudEvent event) {
-        super(event);
-    }
-
-    @Override
-    protected void setAttributes(CloudEvent event) {
-        if (event.getAttributes().getSpecVersion() == SpecVersion.V1) {
-            event.visitAttributes(this);
-        } else {
-            event.visitAttributes(new V03ToV1AttributesConverter(this));
-        }
-    }
-
-    public CloudEventBuilder withId(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public CloudEventBuilder withSource(URI source) {
-        this.source = source;
-        return this;
-    }
-
-    public CloudEventBuilder withType(String type) {
-        this.type = type;
-        return this;
-    }
-
-    public CloudEventBuilder withDataSchema(URI dataschema) {
-        this.dataschema = dataschema;
-        return this;
-    }
-
-    public CloudEventBuilder withDataContentType(
-        String datacontenttype) {
-        this.datacontenttype = datacontenttype;
-        return this;
-    }
-
-    public CloudEventBuilder withSubject(
-        String subject) {
-        this.subject = subject;
-        return this;
-    }
-
-    public CloudEventBuilder withTime(ZonedDateTime time) {
-        this.time = time;
-        return this;
-    }
-
-    protected AttributesImpl buildAttributes() {
-        return new AttributesImpl(id, source, type, datacontenttype, dataschema, subject, time);
-    }
-
-    // Message impl
 
     @Override
     public void setAttribute(String name, String value) throws CloudEventVisitException {
         switch (name) {
             case "id":
-                withId(value);
+                builder.withId(value);
                 return;
             case "source":
                 try {
-                    withSource(new URI(value));
+                    builder.withSource(new URI(value));
                 } catch (URISyntaxException e) {
                     throw CloudEventVisitException.newInvalidAttributeValue("source", value, e);
                 }
                 return;
             case "type":
-                withType(value);
+                builder.withType(value);
                 return;
             case "datacontenttype":
-                withDataContentType(value);
+                builder.withDataContentType(value);
                 return;
-            case "dataschema":
+            case "schemaurl":
                 try {
-                    withDataSchema(new URI(value));
+                    builder.withDataSchema(new URI(value));
                 } catch (URISyntaxException e) {
                     throw CloudEventVisitException.newInvalidAttributeValue("dataschema", value, e);
                 }
                 return;
             case "subject":
-                withSubject(value);
+                builder.withSubject(value);
                 return;
             case "time":
                 try {
-                    withTime(Time.parseTime(value));
+                    builder.withTime(Time.parseTime(value));
                 } catch (DateTimeParseException e) {
                     throw CloudEventVisitException.newInvalidAttributeValue("time", value, e);
                 }
@@ -147,10 +78,10 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     public void setAttribute(String name, URI value) throws CloudEventVisitException {
         switch (name) {
             case "source":
-                withSource(value);
+                builder.withSource(value);
                 return;
-            case "dataschema":
-                withDataSchema(value);
+            case "schemaurl":
+                builder.withDataSchema(value);
                 return;
         }
         throw CloudEventVisitException.newInvalidAttributeType(name, URI.class);
@@ -159,7 +90,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     @Override
     public void setAttribute(String name, ZonedDateTime value) throws CloudEventVisitException {
         if ("time".equals(name)) {
-            withTime(value);
+            builder.withTime(value);
             return;
         }
         throw CloudEventVisitException.newInvalidAttributeType(name, ZonedDateTime.class);

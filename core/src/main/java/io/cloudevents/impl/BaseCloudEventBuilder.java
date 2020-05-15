@@ -41,13 +41,12 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     public BaseCloudEventBuilder(CloudEvent event) {
         this.self = (SELF) this;
 
-        CloudEventImpl ev = (CloudEventImpl) event;
-        this.setAttributes(ev.getAttributes());
-        this.data = ev.getData();
-        this.extensions = new HashMap<>(ev.getExtensions());
+        this.setAttributes(event);
+        this.data = event.getData();
+        this.extensions = new HashMap<>(event.getExtensions());
     }
 
-    protected abstract void setAttributes(Attributes attributes);
+    protected abstract void setAttributes(CloudEvent event);
 
     protected abstract SELF withDataContentType(String contentType);
 

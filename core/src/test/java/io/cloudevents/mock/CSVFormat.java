@@ -18,10 +18,10 @@
 package io.cloudevents.mock;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.types.Time;
-import io.cloudevents.v1.CloudEventBuilder;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -70,7 +70,7 @@ public class CSVFormat implements EventFormat {
         ZonedDateTime time = splitted[7].equals("null") ? null : Time.parseTime(splitted[7]);
         byte[] data = splitted[8].equals("null") ? null : Base64.getDecoder().decode(splitted[8].getBytes());
 
-        CloudEventBuilder builder = io.cloudevents.CloudEventBuilder.v1()
+        io.cloudevents.v1.CloudEventBuilder builder = CloudEventBuilder.v1()
             .withId(id)
             .withType(type)
             .withSource(source);
@@ -92,9 +92,9 @@ public class CSVFormat implements EventFormat {
         }
         switch (sv) {
             case V03:
-                return builder.build().toV03();
+                return CloudEventBuilder.v03(builder.build()).build();
             case V1:
-                return builder.build().toV1();
+                return builder.build();
         }
         return null;
     }
