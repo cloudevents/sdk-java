@@ -45,7 +45,7 @@ public final class KafkaProducerMessageVisitorImpl<K> extends
     }
 
     @Override
-    public KafkaProducerMessageVisitor<K> create(SpecVersion version) {
+    public KafkaProducerMessageVisitor<K> createBinaryMessageVisitor(SpecVersion version) {
         this.setAttribute("specversion", version.toString());
         return this;
     }

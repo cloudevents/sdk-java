@@ -15,16 +15,11 @@
  *
  */
 
-package io.cloudevents;
+package io.cloudevents.message;
+
+import io.cloudevents.SpecVersion;
 
 @FunctionalInterface
-public interface CloudEventVisitorFactory<V extends CloudEventVisitor<R>, R> {
-
-    /**
-     * Create a {@link CloudEventVisitor} starting from the provided {@link SpecVersion}
-     *
-     * @param version
-     * @return
-     */
-    V create(SpecVersion version);
+public interface BinaryMessageVisitorFactory<V extends BinaryMessageVisitor<R>, R> {
+    V createBinaryMessageVisitor(SpecVersion version);
 }

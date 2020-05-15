@@ -18,7 +18,6 @@
 package io.cloudevents.impl;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
 import org.junit.jupiter.api.Test;
 
 import static io.cloudevents.test.Data.*;
@@ -28,7 +27,7 @@ public class CloudEventImplTest {
 
     @Test
     public void testEqualityV03() {
-        CloudEvent event1 = CloudEventBuilder.v03()
+        CloudEvent event1 = CloudEvent.buildV03()
             .withId(ID)
             .withType(TYPE)
             .withSource(SOURCE)
@@ -37,7 +36,7 @@ public class CloudEventImplTest {
             .withTime(TIME)
             .build();
 
-        CloudEvent event2 = CloudEventBuilder.v03()
+        CloudEvent event2 = CloudEvent.buildV03()
             .withId(ID)
             .withType(TYPE)
             .withSource(SOURCE)
@@ -51,7 +50,7 @@ public class CloudEventImplTest {
 
     @Test
     public void testEqualityV1() {
-        CloudEvent event1 = CloudEventBuilder.v1()
+        CloudEvent event1 = CloudEvent.buildV1()
             .withId(ID)
             .withType(TYPE)
             .withSource(SOURCE)
@@ -60,7 +59,7 @@ public class CloudEventImplTest {
             .withTime(TIME)
             .build();
 
-        CloudEvent event2 = CloudEventBuilder.v1()
+        CloudEvent event2 = CloudEvent.buildV1()
             .withId(ID)
             .withType(TYPE)
             .withSource(SOURCE)

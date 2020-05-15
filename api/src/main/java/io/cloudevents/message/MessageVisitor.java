@@ -17,9 +17,5 @@
 
 package io.cloudevents.message;
 
-import io.cloudevents.CloudEventVisitor;
-import io.cloudevents.CloudEventVisitorFactory;
-
-//TODO javadoc
-public interface MessageVisitor<CEV extends CloudEventVisitor<R>, R> extends CloudEventVisitorFactory<CEV, R>, StructuredMessageVisitor<R> {
+public interface MessageVisitor<BV extends BinaryMessageVisitor<R>, R> extends BinaryMessageVisitorFactory<BV, R>, StructuredMessageVisitor<R> {
 }

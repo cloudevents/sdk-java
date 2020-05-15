@@ -19,8 +19,8 @@ package io.cloudevents.v1;
 
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.impl.BaseCloudEventBuilder;
+import io.cloudevents.message.MessageVisitException;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
@@ -108,7 +108,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     // Message impl
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventVisitException {
+    public void setAttribute(String name, String value) throws MessageVisitException {
         switch (name) {
             case "id":
                 withId(value);
@@ -117,7 +117,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 try {
                     withSource(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("source", value, e);
+                    throw MessageVisitException.newInvalidAttributeValue("source", value, e);
                 }
                 return;
             case "type":
@@ -130,7 +130,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 try {
                     withDataSchema(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("dataschema", value, e);
+                    throw MessageVisitException.newInvalidAttributeValue("dataschema", value, e);
                 }
                 return;
             case "subject":
@@ -140,15 +140,15 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 try {
                     withTime(Time.parseTime(value));
                 } catch (DateTimeParseException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("time", value, e);
+                    throw MessageVisitException.newInvalidAttributeValue("time", value, e);
                 }
                 return;
         }
-        throw CloudEventVisitException.newInvalidAttributeName(name);
+        throw MessageVisitException.newInvalidAttributeName(name);
     }
 
     @Override
-    public void setAttribute(String name, URI value) throws CloudEventVisitException {
+    public void setAttribute(String name, URI value) throws MessageVisitException {
         switch (name) {
             case "source":
                 withSource(value);
@@ -157,15 +157,15 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 withDataSchema(value);
                 return;
         }
-        throw CloudEventVisitException.newInvalidAttributeType(name, URI.class);
+        throw MessageVisitException.newInvalidAttributeType(name, URI.class);
     }
 
     @Override
-    public void setAttribute(String name, ZonedDateTime value) throws CloudEventVisitException {
+    public void setAttribute(String name, ZonedDateTime value) throws MessageVisitException {
         if ("time".equals(name)) {
             withTime(value);
             return;
         }
-        throw CloudEventVisitException.newInvalidAttributeType(name, ZonedDateTime.class);
+        throw MessageVisitException.newInvalidAttributeType(name, ZonedDateTime.class);
     }
 }
