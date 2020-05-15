@@ -16,7 +16,6 @@
  */
 package io.cloudevents.v03;
 
-import io.cloudevents.Attributes;
 import io.cloudevents.CloudEventAttributesVisitor;
 import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
@@ -131,24 +130,6 @@ public final class AttributesImpl implements AttributesInternal {
                 this.time
             );
         }
-    }
-
-    @Override
-    public Attributes toV03() {
-        return this;
-    }
-
-    @Override
-    public Attributes toV1() {
-        return new io.cloudevents.v1.AttributesImpl(
-            this.id,
-            this.source,
-            this.type,
-            this.datacontenttype,
-            this.schemaurl,
-            this.subject,
-            this.time
-        );
     }
 
     @Override

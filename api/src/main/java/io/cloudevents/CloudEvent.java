@@ -48,12 +48,6 @@ public interface CloudEvent extends CloudEventVisitable {
      */
     Map<String, Object> getExtensions();
 
-    //TODO to be moved
-    CloudEvent toV03();
-
-    //TODO to be moved
-    CloudEvent toV1();
-
     // --- Default implementations for CloudEventVisitable ---
     // Be aware that this implementation assumes the event is SpecVersion v1.
     // If you need to handle other versions, please implement this method by yourself
