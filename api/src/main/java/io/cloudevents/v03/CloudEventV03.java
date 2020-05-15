@@ -14,47 +14,54 @@
  * limitations under the License.
  *
  */
-package io.cloudevents.v1;
+package io.cloudevents.v03;
 
 import io.cloudevents.CloudEventAttributesVisitor;
 import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.impl.AttributesInternal;
+import io.cloudevents.impl.BaseCloudEvent;
+import io.cloudevents.lang.Nullable;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 /**
+ * CloudEvent implementation for v0.3
+ *
  * @author fabiojose
  * @author slinkydeveloper
- * @version 1.0
  */
-public final class AttributesImpl implements AttributesInternal {
+public final class CloudEventV03 extends BaseCloudEvent {
 
     private final String id;
     private final URI source;
     private final String type;
     private final String datacontenttype;
-    private final URI dataschema;
+    private final URI schemaurl;
     private final String subject;
     private final ZonedDateTime time;
 
-    public AttributesImpl(String id, URI source,
-                          String type, String datacontenttype,
-                          URI dataschema, String subject, ZonedDateTime time) {
+    public CloudEventV03(String id, URI source, String type,
+                         ZonedDateTime time, URI schemaurl,
+                         String datacontenttype, String subject,
+                         byte[] data, Map<String, Object> extensions) {
+        super(data, extensions);
 
         this.id = id;
         this.source = source;
         this.type = type;
-        this.datacontenttype = datacontenttype;
-        this.dataschema = dataschema;
-        this.subject = subject;
+
         this.time = time;
+        this.schemaurl = schemaurl;
+        this.datacontenttype = datacontenttype;
+        this.subject = subject;
     }
 
     public SpecVersion getSpecVersion() {
-        return SpecVersion.V1;
+        return SpecVersion.V03;
     }
 
     public String getId() {
@@ -69,14 +76,17 @@ public final class AttributesImpl implements AttributesInternal {
         return type;
     }
 
-    @Override
     public String getDataContentType() {
         return datacontenttype;
     }
 
-    @Override
     public URI getDataSchema() {
-        return dataschema;
+        return schemaurl;
+    }
+
+    @Nullable
+    public URI getSchemaUrl() {
+        return schemaurl;
     }
 
     public String getSubject() {
@@ -107,10 +117,10 @@ public final class AttributesImpl implements AttributesInternal {
                 this.datacontenttype
             );
         }
-        if (this.dataschema != null) {
+        if (this.schemaurl != null) {
             visitor.setAttribute(
-                ContextAttributes.DATASCHEMA.name().toLowerCase(),
-                this.dataschema
+                ContextAttributes.SCHEMAURL.name().toLowerCase(),
+                this.schemaurl
             );
         }
         if (this.subject != null) {
@@ -128,30 +138,38 @@ public final class AttributesImpl implements AttributesInternal {
     }
 
     @Override
-    public String toString() {
-        return "Attibutes V1.0 [id=" + id + ", source=" + source
-            + ", type=" + type
-            + ", datacontenttype=" + datacontenttype + ", dataschema="
-            + dataschema + ", subject=" + subject
-            + ", time=" + time + "]";
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AttributesImpl that = (AttributesImpl) o;
-        return Objects.equals(id, that.id) &&
-            Objects.equals(source, that.source) &&
-            Objects.equals(type, that.type) &&
+        CloudEventV03 that = (CloudEventV03) o;
+        return Objects.equals(getId(), that.getId()) &&
+            Objects.equals(getSource(), that.getSource()) &&
+            Objects.equals(getType(), that.getType()) &&
             Objects.equals(datacontenttype, that.datacontenttype) &&
-            Objects.equals(dataschema, that.dataschema) &&
-            Objects.equals(subject, that.subject) &&
-            Objects.equals(time, that.time);
+            Objects.equals(schemaurl, that.schemaurl) &&
+            Objects.equals(getSubject(), that.getSubject()) &&
+            Objects.equals(getTime(), that.getTime()) &&
+            Arrays.equals(getData(), that.getData()) &&
+            Objects.equals(getExtensions(), that.getExtensions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, source, type, datacontenttype, dataschema, subject, time);
+        return Objects.hash(getId(), getSource(), getType(), datacontenttype, schemaurl, getSubject(), getTime(), getData(), getExtensions());
+    }
+
+    @Override
+    public String toString() {
+        return "CloudEvent{" +
+            "id='" + id + '\'' +
+            ", source=" + source +
+            ", type='" + type + '\'' +
+            ", datacontenttype='" + datacontenttype + '\'' +
+            ", schemaurl=" + schemaurl +
+            ", subject='" + subject + '\'' +
+            ", time=" + time +
+            ", data=" + Arrays.toString(getData()) +
+            ", extensions" + getExtensions() +
+            '}';
     }
 }

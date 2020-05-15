@@ -96,7 +96,7 @@ CloudEvent<AttributesImpl, Map> event =
     .unmarshal();
 
 /* Use the CloudEvent instance attributes, data and extensions */
-event.getAttributes();
+event;
 event.getData();
 event.getExtensions();
 ```
@@ -154,11 +154,8 @@ wire.getPayload(); //Optional<String> which has the JSON
 The high-level API to unmarshal CloudEvents as structured content mode.
 
 ```java
-import java.util.HashMap;
-import java.util.Map;
 
-import io.cloudevents.CloudEvent;
-import io.cloudevents.v1.AttributesImpl;
+
 import io.cloudevents.v1.http.Unmarshallers;
 
 // . . .
@@ -183,7 +180,7 @@ CloudEvent<AttributesImpl, Map> event =
 			.unmarshal();
 
 /* Use the event instance */
-event.getAttributes();
+event;
 event.getExtensions();
 event.getData();
 ```
@@ -220,7 +217,6 @@ import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
 import io.cloudevents.v1.Accessor;
-import io.cloudevents.v1.AttributesImpl;
 
 // . . .
 
@@ -295,16 +291,13 @@ Wire<String, String, String> wire =
 /*
  * The imports used by the example bellow
  */
-import java.util.HashMap;
 
-import io.cloudevents.CloudEvent;
 import io.cloudevents.extensions.ExtensionFormat;
 import io.cloudevents.format.StructuredMarshaller;
 import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.json.Json;
 import io.cloudevents.json.types.Much;
 import io.cloudevents.v1.Accessor;
-import io.cloudevents.v1.AttributesImpl;
 
 // . . .
 

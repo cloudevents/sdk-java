@@ -16,7 +16,6 @@
  */
 package io.cloudevents.v03;
 
-import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.impl.BaseCloudEventBuilder;
@@ -32,7 +31,7 @@ import java.time.format.DateTimeParseException;
  *
  * @author fabiojose
  */
-public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder, AttributesImpl> {
+public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder, CloudEventV03> {
 
     private String id;
     private URI source;
@@ -46,13 +45,13 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         super();
     }
 
-    public CloudEventBuilder(CloudEvent event) {
+    public CloudEventBuilder(io.cloudevents.CloudEvent event) {
         super(event);
     }
 
     @Override
-    protected void setAttributes(CloudEvent event) {
-        if (event.getAttributes().getSpecVersion() == SpecVersion.V03) {
+    protected void setAttributes(io.cloudevents.CloudEvent event) {
+        if (event.getSpecVersion() == SpecVersion.V03) {
             event.visitAttributes(this);
         } else {
             event.visitAttributes(new V1ToV03AttributesConverter(this));
@@ -102,8 +101,8 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     }
 
     @Override
-    protected AttributesImpl buildAttributes() {
-        return new AttributesImpl(id, source, type, time, schemaurl, datacontenttype, subject);
+    public CloudEventV03 build() {
+        return new CloudEventV03(id, source, type, time, schemaurl, datacontenttype, subject, this.data, this.extensions);
     }
 
     // Message impl

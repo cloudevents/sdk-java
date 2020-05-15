@@ -29,7 +29,7 @@ import java.time.ZonedDateTime;
  * @author fabiojose
  */
 @ParametersAreNonnullByDefault
-public interface Attributes {
+public interface CloudEventAttributes {
 
     /**
      * @return The version of the CloudEvents specification which the event uses

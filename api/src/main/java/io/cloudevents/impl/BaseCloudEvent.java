@@ -19,25 +19,18 @@ package io.cloudevents.impl;
 
 import io.cloudevents.*;
 
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class CloudEventImpl implements CloudEvent {
+public abstract class BaseCloudEvent implements CloudEvent {
 
-    private final AttributesInternal attributes;
     private final byte[] data;
     private final Map<String, Object> extensions;
 
-    public CloudEventImpl(Attributes attributes, byte[] data, Map<String, Object> extensions) {
-        Objects.requireNonNull(attributes);
-        this.attributes = (AttributesInternal) attributes;
+    protected BaseCloudEvent(byte[] data, Map<String, Object> extensions) {
         this.data = data;
         this.extensions = extensions != null ? extensions : new HashMap<>();
-    }
-
-    @Override
-    public Attributes getAttributes() {
-        return attributes;
     }
 
     @Override
@@ -52,8 +45,8 @@ public final class CloudEventImpl implements CloudEvent {
 
     @Override
     public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
-        CloudEventVisitor<V> visitor = visitorFactory.create(this.attributes.getSpecVersion());
-        this.attributes.visitAttributes(visitor);
+        CloudEventVisitor<V> visitor = visitorFactory.create(this.getSpecVersion());
+        this.visitAttributes(visitor);
         this.visitExtensions(visitor);
 
         if (this.data != null) {
@@ -61,11 +54,6 @@ public final class CloudEventImpl implements CloudEvent {
         }
 
         return visitor.end();
-    }
-
-    @Override
-    public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
-        this.attributes.visitAttributes(visitor);
     }
 
     @Override
@@ -83,29 +71,5 @@ public final class CloudEventImpl implements CloudEvent {
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CloudEventImpl that = (CloudEventImpl) o;
-        return Objects.equals(attributes, that.attributes) &&
-            Arrays.equals(data, that.data) &&
-            Objects.equals(extensions, that.extensions);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(attributes, data, extensions);
-    }
-
-    @Override
-    public String toString() {
-        return "CloudEvent{" +
-            "attributes=" + attributes +
-            ((this.data != null) ? ", data=" + new String(this.data, StandardCharsets.UTF_8) : "") +
-            ", extensions=" + extensions +
-            '}';
     }
 }
