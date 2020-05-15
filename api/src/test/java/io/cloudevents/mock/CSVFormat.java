@@ -70,7 +70,7 @@ public class CSVFormat implements EventFormat {
         ZonedDateTime time = splitted[7].equals("null") ? null : Time.parseTime(splitted[7]);
         byte[] data = splitted[8].equals("null") ? null : Base64.getDecoder().decode(splitted[8].getBytes());
 
-        CloudEventBuilder builder = CloudEvent.buildV1()
+        CloudEventBuilder builder = io.cloudevents.CloudEventBuilder.v1()
             .withId(id)
             .withType(type)
             .withSource(source);
