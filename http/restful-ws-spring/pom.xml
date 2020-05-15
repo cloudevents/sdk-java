@@ -31,8 +31,20 @@
     <packaging>jar</packaging>
 
     <properties>
-        <spring.version>2.1.2.RELEASE</spring.version>
+        <spring.version>2.3.0.RELEASE</spring.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>5.2.6.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- Test deps -->
@@ -58,6 +70,7 @@
         </dependency>
 
         <!-- Spring -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jersey</artifactId>
