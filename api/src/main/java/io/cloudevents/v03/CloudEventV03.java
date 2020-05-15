@@ -155,7 +155,7 @@ public final class CloudEventV03 extends BaseCloudEvent {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSource(), getType(), datacontenttype, schemaurl, getSubject(), getTime(), getData(), getExtensions());
+        return Objects.hash(getId(), getSource(), getType(), datacontenttype, schemaurl, getSubject(), getTime(), Arrays.hashCode(getData()), getExtensions());
     }
 
     @Override

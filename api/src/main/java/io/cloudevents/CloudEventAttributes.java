@@ -52,7 +52,6 @@ public interface CloudEventAttributes {
     URI getSource();
 
     /**
-     * TODO
      * A common way to get the media type of CloudEvents 'data';
      *
      * @return If has a value, it MUST follows the <a href="https://tools.ietf.org/html/rfc2046">RFC2046</a>
@@ -60,12 +59,21 @@ public interface CloudEventAttributes {
     @Nullable
     String getDataContentType();
 
+    /**
+     * @return Return the URI specifying the location of the schema for the provided data
+     */
     @Nullable
     URI getDataSchema();
 
+    /**
+     * @return <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#subject">Subject</a> of the event
+     */
     @Nullable
     String getSubject();
 
+    /**
+     * @return <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#time">Timestamp</a> of when the occurrence happened
+     */
     @Nullable
     ZonedDateTime getTime();
 
