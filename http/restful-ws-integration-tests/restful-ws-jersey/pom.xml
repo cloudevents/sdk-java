@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-http-restful-ws-integration-tests-jersey</artifactId>
+    <name>CloudEvents - JAX-RS Integration Tests - Jersey</name>
     <packaging>jar</packaging>
 
     <properties>
