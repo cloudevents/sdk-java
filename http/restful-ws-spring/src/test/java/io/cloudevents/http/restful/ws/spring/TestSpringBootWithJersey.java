@@ -35,6 +35,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -74,14 +75,13 @@ public class TestSpringBootWithJersey {
     }
 
     @Test
-    @Disabled("This test doesn't work on Spring")
     public void getStructuredEvent() {
         Response res = target.path("getStructuredEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
         assertThat(outEvent)
             .isEqualTo(Data.V1_MIN);
-        assertThat(res.getMediaType().getType())
+        assertThat(res.getHeaderString(HttpHeaders.CONTENT_TYPE))
             .isEqualTo(CSVFormat.INSTANCE.serializedContentType());
     }
 
