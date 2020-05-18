@@ -16,9 +16,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class BaseTest {
 
+    protected abstract WebTarget getWebTarget();
+
     @Test
-    void getMinEvent(WebTarget target) {
-        Response res = target.path("getMinEvent").request().buildGet().invoke();
+    void getMinEvent() {
+        Response res = getWebTarget().path("getMinEvent").request().buildGet().invoke();
 
         assertThat(res.getHeaderString("ce-specversion"))
             .isEqualTo("1.0");
@@ -29,8 +31,8 @@ public abstract class BaseTest {
     }
 
     @Test
-    void getStructuredEvent(WebTarget target) {
-        Response res = target.path("getStructuredEvent").request().buildGet().invoke();
+    void getStructuredEvent() {
+        Response res = getWebTarget().path("getStructuredEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
         assertThat(outEvent)
@@ -40,8 +42,8 @@ public abstract class BaseTest {
     }
 
     @Test
-    void getEvent(WebTarget target) {
-        Response res = target.path("getEvent").request().buildGet().invoke();
+    void getEvent() {
+        Response res = getWebTarget().path("getEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
         assertThat(outEvent)
@@ -49,8 +51,8 @@ public abstract class BaseTest {
     }
 
     @Test
-    void postEventWithoutBody(WebTarget target) {
-        Response res = target
+    void postEventWithoutBody() {
+        Response res = getWebTarget()
             .path("postEventWithoutBody")
             .request()
             .buildPost(Entity.entity(Data.V1_MIN, CloudEventsProvider.CLOUDEVENT_TYPE))
@@ -61,8 +63,8 @@ public abstract class BaseTest {
     }
 
     @Test
-    void postEventStructured(WebTarget target) {
-        Response res = target
+    void postEventStructured() {
+        Response res = getWebTarget()
             .path("postEventWithoutBody")
             .request()
             .buildPost(Entity.entity(Data.V1_MIN, "application/cloudevents+csv"))
@@ -73,8 +75,8 @@ public abstract class BaseTest {
     }
 
     @Test
-    void postEvent(WebTarget target) {
-        Response res = target
+    void postEvent() {
+        Response res = getWebTarget()
             .path("postEvent")
             .request()
             .buildPost(Entity.entity(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, CloudEventsProvider.CLOUDEVENT_TYPE))

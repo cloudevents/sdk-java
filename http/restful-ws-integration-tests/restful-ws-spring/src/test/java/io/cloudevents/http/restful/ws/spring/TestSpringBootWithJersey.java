@@ -20,9 +20,9 @@ package io.cloudevents.http.restful.ws.spring;
 import io.cloudevents.format.EventFormatProvider;
 import io.cloudevents.http.restful.ws.BaseTest;
 import io.cloudevents.http.restful.ws.CloudEventsProvider;
-import io.cloudevents.http.restful.ws.Extension;
 import io.cloudevents.mock.CSVFormat;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -31,6 +31,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import java.net.URI;
 
 @ExtendWith(SpringExtension.class)
@@ -40,10 +41,17 @@ public class TestSpringBootWithJersey extends BaseTest {
     @LocalServerPort
     private int port;
 
-    @RegisterExtension
-    Extension extension = new Extension(() ->
-        ClientBuilder.newClient().register(CloudEventsProvider.class).target(URI.create("http://localhost:" + this.port + "/"))
-    );
+    private WebTarget target;
+
+    @Override
+    protected WebTarget getWebTarget() {
+        return target;
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        target = ClientBuilder.newClient().register(CloudEventsProvider.class).target(URI.create("http://localhost:" + this.port + "/"));
+    }
 
     @BeforeAll
     public static void beforeAll() {

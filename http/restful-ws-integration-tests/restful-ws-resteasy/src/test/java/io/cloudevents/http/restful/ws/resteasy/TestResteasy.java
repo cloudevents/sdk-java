@@ -18,30 +18,20 @@
 
 package io.cloudevents.http.restful.ws.resteasy;
 
-import io.cloudevents.CloudEvent;
 import io.cloudevents.format.EventFormatProvider;
 import io.cloudevents.http.restful.ws.BaseTest;
 import io.cloudevents.http.restful.ws.CloudEventsProvider;
-import io.cloudevents.http.restful.ws.Extension;
 import io.cloudevents.http.restful.ws.TestResource;
 import io.cloudevents.mock.CSVFormat;
-import io.cloudevents.test.Data;
 import org.jboss.resteasy.plugins.server.vertx.VertxContainer;
 import org.jboss.resteasy.plugins.server.vertx.VertxResteasyDeployment;
 import org.jboss.resteasy.test.TestPortProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,8 +40,10 @@ public class TestResteasy extends BaseTest {
     private static VertxResteasyDeployment resteasyDeployment;
     private static WebTarget target;
 
-    @RegisterExtension
-    Extension extension = new Extension(() -> target);
+    @Override
+    protected WebTarget getWebTarget() {
+        return target;
+    }
 
     @BeforeAll
     public static void beforeClass() throws Exception {

@@ -26,16 +26,30 @@ import io.cloudevents.mock.CSVFormat;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 
 public class TestJersey extends BaseTest {
 
+    private WebTarget target;
+
+    @Override
+    protected WebTarget getWebTarget() {
+        return target;
+    }
+
     @BeforeAll
     public static void beforeAll() {
         EventFormatProvider.getInstance().registerFormat(CSVFormat.INSTANCE);
+    }
+
+    @BeforeEach
+    void beforeEach(WebTarget target) {
+        this.target = target;
     }
 
     @RegisterExtension
