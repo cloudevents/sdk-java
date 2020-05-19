@@ -66,14 +66,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <!-- This is just a test package, there is no need to publish it -->
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
