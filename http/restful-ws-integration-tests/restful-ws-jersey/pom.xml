@@ -72,14 +72,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
             </plugin>
-            <!-- This is just a test package, there is no need to publish it -->
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <configuration>
-                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>

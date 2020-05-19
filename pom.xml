@@ -67,7 +67,6 @@
         <module>formats/json-jackson</module>
         <module>http/vertx</module>
         <module>http/restful-ws</module>
-        <module>http/restful-ws-integration-tests</module>
         <module>kafka</module>
     </modules>
 
@@ -98,6 +97,21 @@
     </distributionManagement>
 
     <profiles>
+        <!-- Enable integration tests only when not deploying
+            ~ https://stackoverflow.com/questions/25305850/how-to-disable-nexus-staging-maven-plugin-in-sub-modules
+            -->
+        <profile>
+            <id>no-deploy</id>
+            <activation>
+                <property>
+                    <name>!release</name>
+                </property>
+            </activation>
+            <modules>
+                <module>http/restful-ws-integration-tests</module>
+            </modules>
+        </profile>
+
         <profile>
             <id>release</id>
             <activation>
@@ -117,7 +131,6 @@
                             <serverId>ossrh</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                            <skipLocalStaging>true</skipLocalStaging>
                         </configuration>
                     </plugin>
 

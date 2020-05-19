@@ -8,7 +8,7 @@ gpg2 --batch --allow-secret-key-import --import .travis.secring
 
 export GPG_TTY=$(tty)
 
-mvn clean deploy -P release -DskipTests \
+mvn clean deploy -Drelease -DskipTests \
     --settings .travis.settings.xml \
     -Dgpg.executable=gpg2 \
     -Dgpg.keyname=4F144A60ECA44F0D \
