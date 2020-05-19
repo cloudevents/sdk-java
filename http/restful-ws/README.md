@@ -10,7 +10,7 @@ For Maven based projects, use the following to configure the CloudEvents Jakarta
 </dependency>
 ```
 
-This integration is tested with Jersey & RestEasy.
+This integration is tested with Jersey, RestEasy & Spring Boot Jersey.
 
 ## Receiving CloudEvents
 
