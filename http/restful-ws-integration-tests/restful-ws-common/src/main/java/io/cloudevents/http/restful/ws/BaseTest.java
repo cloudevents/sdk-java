@@ -15,54 +15,29 @@
  *
  */
 
-package io.cloudevents.http.restful.ws.jersey;
+package io.cloudevents.http.restful.ws;
 
-import com.github.hanleyt.JerseyExtension;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.EventFormatProvider;
-import io.cloudevents.http.restful.ws.CloudEventsProvider;
-import io.cloudevents.http.restful.ws.TestResource;
 import io.cloudevents.mock.CSVFormat;
 import io.cloudevents.test.Data;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
+import java.net.URISyntaxException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestServerJersey {
+public abstract class BaseTest {
 
-    @BeforeAll
-    public static void beforeAll() {
-        EventFormatProvider.getInstance().registerFormat(CSVFormat.INSTANCE);
-    }
-
-    @RegisterExtension
-    JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
-
-    private Application configureJersey() {
-        return new ResourceConfig(TestResource.class)
-            .register(CloudEventsProvider.class);
-    }
-
-
-    private ClientConfig configureJerseyClient(ExtensionContext extensionContext, ClientConfig clientConfig) {
-        clientConfig.register(CloudEventsProvider.class);
-        return clientConfig;
-    }
+    protected abstract WebTarget getWebTarget();
 
     @Test
-    void getMinEvent(WebTarget target) {
-        Response res = target.path("getMinEvent").request().buildGet().invoke();
+    void getMinEvent() {
+        Response res = getWebTarget().path("getMinEvent").request().buildGet().invoke();
 
         assertThat(res.getHeaderString("ce-specversion"))
             .isEqualTo("1.0");
@@ -73,8 +48,8 @@ public class TestServerJersey {
     }
 
     @Test
-    void getStructuredEvent(WebTarget target) {
-        Response res = target.path("getStructuredEvent").request().buildGet().invoke();
+    void getStructuredEvent() {
+        Response res = getWebTarget().path("getStructuredEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
         assertThat(outEvent)
@@ -84,8 +59,8 @@ public class TestServerJersey {
     }
 
     @Test
-    void getEvent(WebTarget target) {
-        Response res = target.path("getEvent").request().buildGet().invoke();
+    void getEvent() {
+        Response res = getWebTarget().path("getEvent").request().buildGet().invoke();
 
         CloudEvent outEvent = res.readEntity(CloudEvent.class);
         assertThat(outEvent)
@@ -93,8 +68,8 @@ public class TestServerJersey {
     }
 
     @Test
-    void postEventWithoutBody(WebTarget target) {
-        Response res = target
+    void postEventWithoutBody() {
+        Response res = getWebTarget()
             .path("postEventWithoutBody")
             .request()
             .buildPost(Entity.entity(Data.V1_MIN, CloudEventsProvider.CLOUDEVENT_TYPE))
@@ -105,8 +80,8 @@ public class TestServerJersey {
     }
 
     @Test
-    void postEventStructured(WebTarget target) {
-        Response res = target
+    void postEventStructured() {
+        Response res = getWebTarget()
             .path("postEventWithoutBody")
             .request()
             .buildPost(Entity.entity(Data.V1_MIN, "application/cloudevents+csv"))
@@ -117,8 +92,8 @@ public class TestServerJersey {
     }
 
     @Test
-    void postEvent(WebTarget target) {
-        Response res = target
+    void postEvent() {
+        Response res = getWebTarget()
             .path("postEvent")
             .request()
             .buildPost(Entity.entity(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, CloudEventsProvider.CLOUDEVENT_TYPE))
@@ -127,6 +102,4 @@ public class TestServerJersey {
         assertThat(res.getStatus())
             .isEqualTo(200);
     }
-
-
 }

@@ -67,6 +67,7 @@
         <module>formats/json-jackson</module>
         <module>http/vertx</module>
         <module>http/restful-ws</module>
+        <module>http/restful-ws-integration-tests</module>
         <module>kafka</module>
     </modules>
 
