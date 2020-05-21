@@ -14,18 +14,17 @@
  * limitations under the License.
  *
  */
-package io.cloudevents;
 
-import io.cloudevents.lang.Nullable;
+package io.cloudevents.types;
 
-/**
- * An abstract event envelope
- */
-public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-    /**
-     * The event data
-     */
-    @Nullable
-    byte[] getData();
+public final class Time {
+    public static final DateTimeFormatter RFC3339_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    public static ZonedDateTime parseTime(String time) throws DateTimeParseException {
+        return ZonedDateTime.parse(time, RFC3339_DATE_FORMAT);
+    }
 }

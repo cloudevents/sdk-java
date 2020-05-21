@@ -14,18 +14,24 @@
  * limitations under the License.
  *
  */
-package io.cloudevents;
 
-import io.cloudevents.lang.Nullable;
+package io.cloudevents.visitor;
 
-/**
- * An abstract event envelope
- */
-public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
+public interface CloudEventVisitor<V> extends CloudEventAttributesVisitor, CloudEventExtensionsVisitor {
+
+    // TODO maybe, one day, we'll convert this to some byte stream
+    /**
+     * End the visit with a data field
+     *
+     * @return an eventual return value
+     */
+    V end(byte[] value) throws CloudEventVisitException;
 
     /**
-     * The event data
+     * End the visit
+     *
+     * @return an eventual return value
      */
-    @Nullable
-    byte[] getData();
+    V end();
+
 }
