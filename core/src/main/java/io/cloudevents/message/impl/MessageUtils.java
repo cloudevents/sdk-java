@@ -20,6 +20,7 @@ package io.cloudevents.message.impl;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.message.Encoding;
 import io.cloudevents.message.Message;
 
 import java.util.Map;
@@ -80,6 +81,10 @@ public class MessageUtils {
         )
             .distinct()
             .collect(Collectors.toMap(Function.identity(), headerNameMapping));
+    }
+
+    public static IllegalStateException generateWrongEncoding(Encoding expected, Encoding actual) {
+        return new IllegalStateException("Cannot visit message as " + expected + " because the actual encoding is " + actual);
     }
 
 }

@@ -17,10 +17,10 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
+import io.cloudevents.CloudEventVisitException;
+import io.cloudevents.CloudEventVisitor;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
-import io.cloudevents.message.BinaryMessageVisitor;
-import io.cloudevents.message.MessageVisitException;
 import io.cloudevents.message.MessageVisitor;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -28,7 +28,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public final class RestfulWSMessageVisitor implements BinaryMessageVisitor<Void>, MessageVisitor<RestfulWSMessageVisitor, Void> {
+public final class RestfulWSMessageVisitor implements CloudEventVisitor<Void>, MessageVisitor<RestfulWSMessageVisitor, Void> {
 
     private final MultivaluedMap<String, Object> httpHeaders;
     private final OutputStream entityStream;
@@ -42,27 +42,27 @@ public final class RestfulWSMessageVisitor implements BinaryMessageVisitor<Void>
     }
 
     @Override
-    public RestfulWSMessageVisitor createBinaryMessageVisitor(SpecVersion version) {
+    public RestfulWSMessageVisitor create(SpecVersion version) {
         this.httpHeaders.add(CloudEventsHeaders.SPEC_VERSION, version.toString());
         return this;
     }
 
     @Override
-    public void setAttribute(String name, String value) throws MessageVisitException {
+    public void setAttribute(String name, String value) throws CloudEventVisitException {
         this.httpHeaders.add(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
     }
 
     @Override
-    public void setExtension(String name, String value) throws MessageVisitException {
+    public void setExtension(String name, String value) throws CloudEventVisitException {
         this.httpHeaders.add(CloudEventsHeaders.CE_PREFIX + name, value);
     }
 
     @Override
-    public void setBody(byte[] value) throws MessageVisitException {
+    public void setBody(byte[] value) throws CloudEventVisitException {
         try {
             this.entityStream.write(value);
         } catch (IOException e) {
-            throw MessageVisitException.newOther(e);
+            throw CloudEventVisitException.newOther(e);
         }
     }
 
@@ -71,13 +71,13 @@ public final class RestfulWSMessageVisitor implements BinaryMessageVisitor<Void>
         try {
             this.entityStream.flush();
         } catch (IOException e) {
-            throw MessageVisitException.newOther(e);
+            throw CloudEventVisitException.newOther(e);
         }
         return null;
     }
 
     @Override
-    public Void setEvent(EventFormat format, byte[] value) throws MessageVisitException {
+    public Void setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
         this.httpHeaders.add(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
         this.setBody(value);
         return null;

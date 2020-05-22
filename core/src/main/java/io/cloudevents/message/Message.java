@@ -17,43 +17,88 @@
 
 package io.cloudevents.message;
 
-import io.cloudevents.CloudEvent;
+import io.cloudevents.*;
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.message.impl.GenericStructuredMessage;
 
-public interface Message extends StructuredMessage, BinaryMessage {
+public interface Message extends StructuredMessage, CloudEventVisitable {
+
+    /**
+     * Visit the message as binary encoded event using the provided visitor factory
+     *
+     * @param visitorFactory a factory that generates a visitor starting from the SpecVersion of the event
+     * @throws CloudEventVisitException if something went wrong during the visit.
+     * @throws IllegalStateException    if the message is not in binary encoding
+     */
+    <V extends CloudEventVisitor<R>, R> R visit(CloudEventVisitorFactory<V, R> visitorFactory) throws CloudEventVisitException, IllegalStateException;
+
+    /**
+     * Visit the message attributes as binary encoded event using the provided visitor
+     *
+     * @param visitor Attributes visitor
+     * @throws CloudEventVisitException if something went wrong during the visit.
+     * @throws IllegalStateException    if the message is not in binary encoding
+     */
+    void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException, IllegalStateException;
+
+    /**
+     * Visit the message extensions as binary encoded event using the provided visitor
+     *
+     * @param visitor Extensions visitor
+     * @throws CloudEventVisitException if something went wrong during the visit.
+     * @throws IllegalStateException    if the message is not in binary encoding
+     */
+    void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException, IllegalStateException;
+
+    /**
+     * Visit the message as structured encoded event using the provided visitor
+     *
+     * @param visitor Structured Message visitor
+     * @throws CloudEventVisitException if something went wrong during the visit.
+     * @throws IllegalStateException    if the message is not in structured encoding
+     */
+    <T> T visit(StructuredMessageVisitor<T> visitor) throws CloudEventVisitException, IllegalStateException;
 
     Encoding getEncoding();
 
-    default <BV extends BinaryMessageVisitor<R>, R> R visit(MessageVisitor<BV, R> visitor) throws MessageVisitException, IllegalStateException {
+    default <BV extends CloudEventVisitor<R>, R> R visit(MessageVisitor<BV, R> visitor) throws CloudEventVisitException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
-                return this.visit((BinaryMessageVisitorFactory<BV, R>) visitor);
+                return this.visit((CloudEventVisitorFactory<BV, R>) visitor);
             case STRUCTURED:
                 return this.visit((StructuredMessageVisitor<R>) visitor);
             default:
-                throw Encoding.UNKNOWN_ENCODING_EXCEPTION;
+                throw new IllegalStateException("Unknown encoding");
         }
     }
 
-    default CloudEvent toEvent() throws MessageVisitException, IllegalStateException {
+    default CloudEvent toEvent() throws CloudEventVisitException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
-                return this.visit(specVersion -> {
-                    switch (specVersion) {
-                        case V1:
-                            return CloudEvent.buildV1();
-                        case V03:
-                            return CloudEvent.buildV03();
-                    }
-                    return null; // This can never happen
-                });
+                return this.visit(CloudEventBuilder::fromSpecVersion);
             case STRUCTURED:
                 return this.visit(EventFormat::deserialize);
             default:
-                throw Encoding.UNKNOWN_ENCODING_EXCEPTION;
+                throw new IllegalStateException("Unknown encoding");
         }
     }
 
-    ;
+    static <R> R writeStructuredEvent(CloudEvent event, String format, StructuredMessageVisitor<R> visitor) {
+        GenericStructuredMessage message = GenericStructuredMessage.fromEvent(format, event);
+        if (message == null) {
+            throw new IllegalArgumentException("Format " + format + " not found");
+        }
+
+        return message.visit(visitor);
+    }
+
+    static <R> R writeStructuredEvent(CloudEvent event, EventFormat format, StructuredMessageVisitor<R> visitor) {
+        return GenericStructuredMessage.fromEvent(format, event).visit(visitor);
+    }
+
+
+    static <V extends CloudEventVisitor<R>, R> R writeBinaryEvent(CloudEvent event, CloudEventVisitorFactory<V, R> visitor) {
+        return event.visit(visitor);
+    }
 
 }
