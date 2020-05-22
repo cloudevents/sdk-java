@@ -15,14 +15,19 @@
  *
  */
 
-package io.cloudevents.message;
+package io.cloudevents;
 
-public interface BinaryMessageVisitor<V> extends BinaryMessageAttributesVisitor, BinaryMessageExtensionsVisitor {
+@FunctionalInterface
+public interface CloudEventExtensionsVisitor {
 
-    // TODO one day we'll convert this to some byte stream
-    void setBody(byte[] value) throws MessageVisitException;
+    void setExtension(String name, String value) throws CloudEventVisitException;
 
-    // Returns an eventual output value
-    V end();
+    default void setExtension(String name, Number value) throws CloudEventVisitException {
+        setExtension(name, value.toString());
+    }
+
+    default void setExtension(String name, Boolean value) throws CloudEventVisitException {
+        setExtension(name, value.toString());
+    }
 
 }

@@ -19,7 +19,7 @@ You need to configure the `CloudEventsProvider` to enable marshalling/unmarshall
 Below is a sample on how to read and write CloudEvents:
 
 ```java
-import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEvent;import io.cloudevents.CloudEventBuilder;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,7 +32,7 @@ public class EventReceiverResource {
     @GET
     @Path("getMinEvent")
     public CloudEvent getMinEvent() {
-        return CloudEvent.buildV1()
+        return CloudEventBuilder.v1()
             .withId("hello")
             .withType("example.vertx")
             .withSource(URI.create("http://localhost"))
@@ -44,7 +44,7 @@ public class EventReceiverResource {
     @Path("getStructuredEvent")
     @StructuredEncoding("application/cloudevents+csv")
     public CloudEvent getStructuredEvent() {
-        return CloudEvent.buildV1()
+        return CloudEventBuilder.v1()
             .withId("hello")
             .withType("example.vertx")
             .withSource(URI.create("http://localhost"))

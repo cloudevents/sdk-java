@@ -17,15 +17,16 @@
 
 package io.cloudevents.mock;
 
-import io.cloudevents.SpecVersion;
-import io.cloudevents.message.*;
+import io.cloudevents.*;
+import io.cloudevents.message.Message;
+import io.cloudevents.message.impl.BaseBinaryMessage;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MockBinaryMessage implements Message, BinaryMessageVisitorFactory<MockBinaryMessage, MockBinaryMessage>, BinaryMessageVisitor<MockBinaryMessage> {
+public class MockBinaryMessage extends BaseBinaryMessage implements Message, CloudEventVisitorFactory<MockBinaryMessage, MockBinaryMessage>, CloudEventVisitor<MockBinaryMessage> {
 
     private SpecVersion version;
     private Map<String, Object> attributes;
@@ -45,17 +46,22 @@ public class MockBinaryMessage implements Message, BinaryMessageVisitorFactory<M
     }
 
     @Override
-    public Encoding getEncoding() {
-        return Encoding.BINARY;
-    }
-
-    @Override
-    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
+    public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
         if (version == null) {
             throw new IllegalStateException("MockBinaryMessage is empty");
         }
 
-        BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(version);
+        CloudEventVisitor<V> visitor = visitorFactory.create(version);
+        this.visitAttributes(visitor);
+        this.visitExtensions(visitor);
+
+        visitor.setBody(this.data);
+
+        return visitor.end();
+    }
+
+    @Override
+    public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException, IllegalStateException {
         for (Map.Entry<String, Object> e : this.attributes.entrySet()) {
             if (e.getValue() instanceof String) {
                 visitor.setAttribute(e.getKey(), (String) e.getValue());
@@ -68,7 +74,10 @@ public class MockBinaryMessage implements Message, BinaryMessageVisitorFactory<M
                 throw new IllegalStateException("Illegal value inside attributes map: " + e);
             }
         }
+    }
 
+    @Override
+    public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException, IllegalStateException {
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {
                 visitor.setExtension(entry.getKey(), (String) entry.getValue());
@@ -81,19 +90,10 @@ public class MockBinaryMessage implements Message, BinaryMessageVisitorFactory<M
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
             }
         }
-
-        visitor.setBody(this.data);
-
-        return visitor.end();
     }
 
     @Override
-    public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
-        throw Encoding.WRONG_ENCODING_EXCEPTION;
-    }
-
-    @Override
-    public void setBody(byte[] value) throws MessageVisitException {
+    public void setBody(byte[] value) throws CloudEventVisitException {
         this.data = value;
     }
 
@@ -103,37 +103,37 @@ public class MockBinaryMessage implements Message, BinaryMessageVisitorFactory<M
     }
 
     @Override
-    public void setAttribute(String name, String value) throws MessageVisitException {
+    public void setAttribute(String name, String value) throws CloudEventVisitException {
         this.attributes.put(name, value);
     }
 
     @Override
-    public void setAttribute(String name, URI value) throws MessageVisitException {
+    public void setAttribute(String name, URI value) throws CloudEventVisitException {
         this.attributes.put(name, value);
     }
 
     @Override
-    public void setAttribute(String name, ZonedDateTime value) throws MessageVisitException {
+    public void setAttribute(String name, ZonedDateTime value) throws CloudEventVisitException {
         this.attributes.put(name, value);
     }
 
     @Override
-    public void setExtension(String name, String value) throws MessageVisitException {
+    public void setExtension(String name, String value) throws CloudEventVisitException {
         this.extensions.put(name, value);
     }
 
     @Override
-    public void setExtension(String name, Number value) throws MessageVisitException {
+    public void setExtension(String name, Number value) throws CloudEventVisitException {
         this.extensions.put(name, value);
     }
 
     @Override
-    public void setExtension(String name, Boolean value) throws MessageVisitException {
+    public void setExtension(String name, Boolean value) throws CloudEventVisitException {
         this.extensions.put(name, value);
     }
 
     @Override
-    public MockBinaryMessage createBinaryMessageVisitor(SpecVersion version) {
+    public MockBinaryMessage create(SpecVersion version) {
         this.version = version;
 
         return this;

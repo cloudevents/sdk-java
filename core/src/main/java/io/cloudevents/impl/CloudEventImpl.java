@@ -17,15 +17,12 @@
 
 package io.cloudevents.impl;
 
-import io.cloudevents.Attributes;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.format.EventFormat;
-import io.cloudevents.message.*;
+import io.cloudevents.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMessageExtensions {
+public final class CloudEventImpl implements CloudEvent {
 
     private final AttributesInternal attributes;
     private final byte[] data;
@@ -71,25 +68,26 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMe
         );
     }
 
-    // Message impl
+    @Override
+    public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
+        CloudEventVisitor<V> visitor = visitorFactory.create(this.attributes.getSpecVersion());
+        this.attributes.visitAttributes(visitor);
+        this.visitExtensions(visitor);
 
-    public BinaryMessage asBinaryMessage() {
-        return this;
-    }
+        if (this.data != null) {
+            visitor.setBody(this.data);
+        }
 
-    public StructuredMessage asStructuredMessage(EventFormat format) {
-        CloudEvent ev = this;
-        // TODO This sucks, will improve later
-        return new StructuredMessage() {
-            @Override
-            public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
-                return visitor.setEvent(format, format.serialize(ev));
-            }
-        };
+        return visitor.end();
     }
 
     @Override
-    public void visitExtensions(BinaryMessageExtensionsVisitor visitor) throws MessageVisitException {
+    public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
+        this.attributes.visitAttributes(visitor);
+    }
+
+    @Override
+    public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException {
         // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {
@@ -103,19 +101,6 @@ public final class CloudEventImpl implements CloudEvent, BinaryMessage, BinaryMe
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
             }
         }
-    }
-
-    @Override
-    public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
-        BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(this.attributes.getSpecVersion());
-        this.attributes.visitAttributes(visitor);
-        this.visitExtensions(visitor);
-
-        if (this.data != null) {
-            visitor.setBody(this.data);
-        }
-
-        return visitor.end();
     }
 
     @Override

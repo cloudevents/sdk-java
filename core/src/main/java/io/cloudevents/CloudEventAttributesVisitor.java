@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.message;
+package io.cloudevents;
 
 import io.cloudevents.types.Time;
 
@@ -23,26 +23,26 @@ import java.net.URI;
 import java.time.ZonedDateTime;
 
 @FunctionalInterface
-public interface BinaryMessageAttributesVisitor {
+public interface CloudEventAttributesVisitor {
 
     /**
      * Set attribute with type {@link String}. This setter should not be invoked for specversion, because the built Visitor already
-     * has the information through the {@link BinaryMessageVisitorFactory}
+     * has the information through the {@link CloudEventVisitorFactory}.
      *
      * @param name
      * @param value
-     * @throws MessageVisitException
+     * @throws CloudEventVisitException
      */
-    void setAttribute(String name, String value) throws MessageVisitException;
+    void setAttribute(String name, String value) throws CloudEventVisitException;
 
     /**
      * Set attribute with type {@link URI}.
      *
      * @param name
      * @param value
-     * @throws MessageVisitException
+     * @throws CloudEventVisitException
      */
-    default void setAttribute(String name, URI value) throws MessageVisitException {
+    default void setAttribute(String name, URI value) throws CloudEventVisitException {
         setAttribute(name, value.toString());
     }
 
@@ -51,9 +51,9 @@ public interface BinaryMessageAttributesVisitor {
      *
      * @param name
      * @param value
-     * @throws MessageVisitException
+     * @throws CloudEventVisitException
      */
-    default void setAttribute(String name, ZonedDateTime value) throws MessageVisitException {
+    default void setAttribute(String name, ZonedDateTime value) throws CloudEventVisitException {
         setAttribute(name, value.format(Time.RFC3339_DATE_FORMAT));
     }
 

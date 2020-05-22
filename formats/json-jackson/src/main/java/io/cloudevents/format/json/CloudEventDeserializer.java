@@ -25,12 +25,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.SpecVersion;
-import io.cloudevents.message.BinaryMessage;
-import io.cloudevents.message.BinaryMessageVisitor;
-import io.cloudevents.message.BinaryMessageVisitorFactory;
-import io.cloudevents.message.MessageVisitException;
+import io.cloudevents.*;
 
 import java.io.IOException;
 
@@ -40,7 +35,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         super(CloudEvent.class);
     }
 
-    private static class JsonMessage implements BinaryMessage {
+    private static class JsonMessage implements CloudEventVisitable {
 
         private final JsonParser p;
         private final ObjectNode node;
@@ -51,10 +46,10 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public <T extends BinaryMessageVisitor<V>, V> V visit(BinaryMessageVisitorFactory<T, V> visitorFactory) throws MessageVisitException, IllegalStateException {
+        public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
             try {
                 SpecVersion specVersion = SpecVersion.parse(getStringNode(this.node, this.p, "specversion"));
-                BinaryMessageVisitor<V> visitor = visitorFactory.createBinaryMessageVisitor(specVersion);
+                CloudEventVisitor<V> visitor = visitorFactory.create(specVersion);
 
                 // Read mandatory attributes
                 for (String attr : specVersion.getMandatoryAttributes()) {
@@ -146,6 +141,16 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
             }
         }
 
+        @Override
+        public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
+            // no-op no need for that
+        }
+
+        @Override
+        public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException {
+            // no-op no need for that
+        }
+
         private String getStringNode(ObjectNode objNode, JsonParser p, String attributeName) throws JsonProcessingException {
             String val = getOptionalStringNode(objNode, p, attributeName);
             if (val == null) {
@@ -181,7 +186,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         ObjectNode node = ctxt.readValue(p, ObjectNode.class);
 
         try {
-            return new JsonMessage(p, node).toEvent();
+            return new JsonMessage(p, node).visit(CloudEventBuilder::fromSpecVersion);
         } catch (RuntimeException e) {
             // Yeah this is bad but it's needed to support checked exceptions...
             if (e.getCause() instanceof IOException) {

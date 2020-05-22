@@ -17,12 +17,14 @@
 
 package io.cloudevents.message;
 
+import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
 
+//TODO javadoc
 @FunctionalInterface
 public interface StructuredMessageVisitor<T> {
 
     // TODO one day we'll convert this to some byte stream
-    T setEvent(EventFormat format, byte[] value) throws MessageVisitException;
+    T setEvent(EventFormat format, byte[] value) throws CloudEventVisitException;
 
 }
