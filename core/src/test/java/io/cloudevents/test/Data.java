@@ -18,6 +18,7 @@
 package io.cloudevents.test;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
@@ -40,13 +41,13 @@ public class Data {
     public static byte[] DATA_XML_SERIALIZED = "<stuff></stuff>".getBytes();
     public static byte[] DATA_TEXT_SERIALIZED = "Hello World Lorena!".getBytes();
 
-    public static final CloudEvent V1_MIN = CloudEvent.buildV1()
+    public static final CloudEvent V1_MIN = CloudEventBuilder.v1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
         .build();
 
-    public static final CloudEvent V1_WITH_JSON_DATA = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_JSON_DATA = CloudEventBuilder.v1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -55,7 +56,7 @@ public class Data {
         .withTime(TIME)
         .build();
 
-    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT = CloudEventBuilder.v1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -67,7 +68,7 @@ public class Data {
         .withExtension("anumber", 10)
         .build();
 
-    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT_STRING = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT_STRING = CloudEventBuilder.v1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -79,7 +80,7 @@ public class Data {
         .withExtension("anumber", "10")
         .build();
 
-    public static final CloudEvent V1_WITH_XML_DATA = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_XML_DATA = CloudEventBuilder.v1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -88,7 +89,7 @@ public class Data {
         .withTime(TIME)
         .build();
 
-    public static final CloudEvent V1_WITH_TEXT_DATA = CloudEvent.buildV1()
+    public static final CloudEvent V1_WITH_TEXT_DATA = CloudEventBuilder.v1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -138,7 +139,7 @@ public class Data {
 
     public static Stream<CloudEvent> v1EventsWithStringExt() {
         return v1Events().map(ce -> {
-            io.cloudevents.v1.CloudEventBuilder builder = CloudEvent.buildV1(ce);
+            io.cloudevents.v1.CloudEventBuilder builder = CloudEventBuilder.v1(ce);
             ce.getExtensions().forEach((k, v) -> builder.withExtension(k, v.toString()));
             return builder.build();
         });
@@ -146,7 +147,7 @@ public class Data {
 
     public static Stream<CloudEvent> v03EventsWithStringExt() {
         return v03Events().map(ce -> {
-            io.cloudevents.v03.CloudEventBuilder builder = CloudEvent.buildV03(ce);
+            io.cloudevents.v03.CloudEventBuilder builder = CloudEventBuilder.v03(ce);
             ce.getExtensions().forEach((k, v) -> builder.withExtension(k, v.toString()));
             return builder.build();
         });

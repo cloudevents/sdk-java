@@ -17,9 +17,9 @@
 
 package io.cloudevents.message.impl;
 
+import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.message.Encoding;
 import io.cloudevents.message.Message;
-import io.cloudevents.message.MessageVisitException;
 import io.cloudevents.message.StructuredMessageVisitor;
 
 public abstract class BaseBinaryMessage implements Message {
@@ -30,7 +30,7 @@ public abstract class BaseBinaryMessage implements Message {
     }
 
     @Override
-    public <T> T visit(StructuredMessageVisitor<T> visitor) throws MessageVisitException, IllegalStateException {
-        throw Encoding.UNKNOWN_ENCODING_EXCEPTION;
+    public <T> T visit(StructuredMessageVisitor<T> visitor) throws CloudEventVisitException, IllegalStateException {
+        throw MessageUtils.generateWrongEncoding(Encoding.STRUCTURED, Encoding.BINARY);
     }
 }

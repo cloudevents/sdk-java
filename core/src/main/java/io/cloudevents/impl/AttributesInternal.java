@@ -18,7 +18,10 @@
 package io.cloudevents.impl;
 
 import io.cloudevents.Attributes;
-import io.cloudevents.message.BinaryMessageAttributes;
+import io.cloudevents.CloudEventAttributesVisitor;
+import io.cloudevents.CloudEventVisitException;
 
-public interface AttributesInternal extends Attributes, BinaryMessageAttributes {
+public interface AttributesInternal extends Attributes {
+
+    void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException;
 }
