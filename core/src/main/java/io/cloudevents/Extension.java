@@ -14,18 +14,15 @@
  * limitations under the License.
  *
  */
+
 package io.cloudevents;
 
-import io.cloudevents.lang.Nullable;
+import java.util.Map;
 
-/**
- * An abstract event envelope
- */
-public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
+public interface Extension {
 
-    /**
-     * The event data
-     */
-    @Nullable
-    byte[] getData();
+    void readFromEvent(CloudEvent event);
+
+    Map<String, Object> asMap();
+
 }

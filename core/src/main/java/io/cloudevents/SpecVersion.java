@@ -17,20 +17,23 @@
 
 package io.cloudevents;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum SpecVersion {
     V03(
         "0.3",
-        Arrays.asList("specversion", "id", "type", "source"),
-        Arrays.asList("datacontenttype", "datacontentencoding", "schemaurl", "subject", "time")
+        Collections.unmodifiableSet(new HashSet<>(Arrays.asList("specversion", "id", "type", "source"))),
+        Collections.unmodifiableSet(new HashSet<>(Arrays.asList("datacontenttype", "datacontentencoding", "schemaurl", "subject", "time")))
     ),
     V1(
         "1.0",
-        Arrays.asList("specversion", "id", "type", "source"),
-        Arrays.asList("datacontenttype", "dataschema", "subject", "time")
+        Collections.unmodifiableSet(new HashSet<>(Arrays.asList("specversion", "id", "type", "source"))),
+        Collections.unmodifiableSet(new HashSet<>(Arrays.asList("datacontenttype", "dataschema", "subject", "time")))
     );
 
     private final String stringValue;
@@ -38,10 +41,10 @@ public enum SpecVersion {
     private final Set<String> optionalAttributes;
     private final Set<String> allAttributes;
 
-    SpecVersion(String stringValue, Collection<String> mandatoryAttributes, Collection<String> optionalAttributes) {
+    SpecVersion(String stringValue, Set<String> mandatoryAttributes, Set<String> optionalAttributes) {
         this.stringValue = stringValue;
-        this.mandatoryAttributes = Collections.unmodifiableSet(new HashSet<>(mandatoryAttributes));
-        this.optionalAttributes = Collections.unmodifiableSet(new HashSet<>(optionalAttributes));
+        this.mandatoryAttributes = mandatoryAttributes;
+        this.optionalAttributes = optionalAttributes;
         this.allAttributes = Collections.unmodifiableSet(
             Stream.concat(mandatoryAttributes.stream(), optionalAttributes.stream()).collect(Collectors.toSet())
         );
@@ -52,13 +55,6 @@ public enum SpecVersion {
         return this.stringValue;
     }
 
-    /**
-     * Parse a string as {@link SpecVersion}
-     *
-     * @param sv String representing the spec version
-     * @return The parsed spec version
-     * @throws IllegalArgumentException When the spec version string is unrecognized
-     */
     public static SpecVersion parse(String sv) {
         switch (sv) {
             case "0.3":

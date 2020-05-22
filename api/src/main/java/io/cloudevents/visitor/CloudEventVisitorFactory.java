@@ -14,18 +14,19 @@
  * limitations under the License.
  *
  */
-package io.cloudevents;
 
-import io.cloudevents.lang.Nullable;
+package io.cloudevents.visitor;
 
-/**
- * An abstract event envelope
- */
-public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
+import io.cloudevents.SpecVersion;
+
+@FunctionalInterface
+public interface CloudEventVisitorFactory<V extends CloudEventVisitor<R>, R> {
 
     /**
-     * The event data
+     * Create a {@link CloudEventVisitor} starting from the provided {@link SpecVersion}
+     *
+     * @param version
+     * @return
      */
-    @Nullable
-    byte[] getData();
+    V create(SpecVersion version);
 }

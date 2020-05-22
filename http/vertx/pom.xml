@@ -38,7 +38,7 @@
     <dependencies>
         <dependency>
             <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-api</artifactId>
+            <artifactId>cloudevents-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -50,7 +50,7 @@
         <!-- Test deps -->
         <dependency>
             <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-api</artifactId>
+            <artifactId>cloudevents-core</artifactId>
             <classifier>tests</classifier>
             <type>test-jar</type>
             <version>${project.version}</version>

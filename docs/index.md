@@ -29,7 +29,7 @@ Supported features of the specification:
 
 The CloudEvents SDK for Java is composed by several modules, each one providing a different feature from the different subspecs of [CloudEvents specification](#supported-specification-features):
 
-* [`cloudevents-api`](https://github.com/cloudevents/sdk-java/tree/master/api): Base module providing
+* [`cloudevents-core`](https://github.com/cloudevents/sdk-java/tree/master/api): Base module providing
   * `CloudEvent` class, the in memory representation of a CloudEvent
   * `CloudEventBuilder`, the builder to create `CloudEvent`s programmatically
   * `EventFormat`, the abstraction to implement [Event Formats](https://github.com/cloudevents/spec/blob/v1.0/spec.md#event-format)

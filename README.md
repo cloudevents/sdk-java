@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/cloudevents/sdk-java.png)](https://travis-ci.org/cloudevents/sdk-java)
 [![License](https://img.shields.io/:license-Apache2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudevents/cloudevents-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudevents/cloudevents-parent)
-[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-api.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-api)
+[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-core.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
 
 A Java API for the [CloudEvents specification](https://github.com/cloudevents/spec)
 
@@ -44,7 +44,7 @@ For Maven based projects, use the following to configure the CloudEvents Java SD
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
-    <artifactId>cloudevents-api</artifactId>
+    <artifactId>cloudevents-core</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 </dependency>
 ```

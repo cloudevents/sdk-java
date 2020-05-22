@@ -14,18 +14,25 @@
  * limitations under the License.
  *
  */
+
 package io.cloudevents;
 
 import io.cloudevents.lang.Nullable;
 
-/**
- * An abstract event envelope
- */
-public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Set;
 
-    /**
-     * The event data
-     */
+/**
+ * The event extensions
+ * <p>
+ * Extensions values could be String/Number/Boolean
+ */
+@ParametersAreNonnullByDefault
+public interface CloudEventExtensions {
+
     @Nullable
-    byte[] getData();
+    Object getExtension(String extensionName);
+
+    Set<String> getExtensionNames();
+
 }

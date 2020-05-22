@@ -14,18 +14,19 @@
  * limitations under the License.
  *
  */
-package io.cloudevents;
 
-import io.cloudevents.lang.Nullable;
+package io.cloudevents.visitor;
 
-/**
- * An abstract event envelope
- */
-public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
+public interface CloudEventExtensionsVisitor {
 
-    /**
-     * The event data
-     */
-    @Nullable
-    byte[] getData();
+    void setExtension(String name, String value) throws CloudEventVisitException;
+
+    default void setExtension(String name, Number value) throws CloudEventVisitException {
+        setExtension(name, value.toString());
+    }
+
+    default void setExtension(String name, Boolean value) throws CloudEventVisitException {
+        setExtension(name, value.toString());
+    }
+
 }
