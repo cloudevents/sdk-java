@@ -17,12 +17,16 @@
 
 package io.cloudevents;
 
-import java.util.Map;
+/**
+ * Materialized CloudEvent Extension interface to read/write the extension attributes key/values.
+ */
+public interface Extension extends CloudEventExtensions {
 
-public interface Extension {
-
-    void readFromEvent(CloudEvent event);
-
-    Map<String, Object> asMap();
+    /**
+     * Fill this materialized extension with values from a {@link CloudEventExtensions} implementation
+     *
+     * @param extensions
+     */
+    void readFromEvent(CloudEventExtensions extensions);
 
 }

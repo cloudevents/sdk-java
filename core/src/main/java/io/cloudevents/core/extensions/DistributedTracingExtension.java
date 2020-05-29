@@ -17,17 +17,19 @@
 
 package io.cloudevents.core.extensions;
 
-import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventExtensions;
 import io.cloudevents.Extension;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class DistributedTracingExtension implements Extension {
 
     public static final String TRACEPARENT = "traceparent";
     public static final String TRACESTATE = "tracestate";
+    private static final Set<String> KEY_SET = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TRACEPARENT, TRACESTATE)));
 
     private String traceparent;
     private String tracestate;
@@ -49,23 +51,31 @@ public final class DistributedTracingExtension implements Extension {
     }
 
     @Override
-    public void readFromEvent(CloudEvent event) {
-        Object tp = event.getExtension(TRACEPARENT);
+    public void readFromEvent(CloudEventExtensions extensions) {
+        Object tp = extensions.getExtension(TRACEPARENT);
         if (tp != null) {
             this.traceparent = tp.toString();
         }
-        Object ts = event.getExtension(TRACESTATE);
+        Object ts = extensions.getExtension(TRACESTATE);
         if (ts != null) {
             this.tracestate = ts.toString();
         }
     }
 
     @Override
-    public Map<String, Object> asMap() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put(TRACEPARENT, this.traceparent);
-        map.put(TRACESTATE, this.tracestate);
-        return Collections.unmodifiableMap(map);
+    public Object getExtension(String extensionName) {
+        switch (extensionName) {
+            case TRACEPARENT:
+                return this.traceparent;
+            case TRACESTATE:
+                return this.tracestate;
+        }
+        return null;
+    }
+
+    @Override
+    public Set<String> getExtensionNames() {
+        return KEY_SET;
     }
 
     @Override
