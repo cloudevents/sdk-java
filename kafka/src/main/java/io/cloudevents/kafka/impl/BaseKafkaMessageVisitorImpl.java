@@ -17,14 +17,14 @@
 
 package io.cloudevents.kafka.impl;
 
-import io.cloudevents.format.EventFormat;
-import io.cloudevents.message.BinaryMessageVisitor;
-import io.cloudevents.message.MessageVisitException;
-import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.core.message.MessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.visitor.CloudEventVisitor;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeader;
 
-abstract class BaseKafkaMessageVisitorImpl<S extends MessageVisitor<S, R> & BinaryMessageVisitor<R>, R> implements MessageVisitor<S, R>, BinaryMessageVisitor<R> {
+abstract class BaseKafkaMessageVisitorImpl<S extends MessageVisitor<S, R> & CloudEventVisitor<R>, R> implements MessageVisitor<S, R>, CloudEventVisitor<R> {
 
     byte[] value;
     final Headers headers;
@@ -34,24 +34,24 @@ abstract class BaseKafkaMessageVisitorImpl<S extends MessageVisitor<S, R> & Bina
     }
 
     @Override
-    public void setAttribute(String name, String value) throws MessageVisitException {
+    public void setAttribute(String name, String value) throws CloudEventVisitException {
         headers.add(new RecordHeader(KafkaHeaders.ATTRIBUTES_TO_HEADERS.get(name), value.getBytes()));
     }
 
     @Override
-    public void setExtension(String name, String value) throws MessageVisitException {
+    public void setExtension(String name, String value) throws CloudEventVisitException {
         headers.add(new RecordHeader(KafkaHeaders.CE_PREFIX + name, value.getBytes()));
     }
 
     @Override
-    public void setBody(byte[] value) throws MessageVisitException {
+    public R end(byte[] value) throws CloudEventVisitException {
         this.value = value;
+        return this.end();
     }
 
     @Override
-    public R setEvent(EventFormat format, byte[] value) throws MessageVisitException {
+    public R setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
         this.headers.add(new RecordHeader(KafkaHeaders.CONTENT_TYPE, format.serializedContentType().getBytes()));
-        this.value = value;
-        return this.end();
+        return this.end(value);
     }
 }

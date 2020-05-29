@@ -17,12 +17,12 @@
 
 package io.cloudevents.kafka;
 
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.impl.GenericStructuredMessage;
+import io.cloudevents.core.message.impl.MessageUtils;
+import io.cloudevents.core.message.impl.UnknownEncodingMessage;
 import io.cloudevents.kafka.impl.KafkaBinaryMessageImpl;
 import io.cloudevents.kafka.impl.KafkaHeaders;
-import io.cloudevents.message.Message;
-import io.cloudevents.message.impl.GenericStructuredMessage;
-import io.cloudevents.message.impl.MessageUtils;
-import io.cloudevents.message.impl.UnknownEncodingMessage;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.header.Headers;
 

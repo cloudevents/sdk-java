@@ -18,10 +18,11 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.message.Encoding;
-import io.cloudevents.message.Message;
-import io.cloudevents.mock.MockBinaryMessage;
-import io.cloudevents.test.Data;
+import io.cloudevents.core.impl.CloudEventUtils;
+import io.cloudevents.core.message.Encoding;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.mock.MockBinaryMessage;
+import io.cloudevents.core.test.Data;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class CloudEventMessageSerializerTest {
         Headers headers = new RecordHeaders();
 
         MockBinaryMessage inMessage = new MockBinaryMessage();
-        event.asBinaryMessage().visit(inMessage);
+        CloudEventUtils.toVisitable(event).visit(inMessage);
 
         byte[] payload = serializer.serialize(topic, headers, inMessage);
 

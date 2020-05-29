@@ -16,7 +16,7 @@
  */
 package io.cloudevents.kafka.impl;
 
-import io.cloudevents.message.impl.MessageUtils;
+import io.cloudevents.core.message.impl.MessageUtils;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
 

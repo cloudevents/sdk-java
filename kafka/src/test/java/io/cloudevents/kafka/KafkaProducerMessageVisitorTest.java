@@ -19,8 +19,10 @@ package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.StructuredMessage;
+import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.kafka.impl.KafkaHeaders;
-import io.cloudevents.mock.CSVFormat;
 import io.cloudevents.types.Time;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Headers;
@@ -31,15 +33,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static io.cloudevents.core.test.Data.*;
 import static io.cloudevents.kafka.KafkaUtils.header;
 import static io.cloudevents.kafka.KafkaUtils.kafkaHeaders;
-import static io.cloudevents.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class KafkaProducerMessageVisitorTest {
 
     @ParameterizedTest
-    @MethodSource("io.cloudevents.test.Data#allEventsWithoutExtensions")
+    @MethodSource("io.cloudevents.core.test.Data#allEventsWithoutExtensions")
     void testRequestWithStructured(CloudEvent event) {
         String expectedContentType = CSVFormat.INSTANCE.serializedContentType();
         byte[] expectedBuffer = CSVFormat.INSTANCE.serialize(event);
@@ -49,8 +51,8 @@ public class KafkaProducerMessageVisitorTest {
         Long timestamp = System.currentTimeMillis();
         String key = "aaa";
 
-        ProducerRecord<String, byte[]> producerRecord = event
-            .asStructuredMessage(CSVFormat.INSTANCE)
+        ProducerRecord<String, byte[]> producerRecord = StructuredMessage
+            .fromEvent(CSVFormat.INSTANCE, event)
             .visit(KafkaProducerMessageVisitor.create(topic, partition, timestamp, key));
 
         assertThat(producerRecord.topic())
@@ -75,9 +77,8 @@ public class KafkaProducerMessageVisitorTest {
         Long timestamp = System.currentTimeMillis();
         String key = "aaa";
 
-        ProducerRecord<String, byte[]> producerRecord = event
-            .asBinaryMessage()
-            .visit(KafkaProducerMessageVisitor.create(topic, partition, timestamp, key));
+        ProducerRecord<String, byte[]> producerRecord = Message
+            .writeBinaryEvent(event, KafkaProducerMessageVisitor.create(topic, partition, timestamp, key));
 
         assertThat(producerRecord.topic())
             .isEqualTo(topic);

@@ -13,7 +13,7 @@ The high-level API to marshal CloudEvents as binary content mode.
 ```java
 
 
-import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.core.extensions.ExtensionFormat;
 import io.cloudevents.format.Wire;
 import io.cloudevents.v1.CloudEventImpl;
 import io.cloudevents.v1.http.Marshallers;
@@ -108,7 +108,7 @@ The high-level API to marshal CloudEvents as structured content mode.
 ```java
 
 
-import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.core.extensions.ExtensionFormat;
 import io.cloudevents.v1.CloudEventImpl;
 import io.cloudevents.v1.http.Marshallers;
 
@@ -213,7 +213,7 @@ Well, this is how build marshaller using the low-level API.
 /*
  * The imports used by the example bellow
  */
-import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.core.extensions.ExtensionFormat;
 import io.cloudevents.format.BinaryMarshaller;
 import io.cloudevents.format.Wire;
 import io.cloudevents.format.builder.EventStep;
@@ -295,10 +295,8 @@ Wire<String, String, String> wire =
 /*
  * The imports used by the example bellow
  */
-import java.util.HashMap;
 
-import io.cloudevents.CloudEvent;
-import io.cloudevents.extensions.ExtensionFormat;
+import io.cloudevents.core.extensions.ExtensionFormat;
 import io.cloudevents.format.StructuredMarshaller;
 import io.cloudevents.format.builder.EventStep;
 import io.cloudevents.json.Json;

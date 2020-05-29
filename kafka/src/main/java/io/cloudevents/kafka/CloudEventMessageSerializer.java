@@ -17,8 +17,8 @@
 
 package io.cloudevents.kafka;
 
+import io.cloudevents.core.message.Message;
 import io.cloudevents.kafka.impl.KafkaSerializerMessageVisitorImpl;
-import io.cloudevents.message.Message;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Serializer;
 

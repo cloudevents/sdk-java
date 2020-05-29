@@ -17,7 +17,7 @@
 
 package io.cloudevents.http.vertx.impl;
 
-import io.cloudevents.message.impl.MessageUtils;
+import io.cloudevents.core.message.impl.MessageUtils;
 import io.vertx.core.http.HttpHeaders;
 
 import java.util.Map;

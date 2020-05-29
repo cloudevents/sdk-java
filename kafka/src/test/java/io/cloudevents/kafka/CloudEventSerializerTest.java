@@ -18,11 +18,11 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.EventFormatProvider;
-import io.cloudevents.message.Encoding;
-import io.cloudevents.message.Message;
-import io.cloudevents.mock.CSVFormat;
-import io.cloudevents.test.Data;
+import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.message.Encoding;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.mock.CSVFormat;
+import io.cloudevents.core.test.Data;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.junit.jupiter.api.Test;

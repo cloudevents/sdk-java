@@ -17,12 +17,12 @@
 
 package io.cloudevents.kafka;
 
+import io.cloudevents.core.message.MessageVisitor;
 import io.cloudevents.kafka.impl.KafkaProducerMessageVisitorImpl;
-import io.cloudevents.message.BinaryMessageVisitor;
-import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-public interface KafkaProducerMessageVisitor<K> extends MessageVisitor<KafkaProducerMessageVisitor<K>, ProducerRecord<K, byte[]>>, BinaryMessageVisitor<ProducerRecord<K, byte[]>> {
+public interface KafkaProducerMessageVisitor<K> extends MessageVisitor<KafkaProducerMessageVisitor<K>, ProducerRecord<K, byte[]>>, CloudEventVisitor<ProducerRecord<K, byte[]>> {
 
     static <V> KafkaProducerMessageVisitor<V> create(String topic, Integer partition, Long timestamp, V key) {
         return new KafkaProducerMessageVisitorImpl<V>(topic, partition, timestamp, key);

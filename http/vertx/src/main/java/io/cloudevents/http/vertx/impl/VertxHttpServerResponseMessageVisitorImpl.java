@@ -18,9 +18,9 @@
 package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.format.EventFormat;
+import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
-import io.cloudevents.message.MessageVisitException;
+import io.cloudevents.visitor.CloudEventVisitException;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
@@ -36,7 +36,7 @@ public class VertxHttpServerResponseMessageVisitorImpl implements VertxHttpServe
     // Binary visitor factory
 
     @Override
-    public VertxHttpServerResponseMessageVisitor createBinaryMessageVisitor(SpecVersion version) {
+    public VertxHttpServerResponseMessageVisitor create(SpecVersion version) {
         this.response.putHeader(CloudEventsHeaders.SPEC_VERSION, version.toString());
         return this;
     }
@@ -44,21 +44,22 @@ public class VertxHttpServerResponseMessageVisitorImpl implements VertxHttpServe
     // Binary visitor
 
     @Override
-    public void setAttribute(String name, String value) throws MessageVisitException {
+    public void setAttribute(String name, String value) throws CloudEventVisitException {
         this.response.putHeader(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
     }
 
     @Override
-    public void setExtension(String name, String value) throws MessageVisitException {
+    public void setExtension(String name, String value) throws CloudEventVisitException {
         this.response.putHeader("ce-" + name, value);
     }
 
     @Override
-    public void setBody(byte[] value) throws MessageVisitException {
+    public HttpServerResponse end(byte[] value) throws CloudEventVisitException {
         if (this.response.ended()) {
-            throw MessageVisitException.newOther(new IllegalStateException("Cannot set the body because the response is already ended"));
+            throw CloudEventVisitException.newOther(new IllegalStateException("Cannot set the body because the response is already ended"));
         }
         this.response.end(Buffer.buffer(value));
+        return this.response;
     }
 
     @Override
@@ -72,7 +73,7 @@ public class VertxHttpServerResponseMessageVisitorImpl implements VertxHttpServe
     // Structured visitor
 
     @Override
-    public HttpServerResponse setEvent(EventFormat format, byte[] value) throws MessageVisitException {
+    public HttpServerResponse setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
         this.response.putHeader(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
         this.response.end(Buffer.buffer(value));
         return this.response;

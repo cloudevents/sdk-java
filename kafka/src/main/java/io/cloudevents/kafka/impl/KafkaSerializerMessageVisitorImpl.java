@@ -27,7 +27,7 @@ public final class KafkaSerializerMessageVisitorImpl extends BaseKafkaMessageVis
     }
 
     @Override
-    public KafkaSerializerMessageVisitorImpl createBinaryMessageVisitor(SpecVersion version) {
+    public KafkaSerializerMessageVisitorImpl create(SpecVersion version) {
         this.setAttribute("specversion", version.toString());
         return this;
     }

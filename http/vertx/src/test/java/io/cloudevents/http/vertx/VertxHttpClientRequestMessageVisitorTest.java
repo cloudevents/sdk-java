@@ -19,7 +19,8 @@ package io.cloudevents.http.vertx;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.mock.CSVFormat;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.types.Time;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
@@ -36,14 +37,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static io.cloudevents.test.Data.*;
+import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(VertxExtension.class)
 public class VertxHttpClientRequestMessageVisitorTest {
 
     @ParameterizedTest
-    @MethodSource("io.cloudevents.test.Data#allEventsWithoutExtensions")
+    @MethodSource("io.cloudevents.core.test.Data#allEventsWithoutExtensions")
     void testRequestWithStructured(CloudEvent event, Vertx vertx, VertxTestContext testContext) {
         String expectedContentType = CSVFormat.INSTANCE.serializedContentType();
         byte[] expectedBuffer = CSVFormat.INSTANCE.serialize(event);
@@ -74,8 +75,8 @@ public class VertxHttpClientRequestMessageVisitorTest {
                     checkpoint.flag();
                 });
                 try {
-                    event.asStructuredMessage(CSVFormat.INSTANCE)
-                        .visit(VertxHttpClientRequestMessageVisitor.create(req));
+                    Message
+                        .writeStructuredEvent(event, CSVFormat.INSTANCE, VertxHttpClientRequestMessageVisitor.create(req));
                 } catch (Throwable e) {
                     testContext.failNow(e);
                 }
@@ -116,8 +117,8 @@ public class VertxHttpClientRequestMessageVisitorTest {
                     checkpoint.flag();
                 });
                 try {
-                    event.asBinaryMessage()
-                        .visit(VertxHttpClientRequestMessageVisitor.create(req));
+                    Message
+                        .writeBinaryEvent(event, VertxHttpClientRequestMessageVisitor.create(req));
                 } catch (Throwable e) {
                     testContext.failNow(e);
                 }

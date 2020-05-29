@@ -18,16 +18,14 @@
 package io.cloudevents.http.restful.ws;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.mock.CSVFormat;
-import io.cloudevents.test.Data;
+import io.cloudevents.core.mock.CSVFormat;
+import io.cloudevents.core.test.Data;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-
-import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -18,22 +18,19 @@
 
 package io.cloudevents.http.restful.ws.resteasy;
 
-import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.http.restful.ws.BaseTest;
 import io.cloudevents.http.restful.ws.CloudEventsProvider;
 import io.cloudevents.http.restful.ws.TestResource;
-import io.cloudevents.mock.CSVFormat;
 import org.jboss.resteasy.plugins.server.vertx.VertxContainer;
 import org.jboss.resteasy.plugins.server.vertx.VertxResteasyDeployment;
 import org.jboss.resteasy.test.TestPortProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestResteasy extends BaseTest {
 

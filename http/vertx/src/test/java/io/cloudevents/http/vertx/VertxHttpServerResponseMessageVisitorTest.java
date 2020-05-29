@@ -19,7 +19,9 @@ package io.cloudevents.http.vertx;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.mock.CSVFormat;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.impl.GenericStructuredMessage;
+import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.types.Time;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
@@ -35,14 +37,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static io.cloudevents.test.Data.*;
+import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(VertxExtension.class)
 public class VertxHttpServerResponseMessageVisitorTest {
 
     @ParameterizedTest
-    @MethodSource("io.cloudevents.test.Data#allEventsWithoutExtensions")
+    @MethodSource("io.cloudevents.core.test.Data#allEventsWithoutExtensions")
     void testReplyWithStructured(CloudEvent event, Vertx vertx, VertxTestContext testContext) {
         Checkpoint checkpoint = testContext.checkpoint(2);
 
@@ -50,7 +52,7 @@ public class VertxHttpServerResponseMessageVisitorTest {
             .createHttpServer()
             .requestHandler(httpServerRequest -> {
                 try {
-                    event.asStructuredMessage(CSVFormat.INSTANCE).visit(
+                    GenericStructuredMessage.fromEvent(CSVFormat.INSTANCE, event).visit(
                         VertxHttpServerResponseMessageVisitor.create(httpServerRequest.response())
                     );
                     checkpoint.flag();
@@ -89,9 +91,8 @@ public class VertxHttpServerResponseMessageVisitorTest {
             .createHttpServer()
             .requestHandler(httpServerRequest -> {
                 try {
-                    event.asBinaryMessage().visit(
-                        VertxHttpServerResponseMessageVisitor.create(httpServerRequest.response())
-                    );
+                    Message
+                        .writeBinaryEvent(event, VertxHttpServerResponseMessageVisitor.create(httpServerRequest.response()));
                     checkpoint.flag();
                 } catch (Throwable e) {
                     testContext.failNow(e);

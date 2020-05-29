@@ -18,11 +18,11 @@
 package io.cloudevents.http.restful.ws.jersey;
 
 import com.github.hanleyt.JerseyExtension;
-import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.http.restful.ws.BaseTest;
 import io.cloudevents.http.restful.ws.CloudEventsProvider;
 import io.cloudevents.http.restful.ws.TestResource;
-import io.cloudevents.mock.CSVFormat;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.jupiter.api.BeforeAll;

@@ -17,15 +17,14 @@
 
 package io.cloudevents.http.restful.ws.spring;
 
-import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.http.restful.ws.BaseTest;
 import io.cloudevents.http.restful.ws.CloudEventsProvider;
-import io.cloudevents.mock.CSVFormat;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;

@@ -17,12 +17,12 @@
 
 package io.cloudevents.http.vertx;
 
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.impl.GenericStructuredMessage;
+import io.cloudevents.core.message.impl.MessageUtils;
+import io.cloudevents.core.message.impl.UnknownEncodingMessage;
 import io.cloudevents.http.vertx.impl.BinaryVertxMessageImpl;
 import io.cloudevents.http.vertx.impl.CloudEventsHeaders;
-import io.cloudevents.message.Message;
-import io.cloudevents.message.impl.GenericStructuredMessage;
-import io.cloudevents.message.impl.MessageUtils;
-import io.cloudevents.message.impl.UnknownEncodingMessage;
 import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientResponse;

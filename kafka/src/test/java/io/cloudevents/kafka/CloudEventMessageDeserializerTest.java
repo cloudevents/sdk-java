@@ -18,9 +18,9 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.message.Encoding;
-import io.cloudevents.message.Message;
-import io.cloudevents.test.Data;
+import io.cloudevents.core.message.Encoding;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.test.Data;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ public class CloudEventMessageDeserializerTest {
         CloudEventMessageDeserializer deserializer = new CloudEventMessageDeserializer();
 
         // Serialize the event first
-        ProducerRecord<Void, byte[]> inRecord = inEvent.asBinaryMessage().visit(KafkaProducerMessageVisitor.create(topic));
+        ProducerRecord<Void, byte[]> inRecord = Message.writeBinaryEvent(inEvent, KafkaProducerMessageVisitor.create(topic));
         Message outMessage = deserializer.deserialize(topic, inRecord.headers(), inRecord.value());
 
         assertThat(outMessage.getEncoding())
