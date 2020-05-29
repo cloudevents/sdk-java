@@ -50,7 +50,9 @@ public interface CloudEventBuilder extends CloudEventVisitor<CloudEvent> {
             case V03:
                 return CloudEventBuilder.v03();
         }
-        return null;
+        throw new IllegalStateException(
+            "The provided spec version doesn't exist. Please make sure your io.cloudevents deps versions are aligned."
+        );
     }
 
 }
