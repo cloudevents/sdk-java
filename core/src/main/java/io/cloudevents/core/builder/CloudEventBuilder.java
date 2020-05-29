@@ -21,6 +21,8 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.visitor.CloudEventVisitor;
 
+import javax.annotation.Nonnull;
+
 public interface CloudEventBuilder extends CloudEventVisitor<CloudEvent> {
 
     CloudEvent build();
@@ -41,7 +43,7 @@ public interface CloudEventBuilder extends CloudEventVisitor<CloudEvent> {
         return new io.cloudevents.core.v03.CloudEventBuilder(event);
     }
 
-    static CloudEventBuilder fromSpecVersion(SpecVersion version) {
+    static CloudEventBuilder fromSpecVersion(@Nonnull SpecVersion version) {
         switch (version) {
             case V1:
                 return CloudEventBuilder.v1();
