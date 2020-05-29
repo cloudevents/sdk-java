@@ -27,6 +27,6 @@ public interface Extension extends CloudEventExtensions {
      *
      * @param extensions
      */
-    void readFromEvent(CloudEventExtensions extensions);
+    void readFrom(CloudEventExtensions extensions);
 
 }

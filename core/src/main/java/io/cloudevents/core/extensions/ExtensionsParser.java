@@ -51,7 +51,7 @@ public final class ExtensionsParser {
         Supplier<Extension> factory = extensionFactories.get(extensionClass);
         if (factory != null) {
             Extension ext = factory.get();
-            ext.readFromEvent(event);
+            ext.readFrom(event);
             return (T) ext;
         }
         return null;
