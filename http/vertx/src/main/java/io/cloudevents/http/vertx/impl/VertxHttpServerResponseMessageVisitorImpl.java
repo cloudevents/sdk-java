@@ -18,7 +18,7 @@
 package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.format.EventFormat;
+import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
 import io.cloudevents.visitor.CloudEventVisitException;
 import io.vertx.core.buffer.Buffer;

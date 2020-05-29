@@ -17,7 +17,7 @@ Below is a sample on how to read and write CloudEvents:
 ```java
 import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
 import io.cloudevents.http.vertx.VertxMessageFactory;
-import io.cloudevents.message.StructuredMessage;
+import io.cloudevents.core.message.StructuredMessage;
 import io.cloudevents.CloudEvent;
 import io.vertx.core.AbstractVerticle;
 
@@ -55,11 +55,11 @@ public class CloudEventServerVerticle extends AbstractVerticle {
 Below is a sample on how to use the client to send and receive a CloudEvent:
 
 ```java
-import io.cloudevents.builder.CloudEventBuilder;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.http.vertx.VertxHttpClientRequestMessageVisitor;
 import io.cloudevents.http.vertx.VertxMessageFactory;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.message.Message;
+import io.cloudevents.core.message.Message;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.AbstractVerticle;

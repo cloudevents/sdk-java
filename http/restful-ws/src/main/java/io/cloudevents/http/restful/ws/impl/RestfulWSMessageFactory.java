@@ -17,10 +17,10 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
-import io.cloudevents.message.Message;
-import io.cloudevents.message.impl.GenericStructuredMessage;
-import io.cloudevents.message.impl.MessageUtils;
-import io.cloudevents.message.impl.UnknownEncodingMessage;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.impl.GenericStructuredMessage;
+import io.cloudevents.core.message.impl.MessageUtils;
+import io.cloudevents.core.message.impl.UnknownEncodingMessage;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;

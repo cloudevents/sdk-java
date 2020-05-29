@@ -18,9 +18,9 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.message.Encoding;
-import io.cloudevents.message.Message;
-import io.cloudevents.test.Data;
+import io.cloudevents.core.message.Encoding;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.test.Data;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
 

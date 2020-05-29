@@ -18,7 +18,7 @@
 package io.cloudevents.kafka.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.message.impl.BaseGenericBinaryMessageImpl;
+import io.cloudevents.core.message.impl.BaseGenericBinaryMessageImpl;
 import org.apache.kafka.common.header.Headers;
 
 import java.nio.charset.StandardCharsets;

@@ -19,7 +19,7 @@ You need to configure the `CloudEventsProvider` to enable marshalling/unmarshall
 Below is a sample on how to read and write CloudEvents:
 
 ```java
-import io.cloudevents.CloudEvent;import io.cloudevents.builder.CloudEventBuilder;
+import io.cloudevents.CloudEvent;import io.cloudevents.core.builder.CloudEventBuilder;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

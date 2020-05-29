@@ -17,7 +17,7 @@
 
 package io.cloudevents.kafka;
 
-import io.cloudevents.message.Message;
+import io.cloudevents.core.message.Message;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
 

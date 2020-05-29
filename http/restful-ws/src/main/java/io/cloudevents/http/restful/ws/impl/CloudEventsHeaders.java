@@ -17,7 +17,7 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
-import io.cloudevents.message.impl.MessageUtils;
+import io.cloudevents.core.message.impl.MessageUtils;
 
 import javax.ws.rs.core.HttpHeaders;
 import java.util.Map;

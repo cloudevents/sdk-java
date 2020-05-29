@@ -19,9 +19,9 @@ package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.message.Encoding;
-import io.cloudevents.message.Message;
-import io.cloudevents.mock.CSVFormat;
+import io.cloudevents.core.message.Encoding;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.types.Time;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
@@ -31,9 +31,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static io.cloudevents.core.test.Data.*;
 import static io.cloudevents.kafka.KafkaUtils.header;
 import static io.cloudevents.kafka.KafkaUtils.kafkaHeaders;
-import static io.cloudevents.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class KafkaMessageFactoryTest {
@@ -50,7 +50,7 @@ public class KafkaMessageFactoryTest {
     }
 
     @ParameterizedTest()
-    @MethodSource("io.cloudevents.test.Data#allEventsWithoutExtensions")
+    @MethodSource("io.cloudevents.core.test.Data#allEventsWithoutExtensions")
     public void readStructured(CloudEvent event) {
         byte[] serializedEvent = CSVFormat.INSTANCE.serialize(event);
 

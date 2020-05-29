@@ -18,11 +18,11 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.EventFormat;
-import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.message.Encoding;
+import io.cloudevents.core.message.Message;
 import io.cloudevents.kafka.impl.KafkaSerializerMessageVisitorImpl;
-import io.cloudevents.message.Encoding;
-import io.cloudevents.message.Message;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Serializer;
 

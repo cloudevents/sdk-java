@@ -18,8 +18,8 @@
 package io.cloudevents.http.restful.ws.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.format.EventFormat;
-import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.core.message.MessageVisitor;
 import io.cloudevents.visitor.CloudEventVisitException;
 import io.cloudevents.visitor.CloudEventVisitor;
 

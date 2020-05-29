@@ -18,7 +18,7 @@
 package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.message.impl.BaseGenericBinaryMessageImpl;
+import io.cloudevents.core.message.impl.BaseGenericBinaryMessageImpl;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;

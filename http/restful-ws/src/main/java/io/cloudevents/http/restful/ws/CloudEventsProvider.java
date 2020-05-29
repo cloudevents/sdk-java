@@ -18,14 +18,14 @@
 package io.cloudevents.http.restful.ws;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.format.EventFormat;
-import io.cloudevents.format.EventFormatProvider;
+import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.MessageVisitor;
 import io.cloudevents.http.restful.ws.impl.RestfulWSClientMessageVisitor;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageFactory;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageVisitor;
 import io.cloudevents.http.restful.ws.impl.Utils;
-import io.cloudevents.message.Message;
-import io.cloudevents.message.MessageVisitor;
 import io.cloudevents.visitor.CloudEventVisitor;
 
 import javax.ws.rs.Consumes;

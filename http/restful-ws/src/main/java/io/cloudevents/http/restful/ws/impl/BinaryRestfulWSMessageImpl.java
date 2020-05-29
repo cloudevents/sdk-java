@@ -18,7 +18,7 @@
 package io.cloudevents.http.restful.ws.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.message.impl.BaseGenericBinaryMessageImpl;
+import io.cloudevents.core.message.impl.BaseGenericBinaryMessageImpl;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;

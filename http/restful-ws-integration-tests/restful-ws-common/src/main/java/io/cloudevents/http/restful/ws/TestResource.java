@@ -18,7 +18,7 @@
 package io.cloudevents.http.restful.ws;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.test.Data;
+import io.cloudevents.core.test.Data;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

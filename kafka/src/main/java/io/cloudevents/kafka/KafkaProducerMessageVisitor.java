@@ -17,8 +17,8 @@
 
 package io.cloudevents.kafka;
 
+import io.cloudevents.core.message.MessageVisitor;
 import io.cloudevents.kafka.impl.KafkaProducerMessageVisitorImpl;
-import io.cloudevents.message.MessageVisitor;
 import io.cloudevents.visitor.CloudEventVisitor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
