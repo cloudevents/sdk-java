@@ -95,8 +95,8 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     public SELF withExtension(Extension extension) {
-        for (String key : extension.getExtensionNames()) {
-            Object value = extension.getExtension(key);
+        for (String key : extension.getKeys()) {
+            Object value = extension.getValue(key);
             if (value != null) {
                 this.extensions.put(key, value);
             }

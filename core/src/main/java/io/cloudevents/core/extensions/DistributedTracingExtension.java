@@ -63,7 +63,7 @@ public final class DistributedTracingExtension implements Extension {
     }
 
     @Override
-    public Object getExtension(String extensionName) {
+    public Object getValue(String extensionName) {
         switch (extensionName) {
             case TRACEPARENT:
                 return this.traceparent;
@@ -74,7 +74,7 @@ public final class DistributedTracingExtension implements Extension {
     }
 
     @Override
-    public Set<String> getExtensionNames() {
+    public Set<String> getKeys() {
         return KEY_SET;
     }
 

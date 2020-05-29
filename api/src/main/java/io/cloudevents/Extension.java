@@ -17,10 +17,16 @@
 
 package io.cloudevents;
 
+import io.cloudevents.lang.Nullable;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Set;
+
 /**
  * Materialized CloudEvent Extension interface to read/write the extension attributes key/values.
  */
-public interface Extension extends CloudEventExtensions {
+@ParametersAreNonnullByDefault
+public interface Extension {
 
     /**
      * Fill this materialized extension with values from a {@link CloudEventExtensions} implementation
@@ -28,5 +34,21 @@ public interface Extension extends CloudEventExtensions {
      * @param extensions
      */
     void readFrom(CloudEventExtensions extensions);
+
+    /**
+     * Get the attribute of extension named {@code key}
+     *
+     * @param key the name of the extension attribute
+     * @return the extension value
+     */
+    @Nullable
+    Object getValue(String key);
+
+    /**
+     * Get the set of possible extension attribute keys
+     *
+     * @return set of possible extension attribute keys
+     */
+    Set<String> getKeys();
 
 }
