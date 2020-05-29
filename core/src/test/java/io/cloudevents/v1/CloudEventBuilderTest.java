@@ -66,7 +66,7 @@ public class CloudEventBuilderTest {
 
         CloudEvent actual = CloudEventBuilder.v03(input).build();
 
-        assertThat(expected.getAttributes().getSpecVersion())
+        assertThat(expected.getSpecVersion())
             .isEqualTo(SpecVersion.V03);
         assertThat(actual).isEqualTo(expected);
     }

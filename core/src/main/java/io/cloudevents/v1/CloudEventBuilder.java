@@ -33,7 +33,7 @@ import java.time.format.DateTimeParseException;
  * @author slinkydeveloper
  * @version 1.0
  */
-public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder, AttributesImpl> {
+public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder, CloudEventV1> {
 
     private String id;
     private URI source;
@@ -47,13 +47,13 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         super();
     }
 
-    public CloudEventBuilder(CloudEvent event) {
+    public CloudEventBuilder(io.cloudevents.CloudEvent event) {
         super(event);
     }
 
     @Override
-    protected void setAttributes(CloudEvent event) {
-        if (event.getAttributes().getSpecVersion() == SpecVersion.V1) {
+    protected void setAttributes(io.cloudevents.CloudEvent event) {
+        if (event.getSpecVersion() == SpecVersion.V1) {
             event.visitAttributes(this);
         } else {
             event.visitAttributes(new V03ToV1AttributesConverter(this));
@@ -97,8 +97,9 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         return this;
     }
 
-    protected AttributesImpl buildAttributes() {
-        return new AttributesImpl(id, source, type, datacontenttype, dataschema, subject, time);
+    @Override
+    public CloudEvent build() {
+        return new CloudEventV1(id, source, type, datacontenttype, dataschema, subject, time, this.data, this.extensions);
     }
 
     // Message impl

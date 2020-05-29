@@ -23,13 +23,13 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends Attributes> implements CloudEventBuilder {
+public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEventAttributes> implements CloudEventBuilder {
 
     // This is a little trick for enabling fluency
     private SELF self;
 
-    private byte[] data;
-    private Map<String, Object> extensions;
+    protected byte[] data;
+    protected Map<String, Object> extensions;
 
     @SuppressWarnings("unchecked")
     public BaseCloudEventBuilder() {
@@ -51,8 +51,6 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     protected abstract SELF withDataContentType(String contentType);
 
     protected abstract SELF withDataSchema(URI dataSchema);
-
-    protected abstract T buildAttributes();
 
     //TODO builder should accept data as Object and use data codecs (that we need to implement)
     // to encode data
@@ -93,11 +91,6 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     public SELF withExtension(Extension extension) {
         this.extensions.putAll(extension.asMap());
         return self;
-    }
-
-    @Override
-    public CloudEvent build() {
-        return new CloudEventImpl(this.buildAttributes(), data, extensions);
     }
 
     @Override

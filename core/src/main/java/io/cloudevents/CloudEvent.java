@@ -28,12 +28,7 @@ import java.util.Map;
  * @author slinkydeveloper
  */
 @ParametersAreNonnullByDefault
-public interface CloudEvent extends CloudEventVisitable {
-
-    /**
-     * The event context attributes
-     */
-    Attributes getAttributes();
+public interface CloudEvent extends CloudEventVisitable, CloudEventAttributes {
 
     /**
      * The event data
@@ -54,7 +49,7 @@ public interface CloudEvent extends CloudEventVisitable {
 
     @Override
     default <V extends CloudEventVisitor<R>, R> R visit(CloudEventVisitorFactory<V, R> visitorFactory) throws RuntimeException {
-        CloudEventVisitor<R> visitor = visitorFactory.create(this.getAttributes().getSpecVersion());
+        CloudEventVisitor<R> visitor = visitorFactory.create(this.getSpecVersion());
         this.visitAttributes(visitor);
         this.visitExtensions(visitor);
 
@@ -67,20 +62,20 @@ public interface CloudEvent extends CloudEventVisitable {
 
     @Override
     default void visitAttributes(CloudEventAttributesVisitor visitor) throws RuntimeException {
-        visitor.setAttribute("id", this.getAttributes().getId());
-        visitor.setAttribute("source", this.getAttributes().getSource());
-        visitor.setAttribute("type", this.getAttributes().getType());
-        if (this.getAttributes().getDataContentType() != null) {
-            visitor.setAttribute("datacontenttype", this.getAttributes().getDataContentType());
+        visitor.setAttribute("id", this.getId());
+        visitor.setAttribute("source", this.getSource());
+        visitor.setAttribute("type", this.getType());
+        if (this.getDataContentType() != null) {
+            visitor.setAttribute("datacontenttype", this.getDataContentType());
         }
-        if (this.getAttributes().getDataSchema() != null) {
-            visitor.setAttribute("dataschema", this.getAttributes().getDataSchema());
+        if (this.getDataSchema() != null) {
+            visitor.setAttribute("dataschema", this.getDataSchema());
         }
-        if (this.getAttributes().getSubject() != null) {
-            visitor.setAttribute("subject", this.getAttributes().getSubject());
+        if (this.getSubject() != null) {
+            visitor.setAttribute("subject", this.getSubject());
         }
-        if (this.getAttributes().getTime() != null) {
-            visitor.setAttribute("time", this.getAttributes().getTime());
+        if (this.getTime() != null) {
+            visitor.setAttribute("time", this.getTime());
         }
     }
 

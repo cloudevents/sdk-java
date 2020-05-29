@@ -90,7 +90,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
     @Override
     public void serialize(CloudEvent value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
-        gen.writeStringField("specversion", value.getAttributes().getSpecVersion().toString());
+        gen.writeStringField("specversion", value.getSpecVersion().toString());
 
         // Serialize attributes
         try {
@@ -103,10 +103,10 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
         // Serialize data
         byte[] data = value.getData();
-        String contentType = value.getAttributes().getDataContentType();
+        String contentType = value.getDataContentType();
         if (data != null) {
             if (shouldSerializeBase64(contentType)) {
-                switch (value.getAttributes().getSpecVersion()) {
+                switch (value.getSpecVersion()) {
                     case V03:
                         gen.writeStringField("datacontentencoding", "base64");
                         gen.writeFieldName("data");

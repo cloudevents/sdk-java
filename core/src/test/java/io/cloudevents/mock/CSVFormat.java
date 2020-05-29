@@ -40,15 +40,15 @@ public class CSVFormat implements EventFormat {
     public byte[] serialize(CloudEvent event) {
         return String.join(
             ",",
-            event.getAttributes().getSpecVersion().toString(),
-            event.getAttributes().getId(),
-            event.getAttributes().getType(),
-            event.getAttributes().getSource().toString(),
-            Objects.toString(event.getAttributes().getDataContentType()),
-            Objects.toString(event.getAttributes().getDataSchema()),
-            Objects.toString(event.getAttributes().getSubject()),
-            event.getAttributes().getTime() != null
-                ? Time.RFC3339_DATE_FORMAT.format(event.getAttributes().getTime())
+            event.getSpecVersion().toString(),
+            event.getId(),
+            event.getType(),
+            event.getSource().toString(),
+            Objects.toString(event.getDataContentType()),
+            Objects.toString(event.getDataSchema()),
+            Objects.toString(event.getSubject()),
+            event.getTime() != null
+                ? Time.RFC3339_DATE_FORMAT.format(event.getTime())
                 : "null",
             event.getData() != null
                 ? new String(Base64.getEncoder().encode(event.getData()), StandardCharsets.UTF_8)
