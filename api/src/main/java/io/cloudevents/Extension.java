@@ -40,9 +40,10 @@ public interface Extension {
      *
      * @param key the name of the extension attribute
      * @return the extension value
+     * @throws IllegalArgumentException if the key is not a valid attribute key for this extension
      */
     @Nullable
-    Object getValue(String key);
+    Object getValue(String key) throws IllegalArgumentException;
 
     /**
      * Get the set of possible extension attribute keys

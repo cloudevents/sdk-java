@@ -19,6 +19,7 @@ package io.cloudevents.core.extensions;
 
 import io.cloudevents.CloudEventExtensions;
 import io.cloudevents.Extension;
+import io.cloudevents.core.extensions.impl.ExtensionUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,14 +64,14 @@ public final class DistributedTracingExtension implements Extension {
     }
 
     @Override
-    public Object getValue(String extensionName) {
-        switch (extensionName) {
+    public Object getValue(String key) {
+        switch (key) {
             case TRACEPARENT:
                 return this.traceparent;
             case TRACESTATE:
                 return this.tracestate;
         }
-        return null;
+        throw ExtensionUtils.generateInvalidKeyException(this.getClass().getSimpleName(), key);
     }
 
     @Override
