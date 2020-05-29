@@ -17,10 +17,10 @@
 
 package io.cloudevents.http.vertx.impl;
 
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
@@ -54,11 +54,12 @@ public class VertxHttpServerResponseMessageVisitorImpl implements VertxHttpServe
     }
 
     @Override
-    public void setBody(byte[] value) throws CloudEventVisitException {
+    public HttpServerResponse end(byte[] value) throws CloudEventVisitException {
         if (this.response.ended()) {
             throw CloudEventVisitException.newOther(new IllegalStateException("Cannot set the body because the response is already ended"));
         }
         this.response.end(Buffer.buffer(value));
+        return this.response;
     }
 
     @Override

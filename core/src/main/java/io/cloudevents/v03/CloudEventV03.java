@@ -16,17 +16,18 @@
  */
 package io.cloudevents.v03;
 
-import io.cloudevents.CloudEventAttributesVisitor;
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.impl.BaseCloudEvent;
 import io.cloudevents.lang.Nullable;
+import io.cloudevents.visitor.CloudEventAttributesVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * CloudEvent implementation for v0.3
@@ -98,6 +99,32 @@ public final class CloudEventV03 extends BaseCloudEvent {
     }
 
     @Override
+    public Object getAttribute(String name) {
+        switch (name) {
+            case "id":
+                return this.id;
+            case "source":
+                return this.source;
+            case "type":
+                return this.type;
+            case "datacontenttype":
+                return this.datacontenttype;
+            case "schemaurl":
+                return this.schemaurl;
+            case "subject":
+                return this.subject;
+            case "time":
+                return this.time;
+        }
+        throw new IllegalArgumentException("Spec version v0.3 doesn't have attribute named " + name);
+    }
+
+    @Override
+    public Set<String> getAttributeNames() {
+        return ContextAttributes.VALUES;
+    }
+
+    @Override
     public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
         visitor.setAttribute(
             ContextAttributes.ID.name().toLowerCase(),
@@ -150,12 +177,12 @@ public final class CloudEventV03 extends BaseCloudEvent {
             Objects.equals(getSubject(), that.getSubject()) &&
             Objects.equals(getTime(), that.getTime()) &&
             Arrays.equals(getData(), that.getData()) &&
-            Objects.equals(getExtensions(), that.getExtensions());
+            Objects.equals(this.extensions, that.extensions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSource(), getType(), datacontenttype, schemaurl, getSubject(), getTime(), Arrays.hashCode(getData()), getExtensions());
+        return Objects.hash(getId(), getSource(), getType(), datacontenttype, schemaurl, getSubject(), getTime(), Arrays.hashCode(getData()), this.extensions);
     }
 
     @Override
@@ -169,7 +196,7 @@ public final class CloudEventV03 extends BaseCloudEvent {
             ", subject='" + subject + '\'' +
             ", time=" + time +
             ", data=" + Arrays.toString(getData()) +
-            ", extensions" + getExtensions() +
+            ", extensions" + this.extensions +
             '}';
     }
 }

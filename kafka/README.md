@@ -18,7 +18,7 @@ To produce CloudEvents in Kafka, configure the KafkaProducer to use the provided
 import java.util.Properties;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;import io.cloudevents.kafka.CloudEventSerializer;
+import io.cloudevents.builder.CloudEventBuilder;import io.cloudevents.kafka.CloudEventSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

@@ -17,10 +17,10 @@
 
 package io.cloudevents.message.impl;
 
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.message.Encoding;
 import io.cloudevents.message.Message;
 import io.cloudevents.message.StructuredMessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
 
 public abstract class BaseBinaryMessage implements Message {
 

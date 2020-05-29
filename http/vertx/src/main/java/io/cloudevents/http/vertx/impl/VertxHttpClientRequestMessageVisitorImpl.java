@@ -17,10 +17,10 @@
 
 package io.cloudevents.http.vertx.impl;
 
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.http.vertx.VertxHttpClientRequestMessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
@@ -28,11 +28,9 @@ import io.vertx.core.http.HttpHeaders;
 public class VertxHttpClientRequestMessageVisitorImpl implements VertxHttpClientRequestMessageVisitor {
 
     private final HttpClientRequest request;
-    private boolean ended;
 
     public VertxHttpClientRequestMessageVisitorImpl(HttpClientRequest request) {
         this.request = request;
-        this.ended = false;
     }
 
     // Binary visitor factory
@@ -56,19 +54,14 @@ public class VertxHttpClientRequestMessageVisitorImpl implements VertxHttpClient
     }
 
     @Override
-    public void setBody(byte[] value) throws CloudEventVisitException {
-        if (ended) {
-            throw CloudEventVisitException.newOther(new IllegalStateException("Cannot set the body because the request is already ended"));
-        }
+    public HttpClientRequest end(byte[] value) throws CloudEventVisitException {
         this.request.end(Buffer.buffer(value));
-        this.ended = true;
+        return this.request;
     }
 
     @Override
     public HttpClientRequest end() {
-        if (!ended) {
-            this.request.end();
-        }
+        this.request.end();
         return this.request;
     }
 

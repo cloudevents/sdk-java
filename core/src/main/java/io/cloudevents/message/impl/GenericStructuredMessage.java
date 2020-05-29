@@ -18,11 +18,11 @@
 package io.cloudevents.message.impl;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.format.EventFormatProvider;
 import io.cloudevents.lang.Nullable;
 import io.cloudevents.message.StructuredMessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
 
 public class GenericStructuredMessage extends BaseStructuredMessage {
 

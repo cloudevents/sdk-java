@@ -17,11 +17,11 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
-import io.cloudevents.CloudEventVisitException;
-import io.cloudevents.CloudEventVisitor;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.visitor.CloudEventVisitor;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.core.HttpHeaders;
@@ -56,8 +56,9 @@ public final class RestfulWSClientMessageVisitor implements CloudEventVisitor<Vo
     }
 
     @Override
-    public void setBody(byte[] value) throws CloudEventVisitException {
+    public Void end(byte[] value) throws CloudEventVisitException {
         this.context.setEntity(value);
+        return null;
     }
 
     @Override

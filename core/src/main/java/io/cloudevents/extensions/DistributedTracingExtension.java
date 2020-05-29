@@ -50,11 +50,11 @@ public final class DistributedTracingExtension implements Extension {
 
     @Override
     public void readFromEvent(CloudEvent event) {
-        Object tp = event.getExtensions().get(TRACEPARENT);
+        Object tp = event.getExtension(TRACEPARENT);
         if (tp != null) {
             this.traceparent = tp.toString();
         }
-        Object ts = event.getExtensions().get(TRACESTATE);
+        Object ts = event.getExtension(TRACESTATE);
         if (ts != null) {
             this.tracestate = ts.toString();
         }

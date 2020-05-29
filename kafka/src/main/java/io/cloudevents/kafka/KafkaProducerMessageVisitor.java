@@ -17,9 +17,9 @@
 
 package io.cloudevents.kafka;
 
-import io.cloudevents.CloudEventVisitor;
 import io.cloudevents.kafka.impl.KafkaProducerMessageVisitorImpl;
 import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 public interface KafkaProducerMessageVisitor<K> extends MessageVisitor<KafkaProducerMessageVisitor<K>, ProducerRecord<K, byte[]>>, CloudEventVisitor<ProducerRecord<K, byte[]>> {

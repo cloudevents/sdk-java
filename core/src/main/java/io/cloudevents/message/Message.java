@@ -17,10 +17,12 @@
 
 package io.cloudevents.message;
 
-import io.cloudevents.*;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.builder.CloudEventBuilder;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.impl.CloudEventUtils;
 import io.cloudevents.message.impl.GenericStructuredMessage;
+import io.cloudevents.visitor.*;
 
 public interface Message extends StructuredMessage, CloudEventVisitable {
 

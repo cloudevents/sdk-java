@@ -55,7 +55,7 @@ public class CloudEventServerVerticle extends AbstractVerticle {
 Below is a sample on how to use the client to send and receive a CloudEvent:
 
 ```java
-import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.builder.CloudEventBuilder;
 import io.cloudevents.http.vertx.VertxHttpClientRequestMessageVisitor;
 import io.cloudevents.http.vertx.VertxMessageFactory;
 import io.cloudevents.CloudEvent;

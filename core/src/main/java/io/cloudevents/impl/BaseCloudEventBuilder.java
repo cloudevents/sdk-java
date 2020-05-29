@@ -17,13 +17,16 @@
 
 package io.cloudevents.impl;
 
-import io.cloudevents.*;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.Extension;
+import io.cloudevents.builder.CloudEventBuilder;
+import io.cloudevents.visitor.CloudEventVisitException;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEventAttributes> implements CloudEventBuilder {
+public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder {
 
     // This is a little trick for enabling fluency
     private SELF self;
@@ -43,7 +46,10 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
 
         this.setAttributes(event);
         this.data = event.getData();
-        this.extensions = new HashMap<>(event.getExtensions());
+        this.extensions = new HashMap<>();
+        for (String k : event.getExtensionNames()) {
+            this.extensions.put(k, event.getExtension(k));
+        }
     }
 
     protected abstract void setAttributes(CloudEvent event);
@@ -109,8 +115,9 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     @Override
-    public void setBody(byte[] value) throws CloudEventVisitException {
+    public CloudEvent end(byte[] value) throws CloudEventVisitException {
         this.data = value;
+        return build();
     }
 
     @Override

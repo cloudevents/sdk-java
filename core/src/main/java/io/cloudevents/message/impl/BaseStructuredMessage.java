@@ -17,12 +17,12 @@
 
 package io.cloudevents.message.impl;
 
-import io.cloudevents.CloudEventAttributesVisitor;
-import io.cloudevents.CloudEventExtensionsVisitor;
-import io.cloudevents.CloudEventVisitor;
-import io.cloudevents.CloudEventVisitorFactory;
 import io.cloudevents.message.Encoding;
 import io.cloudevents.message.Message;
+import io.cloudevents.visitor.CloudEventAttributesVisitor;
+import io.cloudevents.visitor.CloudEventExtensionsVisitor;
+import io.cloudevents.visitor.CloudEventVisitor;
+import io.cloudevents.visitor.CloudEventVisitorFactory;
 
 public abstract class BaseStructuredMessage implements Message {
 

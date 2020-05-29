@@ -17,16 +17,17 @@
 
 package io.cloudevents.impl;
 
-import io.cloudevents.*;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.visitor.*;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class BaseCloudEvent implements CloudEvent, CloudEventVisitable {
 
     private final byte[] data;
-    private final Map<String, Object> extensions;
+    protected final Map<String, Object> extensions;
 
     protected BaseCloudEvent(byte[] data, Map<String, Object> extensions) {
         this.data = data;
@@ -39,8 +40,13 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventVisitable 
     }
 
     @Override
-    public Map<String, Object> getExtensions() {
-        return Collections.unmodifiableMap(extensions);
+    public Object getExtension(String extensionName) {
+        return this.extensions.get(extensionName);
+    }
+
+    @Override
+    public Set<String> getExtensionNames() {
+        return this.extensions.keySet();
     }
 
     public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
@@ -49,7 +55,7 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventVisitable 
         this.visitExtensions(visitor);
 
         if (this.data != null) {
-            visitor.setBody(this.data);
+            return visitor.end(this.data);
         }
 
         return visitor.end();

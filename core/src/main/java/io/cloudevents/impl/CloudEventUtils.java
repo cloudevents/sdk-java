@@ -18,7 +18,7 @@
 package io.cloudevents.impl;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventVisitable;
+import io.cloudevents.visitor.CloudEventVisitable;
 
 public final class CloudEventUtils {
 

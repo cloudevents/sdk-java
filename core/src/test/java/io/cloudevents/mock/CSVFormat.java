@@ -18,8 +18,8 @@
 package io.cloudevents.mock;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.builder.CloudEventBuilder;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.types.Time;
 

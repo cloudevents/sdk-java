@@ -20,8 +20,12 @@ package io.cloudevents.format.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import io.cloudevents.*;
+import io.cloudevents.CloudEvent;
 import io.cloudevents.impl.CloudEventUtils;
+import io.cloudevents.visitor.CloudEventAttributesVisitor;
+import io.cloudevents.visitor.CloudEventExtensionsVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.visitor.CloudEventVisitable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

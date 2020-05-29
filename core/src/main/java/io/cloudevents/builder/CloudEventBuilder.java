@@ -15,7 +15,11 @@
  *
  */
 
-package io.cloudevents;
+package io.cloudevents.builder;
+
+import io.cloudevents.CloudEvent;
+import io.cloudevents.SpecVersion;
+import io.cloudevents.visitor.CloudEventVisitor;
 
 public interface CloudEventBuilder extends CloudEventVisitor<CloudEvent> {
 

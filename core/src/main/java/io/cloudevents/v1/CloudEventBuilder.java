@@ -18,11 +18,11 @@
 package io.cloudevents.v1;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.impl.BaseCloudEventBuilder;
 import io.cloudevents.impl.CloudEventUtils;
 import io.cloudevents.types.Time;
+import io.cloudevents.visitor.CloudEventVisitException;
 
 import java.net.URI;
 import java.net.URISyntaxException;

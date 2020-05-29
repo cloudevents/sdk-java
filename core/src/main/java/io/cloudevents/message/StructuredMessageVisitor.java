@@ -17,8 +17,8 @@
 
 package io.cloudevents.message;
 
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.visitor.CloudEventVisitException;
 
 //TODO javadoc
 @FunctionalInterface

@@ -17,7 +17,8 @@
 
 package io.cloudevents.message.impl;
 
-import io.cloudevents.*;
+import io.cloudevents.SpecVersion;
+import io.cloudevents.visitor.*;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -66,7 +67,7 @@ public abstract class BaseGenericBinaryMessageImpl<HK, HV> extends BaseBinaryMes
 
         // Set the payload
         if (this.body != null && this.body.length != 0) {
-            visitor.setBody(this.body);
+            return visitor.end(this.body);
         }
 
         return visitor.end();

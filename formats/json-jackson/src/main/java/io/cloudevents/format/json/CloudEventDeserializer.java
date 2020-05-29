@@ -25,7 +25,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.cloudevents.*;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.SpecVersion;
+import io.cloudevents.builder.CloudEventBuilder;
+import io.cloudevents.visitor.*;
 
 import java.io.IOException;
 
@@ -74,22 +77,24 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                     }
                 }
 
+                byte[] data = null;
+
                 // Now let's handle the data
                 switch (specVersion) {
                     case V03:
                         boolean isBase64 = "base64".equals(getOptionalStringNode(this.node, this.p, "datacontentencoding"));
                         if (node.has("data")) {
                             if (isBase64) {
-                                visitor.setBody(node.remove("data").binaryValue());
+                                data = node.remove("data").binaryValue();
                             } else {
                                 if (JsonFormat.dataIsJsonContentType(contentType)) {
                                     // This solution is quite bad, but i see no alternatives now.
                                     // Hopefully in future we can improve it
-                                    visitor.setBody(node.remove("data").toString().getBytes());
+                                    data = node.remove("data").toString().getBytes();
                                 } else {
-                                    JsonNode data = node.remove("data");
-                                    assertNodeType(data, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
-                                    visitor.setBody(data.asText().getBytes());
+                                    JsonNode dataNode = node.remove("data");
+                                    assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
+                                    data = dataNode.asText().getBytes();
                                 }
                             }
                         }
@@ -98,16 +103,16 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                             throw MismatchedInputException.from(p, CloudEvent.class, "CloudEvent cannot have both 'data' and 'data_base64' fields");
                         }
                         if (node.has("data_base64")) {
-                            visitor.setBody(node.remove("data_base64").binaryValue());
+                            data = node.remove("data_base64").binaryValue();
                         } else if (node.has("data")) {
                             if (JsonFormat.dataIsJsonContentType(contentType)) {
                                 // This solution is quite bad, but i see no alternatives now.
                                 // Hopefully in future we can improve it
-                                visitor.setBody(node.remove("data").toString().getBytes());
+                                data = node.remove("data").toString().getBytes();
                             } else {
-                                JsonNode data = node.remove("data");
-                                assertNodeType(data, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
-                                visitor.setBody(data.asText().getBytes());
+                                JsonNode dataNode = node.remove("data");
+                                assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
+                                data = dataNode.asText().getBytes();
                             }
                         }
                 }
@@ -133,6 +138,9 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
 
                 });
 
+                if (data != null) {
+                    return visitor.end(data);
+                }
                 return visitor.end();
             } catch (IOException e) {
                 throw new RuntimeException(e);

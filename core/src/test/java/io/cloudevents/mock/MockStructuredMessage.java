@@ -17,11 +17,11 @@
 
 package io.cloudevents.mock;
 
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.message.Message;
 import io.cloudevents.message.StructuredMessageVisitor;
 import io.cloudevents.message.impl.BaseStructuredMessage;
+import io.cloudevents.visitor.CloudEventVisitException;
 
 public class MockStructuredMessage extends BaseStructuredMessage implements Message, StructuredMessageVisitor<MockStructuredMessage> {
 

@@ -17,11 +17,11 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
-import io.cloudevents.CloudEventVisitException;
-import io.cloudevents.CloudEventVisitor;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.visitor.CloudEventVisitor;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
@@ -58,12 +58,13 @@ public final class RestfulWSMessageVisitor implements CloudEventVisitor<Void>, M
     }
 
     @Override
-    public void setBody(byte[] value) throws CloudEventVisitException {
+    public Void end(byte[] value) throws CloudEventVisitException {
         try {
             this.entityStream.write(value);
         } catch (IOException e) {
             throw CloudEventVisitException.newOther(e);
         }
+        return this.end();
     }
 
     @Override
@@ -79,7 +80,7 @@ public final class RestfulWSMessageVisitor implements CloudEventVisitor<Void>, M
     @Override
     public Void setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
         this.httpHeaders.add(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
-        this.setBody(value);
+        this.end(value);
         return null;
     }
 }

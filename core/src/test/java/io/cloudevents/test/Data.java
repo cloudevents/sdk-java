@@ -18,11 +18,12 @@
 package io.cloudevents.test;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.builder.CloudEventBuilder;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class Data {
@@ -110,7 +111,7 @@ public class Data {
     }
 
     public static Stream<CloudEvent> allEventsWithoutExtensions() {
-        return Stream.concat(v1Events(), v03Events()).filter(e -> e.getExtensions().isEmpty());
+        return Stream.concat(v1Events(), v03Events()).filter(e -> e.getExtensionNames().isEmpty());
     }
 
     public static Stream<CloudEvent> allEventsWithStringExtensions() {
@@ -140,7 +141,7 @@ public class Data {
     public static Stream<CloudEvent> v1EventsWithStringExt() {
         return v1Events().map(ce -> {
             io.cloudevents.v1.CloudEventBuilder builder = CloudEventBuilder.v1(ce);
-            ce.getExtensions().forEach((k, v) -> builder.withExtension(k, v.toString()));
+            ce.getExtensionNames().forEach(k -> builder.withExtension(k, Objects.toString(ce.getExtension(k))));
             return builder.build();
         });
     }
@@ -148,7 +149,7 @@ public class Data {
     public static Stream<CloudEvent> v03EventsWithStringExt() {
         return v03Events().map(ce -> {
             io.cloudevents.v03.CloudEventBuilder builder = CloudEventBuilder.v03(ce);
-            ce.getExtensions().forEach((k, v) -> builder.withExtension(k, v.toString()));
+            ce.getExtensionNames().forEach(k -> builder.withExtension(k, Objects.toString(ce.getExtension(k))));
             return builder.build();
         });
     }

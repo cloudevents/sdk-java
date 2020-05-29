@@ -18,9 +18,9 @@
 package io.cloudevents.message;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.message.impl.GenericStructuredMessage;
+import io.cloudevents.visitor.CloudEventVisitException;
 
 @FunctionalInterface
 public interface StructuredMessage {

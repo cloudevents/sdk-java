@@ -17,10 +17,10 @@
 
 package io.cloudevents.kafka.impl;
 
-import io.cloudevents.CloudEventVisitException;
-import io.cloudevents.CloudEventVisitor;
 import io.cloudevents.format.EventFormat;
 import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.visitor.CloudEventVisitor;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeader;
 
@@ -44,14 +44,14 @@ abstract class BaseKafkaMessageVisitorImpl<S extends MessageVisitor<S, R> & Clou
     }
 
     @Override
-    public void setBody(byte[] value) throws CloudEventVisitException {
+    public R end(byte[] value) throws CloudEventVisitException {
         this.value = value;
+        return this.end();
     }
 
     @Override
     public R setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
         this.headers.add(new RecordHeader(KafkaHeaders.CONTENT_TYPE, format.serializedContentType().getBytes()));
-        this.value = value;
-        return this.end();
+        return this.end(value);
     }
 }

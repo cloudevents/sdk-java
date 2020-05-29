@@ -17,9 +17,10 @@
 
 package io.cloudevents.mock;
 
-import io.cloudevents.*;
+import io.cloudevents.SpecVersion;
 import io.cloudevents.message.Message;
 import io.cloudevents.message.impl.BaseBinaryMessage;
+import io.cloudevents.visitor.*;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -55,7 +56,9 @@ public class MockBinaryMessage extends BaseBinaryMessage implements Message, Clo
         this.visitAttributes(visitor);
         this.visitExtensions(visitor);
 
-        visitor.setBody(this.data);
+        if (this.data != null && this.data.length != 0) {
+            return visitor.end(this.data);
+        }
 
         return visitor.end();
     }
@@ -93,8 +96,9 @@ public class MockBinaryMessage extends BaseBinaryMessage implements Message, Clo
     }
 
     @Override
-    public void setBody(byte[] value) throws CloudEventVisitException {
+    public MockBinaryMessage end(byte[] value) throws CloudEventVisitException {
         this.data = value;
+        return this;
     }
 
     @Override

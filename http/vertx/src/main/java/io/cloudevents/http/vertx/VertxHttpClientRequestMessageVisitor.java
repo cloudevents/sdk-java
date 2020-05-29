@@ -17,9 +17,9 @@
 
 package io.cloudevents.http.vertx;
 
-import io.cloudevents.CloudEventVisitor;
 import io.cloudevents.http.vertx.impl.VertxHttpClientRequestMessageVisitorImpl;
 import io.cloudevents.message.MessageVisitor;
+import io.cloudevents.visitor.CloudEventVisitor;
 import io.vertx.core.http.HttpClientRequest;
 
 /**

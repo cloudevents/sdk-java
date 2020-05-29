@@ -18,7 +18,7 @@
 package io.cloudevents.impl;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
+import io.cloudevents.builder.CloudEventBuilder;
 import org.junit.jupiter.api.Test;
 
 import static io.cloudevents.test.Data.*;

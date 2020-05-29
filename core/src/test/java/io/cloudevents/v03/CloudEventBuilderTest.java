@@ -17,8 +17,8 @@
 package io.cloudevents.v03;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventBuilder;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.builder.CloudEventBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

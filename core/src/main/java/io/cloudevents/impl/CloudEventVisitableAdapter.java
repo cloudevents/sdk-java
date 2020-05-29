@@ -17,9 +17,8 @@
 
 package io.cloudevents.impl;
 
-import io.cloudevents.*;
-
-import java.util.Map;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.visitor.*;
 
 public class CloudEventVisitableAdapter implements CloudEventVisitable {
 
@@ -36,7 +35,7 @@ public class CloudEventVisitableAdapter implements CloudEventVisitable {
         this.visitExtensions(visitor);
 
         if (event.getData() != null) {
-            visitor.setBody(event.getData());
+            return visitor.end(event.getData());
         }
 
         return visitor.end();
@@ -63,16 +62,17 @@ public class CloudEventVisitableAdapter implements CloudEventVisitable {
 
     @Override
     public void visitExtensions(CloudEventExtensionsVisitor visitor) throws RuntimeException {
-        for (Map.Entry<String, Object> entry : event.getExtensions().entrySet()) {
-            if (entry.getValue() instanceof String) {
-                visitor.setExtension(entry.getKey(), (String) entry.getValue());
-            } else if (entry.getValue() instanceof Number) {
-                visitor.setExtension(entry.getKey(), (Number) entry.getValue());
-            } else if (entry.getValue() instanceof Boolean) {
-                visitor.setExtension(entry.getKey(), (Boolean) entry.getValue());
+        for (String key : event.getExtensionNames()) {
+            Object value = event.getExtension(key);
+            if (value instanceof String) {
+                visitor.setExtension(key, (String) value);
+            } else if (value instanceof Number) {
+                visitor.setExtension(key, (Number) value);
+            } else if (value instanceof Boolean) {
+                visitor.setExtension(key, (Boolean) value);
             } else {
                 // This should never happen because we build that map only through our builders
-                throw new IllegalStateException("Illegal value inside extensions map: " + entry);
+                throw new IllegalStateException("Illegal value inside extensions map: " + key + " " + value);
             }
         }
         ;
