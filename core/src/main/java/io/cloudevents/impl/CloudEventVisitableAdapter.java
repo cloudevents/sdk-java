@@ -19,45 +19,51 @@ package io.cloudevents.impl;
 
 import io.cloudevents.*;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseCloudEvent implements CloudEvent, CloudEventVisitable {
+public class CloudEventVisitableAdapter implements CloudEventVisitable {
 
-    private final byte[] data;
-    private final Map<String, Object> extensions;
+    private CloudEvent event;
 
-    protected BaseCloudEvent(byte[] data, Map<String, Object> extensions) {
-        this.data = data;
-        this.extensions = extensions != null ? extensions : new HashMap<>();
+    CloudEventVisitableAdapter(CloudEvent event) {
+        this.event = event;
     }
 
     @Override
-    public byte[] getData() {
-        return this.data;
-    }
-
-    @Override
-    public Map<String, Object> getExtensions() {
-        return Collections.unmodifiableMap(extensions);
-    }
-
-    public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
-        CloudEventVisitor<V> visitor = visitorFactory.create(this.getSpecVersion());
+    public <V extends CloudEventVisitor<R>, R> R visit(CloudEventVisitorFactory<V, R> visitorFactory) throws RuntimeException {
+        CloudEventVisitor<R> visitor = visitorFactory.create(event.getSpecVersion());
         this.visitAttributes(visitor);
         this.visitExtensions(visitor);
 
-        if (this.data != null) {
-            visitor.setBody(this.data);
+        if (event.getData() != null) {
+            visitor.setBody(event.getData());
         }
 
         return visitor.end();
     }
 
-    public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException {
-        // TODO to be improved
-        for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
+    @Override
+    public void visitAttributes(CloudEventAttributesVisitor visitor) throws RuntimeException {
+        visitor.setAttribute("id", event.getId());
+        visitor.setAttribute("source", event.getSource());
+        visitor.setAttribute("type", event.getType());
+        if (event.getDataContentType() != null) {
+            visitor.setAttribute("datacontenttype", event.getDataContentType());
+        }
+        if (event.getDataSchema() != null) {
+            visitor.setAttribute("dataschema", event.getDataSchema());
+        }
+        if (event.getSubject() != null) {
+            visitor.setAttribute("subject", event.getSubject());
+        }
+        if (event.getTime() != null) {
+            visitor.setAttribute("time", event.getTime());
+        }
+    }
+
+    @Override
+    public void visitExtensions(CloudEventExtensionsVisitor visitor) throws RuntimeException {
+        for (Map.Entry<String, Object> entry : event.getExtensions().entrySet()) {
             if (entry.getValue() instanceof String) {
                 visitor.setExtension(entry.getKey(), (String) entry.getValue());
             } else if (entry.getValue() instanceof Number) {
@@ -69,5 +75,7 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventVisitable 
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
             }
         }
+        ;
     }
+
 }

@@ -20,10 +20,8 @@ package io.cloudevents.format.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventAttributesVisitor;
-import io.cloudevents.CloudEventExtensionsVisitor;
-import io.cloudevents.CloudEventVisitException;
+import io.cloudevents.*;
+import io.cloudevents.impl.CloudEventUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -94,9 +92,10 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
         // Serialize attributes
         try {
+            CloudEventVisitable visitable = CloudEventUtils.toVisitable(value);
             FieldsSerializer serializer = new FieldsSerializer(gen, provider);
-            value.visitAttributes(serializer);
-            value.visitExtensions(serializer);
+            visitable.visitAttributes(serializer);
+            visitable.visitExtensions(serializer);
         } catch (RuntimeException e) {
             throw (IOException) e.getCause();
         }

@@ -18,6 +18,7 @@
 package io.cloudevents.message;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.impl.CloudEventUtils;
 import io.cloudevents.message.impl.GenericStructuredMessage;
 import io.cloudevents.mock.CSVFormat;
 import io.cloudevents.mock.MockBinaryMessage;
@@ -56,7 +57,7 @@ public class EventMessageRoundtripTest {
     @ParameterizedTest()
     @MethodSource("io.cloudevents.test.Data#allEvents")
     void binaryToMockBinaryMessageToEvent(CloudEvent input) {
-        assertThat(input.visit(new MockBinaryMessage()).toEvent())
+        assertThat(CloudEventUtils.toVisitable(input).visit(new MockBinaryMessage()).toEvent())
             .isEqualTo(input);
     }
 

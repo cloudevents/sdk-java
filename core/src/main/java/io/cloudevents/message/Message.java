@@ -19,6 +19,7 @@ package io.cloudevents.message;
 
 import io.cloudevents.*;
 import io.cloudevents.format.EventFormat;
+import io.cloudevents.impl.CloudEventUtils;
 import io.cloudevents.message.impl.GenericStructuredMessage;
 
 public interface Message extends StructuredMessage, CloudEventVisitable {
@@ -98,7 +99,7 @@ public interface Message extends StructuredMessage, CloudEventVisitable {
 
 
     static <V extends CloudEventVisitor<R>, R> R writeBinaryEvent(CloudEvent event, CloudEventVisitorFactory<V, R> visitor) {
-        return event.visit(visitor);
+        return CloudEventUtils.toVisitable(event).visit(visitor);
     }
 
 }

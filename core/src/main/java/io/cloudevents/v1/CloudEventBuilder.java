@@ -21,6 +21,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventVisitException;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.impl.BaseCloudEventBuilder;
+import io.cloudevents.impl.CloudEventUtils;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
@@ -54,9 +55,9 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     @Override
     protected void setAttributes(io.cloudevents.CloudEvent event) {
         if (event.getSpecVersion() == SpecVersion.V1) {
-            event.visitAttributes(this);
+            CloudEventUtils.toVisitable(event).visitAttributes(this);
         } else {
-            event.visitAttributes(new V03ToV1AttributesConverter(this));
+            CloudEventUtils.toVisitable(event).visitAttributes(new V03ToV1AttributesConverter(this));
         }
     }
 
