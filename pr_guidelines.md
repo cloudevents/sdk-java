@@ -18,19 +18,17 @@ When creating a pull request, first fork this repository and clone it to your
 local development environment. Then add this repository as the upstream.
 
 ```console
-git clone https://github.com/mygithuborg/sdk-javascript.git
-cd sdk-javascript
-git remote add upstream https://github.com/cloudevents/sdk-javascript.git
+git clone https://github.com/mygithuborg/sdk-java.git
+cd sdk-java
+git remote add upstream https://github.com/cloudevents/sdk-java.git
 ```
 
 ## Branches
 
 The first thing you'll need to do is create a branch for your work.
 If you are submitting a pull request that fixes or relates to an existing
-GitHub issue, you can use this in your branch name to keep things organized.
-For example, if you were to create a pull request to fix
-[this error with `httpAgent`](https://github.com/cloudevents/sdk-javascript/issues/48)
-you might create a branch named `48-fix-http-agent-error`.
+GitHub issue, you can use the issue number in your branch name to keep things
+organized.
 
 ```console
 git fetch upstream
