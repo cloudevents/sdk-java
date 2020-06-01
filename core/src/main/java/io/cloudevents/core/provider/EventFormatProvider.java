@@ -15,7 +15,9 @@
  *
  */
 
-package io.cloudevents.core.format;
+package io.cloudevents.core.provider;
+
+import io.cloudevents.core.format.EventFormat;
 
 import java.util.HashMap;
 import java.util.ServiceLoader;

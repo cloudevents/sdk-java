@@ -17,8 +17,8 @@
 
 package io.cloudevents.http.restful.ws.spring;
 
-import io.cloudevents.core.format.EventFormatProvider;
 import io.cloudevents.core.mock.CSVFormat;
+import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.http.restful.ws.BaseTest;
 import io.cloudevents.http.restful.ws.CloudEventsProvider;
 import org.junit.jupiter.api.BeforeAll;

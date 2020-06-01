@@ -18,6 +18,7 @@ package io.cloudevents.core.extensions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.provider.ExtensionProvider;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +49,7 @@ public class DistributedTracingExtensionTest {
             .withExtension(DistributedTracingExtension.TRACESTATE, "state")
             .build();
 
-        DistributedTracingExtension tracing = ExtensionsParser
+        DistributedTracingExtension tracing = ExtensionProvider
             .getInstance()
             .parseExtension(DistributedTracingExtension.class, event);
 

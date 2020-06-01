@@ -15,29 +15,29 @@
  *
  */
 
-package io.cloudevents.core.extensions;
+package io.cloudevents.core.provider;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
+import io.cloudevents.core.extensions.DistributedTracingExtension;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-public final class ExtensionsParser {
+public final class ExtensionProvider {
 
     private static class SingletonContainer {
-        private final static ExtensionsParser INSTANCE = new ExtensionsParser();
+        private final static ExtensionProvider INSTANCE = new ExtensionProvider();
     }
 
-    public static ExtensionsParser getInstance() {
+    public static ExtensionProvider getInstance() {
         return SingletonContainer.INSTANCE;
     }
 
-    private HashMap<Class<?>, Supplier<Extension>> extensionFactories;
-
+    private final HashMap<Class<?>, Supplier<Extension>> extensionFactories;
 
     // TODO SPI in future?
-    private ExtensionsParser() {
+    private ExtensionProvider() {
         this.extensionFactories = new HashMap<>();
         registerExtension(DistributedTracingExtension.class, DistributedTracingExtension::new);
     }

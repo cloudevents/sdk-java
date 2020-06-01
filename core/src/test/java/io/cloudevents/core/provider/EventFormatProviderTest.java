@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.core.format;
+package io.cloudevents.core.provider;
 
 import io.cloudevents.core.mock.CSVFormat;
 import org.junit.jupiter.api.Test;
