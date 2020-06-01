@@ -26,6 +26,7 @@ Supported features of the specification:
 | AVRO Event Format             | :x: | :x: |
 | HTTP Protocol Binding         | :heavy_check_mark: | :heavy_check_mark: |
 | - [Vert.x](http/vertx)        | :heavy_check_mark: | :heavy_check_mark: |
+| - [Jakarta Restful WS](http/restful-ws) | :heavy_check_mark: | :heavy_check_mark: |
 | JSON Event Format             | :heavy_check_mark: | :heavy_check_mark: |
 | - [Jackson](formats/json-jackson) | :heavy_check_mark: | :heavy_check_mark: |
 | [Kafka Protocol Binding](kafka)        | :heavy_check_mark: | :heavy_check_mark: |
