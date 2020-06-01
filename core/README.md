@@ -37,7 +37,7 @@ The SDK implements [Event Formats](https://github.com/cloudevents/spec/blob/v1.0
 To use them, you just need to add them as dependencies to your project and the SDK,
 through the `ServiceLoader` mechanism, will load them into the classpath.
 For example, to use the [JSON event format](https://github.com/cloudevents/spec/blob/v1.0/json-format.md) with Jackson,
-add as dependency `cloudevents-json-jackson` and then:
+add `cloudevents-json-jackson` as a dependency and then:
 
 ```java
 import io.cloudevents.core.format.EventFormatProvider;
