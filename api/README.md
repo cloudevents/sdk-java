@@ -22,5 +22,5 @@ This package provides the base interfaces used by the SDK. In particular:
    to customize/implement efficiently the marshalling/unmarshalling process.
    These interfaces are optional and, if your `CloudEvent` doesn't implement it, a default implementation is provided by the SDK.
 
-The implementation of these interfaces are provided by `cloudevents-core` and a 3rd party implementer can grab this package
-to implement specialized CloudEvent in memory representations.
+`cloudevents-core` provides the implementation of these interfaces, and a 3rd party implementer can grab this package
+to implement specialized CloudEvent in-memory representations.
