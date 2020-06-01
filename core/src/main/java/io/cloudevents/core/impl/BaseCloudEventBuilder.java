@@ -26,7 +26,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder {
+public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder<SELF> {
 
     // This is a little trick for enabling fluency
     private SELF self;

@@ -18,12 +18,43 @@
 package io.cloudevents.core.builder;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.Extension;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.visitor.CloudEventVisitor;
 
 import javax.annotation.Nonnull;
+import java.net.URI;
+import java.time.ZonedDateTime;
 
 public interface CloudEventBuilder extends CloudEventVisitor<CloudEvent> {
+
+    CloudEventBuilder withId(String id);
+
+    CloudEventBuilder withSource(URI source);
+
+    CloudEventBuilder withType(String type);
+
+    CloudEventBuilder withDataSchema(URI dataschema);
+
+    CloudEventBuilder withDataContentType(String datacontenttype);
+
+    CloudEventBuilder withSubject(String subject);
+
+    CloudEventBuilder withTime(ZonedDateTime time);
+
+    CloudEventBuilder withData(byte[] data);
+
+    CloudEventBuilder withData(String contentType, byte[] data);
+
+    CloudEventBuilder withData(String contentType, URI dataSchema, byte[] data);
+
+    CloudEventBuilder withExtension(String key, String value);
+
+    CloudEventBuilder withExtension(String key, Number value);
+
+    CloudEventBuilder withExtension(String key, boolean value);
+
+    CloudEventBuilder withExtension(Extension extension);
 
     CloudEvent build();
 
@@ -44,6 +75,9 @@ public interface CloudEventBuilder extends CloudEventVisitor<CloudEvent> {
     }
 
     static CloudEventBuilder fromSpecVersion(@Nonnull SpecVersion version) {
+
+        io.cloudevents.core.v1.CloudEventBuilder v1 = v1().withId("aaaa");
+
         switch (version) {
             case V1:
                 return CloudEventBuilder.v1();
