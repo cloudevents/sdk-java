@@ -19,9 +19,9 @@ package io.cloudevents.core.message.impl;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.core.format.EventFormatProvider;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.Message;
+import io.cloudevents.core.provider.EventFormatProvider;
 
 import java.util.Map;
 import java.util.function.Function;

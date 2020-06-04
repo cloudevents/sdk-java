@@ -18,8 +18,8 @@
 
 package io.cloudevents.http.restful.ws.resteasy;
 
-import io.cloudevents.core.format.EventFormatProvider;
 import io.cloudevents.core.mock.CSVFormat;
+import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.http.restful.ws.BaseTest;
 import io.cloudevents.http.restful.ws.CloudEventsProvider;
 import io.cloudevents.http.restful.ws.TestResource;

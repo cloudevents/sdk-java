@@ -19,8 +19,8 @@ package io.cloudevents.core.message.impl;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.core.format.EventFormatProvider;
 import io.cloudevents.core.message.StructuredMessageVisitor;
+import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.lang.Nullable;
 import io.cloudevents.visitor.CloudEventVisitException;
 
