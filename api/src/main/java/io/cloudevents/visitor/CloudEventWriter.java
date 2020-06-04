@@ -15,13 +15,28 @@
  *
  */
 
-package io.cloudevents.core.message;
+package io.cloudevents.visitor;
 
 /**
- * One of the possible encodings of a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a>
+ * Interface to write the content (CloudEvents attributes, extensions and payload) from a
+ * {@link io.cloudevents.visitor.CloudEventReader} to a new representation.
+ *
+ * @param <R> return value at the end of the write process
  */
-public enum Encoding {
-    STRUCTURED,
-    BINARY,
-    UNKNOWN
+public interface CloudEventWriter<R> extends CloudEventAttributesWriter, CloudEventExtensionsWriter {
+
+    /**
+     * End the visit with a data field
+     *
+     * @return an eventual return value
+     */
+    R end(byte[] value) throws CloudEventVisitException;
+
+    /**
+     * End the visit
+     *
+     * @return an eventual return value
+     */
+    R end();
+
 }

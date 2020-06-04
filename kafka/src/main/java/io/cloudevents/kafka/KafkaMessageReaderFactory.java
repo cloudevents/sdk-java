@@ -15,28 +15,32 @@
  *
  */
 
-package io.cloudevents.http.restful.ws.impl;
+package io.cloudevents.kafka;
 
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
 import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
+import io.cloudevents.kafka.impl.KafkaBinaryMessageReaderImpl;
+import io.cloudevents.kafka.impl.KafkaHeaders;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.header.Headers;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+public final class KafkaMessageReaderFactory {
 
-public final class RestfulWSMessageFactory {
-
-    private RestfulWSMessageFactory() {
+    private KafkaMessageReaderFactory() {
     }
 
-    public static MessageReader create(MediaType mediaType, MultivaluedMap<String, String> headers, byte[] payload) throws IllegalArgumentException {
+    static <K> MessageReader create(ConsumerRecord<K, byte[]> record) throws IllegalArgumentException {
+        return create(record.headers(), record.value());
+    }
+
+    static MessageReader create(Headers headers, byte[] payload) throws IllegalArgumentException {
         return MessageUtils.parseStructuredOrBinaryMessage(
-            () -> headers.getFirst(HttpHeaders.CONTENT_TYPE),
+            () -> KafkaHeaders.getParsedKafkaHeader(headers, KafkaHeaders.CONTENT_TYPE),
             format -> new GenericStructuredMessageReader(format, payload),
-            () -> headers.getFirst(CloudEventsHeaders.SPEC_VERSION),
-            sv -> new BinaryRestfulWSMessageReaderImpl(sv, headers, payload),
+            () -> KafkaHeaders.getParsedKafkaHeader(headers, KafkaHeaders.SPEC_VERSION),
+            sv -> new KafkaBinaryMessageReaderImpl(sv, headers, payload),
             UnknownEncodingMessageReader::new
         );
     }

@@ -18,7 +18,7 @@
 package io.cloudevents.core.v03;
 
 import io.cloudevents.types.Time;
-import io.cloudevents.visitor.CloudEventAttributesVisitor;
+import io.cloudevents.visitor.CloudEventAttributesWriter;
 import io.cloudevents.visitor.CloudEventVisitException;
 
 import java.net.URI;
@@ -26,7 +26,7 @@ import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
-class V1ToV03AttributesConverter implements CloudEventAttributesVisitor {
+class V1ToV03AttributesConverter implements CloudEventAttributesWriter {
 
     private final CloudEventBuilder builder;
 

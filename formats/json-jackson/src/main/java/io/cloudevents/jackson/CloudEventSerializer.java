@@ -22,10 +22,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.impl.CloudEventUtils;
-import io.cloudevents.visitor.CloudEventAttributesVisitor;
-import io.cloudevents.visitor.CloudEventExtensionsVisitor;
+import io.cloudevents.visitor.CloudEventAttributesWriter;
+import io.cloudevents.visitor.CloudEventExtensionsWriter;
+import io.cloudevents.visitor.CloudEventReader;
 import io.cloudevents.visitor.CloudEventVisitException;
-import io.cloudevents.visitor.CloudEventVisitable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -41,7 +41,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         this.forceStringSerialization = forceStringSerialization;
     }
 
-    private static class FieldsSerializer implements CloudEventAttributesVisitor, CloudEventExtensionsVisitor {
+    private static class FieldsSerializer implements CloudEventAttributesWriter, CloudEventExtensionsWriter {
 
         private final JsonGenerator gen;
         private final SerializerProvider provider;
@@ -96,10 +96,10 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
         // Serialize attributes
         try {
-            CloudEventVisitable visitable = CloudEventUtils.toVisitable(value);
+            CloudEventReader visitable = CloudEventUtils.toVisitable(value);
             FieldsSerializer serializer = new FieldsSerializer(gen, provider);
-            visitable.visitAttributes(serializer);
-            visitable.visitExtensions(serializer);
+            visitable.readAttributes(serializer);
+            visitable.readExtensions(serializer);
         } catch (RuntimeException e) {
             throw (IOException) e.getCause();
         }

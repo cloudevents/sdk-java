@@ -18,24 +18,24 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.visitor.CloudEventVisitable;
+import io.cloudevents.visitor.CloudEventReader;
 
 public final class CloudEventUtils {
 
     private CloudEventUtils() {}
 
     /**
-     * Convert a {@link CloudEvent} to a {@link CloudEventVisitable}. This method provides a default implementation
+     * Convert a {@link CloudEvent} to a {@link CloudEventReader}. This method provides a default implementation
      * for CloudEvent that doesn't implement CloudEventVisitable
      *
      * @param event the event to convert
      * @return the visitable implementation
      */
-    public static CloudEventVisitable toVisitable(CloudEvent event) {
-        if (event instanceof CloudEventVisitable) {
-            return (CloudEventVisitable) event;
+    public static CloudEventReader toVisitable(CloudEvent event) {
+        if (event instanceof CloudEventReader) {
+            return (CloudEventReader) event;
         } else {
-            return new CloudEventVisitableAdapter(event);
+            return new CloudEventReaderAdapter(event);
         }
     }
 

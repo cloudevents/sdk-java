@@ -17,11 +17,14 @@
 
 package io.cloudevents.core.message;
 
-/**
- * One of the possible encodings of a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a>
- */
-public enum Encoding {
-    STRUCTURED,
-    BINARY,
-    UNKNOWN
+import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.visitor.CloudEventVisitException;
+
+//TODO javadoc
+@FunctionalInterface
+public interface StructuredMessageWriter<T> {
+
+    // TODO one day we'll convert this to some byte stream
+    T setEvent(EventFormat format, byte[] value) throws CloudEventVisitException;
+
 }

@@ -17,22 +17,22 @@
 
 package io.cloudevents.kafka;
 
-import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.MessageReader;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
 
 /**
- * Deserializer for {@link Message}
+ * Deserializer for {@link MessageReader}
  */
-public class CloudEventMessageDeserializer implements Deserializer<Message> {
+public class CloudEventMessageDeserializer implements Deserializer<MessageReader> {
 
     @Override
-    public Message deserialize(String topic, byte[] data) {
+    public MessageReader deserialize(String topic, byte[] data) {
         throw new UnsupportedOperationException("CloudEventDeserializer supports only the signature deserialize(String, Headers, byte[])");
     }
 
     @Override
-    public Message deserialize(String topic, Headers headers, byte[] data) {
-        return KafkaMessageFactory.create(headers, data);
+    public MessageReader deserialize(String topic, Headers headers, byte[] data) {
+        return KafkaMessageReaderFactory.create(headers, data);
     }
 }

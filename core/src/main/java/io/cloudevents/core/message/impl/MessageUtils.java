@@ -20,7 +20,7 @@ package io.cloudevents.core.message.impl;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.Encoding;
-import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.provider.EventFormatProvider;
 
 import java.util.Map;
@@ -41,12 +41,12 @@ public class MessageUtils {
      * @param unknownMessageFactory
      * @return
      */
-    public static Message parseStructuredOrBinaryMessage(
+    public static MessageReader parseStructuredOrBinaryMessage(
         Supplier<String> contentTypeHeaderReader,
-        Function<EventFormat, Message> structuredMessageFactory,
+        Function<EventFormat, MessageReader> structuredMessageFactory,
         Supplier<String> specVersionHeaderReader,
-        Function<SpecVersion, Message> binaryMessageFactory,
-        Supplier<Message> unknownMessageFactory
+        Function<SpecVersion, MessageReader> binaryMessageFactory,
+        Supplier<MessageReader> unknownMessageFactory
     ) {
         // Let's try structured mode
         String ct = contentTypeHeaderReader.get();

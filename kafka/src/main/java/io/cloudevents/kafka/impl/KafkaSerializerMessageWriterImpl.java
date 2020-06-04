@@ -15,24 +15,26 @@
  *
  */
 
-package io.cloudevents.kafka;
+package io.cloudevents.kafka.impl;
 
-import io.cloudevents.CloudEvent;
+import io.cloudevents.SpecVersion;
 import org.apache.kafka.common.header.Headers;
-import org.apache.kafka.common.serialization.Deserializer;
 
-/**
- * Deserializer for {@link CloudEvent}
- */
-public class CloudEventDeserializer implements Deserializer<CloudEvent> {
+public final class KafkaSerializerMessageWriterImpl extends BaseKafkaMessageWriterImpl<KafkaSerializerMessageWriterImpl, byte[]> {
 
-    @Override
-    public CloudEvent deserialize(String topic, byte[] data) {
-        throw new UnsupportedOperationException("CloudEventDeserializer supports only the signature deserialize(String, Headers, byte[])");
+    public KafkaSerializerMessageWriterImpl(Headers headers) {
+        super(headers);
     }
 
     @Override
-    public CloudEvent deserialize(String topic, Headers headers, byte[] data) {
-        return KafkaMessageReaderFactory.create(headers, data).toEvent();
+    public KafkaSerializerMessageWriterImpl create(SpecVersion version) {
+        this.setAttribute("specversion", version.toString());
+        return this;
     }
+
+    @Override
+    public byte[] end() {
+        return this.value;
+    }
+
 }

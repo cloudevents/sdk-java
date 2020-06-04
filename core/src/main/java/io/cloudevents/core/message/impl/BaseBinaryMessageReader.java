@@ -15,24 +15,22 @@
  *
  */
 
-package io.cloudevents.kafka;
+package io.cloudevents.core.message.impl;
 
-import io.cloudevents.CloudEvent;
-import org.apache.kafka.common.header.Headers;
-import org.apache.kafka.common.serialization.Deserializer;
+import io.cloudevents.core.message.Encoding;
+import io.cloudevents.core.message.MessageReader;
+import io.cloudevents.core.message.StructuredMessageWriter;
+import io.cloudevents.visitor.CloudEventVisitException;
 
-/**
- * Deserializer for {@link CloudEvent}
- */
-public class CloudEventDeserializer implements Deserializer<CloudEvent> {
+public abstract class BaseBinaryMessageReader implements MessageReader {
 
     @Override
-    public CloudEvent deserialize(String topic, byte[] data) {
-        throw new UnsupportedOperationException("CloudEventDeserializer supports only the signature deserialize(String, Headers, byte[])");
+    public Encoding getEncoding() {
+        return Encoding.BINARY;
     }
 
     @Override
-    public CloudEvent deserialize(String topic, Headers headers, byte[] data) {
-        return KafkaMessageReaderFactory.create(headers, data).toEvent();
+    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventVisitException, IllegalStateException {
+        throw MessageUtils.generateWrongEncoding(Encoding.STRUCTURED, Encoding.BINARY);
     }
 }

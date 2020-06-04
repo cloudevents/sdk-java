@@ -15,13 +15,18 @@
  *
  */
 
-package io.cloudevents.core.message;
+package io.cloudevents.visitor;
 
-/**
- * One of the possible encodings of a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a>
- */
-public enum Encoding {
-    STRUCTURED,
-    BINARY,
-    UNKNOWN
+import io.cloudevents.SpecVersion;
+
+@FunctionalInterface
+public interface CloudEventWriterFactory<V extends CloudEventWriter<R>, R> {
+
+    /**
+     * Create a {@link CloudEventWriter} starting from the provided {@link SpecVersion}
+     *
+     * @param version
+     * @return
+     */
+    V create(SpecVersion version);
 }
