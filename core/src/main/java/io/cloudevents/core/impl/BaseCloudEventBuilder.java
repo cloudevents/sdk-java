@@ -29,7 +29,7 @@ import java.util.Map;
 public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder {
 
     // This is a little trick for enabling fluency
-    private SELF self;
+    private final SELF self;
 
     protected byte[] data;
     protected Map<String, Object> extensions;
@@ -54,10 +54,6 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
 
     protected abstract void setAttributes(CloudEvent event);
 
-    protected abstract SELF withDataContentType(String contentType);
-
-    protected abstract SELF withDataSchema(URI dataSchema);
-
     //TODO builder should accept data as Object and use data codecs (that we need to implement)
     // to encode data
 
@@ -66,14 +62,14 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return this.self;
     }
 
-    public SELF withData(String contentType, byte[] data) {
-        withDataContentType(contentType);
+    public SELF withData(String dataContentType, byte[] data) {
+        withDataContentType(dataContentType);
         withData(data);
         return this.self;
     }
 
-    public SELF withData(String contentType, URI dataSchema, byte[] data) {
-        withDataContentType(contentType);
+    public SELF withData(String dataContentType, URI dataSchema, byte[] data) {
+        withDataContentType(dataContentType);
         withDataSchema(dataSchema);
         withData(data);
         return this.self;
@@ -127,6 +123,14 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
 
     @Override
     public CloudEvent end() {
-        return build();
+        try {
+            return build();
+        } catch (Exception e) {
+            throw CloudEventVisitException.newOther(e);
+        }
+    }
+
+    protected static IllegalStateException createMissingAttributeException(String attributeName) {
+        return new IllegalStateException("Attribute '" + attributeName + "' cannot be null");
     }
 }

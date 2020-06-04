@@ -23,8 +23,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.net.URI;
+
 import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 
 /**
@@ -69,6 +72,36 @@ public class CloudEventBuilderTest {
         assertThat(expected.getSpecVersion())
             .isEqualTo(SpecVersion.V03);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void testMissingId() {
+        assertThatCode(() -> CloudEventBuilder
+            .v1()
+            .withSource(URI.create("http://localhost"))
+            .withType("aaa")
+            .build()
+        ).hasMessageContaining("Attribute 'id' cannot be null");
+    }
+
+    @Test
+    void testMissingSource() {
+        assertThatCode(() -> CloudEventBuilder
+            .v1()
+            .withId("000")
+            .withType("aaa")
+            .build()
+        ).hasMessageContaining("Attribute 'source' cannot be null");
+    }
+
+    @Test
+    void testMissingType() {
+        assertThatCode(() -> CloudEventBuilder
+            .v1()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .build()
+        ).hasMessageContaining("Attribute 'type' cannot be null");
     }
 
 }

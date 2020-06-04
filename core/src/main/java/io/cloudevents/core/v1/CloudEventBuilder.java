@@ -76,14 +76,14 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         return this;
     }
 
-    public CloudEventBuilder withDataSchema(URI dataschema) {
-        this.dataschema = dataschema;
+    public CloudEventBuilder withDataSchema(URI dataSchema) {
+        this.dataschema = dataSchema;
         return this;
     }
 
     public CloudEventBuilder withDataContentType(
-        String datacontenttype) {
-        this.datacontenttype = datacontenttype;
+        String dataContentType) {
+        this.datacontenttype = dataContentType;
         return this;
     }
 
@@ -100,6 +100,16 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
 
     @Override
     public CloudEvent build() {
+        if (id == null) {
+            throw createMissingAttributeException("id");
+        }
+        if (source == null) {
+            throw createMissingAttributeException("source");
+        }
+        if (type == null) {
+            throw createMissingAttributeException("type");
+        }
+
         return new CloudEventV1(id, source, type, datacontenttype, dataschema, subject, time, this.data, this.extensions);
     }
 
