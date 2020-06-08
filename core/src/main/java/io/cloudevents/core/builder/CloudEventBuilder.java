@@ -158,6 +158,13 @@ public interface CloudEventBuilder extends CloudEventVisitor<CloudEvent> {
     CloudEvent build() throws IllegalStateException;
 
     /**
+     * Copy this builder, creating a new instance with same values.
+     *
+     * @return A new builder with same values of this instance
+     */
+    CloudEventBuilder newBuilder();
+
+    /**
      * @return a new CloudEvent v1 builder
      */
     static io.cloudevents.core.v1.CloudEventBuilder v1() {

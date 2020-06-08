@@ -116,6 +116,21 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         return new CloudEventV03(id, source, type, time, schemaurl, datacontenttype, subject, this.data, this.extensions);
     }
 
+    @Override
+    public CloudEventBuilder newBuilder() {
+        CloudEventBuilder newBuilder = new CloudEventBuilder();
+        newBuilder.id = this.id;
+        newBuilder.source = this.source;
+        newBuilder.type = this.type;
+        newBuilder.time = this.time;
+        newBuilder.schemaurl = this.schemaurl;
+        newBuilder.datacontenttype = this.datacontenttype;
+        newBuilder.subject = this.subject;
+        newBuilder.data = this.data;
+        newBuilder.extensions.putAll(this.extensions);
+        return newBuilder;
+    }
+
     // Message impl
 
     @Override
