@@ -19,6 +19,7 @@ package io.cloudevents.core.provider;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
+import io.cloudevents.core.extensions.DatarefExtension;
 import io.cloudevents.core.extensions.DistributedTracingExtension;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ import java.util.function.Supplier;
 public final class ExtensionProvider {
 
     private static class SingletonContainer {
-        private final static ExtensionProvider INSTANCE = new ExtensionProvider();
+        private static final ExtensionProvider INSTANCE = new ExtensionProvider();
     }
 
     public static ExtensionProvider getInstance() {
@@ -40,6 +41,7 @@ public final class ExtensionProvider {
     private ExtensionProvider() {
         this.extensionFactories = new HashMap<>();
         registerExtension(DistributedTracingExtension.class, DistributedTracingExtension::new);
+        registerExtension(DatarefExtension.class, DatarefExtension::new);
     }
 
     public <T extends Extension> void registerExtension(Class<T> extensionClass, Supplier<Extension> factory) {
