@@ -20,7 +20,7 @@ package io.cloudevents.http.vertx.impl;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.http.vertx.VertxHttpServerResponseMessageWriter;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventRWException;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
@@ -44,19 +44,19 @@ public class VertxHttpServerResponseMessageWriterImpl implements VertxHttpServer
     // Binary visitor
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventVisitException {
+    public void setAttribute(String name, String value) throws CloudEventRWException {
         this.response.putHeader(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventVisitException {
+    public void setExtension(String name, String value) throws CloudEventRWException {
         this.response.putHeader("ce-" + name, value);
     }
 
     @Override
-    public HttpServerResponse end(byte[] value) throws CloudEventVisitException {
+    public HttpServerResponse end(byte[] value) throws CloudEventRWException {
         if (this.response.ended()) {
-            throw CloudEventVisitException.newOther(new IllegalStateException("Cannot set the body because the response is already ended"));
+            throw CloudEventRWException.newOther(new IllegalStateException("Cannot set the body because the response is already ended"));
         }
         this.response.end(Buffer.buffer(value));
         return this.response;
@@ -73,7 +73,7 @@ public class VertxHttpServerResponseMessageWriterImpl implements VertxHttpServer
     // Structured visitor
 
     @Override
-    public HttpServerResponse setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
+    public HttpServerResponse setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
         this.response.putHeader(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
         this.response.end(Buffer.buffer(value));
         return this.response;

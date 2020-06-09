@@ -22,7 +22,7 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.StructuredMessageWriter;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.lang.Nullable;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventRWException;
 
 public class GenericStructuredMessageReader extends BaseStructuredMessageReader {
 
@@ -35,7 +35,7 @@ public class GenericStructuredMessageReader extends BaseStructuredMessageReader 
     }
 
     @Override
-    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventVisitException, IllegalStateException {
+    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException {
         return visitor.setEvent(format, payload);
     }
 

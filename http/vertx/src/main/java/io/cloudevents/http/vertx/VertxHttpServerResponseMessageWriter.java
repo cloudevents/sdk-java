@@ -20,7 +20,7 @@ package io.cloudevents.http.vertx;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.http.vertx.impl.VertxHttpServerResponseMessageWriterImpl;
-import io.cloudevents.visitor.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriter;
 import io.vertx.core.http.HttpServerResponse;
 
 /**

@@ -20,7 +20,7 @@ package io.cloudevents.core.message;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventRWException;
 
 /**
  * Represents a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a> in structured mode.
@@ -30,12 +30,12 @@ public interface StructuredMessageReader {
 
     /**
      * @param visitor
-     * @throws CloudEventVisitException If something went wrong when
-     * @throws IllegalStateException    If the message is not a valid structured message
+     * @throws CloudEventRWException If something went wrong when
+     * @throws IllegalStateException If the message is not a valid structured message
      */
-    <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventVisitException, IllegalStateException;
+    <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException;
 
-    default CloudEvent toEvent() throws CloudEventVisitException, IllegalStateException {
+    default CloudEvent toEvent() throws CloudEventRWException, IllegalStateException {
         return this.read(EventFormat::deserialize);
     }
 

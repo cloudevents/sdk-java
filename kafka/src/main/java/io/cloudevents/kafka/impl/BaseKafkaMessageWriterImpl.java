@@ -19,8 +19,8 @@ package io.cloudevents.kafka.impl;
 
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
-import io.cloudevents.visitor.CloudEventVisitException;
-import io.cloudevents.visitor.CloudEventWriter;
+import io.cloudevents.rw.CloudEventRWException;
+import io.cloudevents.rw.CloudEventWriter;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeader;
 
@@ -34,23 +34,23 @@ abstract class BaseKafkaMessageWriterImpl<S extends MessageWriter<S, R> & CloudE
     }
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventVisitException {
+    public void setAttribute(String name, String value) throws CloudEventRWException {
         headers.add(new RecordHeader(KafkaHeaders.ATTRIBUTES_TO_HEADERS.get(name), value.getBytes()));
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventVisitException {
+    public void setExtension(String name, String value) throws CloudEventRWException {
         headers.add(new RecordHeader(KafkaHeaders.CE_PREFIX + name, value.getBytes()));
     }
 
     @Override
-    public R end(byte[] value) throws CloudEventVisitException {
+    public R end(byte[] value) throws CloudEventRWException {
         this.value = value;
         return this.end();
     }
 
     @Override
-    public R setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
+    public R setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
         this.headers.add(new RecordHeader(KafkaHeaders.CONTENT_TYPE, format.serializedContentType().getBytes()));
         return this.end(value);
     }

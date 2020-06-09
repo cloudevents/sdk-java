@@ -21,7 +21,7 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.StructuredMessageWriter;
 import io.cloudevents.core.message.impl.BaseStructuredMessageReader;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventRWException;
 
 public class MockStructuredMessageReader extends BaseStructuredMessageReader implements MessageReader, StructuredMessageWriter<MockStructuredMessageReader> {
 
@@ -29,7 +29,7 @@ public class MockStructuredMessageReader extends BaseStructuredMessageReader imp
     private byte[] payload;
 
     @Override
-    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventVisitException, IllegalStateException {
+    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException {
         if (this.format == null) {
             throw new IllegalStateException("MockStructuredMessage is empty");
         }
@@ -38,7 +38,7 @@ public class MockStructuredMessageReader extends BaseStructuredMessageReader imp
     }
 
     @Override
-    public MockStructuredMessageReader setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
+    public MockStructuredMessageReader setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
         this.format = format;
         this.payload = value;
 

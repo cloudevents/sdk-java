@@ -20,7 +20,7 @@ package io.cloudevents.http.vertx.impl;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.http.vertx.VertxHttpClientRequestMessageWriter;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventRWException;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
@@ -44,17 +44,17 @@ public class VertxHttpClientRequestMessageWriterImpl implements VertxHttpClientR
     // Binary visitor
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventVisitException {
+    public void setAttribute(String name, String value) throws CloudEventRWException {
         this.request.putHeader(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventVisitException {
+    public void setExtension(String name, String value) throws CloudEventRWException {
         this.request.putHeader("ce-" + name, value);
     }
 
     @Override
-    public HttpClientRequest end(byte[] value) throws CloudEventVisitException {
+    public HttpClientRequest end(byte[] value) throws CloudEventRWException {
         this.request.end(Buffer.buffer(value));
         return this.request;
     }
@@ -68,7 +68,7 @@ public class VertxHttpClientRequestMessageWriterImpl implements VertxHttpClientR
     // Structured visitor
 
     @Override
-    public HttpClientRequest setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
+    public HttpClientRequest setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
         this.request.putHeader(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
         this.request.end(Buffer.buffer(value));
         return this.request;

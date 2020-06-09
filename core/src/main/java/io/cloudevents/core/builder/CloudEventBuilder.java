@@ -20,7 +20,7 @@ package io.cloudevents.core.builder;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.visitor.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriter;
 
 import javax.annotation.Nonnull;
 import java.net.URI;

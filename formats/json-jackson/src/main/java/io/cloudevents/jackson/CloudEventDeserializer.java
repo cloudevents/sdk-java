@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.visitor.*;
+import io.cloudevents.rw.*;
 
 import java.io.IOException;
 
@@ -49,7 +49,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
+        public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
             try {
                 SpecVersion specVersion = SpecVersion.parse(getStringNode(this.node, this.p, "specversion"));
                 CloudEventWriter<V> visitor = visitorFactory.create(specVersion);
@@ -150,12 +150,12 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventVisitException {
+        public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException {
             // no-op no need for that
         }
 
         @Override
-        public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventVisitException {
+        public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException {
             // no-op no need for that
         }
 

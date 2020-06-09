@@ -20,7 +20,7 @@ package io.cloudevents.core.mock;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.BaseBinaryMessageReader;
-import io.cloudevents.visitor.*;
+import io.cloudevents.rw.*;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -47,7 +47,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
         if (version == null) {
             throw new IllegalStateException("MockBinaryMessage is empty");
         }
@@ -64,7 +64,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventVisitException, IllegalStateException {
+    public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException, IllegalStateException {
         for (Map.Entry<String, Object> e : this.attributes.entrySet()) {
             if (e.getValue() instanceof String) {
                 visitor.setAttribute(e.getKey(), (String) e.getValue());
@@ -80,7 +80,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventVisitException, IllegalStateException {
+    public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException, IllegalStateException {
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {
                 visitor.setExtension(entry.getKey(), (String) entry.getValue());
@@ -96,7 +96,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public MockBinaryMessageWriter end(byte[] value) throws CloudEventVisitException {
+    public MockBinaryMessageWriter end(byte[] value) throws CloudEventRWException {
         this.data = value;
         return this;
     }
@@ -107,32 +107,32 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventVisitException {
+    public void setAttribute(String name, String value) throws CloudEventRWException {
         this.attributes.put(name, value);
     }
 
     @Override
-    public void setAttribute(String name, URI value) throws CloudEventVisitException {
+    public void setAttribute(String name, URI value) throws CloudEventRWException {
         this.attributes.put(name, value);
     }
 
     @Override
-    public void setAttribute(String name, ZonedDateTime value) throws CloudEventVisitException {
+    public void setAttribute(String name, ZonedDateTime value) throws CloudEventRWException {
         this.attributes.put(name, value);
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventVisitException {
+    public void setExtension(String name, String value) throws CloudEventRWException {
         this.extensions.put(name, value);
     }
 
     @Override
-    public void setExtension(String name, Number value) throws CloudEventVisitException {
+    public void setExtension(String name, Number value) throws CloudEventRWException {
         this.extensions.put(name, value);
     }
 
     @Override
-    public void setExtension(String name, Boolean value) throws CloudEventVisitException {
+    public void setExtension(String name, Boolean value) throws CloudEventRWException {
         this.extensions.put(name, value);
     }
 

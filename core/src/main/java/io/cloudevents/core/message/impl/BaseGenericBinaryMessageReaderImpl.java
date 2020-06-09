@@ -18,7 +18,7 @@
 package io.cloudevents.core.message.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.visitor.*;
+import io.cloudevents.rw.*;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -43,7 +43,7 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
     }
 
     @Override
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
         CloudEventWriter<V> visitor = visitorFactory.create(this.version);
 
         // Grab from headers the attributes and extensions

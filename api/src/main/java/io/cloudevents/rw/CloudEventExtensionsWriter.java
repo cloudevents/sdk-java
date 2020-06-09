@@ -15,13 +15,13 @@
  *
  */
 
-package io.cloudevents.visitor;
+package io.cloudevents.rw;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
 
 /**
- * Interface to write the extensions from a {@link io.cloudevents.visitor.CloudEventReader} to a new representation.
+ * Interface to write the extensions from a {@link io.cloudevents.rw.CloudEventReader} to a new representation.
  */
 public interface CloudEventExtensionsWriter {
 
@@ -30,18 +30,18 @@ public interface CloudEventExtensionsWriter {
      *
      * @param name
      * @param value
-     * @throws CloudEventVisitException
+     * @throws CloudEventRWException
      */
-    void setExtension(String name, String value) throws CloudEventVisitException;
+    void setExtension(String name, String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
      *
      * @param name
      * @param value
-     * @throws CloudEventVisitException
+     * @throws CloudEventRWException
      */
-    default void setExtension(String name, Number value) throws CloudEventVisitException {
+    default void setExtension(String name, Number value) throws CloudEventRWException {
         setExtension(name, value.toString());
     }
 
@@ -50,9 +50,9 @@ public interface CloudEventExtensionsWriter {
      *
      * @param name
      * @param value
-     * @throws CloudEventVisitException
+     * @throws CloudEventRWException
      */
-    default void setExtension(String name, Boolean value) throws CloudEventVisitException {
+    default void setExtension(String name, Boolean value) throws CloudEventRWException {
         setExtension(name, value.toString());
     }
 

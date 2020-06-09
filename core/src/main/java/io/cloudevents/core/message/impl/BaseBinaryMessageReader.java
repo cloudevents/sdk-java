@@ -20,7 +20,7 @@ package io.cloudevents.core.message.impl;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.StructuredMessageWriter;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventRWException;
 
 public abstract class BaseBinaryMessageReader implements MessageReader {
 
@@ -30,7 +30,7 @@ public abstract class BaseBinaryMessageReader implements MessageReader {
     }
 
     @Override
-    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventVisitException, IllegalStateException {
+    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException {
         throw MessageUtils.generateWrongEncoding(Encoding.STRUCTURED, Encoding.BINARY);
     }
 }

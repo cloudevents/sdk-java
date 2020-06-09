@@ -19,10 +19,10 @@ package io.cloudevents.core.message.impl;
 
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
-import io.cloudevents.visitor.CloudEventAttributesWriter;
-import io.cloudevents.visitor.CloudEventExtensionsWriter;
-import io.cloudevents.visitor.CloudEventWriter;
-import io.cloudevents.visitor.CloudEventWriterFactory;
+import io.cloudevents.rw.CloudEventAttributesWriter;
+import io.cloudevents.rw.CloudEventExtensionsWriter;
+import io.cloudevents.rw.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriterFactory;
 
 public abstract class BaseStructuredMessageReader implements MessageReader {
 

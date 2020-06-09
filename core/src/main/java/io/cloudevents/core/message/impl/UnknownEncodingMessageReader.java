@@ -20,7 +20,7 @@ package io.cloudevents.core.message.impl;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.StructuredMessageWriter;
-import io.cloudevents.visitor.*;
+import io.cloudevents.rw.*;
 
 public class UnknownEncodingMessageReader implements MessageReader {
     @Override
@@ -29,22 +29,22 @@ public class UnknownEncodingMessageReader implements MessageReader {
     }
 
     @Override
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
         throw new IllegalStateException("Unknown encoding");
     }
 
     @Override
-    public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventVisitException {
+    public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException {
         throw new IllegalStateException("Unknown encoding");
     }
 
     @Override
-    public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventVisitException {
+    public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException {
         throw new IllegalStateException("Unknown encoding");
     }
 
     @Override
-    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventVisitException, IllegalStateException {
+    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException {
         throw new IllegalStateException("Unknown encoding");
     }
 }

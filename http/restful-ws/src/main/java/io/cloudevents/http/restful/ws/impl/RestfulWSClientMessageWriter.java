@@ -20,8 +20,8 @@ package io.cloudevents.http.restful.ws.impl;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
-import io.cloudevents.visitor.CloudEventVisitException;
-import io.cloudevents.visitor.CloudEventWriter;
+import io.cloudevents.rw.CloudEventRWException;
+import io.cloudevents.rw.CloudEventWriter;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.core.HttpHeaders;
@@ -46,17 +46,17 @@ public final class RestfulWSClientMessageWriter implements CloudEventWriter<Void
     }
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventVisitException {
+    public void setAttribute(String name, String value) throws CloudEventRWException {
         this.context.getHeaders().add(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventVisitException {
+    public void setExtension(String name, String value) throws CloudEventRWException {
         this.context.getHeaders().add(CloudEventsHeaders.CE_PREFIX + name, value);
     }
 
     @Override
-    public Void end(byte[] value) throws CloudEventVisitException {
+    public Void end(byte[] value) throws CloudEventRWException {
         this.context.setEntity(value);
         return null;
     }
@@ -67,7 +67,7 @@ public final class RestfulWSClientMessageWriter implements CloudEventWriter<Void
     }
 
     @Override
-    public Void setEvent(EventFormat format, byte[] value) throws CloudEventVisitException {
+    public Void setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
         this.context.setEntity(value, null, MediaType.valueOf(format.serializedContentType()));
         return null;
     }

@@ -21,8 +21,8 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
-import io.cloudevents.visitor.CloudEventWriter;
-import io.cloudevents.visitor.CloudEventWriterFactory;
+import io.cloudevents.rw.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriterFactory;
 
 /**
  * Interface to write the {@link MessageReader} content (CloudEvents attributes, extensions and payload) to a new representation.

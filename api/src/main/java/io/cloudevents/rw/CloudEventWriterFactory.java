@@ -15,28 +15,18 @@
  *
  */
 
-package io.cloudevents.visitor;
+package io.cloudevents.rw;
 
-/**
- * Interface to write the content (CloudEvents attributes, extensions and payload) from a
- * {@link io.cloudevents.visitor.CloudEventReader} to a new representation.
- *
- * @param <R> return value at the end of the write process
- */
-public interface CloudEventWriter<R> extends CloudEventAttributesWriter, CloudEventExtensionsWriter {
+import io.cloudevents.SpecVersion;
+
+@FunctionalInterface
+public interface CloudEventWriterFactory<V extends CloudEventWriter<R>, R> {
 
     /**
-     * End the visit with a data field
+     * Create a {@link CloudEventWriter} starting from the provided {@link SpecVersion}
      *
-     * @return an eventual return value
+     * @param version
+     * @return
      */
-    R end(byte[] value) throws CloudEventVisitException;
-
-    /**
-     * End the visit
-     *
-     * @return an eventual return value
-     */
-    R end();
-
+    V create(SpecVersion version);
 }

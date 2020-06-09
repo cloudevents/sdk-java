@@ -18,7 +18,7 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.visitor.*;
+import io.cloudevents.rw.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +49,7 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
         return this.extensions.keySet();
     }
 
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
         CloudEventWriter<V> visitor = visitorFactory.create(this.getSpecVersion());
         this.readAttributes(visitor);
         this.readExtensions(visitor);
@@ -61,7 +61,7 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
         return visitor.end();
     }
 
-    public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventVisitException {
+    public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException {
         // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {

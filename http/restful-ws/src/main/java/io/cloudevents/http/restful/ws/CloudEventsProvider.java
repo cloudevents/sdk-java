@@ -25,7 +25,7 @@ import io.cloudevents.http.restful.ws.impl.RestfulWSClientMessageWriter;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageFactory;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageWriter;
 import io.cloudevents.http.restful.ws.impl.Utils;
-import io.cloudevents.visitor.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriter;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;

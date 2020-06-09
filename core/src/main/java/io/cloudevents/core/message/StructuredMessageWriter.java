@@ -18,13 +18,13 @@
 package io.cloudevents.core.message;
 
 import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventRWException;
 
 //TODO javadoc
 @FunctionalInterface
 public interface StructuredMessageWriter<T> {
 
     // TODO one day we'll convert this to some byte stream
-    T setEvent(EventFormat format, byte[] value) throws CloudEventVisitException;
+    T setEvent(EventFormat format, byte[] value) throws CloudEventRWException;
 
 }

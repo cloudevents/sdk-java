@@ -19,7 +19,7 @@ package io.cloudevents.kafka;
 
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.kafka.impl.KafkaProducerMessageWriterImpl;
-import io.cloudevents.visitor.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriter;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 public interface KafkaProducerMessageWriter<K> extends MessageWriter<KafkaProducerMessageWriter<K>, ProducerRecord<K, byte[]>>, CloudEventWriter<ProducerRecord<K, byte[]>> {

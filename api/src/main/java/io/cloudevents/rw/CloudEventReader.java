@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.visitor;
+package io.cloudevents.rw;
 
 /**
  * Represents an object that can be read as CloudEvent
@@ -26,24 +26,24 @@ public interface CloudEventReader {
      * Visit self using the provided visitor factory
      *
      * @param visitorFactory a factory that generates a visitor starting from the SpecVersion of the event
-     * @throws CloudEventVisitException if something went wrong during the visit.
+     * @throws CloudEventRWException if something went wrong during the visit.
      */
-    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> visitorFactory) throws CloudEventVisitException;
+    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> visitorFactory) throws CloudEventRWException;
 
     /**
      * Visit self attributes using the provided visitor
      *
      * @param visitor Attributes visitor
-     * @throws CloudEventVisitException if something went wrong during the visit.
+     * @throws CloudEventRWException if something went wrong during the visit.
      */
-    void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventVisitException;
+    void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException;
 
     /**
      * Visit self extensions using the provided visitor
      *
      * @param visitor Extensions visitor
-     * @throws CloudEventVisitException if something went wrong during the visit.
+     * @throws CloudEventRWException if something went wrong during the visit.
      */
-    void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventVisitException;
+    void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException;
 
 }

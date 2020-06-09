@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.visitor;
+package io.cloudevents.rw;
 
 import io.cloudevents.types.Time;
 
@@ -23,7 +23,7 @@ import java.net.URI;
 import java.time.ZonedDateTime;
 
 /**
- * Interface to write the attributes from a {@link io.cloudevents.visitor.CloudEventReader} to a new representation.
+ * Interface to write the attributes from a {@link io.cloudevents.rw.CloudEventReader} to a new representation.
  */
 public interface CloudEventAttributesWriter {
 
@@ -33,18 +33,18 @@ public interface CloudEventAttributesWriter {
      *
      * @param name
      * @param value
-     * @throws CloudEventVisitException
+     * @throws CloudEventRWException
      */
-    void setAttribute(String name, String value) throws CloudEventVisitException;
+    void setAttribute(String name, String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
      *
      * @param name
      * @param value
-     * @throws CloudEventVisitException
+     * @throws CloudEventRWException
      */
-    default void setAttribute(String name, URI value) throws CloudEventVisitException {
+    default void setAttribute(String name, URI value) throws CloudEventRWException {
         setAttribute(name, value.toString());
     }
 
@@ -53,9 +53,9 @@ public interface CloudEventAttributesWriter {
      *
      * @param name
      * @param value
-     * @throws CloudEventVisitException
+     * @throws CloudEventRWException
      */
-    default void setAttribute(String name, ZonedDateTime value) throws CloudEventVisitException {
+    default void setAttribute(String name, ZonedDateTime value) throws CloudEventRWException {
         setAttribute(name, value.format(Time.RFC3339_DATE_FORMAT));
     }
 
