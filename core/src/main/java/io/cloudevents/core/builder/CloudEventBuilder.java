@@ -20,7 +20,7 @@ package io.cloudevents.core.builder;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.visitor.CloudEventVisitor;
+import io.cloudevents.rw.CloudEventWriter;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
@@ -29,7 +29,7 @@ import java.time.ZonedDateTime;
 /**
  * Builder interface to build a {@link CloudEvent}.
  */
-public interface CloudEventBuilder extends CloudEventVisitor<CloudEvent> {
+public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
 
     /**
      * Set the {@code id} of the event

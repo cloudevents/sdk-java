@@ -15,9 +15,9 @@ For Maven based projects, use the following to configure the CloudEvents Vertx H
 Below is a sample on how to read and write CloudEvents:
 
 ```java
-import io.cloudevents.http.vertx.VertxHttpServerResponseMessageVisitor;
-import io.cloudevents.http.vertx.VertxMessageFactory;
-import io.cloudevents.core.message.StructuredMessage;
+import io.cloudevents.http.vertx.VertxHttpServerResponseMessageWriter;
+import io.cloudevents.http.vertx.VertxMessageReaderFactory;
+import io.cloudevents.core.message.StructuredMessageReader;
 import io.cloudevents.CloudEvent;
 import io.vertx.core.AbstractVerticle;
 
@@ -26,14 +26,14 @@ public class CloudEventServerVerticle extends AbstractVerticle {
   public void start() {
     vertx.createHttpServer()
       .requestHandler(req -> {
-        VertxMessageFactory.fromHttpServerRequest(req)
+        VertxMessageReaderFactory.fromHttpServerRequest(req)
           .onComplete(result -> {
             // If decoding succeeded, we should write the event back
             if (result.succeeded()) {
               CloudEvent event = result.result().toEvent();
               // Echo the message, as structured mode
-              StructuredMessage.fromEvent(CSVFormat.INSTANCE, event)
-                .visit(VertxHttpServerResponseMessageVisitor.create(req.response()));
+              StructuredMessageReader.from(event, CSVFormat.INSTANCE )
+                .read(VertxHttpServerResponseMessageWriter.create(req.response()));
             }
             req.response().setStatusCode(500).end();
           });
@@ -56,10 +56,9 @@ Below is a sample on how to use the client to send and receive a CloudEvent:
 
 ```java
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.http.vertx.VertxHttpClientRequestMessageVisitor;
-import io.cloudevents.http.vertx.VertxMessageFactory;
+import io.cloudevents.core.message.MessageReader;import io.cloudevents.http.vertx.VertxHttpClientRequestMessageWriter;
+import io.cloudevents.http.vertx.VertxMessageReaderFactory;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.message.Message;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.AbstractVerticle;
@@ -72,7 +71,7 @@ public class CloudEventClientVerticle extends AbstractVerticle {
 
     HttpClientRequest request = client.postAbs("http://localhost:8080")
         .handler(httpClientResponse -> {
-          VertxMessageFactory
+          VertxMessageReaderFactory
             .fromHttpClientResponse(httpClientResponse)
             .onComplete(result -> {
               if (result.succeeded()) {
@@ -88,8 +87,8 @@ public class CloudEventClientVerticle extends AbstractVerticle {
       .build();
 
     // Write request as binary
-    Message
-        .writeBinaryEvent(event, VertxHttpClientRequestMessageVisitor.create(request));
+    MessageReader
+        .writeBinaryEvent(VertxHttpClientRequestMessageWriter.create(request),event );
   }
 }
 ```

@@ -17,16 +17,16 @@
 
 package io.cloudevents.core.v03;
 
+import io.cloudevents.rw.CloudEventAttributesWriter;
+import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
-import io.cloudevents.visitor.CloudEventAttributesVisitor;
-import io.cloudevents.visitor.CloudEventVisitException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
-class V1ToV03AttributesConverter implements CloudEventAttributesVisitor {
+class V1ToV03AttributesConverter implements CloudEventAttributesWriter {
 
     private final CloudEventBuilder builder;
 
@@ -35,7 +35,7 @@ class V1ToV03AttributesConverter implements CloudEventAttributesVisitor {
     }
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventVisitException {
+    public void setAttribute(String name, String value) throws CloudEventRWException {
         switch (name) {
             case "id":
                 builder.withId(value);
@@ -44,7 +44,7 @@ class V1ToV03AttributesConverter implements CloudEventAttributesVisitor {
                 try {
                     builder.withSource(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("source", value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue("source", value, e);
                 }
                 return;
             case "type":
@@ -57,7 +57,7 @@ class V1ToV03AttributesConverter implements CloudEventAttributesVisitor {
                 try {
                     builder.withSchemaUrl(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("dataschema", value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue("dataschema", value, e);
                 }
                 return;
             case "subject":
@@ -67,15 +67,15 @@ class V1ToV03AttributesConverter implements CloudEventAttributesVisitor {
                 try {
                     builder.withTime(Time.parseTime(value));
                 } catch (DateTimeParseException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("time", value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue("time", value, e);
                 }
                 return;
         }
-        throw CloudEventVisitException.newInvalidAttributeName(name);
+        throw CloudEventRWException.newInvalidAttributeName(name);
     }
 
     @Override
-    public void setAttribute(String name, URI value) throws CloudEventVisitException {
+    public void setAttribute(String name, URI value) throws CloudEventRWException {
         switch (name) {
             case "source":
                 builder.withSource(value);
@@ -84,15 +84,15 @@ class V1ToV03AttributesConverter implements CloudEventAttributesVisitor {
                 builder.withSchemaUrl(value);
                 return;
         }
-        throw CloudEventVisitException.newInvalidAttributeType(name, URI.class);
+        throw CloudEventRWException.newInvalidAttributeType(name, URI.class);
     }
 
     @Override
-    public void setAttribute(String name, ZonedDateTime value) throws CloudEventVisitException {
+    public void setAttribute(String name, ZonedDateTime value) throws CloudEventRWException {
         if ("time".equals(name)) {
             builder.withTime(value);
             return;
         }
-        throw CloudEventVisitException.newInvalidAttributeType(name, ZonedDateTime.class);
+        throw CloudEventRWException.newInvalidAttributeType(name, ZonedDateTime.class);
     }
 }

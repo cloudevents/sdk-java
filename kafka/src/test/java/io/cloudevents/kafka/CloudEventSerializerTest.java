@@ -19,7 +19,7 @@ package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.message.Encoding;
-import io.cloudevents.core.message.Message;
+import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.core.test.Data;
@@ -96,7 +96,7 @@ public class CloudEventSerializerTest {
         Headers headers = new RecordHeaders();
         byte[] payload = serializer.serialize(topic, headers, event);
 
-        Message message = KafkaMessageFactory.create(headers, payload);
+        MessageReader message = KafkaMessageReaderFactory.create(headers, payload);
 
         assertThat(message.getEncoding())
             .isEqualTo(expectedEncoding);

@@ -22,10 +22,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.impl.CloudEventUtils;
-import io.cloudevents.visitor.CloudEventAttributesVisitor;
-import io.cloudevents.visitor.CloudEventExtensionsVisitor;
-import io.cloudevents.visitor.CloudEventVisitException;
-import io.cloudevents.visitor.CloudEventVisitable;
+import io.cloudevents.rw.CloudEventAttributesWriter;
+import io.cloudevents.rw.CloudEventExtensionsWriter;
+import io.cloudevents.rw.CloudEventRWException;
+import io.cloudevents.rw.CloudEventReader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -41,7 +41,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         this.forceStringSerialization = forceStringSerialization;
     }
 
-    private static class FieldsSerializer implements CloudEventAttributesVisitor, CloudEventExtensionsVisitor {
+    private static class FieldsSerializer implements CloudEventAttributesWriter, CloudEventExtensionsWriter {
 
         private final JsonGenerator gen;
         private final SerializerProvider provider;
@@ -52,7 +52,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public void setAttribute(String name, String value) throws CloudEventVisitException {
+        public void setAttribute(String name, String value) throws CloudEventRWException {
             try {
                 gen.writeStringField(name, value);
             } catch (IOException e) {
@@ -61,7 +61,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public void setExtension(String name, String value) throws CloudEventVisitException {
+        public void setExtension(String name, String value) throws CloudEventRWException {
             try {
                 gen.writeStringField(name, value);
             } catch (IOException e) {
@@ -70,7 +70,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public void setExtension(String name, Number value) throws CloudEventVisitException {
+        public void setExtension(String name, Number value) throws CloudEventRWException {
             try {
                 gen.writeFieldName(name);
                 provider.findValueSerializer(value.getClass()).serialize(value, gen, provider);
@@ -80,7 +80,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public void setExtension(String name, Boolean value) throws CloudEventVisitException {
+        public void setExtension(String name, Boolean value) throws CloudEventRWException {
             try {
                 gen.writeBooleanField(name, value);
             } catch (IOException e) {
@@ -96,10 +96,10 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
         // Serialize attributes
         try {
-            CloudEventVisitable visitable = CloudEventUtils.toVisitable(value);
+            CloudEventReader visitable = CloudEventUtils.toVisitable(value);
             FieldsSerializer serializer = new FieldsSerializer(gen, provider);
-            visitable.visitAttributes(serializer);
-            visitable.visitExtensions(serializer);
+            visitable.readAttributes(serializer);
+            visitable.readExtensions(serializer);
         } catch (RuntimeException e) {
             throw (IOException) e.getCause();
         }

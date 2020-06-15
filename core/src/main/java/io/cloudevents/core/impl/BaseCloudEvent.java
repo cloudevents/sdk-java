@@ -18,13 +18,13 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.visitor.*;
+import io.cloudevents.rw.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class BaseCloudEvent implements CloudEvent, CloudEventVisitable {
+public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
 
     private final byte[] data;
     protected final Map<String, Object> extensions;
@@ -49,10 +49,10 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventVisitable 
         return this.extensions.keySet();
     }
 
-    public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
-        CloudEventVisitor<V> visitor = visitorFactory.create(this.getSpecVersion());
-        this.visitAttributes(visitor);
-        this.visitExtensions(visitor);
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
+        CloudEventWriter<V> visitor = visitorFactory.create(this.getSpecVersion());
+        this.readAttributes(visitor);
+        this.readExtensions(visitor);
 
         if (this.data != null) {
             return visitor.end(this.data);
@@ -61,7 +61,7 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventVisitable 
         return visitor.end();
     }
 
-    public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException {
+    public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException {
         // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {
