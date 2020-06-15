@@ -33,6 +33,6 @@ public class CloudEventDeserializer implements Deserializer<CloudEvent> {
 
     @Override
     public CloudEvent deserialize(String topic, Headers headers, byte[] data) {
-        return KafkaMessageFactory.create(headers, data).toEvent();
+        return KafkaMessageReaderFactory.create(headers, data).toEvent();
     }
 }

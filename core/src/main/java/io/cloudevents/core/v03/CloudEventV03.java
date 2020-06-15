@@ -19,8 +19,8 @@ package io.cloudevents.core.v03;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.impl.BaseCloudEvent;
 import io.cloudevents.lang.Nullable;
-import io.cloudevents.visitor.CloudEventAttributesVisitor;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventAttributesWriter;
+import io.cloudevents.rw.CloudEventRWException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -125,7 +125,7 @@ public final class CloudEventV03 extends BaseCloudEvent {
     }
 
     @Override
-    public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
+    public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException {
         visitor.setAttribute(
             ContextAttributes.ID.name().toLowerCase(),
             this.id

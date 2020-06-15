@@ -17,6 +17,9 @@
 
 package io.cloudevents.core.message;
 
+/**
+ * One of the possible encodings of a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a>
+ */
 public enum Encoding {
     STRUCTURED,
     BINARY,

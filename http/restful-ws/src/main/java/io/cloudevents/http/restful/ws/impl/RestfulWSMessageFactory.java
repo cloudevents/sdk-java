@@ -17,10 +17,10 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
-import io.cloudevents.core.message.Message;
-import io.cloudevents.core.message.impl.GenericStructuredMessage;
+import io.cloudevents.core.message.MessageReader;
+import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.core.message.impl.UnknownEncodingMessage;
+import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -31,13 +31,13 @@ public final class RestfulWSMessageFactory {
     private RestfulWSMessageFactory() {
     }
 
-    public static Message create(MediaType mediaType, MultivaluedMap<String, String> headers, byte[] payload) throws IllegalArgumentException {
+    public static MessageReader create(MediaType mediaType, MultivaluedMap<String, String> headers, byte[] payload) throws IllegalArgumentException {
         return MessageUtils.parseStructuredOrBinaryMessage(
             () -> headers.getFirst(HttpHeaders.CONTENT_TYPE),
-            format -> new GenericStructuredMessage(format, payload),
+            format -> new GenericStructuredMessageReader(format, payload),
             () -> headers.getFirst(CloudEventsHeaders.SPEC_VERSION),
-            sv -> new BinaryRestfulWSMessageImpl(sv, headers, payload),
-            UnknownEncodingMessage::new
+            sv -> new BinaryRestfulWSMessageReaderImpl(sv, headers, payload),
+            UnknownEncodingMessageReader::new
         );
     }
 

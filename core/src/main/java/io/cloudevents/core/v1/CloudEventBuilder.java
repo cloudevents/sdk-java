@@ -21,8 +21,8 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.impl.BaseCloudEventBuilder;
 import io.cloudevents.core.impl.CloudEventUtils;
+import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
-import io.cloudevents.visitor.CloudEventVisitException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -55,9 +55,9 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     @Override
     protected void setAttributes(io.cloudevents.CloudEvent event) {
         if (event.getSpecVersion() == SpecVersion.V1) {
-            CloudEventUtils.toVisitable(event).visitAttributes(this);
+            CloudEventUtils.toVisitable(event).readAttributes(this);
         } else {
-            CloudEventUtils.toVisitable(event).visitAttributes(new V03ToV1AttributesConverter(this));
+            CloudEventUtils.toVisitable(event).readAttributes(new V03ToV1AttributesConverter(this));
         }
     }
 
@@ -131,7 +131,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     // Message impl
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventVisitException {
+    public void setAttribute(String name, String value) throws CloudEventRWException {
         switch (name) {
             case "id":
                 withId(value);
@@ -140,7 +140,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 try {
                     withSource(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("source", value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue("source", value, e);
                 }
                 return;
             case "type":
@@ -153,7 +153,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 try {
                     withDataSchema(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("dataschema", value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue("dataschema", value, e);
                 }
                 return;
             case "subject":
@@ -163,15 +163,15 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 try {
                     withTime(Time.parseTime(value));
                 } catch (DateTimeParseException e) {
-                    throw CloudEventVisitException.newInvalidAttributeValue("time", value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue("time", value, e);
                 }
                 return;
         }
-        throw CloudEventVisitException.newInvalidAttributeName(name);
+        throw CloudEventRWException.newInvalidAttributeName(name);
     }
 
     @Override
-    public void setAttribute(String name, URI value) throws CloudEventVisitException {
+    public void setAttribute(String name, URI value) throws CloudEventRWException {
         switch (name) {
             case "source":
                 withSource(value);
@@ -180,15 +180,15 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 withDataSchema(value);
                 return;
         }
-        throw CloudEventVisitException.newInvalidAttributeType(name, URI.class);
+        throw CloudEventRWException.newInvalidAttributeType(name, URI.class);
     }
 
     @Override
-    public void setAttribute(String name, ZonedDateTime value) throws CloudEventVisitException {
+    public void setAttribute(String name, ZonedDateTime value) throws CloudEventRWException {
         if ("time".equals(name)) {
             withTime(value);
             return;
         }
-        throw CloudEventVisitException.newInvalidAttributeType(name, ZonedDateTime.class);
+        throw CloudEventRWException.newInvalidAttributeType(name, ZonedDateTime.class);
     }
 }

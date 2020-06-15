@@ -19,14 +19,13 @@ package io.cloudevents.http.restful.ws;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.core.message.Message;
-import io.cloudevents.core.message.MessageVisitor;
+import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.provider.EventFormatProvider;
-import io.cloudevents.http.restful.ws.impl.RestfulWSClientMessageVisitor;
+import io.cloudevents.http.restful.ws.impl.RestfulWSClientMessageWriter;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageFactory;
-import io.cloudevents.http.restful.ws.impl.RestfulWSMessageVisitor;
+import io.cloudevents.http.restful.ws.impl.RestfulWSMessageWriter;
 import io.cloudevents.http.restful.ws.impl.Utils;
-import io.cloudevents.visitor.CloudEventVisitor;
+import io.cloudevents.rw.CloudEventWriter;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -98,25 +97,25 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
             writeStructured(
                 event,
                 structuredEncodingFormat.get(),
-                new RestfulWSMessageVisitor(httpHeaders, entityStream)
+                new RestfulWSMessageWriter(httpHeaders, entityStream)
             );
         } else {
             writeBinary(
                 event,
-                new RestfulWSMessageVisitor(httpHeaders, entityStream)
+                new RestfulWSMessageWriter(httpHeaders, entityStream)
             );
         }
     }
 
-    private <V extends MessageVisitor<V, Void> & CloudEventVisitor<Void>> void writeBinary(CloudEvent input, V visitor) {
-        Message.writeBinaryEvent(input, visitor);
+    private <V extends MessageWriter<V, Void> & CloudEventWriter<Void>> void writeBinary(CloudEvent input, V visitor) {
+        visitor.writeBinary(input);
     }
 
-    private <V extends MessageVisitor<V, Void> & CloudEventVisitor<Void>> void writeStructured(CloudEvent input, EventFormat format, V visitor) {
-        Message.writeStructuredEvent(input, format, visitor);
+    private <V extends MessageWriter<V, Void> & CloudEventWriter<Void>> void writeStructured(CloudEvent input, EventFormat format, V visitor) {
+        visitor.writeStructured(input, format);
     }
 
-    private <V extends MessageVisitor<V, Void> & CloudEventVisitor<Void>> void writeStructured(CloudEvent input, String formatString, V visitor) {
+    private <V extends MessageWriter<V, Void> & CloudEventWriter<Void>> void writeStructured(CloudEvent input, String formatString, V visitor) {
         EventFormat format = EventFormatProvider.getInstance().resolveFormat(formatString);
 
         if (format == null) {
@@ -135,12 +134,12 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
                 writeStructured(
                     (CloudEvent) requestContext.getEntity(),
                     format,
-                    new RestfulWSClientMessageVisitor(requestContext)
+                    new RestfulWSClientMessageWriter(requestContext)
                 );
             } else {
                 writeBinary(
                     (CloudEvent) requestContext.getEntity(),
-                    new RestfulWSClientMessageVisitor(requestContext)
+                    new RestfulWSClientMessageWriter(requestContext)
                 );
             }
         }

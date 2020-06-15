@@ -20,7 +20,7 @@ package io.cloudevents.core.impl;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.visitor.CloudEventVisitException;
+import io.cloudevents.rw.CloudEventRWException;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -101,22 +101,22 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventVisitException {
+    public void setExtension(String name, String value) throws CloudEventRWException {
         this.withExtension(name, value);
     }
 
     @Override
-    public void setExtension(String name, Number value) throws CloudEventVisitException {
+    public void setExtension(String name, Number value) throws CloudEventRWException {
         this.withExtension(name, value);
     }
 
     @Override
-    public void setExtension(String name, Boolean value) throws CloudEventVisitException {
+    public void setExtension(String name, Boolean value) throws CloudEventRWException {
         this.withExtension(name, value);
     }
 
     @Override
-    public CloudEvent end(byte[] value) throws CloudEventVisitException {
+    public CloudEvent end(byte[] value) throws CloudEventRWException {
         this.data = value;
         return build();
     }
@@ -126,7 +126,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         try {
             return build();
         } catch (Exception e) {
-            throw CloudEventVisitException.newOther(e);
+            throw CloudEventRWException.newOther(e);
         }
     }
 

@@ -20,8 +20,8 @@ package io.cloudevents.kafka;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.core.message.Encoding;
-import io.cloudevents.core.message.Message;
-import io.cloudevents.core.mock.MockBinaryMessage;
+import io.cloudevents.core.message.MessageReader;
+import io.cloudevents.core.mock.MockBinaryMessageWriter;
 import io.cloudevents.core.test.Data;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
@@ -40,12 +40,12 @@ public class CloudEventMessageSerializerTest {
 
         Headers headers = new RecordHeaders();
 
-        MockBinaryMessage inMessage = new MockBinaryMessage();
-        CloudEventUtils.toVisitable(event).visit(inMessage);
+        MockBinaryMessageWriter inMessage = new MockBinaryMessageWriter();
+        CloudEventUtils.toVisitable(event).read(inMessage);
 
         byte[] payload = serializer.serialize(topic, headers, inMessage);
 
-        Message outMessage = KafkaMessageFactory.create(headers, payload);
+        MessageReader outMessage = KafkaMessageReaderFactory.create(headers, payload);
 
         assertThat(outMessage.getEncoding())
             .isEqualTo(Encoding.BINARY);

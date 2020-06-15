@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.visitor.*;
+import io.cloudevents.rw.*;
 
 import java.io.IOException;
 
@@ -38,7 +38,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         super(CloudEvent.class);
     }
 
-    private static class JsonMessage implements CloudEventVisitable {
+    private static class JsonMessage implements CloudEventReader {
 
         private final JsonParser p;
         private final ObjectNode node;
@@ -49,10 +49,10 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public <T extends CloudEventVisitor<V>, V> V visit(CloudEventVisitorFactory<T, V> visitorFactory) throws CloudEventVisitException, IllegalStateException {
+        public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
             try {
                 SpecVersion specVersion = SpecVersion.parse(getStringNode(this.node, this.p, "specversion"));
-                CloudEventVisitor<V> visitor = visitorFactory.create(specVersion);
+                CloudEventWriter<V> visitor = visitorFactory.create(specVersion);
 
                 // Read mandatory attributes
                 for (String attr : specVersion.getMandatoryAttributes()) {
@@ -150,12 +150,12 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public void visitAttributes(CloudEventAttributesVisitor visitor) throws CloudEventVisitException {
+        public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException {
             // no-op no need for that
         }
 
         @Override
-        public void visitExtensions(CloudEventExtensionsVisitor visitor) throws CloudEventVisitException {
+        public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException {
             // no-op no need for that
         }
 
@@ -194,7 +194,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         ObjectNode node = ctxt.readValue(p, ObjectNode.class);
 
         try {
-            return new JsonMessage(p, node).visit(CloudEventBuilder::fromSpecVersion);
+            return new JsonMessage(p, node).read(CloudEventBuilder::fromSpecVersion);
         } catch (RuntimeException e) {
             // Yeah this is bad but it's needed to support checked exceptions...
             if (e.getCause() instanceof IOException) {
