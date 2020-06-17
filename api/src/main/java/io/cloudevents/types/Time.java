@@ -19,10 +19,16 @@ package io.cloudevents.types;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 
 public final class Time {
-    public static final DateTimeFormatter RFC3339_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+    public static final DateTimeFormatter RFC3339_DATE_FORMAT = new DateTimeFormatterBuilder()
+        .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+        .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
+        .appendZoneOrOffsetId()
+        .toFormatter();
 
     public static ZonedDateTime parseTime(String time) throws DateTimeParseException {
         return ZonedDateTime.parse(time, RFC3339_DATE_FORMAT);
