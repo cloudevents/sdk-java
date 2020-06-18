@@ -36,7 +36,7 @@ public class CloudEventMessageDeserializerTest {
         CloudEventMessageDeserializer deserializer = new CloudEventMessageDeserializer();
 
         // Serialize the event first
-        ProducerRecord<Void, byte[]> inRecord = KafkaProducerMessageWriter.create(topic).writeBinary(inEvent);
+        ProducerRecord<Void, byte[]> inRecord = KafkaMessageFactory.createWriter(topic).writeBinary(inEvent);
         MessageReader outMessage = deserializer.deserialize(topic, inRecord.headers(), inRecord.value());
 
         assertThat(outMessage.getEncoding())

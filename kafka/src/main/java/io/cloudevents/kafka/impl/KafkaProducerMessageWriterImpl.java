@@ -18,13 +18,11 @@
 package io.cloudevents.kafka.impl;
 
 import io.cloudevents.SpecVersion;
-import io.cloudevents.kafka.KafkaProducerMessageWriter;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 
-public final class KafkaProducerMessageWriterImpl<K> extends
-    BaseKafkaMessageWriterImpl<KafkaProducerMessageWriter<K>, ProducerRecord<K, byte[]>>
-    implements KafkaProducerMessageWriter<K> {
+public final class KafkaProducerMessageWriterImpl<K>
+    extends BaseKafkaMessageWriterImpl<ProducerRecord<K, byte[]>> {
 
     private final String topic;
     private final K key;
@@ -45,7 +43,7 @@ public final class KafkaProducerMessageWriterImpl<K> extends
     }
 
     @Override
-    public KafkaProducerMessageWriter<K> create(SpecVersion version) {
+    public KafkaProducerMessageWriterImpl<K> create(SpecVersion version) {
         this.setAttribute("specversion", version.toString());
         return this;
     }

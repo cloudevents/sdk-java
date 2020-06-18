@@ -96,7 +96,7 @@ public class CloudEventSerializerTest {
         Headers headers = new RecordHeaders();
         byte[] payload = serializer.serialize(topic, headers, event);
 
-        MessageReader message = KafkaMessageReaderFactory.create(headers, payload);
+        MessageReader message = KafkaMessageFactory.createReader(headers, payload);
 
         assertThat(message.getEncoding())
             .isEqualTo(expectedEncoding);

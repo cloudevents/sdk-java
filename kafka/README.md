@@ -18,7 +18,8 @@ To produce CloudEvents in Kafka, configure the KafkaProducer to use the provided
 import java.util.Properties;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.builder.CloudEventBuilder;import io.cloudevents.kafka.CloudEventSerializer;
+import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.kafka.CloudEventSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -43,7 +44,7 @@ public class CloudEventProducer {
               .build();
 
         	// Produce the event
-        	ceProducer.send(new ProducerRecord<>("your.topic", event));
+        	producer.send(new ProducerRecord<>("your.topic", event));
         }
     }
 
@@ -64,7 +65,8 @@ import java.time.Duration;import java.util.Properties;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.kafka.CloudEventDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 public class CloudEventConsumer {

@@ -20,7 +20,7 @@ package io.cloudevents.kafka.impl;
 import io.cloudevents.SpecVersion;
 import org.apache.kafka.common.header.Headers;
 
-public final class KafkaSerializerMessageWriterImpl extends BaseKafkaMessageWriterImpl<KafkaSerializerMessageWriterImpl, byte[]> {
+public final class KafkaSerializerMessageWriterImpl extends BaseKafkaMessageWriterImpl<byte[]> {
 
     public KafkaSerializerMessageWriterImpl(Headers headers) {
         super(headers);
