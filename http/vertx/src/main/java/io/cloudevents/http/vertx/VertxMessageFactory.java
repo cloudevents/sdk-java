@@ -103,7 +103,7 @@ public final class VertxMessageFactory {
 
     /**
      * Creates a {@link MessageWriter} that can write both structured and binary messages to a {@link HttpServerResponse}.
-     * When the visit ends, the response is ended with {@link HttpServerResponse#end(io.vertx.core.buffer.Buffer)}
+     * When the writer finished to write the {@link MessageReader}, the response is ended with {@link HttpServerResponse#end(io.vertx.core.buffer.Buffer)}
      *
      * @param res the response to write
      * @return the message writer
@@ -114,7 +114,7 @@ public final class VertxMessageFactory {
 
     /**
      * Creates a {@link MessageWriter} that can write both structured and binary messages to a {@link HttpClientRequest}.
-     * When the visit ends, the response is ended with {@link HttpClientRequest#end(io.vertx.core.buffer.Buffer)}
+     * When the writer finished to write the {@link MessageReader}, the request is ended with {@link HttpClientRequest#end(io.vertx.core.buffer.Buffer)}
      *
      * @param req the request to write
      * @return the message writer
