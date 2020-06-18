@@ -101,7 +101,7 @@ public final class CloudEventV03 extends BaseCloudEvent {
     public Object getAttribute(String attributeName) {
         switch (attributeName) {
             case "specversion":
-                return SpecVersion.V03;
+                return getSpecVersion();
             case "id":
                 return this.id;
             case "source":
