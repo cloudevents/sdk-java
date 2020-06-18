@@ -74,8 +74,8 @@ public class VertxHttpClientRequestMessageWriterTest {
                     checkpoint.flag();
                 });
                 try {
-                    VertxHttpClientRequestMessageWriter
-                        .create(req)
+                    VertxMessageFactory
+                        .createWriter(req)
                         .writeStructured(event, CSVFormat.INSTANCE);
                 } catch (Throwable e) {
                     testContext.failNow(e);
@@ -117,8 +117,8 @@ public class VertxHttpClientRequestMessageWriterTest {
                     checkpoint.flag();
                 });
                 try {
-                    VertxHttpClientRequestMessageWriter
-                        .create(req)
+                    VertxMessageFactory
+                        .createWriter(req)
                         .writeBinary(event);
                 } catch (Throwable e) {
                     testContext.failNow(e);

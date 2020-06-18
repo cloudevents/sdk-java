@@ -34,12 +34,12 @@ import java.util.stream.Stream;
 import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class VertxMessageReaderFactoryTest {
+public class VertxMessageFactoryTest {
 
     @ParameterizedTest()
     @MethodSource("binaryTestArguments")
     public void readBinary(MultiMap headers, Buffer body, CloudEvent event) {
-        MessageReader message = VertxMessageReaderFactory.create(headers, body);
+        MessageReader message = VertxMessageFactory.createReader(headers, body);
 
         assertThat(message.getEncoding())
             .isEqualTo(Encoding.BINARY);
@@ -52,7 +52,7 @@ public class VertxMessageReaderFactoryTest {
     public void readStructured(CloudEvent event) {
         byte[] serializedEvent = CSVFormat.INSTANCE.serialize(event);
 
-        MessageReader message = VertxMessageReaderFactory.create(
+        MessageReader message = VertxMessageFactory.createReader(
             MultiMap.caseInsensitiveMultiMap().add("content-type", CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8"),
             Buffer.buffer(serializedEvent)
         );
