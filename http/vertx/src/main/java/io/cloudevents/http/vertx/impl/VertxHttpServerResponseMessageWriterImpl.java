@@ -19,13 +19,14 @@ package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.http.vertx.VertxHttpServerResponseMessageWriter;
+import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.rw.CloudEventRWException;
+import io.cloudevents.rw.CloudEventWriter;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 
-public class VertxHttpServerResponseMessageWriterImpl implements VertxHttpServerResponseMessageWriter {
+public class VertxHttpServerResponseMessageWriterImpl implements MessageWriter<CloudEventWriter<HttpServerResponse>, HttpServerResponse>, CloudEventWriter<HttpServerResponse> {
 
     private final HttpServerResponse response;
 
@@ -36,7 +37,7 @@ public class VertxHttpServerResponseMessageWriterImpl implements VertxHttpServer
     // Binary visitor factory
 
     @Override
-    public VertxHttpServerResponseMessageWriter create(SpecVersion version) {
+    public CloudEventWriter<HttpServerResponse> create(SpecVersion version) {
         this.response.putHeader(CloudEventsHeaders.SPEC_VERSION, version.toString());
         return this;
     }

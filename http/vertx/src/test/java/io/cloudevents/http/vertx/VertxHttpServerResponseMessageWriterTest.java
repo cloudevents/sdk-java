@@ -52,7 +52,7 @@ public class VertxHttpServerResponseMessageWriterTest {
             .requestHandler(httpServerRequest -> {
                 try {
                     GenericStructuredMessageReader.from(event, CSVFormat.INSTANCE).visit(
-                        VertxHttpServerResponseMessageWriter.create(httpServerRequest.response())
+                        VertxMessageFactory.createWriter(httpServerRequest.response())
                     );
                     checkpoint.flag();
                 } catch (Throwable e) {
@@ -90,8 +90,8 @@ public class VertxHttpServerResponseMessageWriterTest {
             .createHttpServer()
             .requestHandler(httpServerRequest -> {
                 try {
-                    VertxHttpServerResponseMessageWriter
-                        .create(httpServerRequest.response())
+                    VertxMessageFactory
+                        .createWriter(httpServerRequest.response())
                         .writeBinary(event);
                     checkpoint.flag();
                 } catch (Throwable e) {
