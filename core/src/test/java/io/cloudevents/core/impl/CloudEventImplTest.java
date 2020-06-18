@@ -72,4 +72,23 @@ public class CloudEventImplTest {
         assertThat(event1).isEqualTo(event2);
     }
 
+    @Test
+    public void testGetAttributeNames() {
+        CloudEvent event = CloudEventBuilder.v1()
+            .withId(ID)
+            .withType(TYPE)
+            .withSource(SOURCE)
+            .withTime(TIME)
+            .build();
+
+        assertThat(event.getAttributeNames())
+            .containsExactlyInAnyOrder(
+                "specversion",
+                "id",
+                "type",
+                "source",
+                "time"
+            );
+    }
+
 }

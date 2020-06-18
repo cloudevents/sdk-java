@@ -43,8 +43,8 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
     }
 
     @Override
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
-        CloudEventWriter<V> visitor = visitorFactory.create(this.version);
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory) throws CloudEventRWException, IllegalStateException {
+        CloudEventWriter<V> visitor = writerFactory.create(this.version);
 
         // Grab from headers the attributes and extensions
         // This implementation avoids to use visitAttributes and visitExtensions
@@ -74,17 +74,17 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
     }
 
     @Override
-    public void readAttributes(CloudEventAttributesWriter visitor) throws RuntimeException {
+    public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
         this.forEachHeader((key, value) -> {
             if (isContentTypeHeader(key)) {
-                visitor.setAttribute("datacontenttype", toCloudEventsValue(value));
+                writer.setAttribute("datacontenttype", toCloudEventsValue(value));
             } else if (isCloudEventsHeader(key)) {
                 String name = toCloudEventsKey(key);
                 if (name.equals("specversion")) {
                     return;
                 }
                 if (this.version.getAllAttributes().contains(name)) {
-                    visitor.setAttribute(name, toCloudEventsValue(value));
+                    writer.setAttribute(name, toCloudEventsValue(value));
                 }
             }
         });

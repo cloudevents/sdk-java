@@ -23,6 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Interface which defines CloudEvent attributes as per specification
@@ -78,9 +79,25 @@ public interface CloudEventAttributes {
     @Nullable
     ZonedDateTime getTime();
 
+    /**
+     * Get the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#context-attributes">context attribute</a> named {@code attributeName}
+     *
+     * @param attributeName a valid attribute name
+     * @return the attribute value or null if this instance doesn't contain such attribute
+     * @throws IllegalArgumentException if the provided attribute name it's not a valid attribute for this spec
+     */
     @Nullable
-    Object getAttribute(String extensionName);
+    Object getAttribute(String attributeName) throws IllegalArgumentException;
 
-    Set<String> getAttributeNames();
+    /**
+     * @return The non-null <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#context-attributes">context attributes</a> names in this instance
+     */
+    default Set<String> getAttributeNames() {
+        return getSpecVersion()
+            .getAllAttributes()
+            .stream()
+            .filter(s -> getAttribute(s) != null)
+            .collect(Collectors.toSet());
+    }
 
 }

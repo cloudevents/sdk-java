@@ -17,10 +17,15 @@
 
 package io.cloudevents;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Represents one of the supported CloudEvents specification versions by this library
+ */
+@ParametersAreNonnullByDefault
 public enum SpecVersion {
     V03(
         "0.3",

@@ -56,12 +56,12 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory) throws CloudEventRWException, IllegalStateException {
         if (version == null) {
             throw new IllegalStateException("MockBinaryMessage is empty");
         }
 
-        CloudEventWriter<V> visitor = visitorFactory.create(version);
+        CloudEventWriter<V> visitor = writerFactory.create(version);
         this.readAttributes(visitor);
         this.readExtensions(visitor);
 
@@ -73,14 +73,14 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException, IllegalStateException {
+    public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException, IllegalStateException {
         for (Map.Entry<String, Object> e : this.attributes.entrySet()) {
             if (e.getValue() instanceof String) {
-                visitor.setAttribute(e.getKey(), (String) e.getValue());
+                writer.setAttribute(e.getKey(), (String) e.getValue());
             } else if (e.getValue() instanceof ZonedDateTime) {
-                visitor.setAttribute(e.getKey(), (ZonedDateTime) e.getValue());
+                writer.setAttribute(e.getKey(), (ZonedDateTime) e.getValue());
             } else if (e.getValue() instanceof URI) {
-                visitor.setAttribute(e.getKey(), (URI) e.getValue());
+                writer.setAttribute(e.getKey(), (URI) e.getValue());
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside attributes map: " + e);

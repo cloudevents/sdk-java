@@ -32,12 +32,12 @@ public abstract class BaseStructuredMessageReader implements MessageReader {
     }
 
     @Override
-    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> visitorFactory) {
+    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) {
         throw MessageUtils.generateWrongEncoding(Encoding.BINARY, Encoding.STRUCTURED);
     }
 
     @Override
-    public void readAttributes(CloudEventAttributesWriter visitor) throws RuntimeException {
+    public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
         throw MessageUtils.generateWrongEncoding(Encoding.BINARY, Encoding.STRUCTURED);
     }
 

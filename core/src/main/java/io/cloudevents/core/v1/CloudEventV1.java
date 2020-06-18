@@ -26,7 +26,6 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author fabiojose
@@ -93,8 +92,10 @@ public final class CloudEventV1 extends BaseCloudEvent {
     }
 
     @Override
-    public Object getAttribute(String name) {
-        switch (name) {
+    public Object getAttribute(String attributeName) {
+        switch (attributeName) {
+            case "specversion":
+                return SpecVersion.V1;
             case "id":
                 return this.id;
             case "source":
@@ -110,48 +111,43 @@ public final class CloudEventV1 extends BaseCloudEvent {
             case "time":
                 return this.time;
         }
-        throw new IllegalArgumentException("Spec version v1 doesn't have attribute named " + name);
+        throw new IllegalArgumentException("Spec version v1 doesn't have attribute named " + attributeName);
     }
 
     @Override
-    public Set<String> getAttributeNames() {
-        return ContextAttributes.VALUES;
-    }
-
-    @Override
-    public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException {
-        visitor.setAttribute(
+    public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException {
+        writer.setAttribute(
             ContextAttributes.ID.name().toLowerCase(),
             this.id
         );
-        visitor.setAttribute(
+        writer.setAttribute(
             ContextAttributes.SOURCE.name().toLowerCase(),
             this.source
         );
-        visitor.setAttribute(
+        writer.setAttribute(
             ContextAttributes.TYPE.name().toLowerCase(),
             this.type
         );
         if (this.datacontenttype != null) {
-            visitor.setAttribute(
+            writer.setAttribute(
                 ContextAttributes.DATACONTENTTYPE.name().toLowerCase(),
                 this.datacontenttype
             );
         }
         if (this.dataschema != null) {
-            visitor.setAttribute(
+            writer.setAttribute(
                 ContextAttributes.DATASCHEMA.name().toLowerCase(),
                 this.dataschema
             );
         }
         if (this.subject != null) {
-            visitor.setAttribute(
+            writer.setAttribute(
                 ContextAttributes.SUBJECT.name().toLowerCase(),
                 this.subject
             );
         }
         if (this.time != null) {
-            visitor.setAttribute(
+            writer.setAttribute(
                 ContextAttributes.TIME.name().toLowerCase(),
                 this.time
             );

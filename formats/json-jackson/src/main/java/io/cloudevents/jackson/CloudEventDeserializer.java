@@ -49,10 +49,10 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> visitorFactory) throws CloudEventRWException, IllegalStateException {
+        public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory) throws CloudEventRWException, IllegalStateException {
             try {
                 SpecVersion specVersion = SpecVersion.parse(getStringNode(this.node, this.p, "specversion"));
-                CloudEventWriter<V> visitor = visitorFactory.create(specVersion);
+                CloudEventWriter<V> visitor = writerFactory.create(specVersion);
 
                 // Read mandatory attributes
                 for (String attr : specVersion.getMandatoryAttributes()) {
@@ -150,7 +150,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException {
+        public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException {
             // no-op no need for that
         }
 
