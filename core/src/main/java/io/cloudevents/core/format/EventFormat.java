@@ -19,19 +19,53 @@ package io.cloudevents.core.format;
 
 import io.cloudevents.CloudEvent;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * An <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#event-format">Event format</a>
+ * specifies how to serialize a CloudEvent as a sequence of bytes. <br/>
+ * <p>
+ * An implementation of this interface should support all specification versions of {@link CloudEvent}. <br/>
+ * <p>
+ * Implementations of this interface can be registered to the {@link io.cloudevents.core.provider.EventFormatProvider} to use them.
+ *
+ * @see io.cloudevents.core.provider.EventFormatProvider
+ */
+@ParametersAreNonnullByDefault
 public interface EventFormat {
 
+    /**
+     * Serialize a {@link CloudEvent} to a byte array.
+     *
+     * @param event the event to serialize.
+     * @return the byte representation of the provided event.
+     * @throws EventSerializationException if something goes wrong during serialization.
+     */
     byte[] serialize(CloudEvent event) throws EventSerializationException;
 
-    CloudEvent deserialize(byte[] event) throws EventDeserializationException;
+    /**
+     * Deserialize a byte array to a {@link CloudEvent}.
+     *
+     * @param bytes the serialized event.
+     * @return the deserialized event.
+     * @throws EventDeserializationException if something goes wrong during deserialization.
+     */
+    CloudEvent deserialize(byte[] bytes) throws EventDeserializationException;
 
+    /**
+     * @return the set of content types this event format can deserialize. These content types are used
+     * by the {@link io.cloudevents.core.provider.EventFormatProvider} to resolve an {@link EventFormat} starting
+     * from the content type {@link String}.
+     */
     default Set<String> deserializableContentTypes() {
         return Collections.singleton(serializedContentType());
     }
 
+    /**
+     * @return The content type to use when writing an event with this {@link EventFormat}.
+     */
     String serializedContentType();
 
 }

@@ -26,6 +26,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This extension embeds context from Distributed Tracing so that distributed systems can include traces that span an event-driven system.
+ *
+ * @see <a href="https://github.com/cloudevents/spec/blob/master/extensions/distributed-tracing.md">https://github.com/cloudevents/spec/blob/master/extensions/distributed-tracing.md</a>
+ */
 public final class DistributedTracingExtension implements Extension {
 
     public static final String TRACEPARENT = "traceparent";

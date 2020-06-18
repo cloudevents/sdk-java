@@ -28,9 +28,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
 /**
- * The event builder.
+ * CloudEvent V0.3 builder.
  *
  * @author fabiojose
+ * @author slinkydeveloper
  */
 public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder, CloudEventV03> {
 

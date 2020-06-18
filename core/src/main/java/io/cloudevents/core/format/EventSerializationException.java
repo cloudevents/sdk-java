@@ -17,6 +17,9 @@
 
 package io.cloudevents.core.format;
 
+/**
+ * Exception representing a serialization error while using an {@link EventFormat}.
+ */
 public class EventSerializationException extends RuntimeException {
     public EventSerializationException(Throwable e) {
         super(e);

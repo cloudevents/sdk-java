@@ -57,8 +57,8 @@ public class CSVFormat implements EventFormat {
     }
 
     @Override
-    public CloudEvent deserialize(byte[] event) {
-        String[] splitted = new String(event, StandardCharsets.UTF_8).split(Pattern.quote(","));
+    public CloudEvent deserialize(byte[] bytes) {
+        String[] splitted = new String(bytes, StandardCharsets.UTF_8).split(Pattern.quote(","));
         SpecVersion sv = SpecVersion.parse(splitted[0]);
 
         String id = splitted[1];

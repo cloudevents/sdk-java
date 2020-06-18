@@ -18,17 +18,30 @@
 package io.cloudevents.core.provider;
 
 import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.lang.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.ServiceLoader;
 import java.util.stream.StreamSupport;
 
+/**
+ * Singleton holding the discovered {@link EventFormat} implementations through {@link ServiceLoader}.<br/>
+ * <p>
+ * You can resolve an event format using {@code EventFormatProvider.getInstance().resolveFormat(contentType)}.<br/>
+ * <p>
+ * You can programmatically add a new {@link EventFormat} implementation using {@link this#registerFormat(EventFormat)}.
+ */
+@ParametersAreNonnullByDefault
 public final class EventFormatProvider {
 
     private static class SingletonContainer {
         private final static EventFormatProvider INSTANCE = new EventFormatProvider();
     }
 
+    /**
+     * @return instance of {@link EventFormatProvider}
+     */
     public static EventFormatProvider getInstance() {
         return EventFormatProvider.SingletonContainer.INSTANCE;
     }
@@ -44,18 +57,30 @@ public final class EventFormatProvider {
         ).forEach(this::registerFormat);
     }
 
+    /**
+     * Register a new {@link EventFormat} programmatically.
+     *
+     * @param format the new format to register
+     */
     public void registerFormat(EventFormat format) {
         for (String k : format.deserializableContentTypes()) {
             this.formats.put(k, format);
         }
     }
 
-    public EventFormat resolveFormat(String key) {
-        int i = key.indexOf(';');
+    /**
+     * Resolve an event format starting from the content type.
+     *
+     * @param contentType the content type to resolve the event format
+     * @return null if no format was found for the provided content type
+     */
+    @Nullable
+    public EventFormat resolveFormat(String contentType) {
+        int i = contentType.indexOf(';');
         if (i != -1) {
-            key = key.substring(0, i);
+            contentType = contentType.substring(0, i);
         }
-        return this.formats.get(key);
+        return this.formats.get(contentType);
     }
 
 }

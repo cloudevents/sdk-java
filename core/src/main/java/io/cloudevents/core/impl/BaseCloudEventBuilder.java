@@ -22,6 +22,7 @@ import io.cloudevents.Extension;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.rw.CloudEventRWException;
 
+import javax.annotation.Nonnull;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,22 +76,22 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return this.self;
     }
 
-    public SELF withExtension(String key, String value) {
+    public SELF withExtension(@Nonnull String key, String value) {
         this.extensions.put(key, value);
         return self;
     }
 
-    public SELF withExtension(String key, Number value) {
+    public SELF withExtension(@Nonnull String key, Number value) {
         this.extensions.put(key, value);
         return self;
     }
 
-    public SELF withExtension(String key, boolean value) {
+    public SELF withExtension(@Nonnull String key, boolean value) {
         this.extensions.put(key, value);
         return self;
     }
 
-    public SELF withExtension(Extension extension) {
+    public SELF withExtension(@Nonnull Extension extension) {
         for (String key : extension.getKeys()) {
             Object value = extension.getValue(key);
             if (value != null) {

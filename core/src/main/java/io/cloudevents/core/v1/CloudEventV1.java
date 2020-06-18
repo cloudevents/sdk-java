@@ -29,9 +29,10 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * CloudEvent implementation for v1.0
+ *
  * @author fabiojose
  * @author slinkydeveloper
- * @version 1.0
  */
 public final class CloudEventV1 extends BaseCloudEvent {
 
