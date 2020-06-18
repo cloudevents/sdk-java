@@ -34,8 +34,8 @@ public class CloudEventDeserializerTest {
         CloudEventDeserializer deserializer = new CloudEventDeserializer();
 
         // Serialize the event first
-        ProducerRecord<Void, byte[]> inRecord = KafkaProducerMessageWriter
-            .create(topic)
+        ProducerRecord<Void, byte[]> inRecord = KafkaMessageFactory
+            .createWriter(topic)
             .writeBinary(inEvent);
         CloudEvent outEvent = deserializer.deserialize(topic, inRecord.headers(), inRecord.value());
 

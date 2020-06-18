@@ -36,12 +36,12 @@ import static io.cloudevents.kafka.KafkaUtils.header;
 import static io.cloudevents.kafka.KafkaUtils.kafkaHeaders;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class KafkaMessageReaderFactoryTest {
+public class KafkaMessageFactoryTest {
 
     @ParameterizedTest()
     @MethodSource("binaryTestArguments")
     public void readBinary(Headers headers, byte[] body, CloudEvent event) {
-        MessageReader message = KafkaMessageReaderFactory.create(headers, body);
+        MessageReader message = KafkaMessageFactory.createReader(headers, body);
 
         assertThat(message.getEncoding())
             .isEqualTo(Encoding.BINARY);
@@ -54,7 +54,7 @@ public class KafkaMessageReaderFactoryTest {
     public void readStructured(CloudEvent event) {
         byte[] serializedEvent = CSVFormat.INSTANCE.serialize(event);
 
-        MessageReader message = KafkaMessageReaderFactory.create(
+        MessageReader message = KafkaMessageFactory.createReader(
             new RecordHeaders().add("content-type", (CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8").getBytes()),
             serializedEvent
         );

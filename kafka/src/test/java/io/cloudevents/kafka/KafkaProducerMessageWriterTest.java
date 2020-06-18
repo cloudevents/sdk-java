@@ -52,7 +52,7 @@ public class KafkaProducerMessageWriterTest {
 
         ProducerRecord<String, byte[]> producerRecord = StructuredMessageReader
             .from(event, CSVFormat.INSTANCE)
-            .read(KafkaProducerMessageWriter.create(topic, partition, timestamp, key));
+            .read(KafkaMessageFactory.createWriter(topic, partition, timestamp, key));
 
         assertThat(producerRecord.topic())
             .isEqualTo(topic);
@@ -76,8 +76,8 @@ public class KafkaProducerMessageWriterTest {
         Long timestamp = System.currentTimeMillis();
         String key = "aaa";
 
-        ProducerRecord<String, byte[]> producerRecord = KafkaProducerMessageWriter
-            .create(topic, partition, timestamp, key)
+        ProducerRecord<String, byte[]> producerRecord = KafkaMessageFactory
+            .createWriter(topic, partition, timestamp, key)
             .writeBinary(event);
 
         assertThat(producerRecord.topic())

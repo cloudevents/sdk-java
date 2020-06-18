@@ -24,7 +24,7 @@ import io.cloudevents.rw.CloudEventWriter;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeader;
 
-abstract class BaseKafkaMessageWriterImpl<S extends MessageWriter<S, R> & CloudEventWriter<R>, R> implements MessageWriter<S, R>, CloudEventWriter<R> {
+abstract class BaseKafkaMessageWriterImpl<R> implements MessageWriter<CloudEventWriter<R>, R>, CloudEventWriter<R> {
 
     byte[] value;
     final Headers headers;

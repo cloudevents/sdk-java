@@ -45,7 +45,7 @@ public class CloudEventMessageSerializerTest {
 
         byte[] payload = serializer.serialize(topic, headers, inMessage);
 
-        MessageReader outMessage = KafkaMessageReaderFactory.create(headers, payload);
+        MessageReader outMessage = KafkaMessageFactory.createReader(headers, payload);
 
         assertThat(outMessage.getEncoding())
             .isEqualTo(Encoding.BINARY);

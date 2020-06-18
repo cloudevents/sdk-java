@@ -33,6 +33,6 @@ public class CloudEventMessageDeserializer implements Deserializer<MessageReader
 
     @Override
     public MessageReader deserialize(String topic, Headers headers, byte[] data) {
-        return KafkaMessageReaderFactory.create(headers, data);
+        return KafkaMessageFactory.createReader(headers, data);
     }
 }
