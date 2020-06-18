@@ -18,7 +18,6 @@
 package io.cloudevents.core.message;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.mock.MockBinaryMessageWriter;
@@ -50,14 +49,14 @@ public class EventMessageRoundtripTest {
     @ParameterizedTest()
     @MethodSource("io.cloudevents.core.test.Data#allEventsWithoutExtensions")
     void structuredToMockStructuredMessageToEvent(CloudEvent input) {
-        assertThat(GenericStructuredMessageReader.from(input, CSVFormat.INSTANCE).read(new MockStructuredMessageReader()).toEvent())
+        assertThat(new MockStructuredMessageReader(input, CSVFormat.INSTANCE).toEvent())
             .isEqualTo(input);
     }
 
     @ParameterizedTest()
     @MethodSource("io.cloudevents.core.test.Data#allEvents")
     void binaryToMockBinaryMessageToEvent(CloudEvent input) {
-        assertThat(CloudEventUtils.toVisitable(input).read(new MockBinaryMessageWriter()).toEvent())
+        assertThat(new MockBinaryMessageWriter(input).toEvent())
             .isEqualTo(input);
     }
 

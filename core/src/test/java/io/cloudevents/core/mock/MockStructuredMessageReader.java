@@ -17,16 +17,28 @@
 
 package io.cloudevents.core.mock;
 
+import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.StructuredMessageWriter;
 import io.cloudevents.core.message.impl.BaseStructuredMessageReader;
+import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.rw.CloudEventRWException;
 
 public class MockStructuredMessageReader extends BaseStructuredMessageReader implements MessageReader, StructuredMessageWriter<MockStructuredMessageReader> {
 
     private EventFormat format;
     private byte[] payload;
+
+    public MockStructuredMessageReader() {
+    }
+
+    public MockStructuredMessageReader(CloudEvent event, EventFormat format) {
+        this();
+        GenericStructuredMessageReader
+            .from(event, format)
+            .read(this);
+    }
 
     @Override
     public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException {
