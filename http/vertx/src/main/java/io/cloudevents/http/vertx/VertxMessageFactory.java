@@ -14,6 +14,8 @@ import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.*;
 
+import java.util.function.Consumer;
+
 /**
  * This class provides a collection of methods to create {@link io.cloudevents.core.message.MessageReader}
  * and {@link io.cloudevents.core.message.MessageWriter} for Vert.x HTTP Client and Server.
@@ -42,23 +44,13 @@ public final class VertxMessageFactory {
     }
 
     /**
-     * Build a message starting from an {@link HttpServerRequest}
+     * Build a {@link MessageReader} starting from an {@link HttpServerRequest}
      *
      * @param request
      * @return
      */
     public static Future<MessageReader> createReader(HttpServerRequest request) {
-        Promise<MessageReader> prom = Promise.promise();
-
-        request.exceptionHandler(prom::tryFail);
-        request.bodyHandler(b -> {
-            try {
-                prom.complete(createReader(request.headers(), b));
-            } catch (IllegalArgumentException e) {
-                prom.fail(e);
-            }
-        });
-        return prom.future();
+        return createReader(request.headers(), request::exceptionHandler, request::bodyHandler);
     }
 
     /**
@@ -72,23 +64,13 @@ public final class VertxMessageFactory {
     }
 
     /**
-     * Build a message starting from an {@link HttpClientResponse}
+     * Build a {@link MessageReader} starting from an {@link HttpClientResponse}
      *
-     * @param request
+     * @param response
      * @return
      */
-    public static Future<MessageReader> createReader(HttpClientResponse request) {
-        Promise<MessageReader> prom = Promise.promise();
-
-        request.exceptionHandler(prom::tryFail);
-        request.bodyHandler(b -> {
-            try {
-                prom.complete(createReader(request.headers(), b));
-            } catch (IllegalArgumentException e) {
-                prom.fail(e);
-            }
-        });
-        return prom.future();
+    public static Future<MessageReader> createReader(HttpClientResponse response) {
+        return createReader(response.headers(), response::exceptionHandler, response::bodyHandler);
     }
 
     /**
@@ -99,6 +81,25 @@ public final class VertxMessageFactory {
      */
     public static void createReader(HttpClientResponse response, Handler<AsyncResult<MessageReader>> handler) {
         createReader(response).onComplete(handler);
+    }
+
+    private static Future<MessageReader> createReader(
+        MultiMap headers,
+        Consumer<Handler<Throwable>> fail,
+        Consumer<Handler<Buffer>> success) {
+
+        Promise<MessageReader> prom = Promise.promise();
+
+        fail.accept(prom::tryFail);
+        success.accept(b -> {
+            try {
+                prom.complete(createReader(headers, b));
+            } catch (IllegalArgumentException e) {
+                prom.fail(e);
+            }
+        });
+        return prom.future();
+
     }
 
     /**
