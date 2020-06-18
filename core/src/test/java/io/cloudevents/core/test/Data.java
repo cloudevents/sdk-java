@@ -57,6 +57,15 @@ public class Data {
         .withTime(TIME)
         .build();
 
+    public static final CloudEvent V1_WITH_JSON_DATA_WITH_FRACTIONAL_TIME = CloudEventBuilder.v1()
+        .withId(ID)
+        .withType(TYPE)
+        .withSource(SOURCE)
+        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+        .withSubject(SUBJECT)
+        .withTime(Time.parseTime("2018-04-26T14:48:09.1234Z"))
+        .build();
+
     public static final CloudEvent V1_WITH_JSON_DATA_WITH_EXT = CloudEventBuilder.v1()
         .withId(ID)
         .withType(TYPE)
