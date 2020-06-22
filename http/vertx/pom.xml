@@ -33,6 +33,7 @@
     <properties>
         <vertx.version>3.9.0</vertx.version>
         <assertj-core.version>3.11.0</assertj-core.version>
+        <module-name>io.cloudevents.http.vertx</module-name>
     </properties>
 
     <dependencies>
@@ -82,6 +83,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>${module-name}</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>
