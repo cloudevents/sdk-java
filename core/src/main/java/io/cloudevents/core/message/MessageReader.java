@@ -30,20 +30,20 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     /**
      * Visit the message as binary encoded event using the provided visitor factory.
      *
-     * @param visitorFactory a factory that generates a visitor starting from the SpecVersion of the event
+     * @param writerFactory a factory that generates a visitor starting from the SpecVersion of the event
      * @throws CloudEventRWException if something went wrong during the visit.
      * @throws IllegalStateException if the message is not in binary encoding.
      */
-    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> visitorFactory) throws CloudEventRWException, IllegalStateException;
+    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException, IllegalStateException;
 
     /**
      * Visit the message attributes as binary encoded event using the provided visitor.
      *
-     * @param visitor Attributes visitor
+     * @param writer Attributes visitor
      * @throws CloudEventRWException if something went wrong during the visit.
-     * @throws IllegalStateException    if the message is not in binary encoding.
+     * @throws IllegalStateException if the message is not in binary encoding.
      */
-    void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException, IllegalStateException;
+    void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException, IllegalStateException;
 
     /**
      * Visit the message extensions as binary encoded event using the provided visitor.

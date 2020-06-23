@@ -25,23 +25,23 @@ public interface CloudEventReader {
     /**
      * Visit self using the provided visitor factory
      *
-     * @param visitorFactory a factory that generates a visitor starting from the SpecVersion of the event
+     * @param writerFactory a factory that generates a visitor starting from the SpecVersion of the event
      * @throws CloudEventRWException if something went wrong during the visit.
      */
-    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> visitorFactory) throws CloudEventRWException;
+    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException;
 
     /**
-     * Visit self attributes using the provided visitor
+     * Visit self attributes using the provided writer
      *
-     * @param visitor Attributes visitor
+     * @param writer Attributes writer
      * @throws CloudEventRWException if something went wrong during the visit.
      */
-    void readAttributes(CloudEventAttributesWriter visitor) throws CloudEventRWException;
+    void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException;
 
     /**
-     * Visit self extensions using the provided visitor
+     * Visit self extensions using the provided writer
      *
-     * @param visitor Extensions visitor
+     * @param visitor Extensions writer
      * @throws CloudEventRWException if something went wrong during the visit.
      */
     void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException;

@@ -30,9 +30,18 @@ import java.util.Set;
 @ParametersAreNonnullByDefault
 public interface CloudEventExtensions {
 
+    /**
+     * Get the extension attribute named {@code extensionName}
+     *
+     * @param extensionName the extension name
+     * @return the extension value or null if this instance doesn't contain such extension
+     */
     @Nullable
     Object getExtension(String extensionName);
 
+    /**
+     * @return The non-null extension attributes names in this instance
+     */
     Set<String> getExtensionNames();
 
 }

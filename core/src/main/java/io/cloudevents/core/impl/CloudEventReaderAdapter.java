@@ -29,8 +29,8 @@ public class CloudEventReaderAdapter implements CloudEventReader {
     }
 
     @Override
-    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> visitorFactory) throws RuntimeException {
-        CloudEventWriter<R> visitor = visitorFactory.create(event.getSpecVersion());
+    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws RuntimeException {
+        CloudEventWriter<R> visitor = writerFactory.create(event.getSpecVersion());
         this.readAttributes(visitor);
         this.readExtensions(visitor);
 
@@ -42,21 +42,21 @@ public class CloudEventReaderAdapter implements CloudEventReader {
     }
 
     @Override
-    public void readAttributes(CloudEventAttributesWriter visitor) throws RuntimeException {
-        visitor.setAttribute("id", event.getId());
-        visitor.setAttribute("source", event.getSource());
-        visitor.setAttribute("type", event.getType());
+    public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
+        writer.setAttribute("id", event.getId());
+        writer.setAttribute("source", event.getSource());
+        writer.setAttribute("type", event.getType());
         if (event.getDataContentType() != null) {
-            visitor.setAttribute("datacontenttype", event.getDataContentType());
+            writer.setAttribute("datacontenttype", event.getDataContentType());
         }
         if (event.getDataSchema() != null) {
-            visitor.setAttribute("dataschema", event.getDataSchema());
+            writer.setAttribute("dataschema", event.getDataSchema());
         }
         if (event.getSubject() != null) {
-            visitor.setAttribute("subject", event.getSubject());
+            writer.setAttribute("subject", event.getSubject());
         }
         if (event.getTime() != null) {
-            visitor.setAttribute("time", event.getTime());
+            writer.setAttribute("time", event.getTime());
         }
     }
 
