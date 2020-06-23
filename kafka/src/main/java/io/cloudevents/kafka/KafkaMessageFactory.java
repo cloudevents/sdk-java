@@ -30,10 +30,13 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Headers;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * This class provides a collection of methods to create {@link io.cloudevents.core.message.MessageReader}
  * and {@link io.cloudevents.core.message.MessageWriter} for Kafka Producer and Consumer.
  */
+@ParametersAreNonnullByDefault
 public final class KafkaMessageFactory {
 
     private KafkaMessageFactory() {

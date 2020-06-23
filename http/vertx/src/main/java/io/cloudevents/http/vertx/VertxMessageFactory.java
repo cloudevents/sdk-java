@@ -14,12 +14,14 @@ import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
 /**
  * This class provides a collection of methods to create {@link io.cloudevents.core.message.MessageReader}
  * and {@link io.cloudevents.core.message.MessageWriter} for Vert.x HTTP Client and Server.
  */
+@ParametersAreNonnullByDefault
 public final class VertxMessageFactory {
 
     private VertxMessageFactory() {
