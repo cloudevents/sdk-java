@@ -22,9 +22,12 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.rw.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Represents a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a>.
  */
+@ParametersAreNonnullByDefault
 public interface MessageReader extends StructuredMessageReader, CloudEventReader {
 
     /**

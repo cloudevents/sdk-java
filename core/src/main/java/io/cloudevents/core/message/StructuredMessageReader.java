@@ -22,10 +22,13 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.rw.CloudEventRWException;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Represents a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a> in structured mode.
  */
 @FunctionalInterface
+@ParametersAreNonnullByDefault
 public interface StructuredMessageReader {
 
     /**

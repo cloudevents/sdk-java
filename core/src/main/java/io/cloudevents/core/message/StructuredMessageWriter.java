@@ -20,11 +20,20 @@ package io.cloudevents.core.message;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.rw.CloudEventRWException;
 
-//TODO javadoc
+import javax.annotation.ParametersAreNonnullByDefault;
+
+/**
+ * Interface to write the {@link MessageReader} content (CloudEvents attributes, extensions and payload) to a new representation structured representation.
+ *
+ * @param <T> return value at the end of the write process.
+ */
+@ParametersAreNonnullByDefault
 @FunctionalInterface
 public interface StructuredMessageWriter<T> {
 
-    // TODO one day we'll convert this to some byte stream
+    /**
+     * Write an event using the provided {@link EventFormat}.
+     */
     T setEvent(EventFormat format, byte[] value) throws CloudEventRWException;
 
 }

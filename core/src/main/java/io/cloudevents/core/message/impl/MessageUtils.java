@@ -32,14 +32,7 @@ import java.util.stream.Stream;
 public class MessageUtils {
 
     /**
-     * Common flow to parse an incoming message that could be structured or binary
-     *
-     * @param contentTypeHeaderReader
-     * @param structuredMessageFactory
-     * @param specVersionHeaderReader
-     * @param binaryMessageFactory
-     * @param unknownMessageFactory
-     * @return
+     * Common flow to parse an incoming message that could be structured or binary.<br/>
      */
     public static MessageReader parseStructuredOrBinaryMessage(
         Supplier<String> contentTypeHeaderReader,
@@ -72,7 +65,7 @@ public class MessageUtils {
      *
      * @param headerNameMapping mapper to generate the header name
      * @param <V>               Header key type
-     * @return
+     * @return the generated mapping
      */
     public static <V> Map<String, V> generateAttributesToHeadersMapping(Function<String, V> headerNameMapping) {
         return Stream.concat(

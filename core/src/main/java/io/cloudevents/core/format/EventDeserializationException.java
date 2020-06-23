@@ -17,6 +17,9 @@
 
 package io.cloudevents.core.format;
 
+/**
+ * Exception representing a deserialization error while using an {@link EventFormat}.
+ */
 public class EventDeserializationException extends RuntimeException {
     public EventDeserializationException(Throwable e) {
         super(e);

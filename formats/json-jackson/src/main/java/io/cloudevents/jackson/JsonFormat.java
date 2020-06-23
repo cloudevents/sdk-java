@@ -69,9 +69,9 @@ public final class JsonFormat implements EventFormat {
     }
 
     @Override
-    public CloudEvent deserialize(byte[] event) throws EventDeserializationException {
+    public CloudEvent deserialize(byte[] bytes) throws EventDeserializationException {
         try {
-            return mapper.readValue(event, CloudEvent.class);
+            return mapper.readValue(bytes, CloudEvent.class);
         } catch (IOException e) {
             throw new EventDeserializationException(e);
         }

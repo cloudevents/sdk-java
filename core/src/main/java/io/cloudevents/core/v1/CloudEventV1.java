@@ -28,9 +28,10 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * CloudEvent implementation for v1.0
+ *
  * @author fabiojose
  * @author slinkydeveloper
- * @version 1.0
  */
 public final class CloudEventV1 extends BaseCloudEvent {
 
