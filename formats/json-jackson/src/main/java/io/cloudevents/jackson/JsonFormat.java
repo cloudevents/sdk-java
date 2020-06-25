@@ -26,6 +26,10 @@ import io.cloudevents.core.format.EventSerializationException;
 
 import java.io.IOException;
 
+/**
+ * Implementation of {@link EventFormat} for <a href="https://github.com/cloudevents/spec/blob/v1.0/json-format.md">JSON event format</a>
+ * using Jackson. This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #CONTENT_TYPE}.
+ */
 public final class JsonFormat implements EventFormat {
 
     public static final String CONTENT_TYPE = "application/cloudevents+json";
@@ -89,6 +93,10 @@ public final class JsonFormat implements EventFormat {
         return getCloudEventJacksonModule(false, false);
     }
 
+    /**
+     * @return a JacksonModule with CloudEvent serializer/deserializer customizing the data serialization.
+     * Look at {@link #withForceJsonDataToBase64()} and {@link #withForceNonJsonDataToString()} for more details.
+     */
     public static SimpleModule getCloudEventJacksonModule(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
         final SimpleModule ceModule = new SimpleModule("CloudEvent");
         ceModule.addSerializer(CloudEvent.class, new CloudEventSerializer(forceDataBase64Serialization, forceStringSerialization));

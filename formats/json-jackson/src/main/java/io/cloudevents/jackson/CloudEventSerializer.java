@@ -30,6 +30,9 @@ import io.cloudevents.rw.CloudEventReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Jackson {@link com.fasterxml.jackson.databind.JsonSerializer} for {@link CloudEvent}
+ */
 public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
     private final boolean forceDataBase64Serialization;
