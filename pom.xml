@@ -21,9 +21,12 @@
 
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-parent</artifactId>
-    <name>CloudEvents</name>
     <version>2.0.0-milestone1</version>
     <packaging>pom</packaging>
+
+    <name>CloudEvents</name>
+    <url>https://cloudevents.github.io/sdk-java/</url>
+    <description>CloudEvents SDK for Java</description>
 
     <scm>
         <connection>scm:git:git://github.com/cloudevents/sdk-java.git</connection>
