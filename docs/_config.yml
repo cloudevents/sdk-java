@@ -1,3 +1,13 @@
-theme: jekyll-theme-slate
+# To configure the environment locally to test the website, check out
+# https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
+
+title: Java SDK for CloudEvents
+remote_theme: pmarsceill/just-the-docs
 plugins:
   - jemoji
+
+aux_links:
+  "GitHub Repository":
+    - "https://github.com/cloudevents/sdk-java"
+  "CloudEvents home":
+    - "https://cloudevents.io/"
