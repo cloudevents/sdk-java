@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 /**
- * Singleton to materialize CloudEvent extensions as POJOs. <br/>
+ * Singleton to materialize CloudEvent extensions as POJOs.
  * <p>
- * You can materialize an {@link Extension} POJO with {@code ExtensionProvider.getInstance().parseExtension(DistributedTracingExtension.class, event)}.<br/>
+ * You can materialize an {@link Extension} POJO with {@code ExtensionProvider.getInstance().parseExtension(DistributedTracingExtension.class, event)}.
  */
 @ParametersAreNonnullByDefault
 public final class ExtensionProvider {
@@ -64,11 +64,11 @@ public final class ExtensionProvider {
     }
 
     /**
-     * Parse an extension from the {@link CloudEventExtensions}, materializing the corresponding POJO. <br/>
+     * Parse an extension from the {@link CloudEventExtensions}, materializing the corresponding POJO.
      *
-     * @param extensionClass the class implementing {@link Extension}
+     * @param extensionClass  the class implementing {@link Extension}
      * @param eventExtensions the event extensions to read
-     * @param <T> the type of the extension
+     * @param <T>             the type of the extension
      */
     @SuppressWarnings("unchecked")
     @Nullable

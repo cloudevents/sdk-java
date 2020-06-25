@@ -26,11 +26,11 @@ import java.util.ServiceLoader;
 import java.util.stream.StreamSupport;
 
 /**
- * Singleton holding the discovered {@link EventFormat} implementations through {@link ServiceLoader}.<br/>
+ * Singleton holding the discovered {@link EventFormat} implementations through {@link ServiceLoader}.
  * <p>
- * You can resolve an event format using {@code EventFormatProvider.getInstance().resolveFormat(contentType)}.<br/>
+ * You can resolve an event format using {@code EventFormatProvider.getInstance().resolveFormat(contentType)}.
  * <p>
- * You can programmatically add a new {@link EventFormat} implementation using {@link this#registerFormat(EventFormat)}.
+ * You can programmatically add a new {@link EventFormat} implementation using {@link #registerFormat(EventFormat)}.
  */
 @ParametersAreNonnullByDefault
 public final class EventFormatProvider {

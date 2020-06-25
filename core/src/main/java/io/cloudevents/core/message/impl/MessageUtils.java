@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 public class MessageUtils {
 
     /**
-     * Common flow to parse an incoming message that could be structured or binary.<br/>
+     * Common flow to parse an incoming message that could be structured or binary.
      */
     public static MessageReader parseStructuredOrBinaryMessage(
         Supplier<String> contentTypeHeaderReader,

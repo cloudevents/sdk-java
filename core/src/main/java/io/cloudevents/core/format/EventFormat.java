@@ -25,9 +25,9 @@ import java.util.Set;
 
 /**
  * An <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#event-format">Event format</a>
- * specifies how to serialize a CloudEvent as a sequence of bytes. <br/>
+ * specifies how to serialize a CloudEvent as a sequence of bytes.
  * <p>
- * An implementation of this interface should support all specification versions of {@link CloudEvent}. <br/>
+ * An implementation of this interface should support all specification versions of {@link CloudEvent}.
  * <p>
  * Implementations of this interface can be registered to the {@link io.cloudevents.core.provider.EventFormatProvider} to use them.
  *

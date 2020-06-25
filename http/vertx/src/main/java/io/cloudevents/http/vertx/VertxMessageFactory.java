@@ -56,7 +56,7 @@ public final class VertxMessageFactory {
     }
 
     /**
-     * Like {@link this#createReader(HttpServerRequest)}
+     * Like {@link #createReader(HttpServerRequest)}
      *
      * @param request
      * @param handler
@@ -76,7 +76,7 @@ public final class VertxMessageFactory {
     }
 
     /**
-     * Like {@link this#createReader(HttpClientResponse)}
+     * Like {@link #createReader(HttpClientResponse)}
      *
      * @param response
      * @param handler
