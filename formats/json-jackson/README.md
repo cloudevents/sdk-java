@@ -25,6 +25,6 @@ CloudEvent event = CloudEventBuilder.v1()
 
 byte[] serialized = EventFormatProvider
   .getInstance()
-  .resolveFormat("application/json")
+  .resolveFormat(JsonFormat.CONTENT_TYPE)
   .serialize(event);
 ```

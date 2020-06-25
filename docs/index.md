@@ -71,10 +71,11 @@ For example, given you have in your classpath the [`cloudevents-json-jackson`] m
 
 ```java
 import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.jackson.JsonFormat;
 
 EventFormat format = EventFormatProvider
   .getInstance()
-  .resolveFormat("application/cloudevents+json");
+  .resolveFormat(JsonFormat.CONTENT_TYPE);
 
 // Serialize event
 byte[] serialized = format.serialize(event);
