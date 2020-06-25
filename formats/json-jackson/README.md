@@ -8,7 +8,7 @@ For Maven:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-json-jackson</artifactId>
-    <version>2.0.0-SNAPSHOT </version>
+    <version>2.0.0-milestone1 </version>
 </dependency>
 ```
 
