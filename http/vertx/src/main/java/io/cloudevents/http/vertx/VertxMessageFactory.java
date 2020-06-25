@@ -56,10 +56,9 @@ public final class VertxMessageFactory {
     }
 
     /**
-     * Like {@link #createReader(HttpServerRequest)}
-     *
      * @param request
      * @param handler
+     * @see #createReader(HttpServerRequest)
      */
     public static void createReader(HttpServerRequest request, Handler<AsyncResult<MessageReader>> handler) {
         createReader(request).onComplete(handler);
@@ -76,7 +75,7 @@ public final class VertxMessageFactory {
     }
 
     /**
-     * Like {@link #createReader(HttpClientResponse)}
+     * @see #createReader(HttpClientResponse)
      *
      * @param response
      * @param handler

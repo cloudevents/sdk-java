@@ -54,7 +54,7 @@ public final class KafkaMessageFactory {
     }
 
     /**
-     * Like {@link #createReader(ConsumerRecord)}
+     * @see #createReader(ConsumerRecord)
      */
     public static MessageReader createReader(Headers headers, byte[] payload) throws IllegalArgumentException {
         return MessageUtils.parseStructuredOrBinaryMessage(
@@ -81,21 +81,21 @@ public final class KafkaMessageFactory {
     }
 
     /**
-     * Like {@link #createWriter(String, Integer, Long, Object)}
+     * @see #createWriter(String, Integer, Long, Object)
      */
     public static <K> MessageWriter<CloudEventWriter<ProducerRecord<K, byte[]>>, ProducerRecord<K, byte[]>> createWriter(String topic, Integer partition, K key) {
         return createWriter(topic, partition, null, key);
     }
 
     /**
-     * Like {@link #createWriter(String, Integer, Long, Object)}
+     * @see #createWriter(String, Integer, Long, Object)
      */
     public static <K> MessageWriter<CloudEventWriter<ProducerRecord<K, byte[]>>, ProducerRecord<K, byte[]>> createWriter(String topic, K key) {
         return createWriter(topic, null, null, key);
     }
 
     /**
-     * Like {@link #createWriter(String, Integer, Long, Object)}
+     * @see #createWriter(String, Integer, Long, Object)
      */
     public static MessageWriter<CloudEventWriter<ProducerRecord<Void, byte[]>>, ProducerRecord<Void, byte[]>> createWriter(String topic) {
         return createWriter(topic, null, null, null);
