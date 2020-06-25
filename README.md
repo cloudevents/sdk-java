@@ -7,6 +7,8 @@
 
 A Java API for the [CloudEvents specification](https://github.com/cloudevents/spec)
 
+Look at https://cloudevents.github.io/sdk-java/ for more documentation.
+
 __Checkout the [changelog](./CHANGELOG.md)__
 
 ## Status

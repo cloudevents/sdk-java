@@ -41,8 +41,11 @@ add `cloudevents-json-jackson` as a dependency and then:
 
 ```java
 import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.jackson.JsonFormat;
 
-EventFormat format = EventFormatProvider.getInstance().resolveFormat("application/json");
+EventFormat format = EventFormatProvider
+  .getInstance()
+  .resolveFormat(JsonFormat.CONTENT_TYPE);
 
 // Serialize event
 byte[] serialized = format.serialize(event);
