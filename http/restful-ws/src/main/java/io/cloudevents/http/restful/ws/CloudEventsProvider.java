@@ -46,11 +46,17 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * This provider implements {@link CloudEvent} encoding and decoding for Jax-Rs Resources and {@link javax.ws.rs.client.Client}
+ */
 @Provider
 @Consumes(MediaType.WILDCARD)
 @Produces(MediaType.WILDCARD)
 public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, MessageBodyWriter<CloudEvent>, ClientRequestFilter {
 
+    /**
+     * The content type to use when sending {@link CloudEvent} with {@link javax.ws.rs.client.Client}
+     */
     public static MediaType CLOUDEVENT_TYPE = MediaType.valueOf("application/cloudevents");
 
     @Override
