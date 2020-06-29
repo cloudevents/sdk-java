@@ -7,7 +7,7 @@ set -o pipefail
 function die() { echo "$*" 1>&2 ; exit 1; }
 
 # Example usage
-# ./scripts/trigger_release.sh --branch upstream/master --release 2.0.0 --snapshot 2.1.0-SNAPSHOT
+# ./scripts/trigger_release.sh --upstream upstream --release 2.0.0 --snapshot 2.1.0-SNAPSHOT
 
 # In order to start the release the script:
 # * Performs a dump of the release using the release version prompted on GH using mvn versions:set -DnewVersion={newVersion}
@@ -16,19 +16,19 @@ function die() { echo "$*" 1>&2 ; exit 1; }
 # * Performs a dump of the release back to {snapshotVersion}
 # * Commits straight on master the above changes
 
-REMOTE_BRANCH=""
+REMOTE=""
 NEW_SNAPSHOT=""
 NEW_VERSION=""
 
 # Loop through arguments and process them
 while (( "$#" )); do
     case $1 in
-        -b|--branch)
+        -u|--upstream)
             if [[ -n $2 ]]; then
-                REMOTE_BRANCH=$2
+                REMOTE=$2
                 shift
             else
-                die 'ERROR: "--branch" requires a non-empty option argument.'
+                die 'ERROR: "--upstream" requires a non-empty option argument.'
             fi
         ;;
         -r|--release)
@@ -51,10 +51,10 @@ while (( "$#" )); do
     shift
 done
 
-if [ -z "$REMOTE_BRANCH" ]; then
-    echo "Remote branch is not specified, I'm gonna perform the changes only locally"
+if [ -z "$REMOTE" ]; then
+    echo "Remote is not specified, I'm gonna perform the changes only locally"
 else
-    echo "Going to release on branch $REMOTE_BRANCH"
+    echo "Going to release on remote $REMOTE"
 fi
 
 if [ -z "$NEW_VERSION" ]; then
@@ -75,8 +75,8 @@ git add **/pom.xml
 git commit --signoff -m "Release $NEW_VERSION"
 git tag $NEW_VERSION
 
-if [ -n "$REMOTE_BRANCH" ]; then
-    git push -u $REMOTE_BRANCH
+if [ -n "$REMOTE" ]; then
+    git push -u $REMOTE
 fi
 
 echo "Dumping to snapshot $NEW_SNAPSHOT"
@@ -86,6 +86,6 @@ mvn versions:set -DnewVersion="$NEW_SNAPSHOT"
 git add **/pom.xml
 git commit --signoff -m "Release $NEW_SNAPSHOT"
 
-if [ -n "$REMOTE_BRANCH" ]; then
-    git push -u $REMOTE_BRANCH
+if [ -n "$REMOTE" ]; then
+    git push -u $REMOTE
 fi
