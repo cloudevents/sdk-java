@@ -1,11 +1,13 @@
-#!/usr/bin sh
+#!/usr/bin bash
 
 set -o errexit
 set -o nounset
 set -o pipefail
 
+function die() { echo "$*" 1>&2 ; exit 1; }
+
 # Example usage
-# ./scripts/trigger_release.sh --remote upstream/master --version 2.0.0 --snapshot 2.1.0-SNAPSHOT
+# ./scripts/trigger_release.sh --branch upstream/master --release 2.0.0 --snapshot 2.1.0-SNAPSHOT
 
 # In order to start the release the script:
 # * Performs a dump of the release using the release version prompted on GH using mvn versions:set -DnewVersion={newVersion}
@@ -22,13 +24,13 @@ NEW_VERSION=""
 for arg in "$@"
 do
     case $arg in
-        -r|--remote)
+        -b|--branch)
             if [ "$2" ]; then
                 REMOTE_BRANCH=$2
                 shift
             fi
             ;;
-        -v|--version)
+        -r|--release)
             if [ "$2" ]; then
                 NEW_VERSION=$2
                 shift
@@ -49,7 +51,7 @@ do
 done
 
 if [ -z "$REMOTE_BRANCH" ]; then
-    echo 'Remote branch is not specified'
+    echo "Remote branch is not specified, I'm gonna perform the changes only locally"
 else
     echo "Going to release on branch $REMOTE_BRANCH"
 fi
@@ -69,7 +71,7 @@ sed -i -e 's+<version>[a-zA-Z0-9.-]*<\/version>+<version>2.0.0-milestone2</versi
 
 git add **/*.md
 git add **/pom.xml
-git commit --signoff -m "Dump to release $NEW_VERSION"
+git commit --signoff -m "Release $NEW_VERSION"
 git tag $NEW_VERSION
 
 if [ -n "$REMOTE_BRANCH" ]; then
@@ -81,7 +83,7 @@ echo "Dumping to snapshot $NEW_SNAPSHOT"
 mvn versions:set -DnewVersion="$NEW_SNAPSHOT"
 
 git add **/pom.xml
-git commit --signoff -m "Dump to snapshot NEW_SNAPSHOT"
+git commit --signoff -m "Release $NEW_SNAPSHOT"
 
 if [ -n "$REMOTE_BRANCH" ]; then
     git push -u $REMOTE_BRANCH
