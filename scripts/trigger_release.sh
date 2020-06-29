@@ -69,9 +69,9 @@ fi
 echo "Dumping to release $NEW_VERSION"
 
 mvn versions:set -DnewVersion="$NEW_VERSION"
-for pom in ***/pom.xml; do git add "$pom"; done
+find . -name "pom.xml" -exec git add {} \;
 sed -i -e 's+<version>[a-zA-Z0-9.-]*<\/version>+<version>2.0.0-milestone2</version>+g' ***/*.md
-for md in ***/*.md; do git add "$md"; done
+find . -name "*.md" -exec git add {} \;
 
 git commit --signoff -m "Release $NEW_VERSION"
 git tag $NEW_VERSION
@@ -83,7 +83,7 @@ fi
 echo "Dumping to snapshot $NEW_SNAPSHOT"
 
 mvn versions:set -DnewVersion="$NEW_SNAPSHOT"
-for pom in ***/pom.xml; do git add "$pom"; done
+find . -name "pom.xml" -exec git add {} \;
 
 git commit --signoff -m "Release $NEW_SNAPSHOT"
 
