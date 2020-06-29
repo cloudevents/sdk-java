@@ -1,4 +1,4 @@
-#!/usr/bin bash
+#!/usr/bin/env bash
 
 set -o errexit
 set -o nounset
@@ -21,31 +21,32 @@ NEW_SNAPSHOT=""
 NEW_VERSION=""
 
 # Loop through arguments and process them
-for arg in "$@"
-do
-    case $arg in
+while (( "$#" )); do
+    case $1 in
         -b|--branch)
-            if [ "$2" ]; then
+            if [[ -n $2 ]]; then
                 REMOTE_BRANCH=$2
                 shift
+            else
+                die 'ERROR: "--branch" requires a non-empty option argument.'
             fi
-            ;;
+        ;;
         -r|--release)
-            if [ "$2" ]; then
+            if [[ -n $2 ]]; then
                 NEW_VERSION=$2
                 shift
             else
                 die 'ERROR: "--version" requires a non-empty option argument.'
             fi
-            ;;
+        ;;
         -s|--snapshot)
-            if [ "$2" ]; then
+            if [[ -n $2 ]]; then
                 NEW_SNAPSHOT=$2
                 shift
             else
                 die 'ERROR: "--snapshot" requires a non-empty option argument.'
             fi
-            ;;
+        ;;
     esac
     shift
 done
