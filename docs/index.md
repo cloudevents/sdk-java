@@ -43,7 +43,7 @@ The CloudEvents SDK for Java is composed by several modules, each one providing 
 * [`cloudevents-http-restful-ws`] Implementation of [HTTP Protocol Binding] for [Jakarta Restful WS](https://jakarta.ee/specifications/restful-ws/)
 * [`cloudevents-kafka`] Implementation of [Kafka Protocol Binding]
 
-The latest SDK version is _2.0.0-milestone1_.
+You can look at the latest published artifacts on [Maven Central](https://search.maven.org/search?q=g:io.cloudevents).
 
 ## Get Started
 

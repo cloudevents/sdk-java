@@ -6,6 +6,16 @@ The base classes, interfaces and low-level APIs to use CloudEvents.
 
 ## How to Use
 
+For Maven based projects, use the following dependency:
+
+```xml
+<dependency>
+    <groupId>io.cloudevents</groupId>
+    <artifactId>cloudevents-api</artifactId>
+    <version>2.0.0-milestone1</version>
+</dependency>
+```
+
 ### Create an Event
 
 ```java
