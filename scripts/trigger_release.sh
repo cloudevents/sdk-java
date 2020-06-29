@@ -71,7 +71,8 @@ echo "Dumping to release $NEW_VERSION"
 mvn versions:set -DnewVersion="$NEW_VERSION"
 sed -i -e 's+<version>[a-zA-Z0-9.-]*<\/version>+<version>2.0.0-milestone2</version>+g' **/*.md
 
-git add ***/*.md ***/pom.xml
+git add ***/*.md
+git add ***/pom.xml
 git commit --signoff -m "Release $NEW_VERSION"
 git tag $NEW_VERSION
 
@@ -89,3 +90,5 @@ git commit --signoff -m "Release $NEW_SNAPSHOT"
 if [ -n "$REMOTE" ]; then
     git push -u $REMOTE $THIS_BRANCH
 fi
+
+echo "Done! Now you can create the release on GitHub!"
