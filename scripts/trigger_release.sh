@@ -13,7 +13,7 @@ function die() { echo "$*" 1>&2 ; exit 1; }
 # * Performs a dump of the release using the release version
 # * Updates all the *.md containing the release version
 # * Commits all the above changes and eventually push them to the provided remote
-# * Performs a dump of the version back to {snapshotVersion}
+# * Performs a dump of the version back to the provided snapshot version
 # * Commits all the above changes and eventually push them to the provided remote
 
 THIS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
