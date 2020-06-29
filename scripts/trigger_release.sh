@@ -10,11 +10,11 @@ function die() { echo "$*" 1>&2 ; exit 1; }
 # ./scripts/trigger_release.sh --upstream upstream --release 2.0.0 --snapshot 2.1.0-SNAPSHOT
 
 # In order to start the release the script:
-# * Performs a dump of the release using the release version prompted on GH using mvn versions:set -DnewVersion={newVersion}
+# * Performs a dump of the release using the release version
 # * Updates all the *.md containing the release version
-# * Commits straight on master the above changes
-# * Performs a dump of the release back to {snapshotVersion}
-# * Commits straight on master the above changes
+# * Commits all the above changes and eventually push them to the provided remote
+# * Performs a dump of the version back to {snapshotVersion}
+# * Commits all the above changes and eventually push them to the provided remote
 
 THIS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 REMOTE=""
