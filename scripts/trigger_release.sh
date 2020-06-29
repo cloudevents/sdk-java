@@ -16,6 +16,7 @@ function die() { echo "$*" 1>&2 ; exit 1; }
 # * Performs a dump of the release back to {snapshotVersion}
 # * Commits straight on master the above changes
 
+THIS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 REMOTE=""
 NEW_SNAPSHOT=""
 NEW_VERSION=""
@@ -76,7 +77,7 @@ git commit --signoff -m "Release $NEW_VERSION"
 git tag $NEW_VERSION
 
 if [ -n "$REMOTE" ]; then
-    git push -u $REMOTE
+    git push -u $REMOTE $THIS_BRANCH
 fi
 
 echo "Dumping to snapshot $NEW_SNAPSHOT"
@@ -87,5 +88,5 @@ git add **/pom.xml
 git commit --signoff -m "Release $NEW_SNAPSHOT"
 
 if [ -n "$REMOTE" ]; then
-    git push -u $REMOTE
+    git push -u $REMOTE $THIS_BRANCH
 fi
