@@ -40,17 +40,18 @@ Supported features of the specification:
 
 The [CloudEvents specification](https://github.com/cloudevents/spec) is a vendor-neutral specification for defining the format of event data that is being exchanged between different cloud systems. The specification basically defines an abstract envelope for any event data payload, without knowing specific implementation details of the actual underlying event. The current version of the spec is at `0.3` and it describes a simple event format, which was demonstrated at [KubeCon 2018](https://youtu.be/TZPPjAv12KU) using different _Serverless platforms_, such as [Apache Openwhisk](https://github.com/apache/incubator-openwhisk).
 
-## Java API
+## Documentation
 
-For Maven based projects, use the following to configure the CloudEvents Java SDK:
+Documentation is available at https://cloudevents.github.io/sdk-java/
 
-```xml
-<dependency>
-    <groupId>io.cloudevents</groupId>
-    <artifactId>cloudevents-core</artifactId>
-    <version>2.0.0-milestone1</version>
-</dependency>
-```
+Javadocs are available on [javadoc.io](https://www.javadoc.io):
+
+* [cloudevents-api](https://www.javadoc.io/doc/io.cloudevents/cloudevents-api)
+* [cloudevents-core](https://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
+* [cloudevents-json-jackson](https://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
+* [cloudevents-http-restful-ws](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
+* [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
+* [cloudevents-kafka](https://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)
 
 ## Community
 
@@ -63,4 +64,4 @@ For Maven based projects, use the following to configure the CloudEvents Java SD
 - Slack: #cloudeventssdk channel under
   [CNCF's Slack workspace](https://slack.cncf.io/).
 - Email: https://lists.cncf.io/g/cncf-cloudevents-sdk
-- Contact for additional information: Fabio José (`@fabiojose` on slack).
+- Contact for additional information: Francesco Guardiani (`@slinkydeveloper` on slack), Fabio José (`@fabiojose` on slack).

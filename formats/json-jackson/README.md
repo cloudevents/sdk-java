@@ -1,5 +1,7 @@
 # Json EventFormat implementation with Jackson
 
+[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-json-jackson.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
+
 Implementation of [`EventFormat`](../../api/src/main/java/io/cloudevents/format/EventFormat.java) using Jackson.
 
 For Maven:

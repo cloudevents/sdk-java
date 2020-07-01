@@ -1,5 +1,7 @@
 # Kafka Protocol Binding
 
+[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-kafka.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)
+
 For Maven based projects, use the following to configure the [Kafka Protocol Binding](https://github.com/cloudevents/spec/blob/master/kafka-protocol-binding.md):
 
 ```xml

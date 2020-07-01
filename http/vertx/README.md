@@ -1,5 +1,7 @@
 # HTTP Protocol Binding for Eclipse Vert.x
 
+[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-http-vertx.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
+
 For Maven based projects, use the following to configure the CloudEvents Vertx HTTP Transport:
 
 ```xml
