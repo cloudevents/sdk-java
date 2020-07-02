@@ -18,10 +18,10 @@ public class SampleHTTPClient {
     public static void main(String[] args) {
 
         if (args.length != 1) {
-            System.err.println("Usage: SampleHTTPClient <server>");
+            System.err.println("Usage: SampleHTTPClient <event_sink>");
             return;
         }
-        final String server = args[0];
+        final String eventSink = args[0];
 
         final Vertx vertx = Vertx.vertx();
         final HttpClient httpClient = vertx.createHttpClient();
@@ -35,7 +35,7 @@ public class SampleHTTPClient {
         for (int i = 0; i < NUM_EVENTS; i++) {
 
             // create HTTP request.
-            final HttpClientRequest request = httpClient.postAbs(server)
+            final HttpClientRequest request = httpClient.postAbs(eventSink)
                 .handler(response -> {
 
                     // We need to read the event from the HTTP response we get, so create a MessageReader.
@@ -59,7 +59,7 @@ public class SampleHTTPClient {
                 .build();
 
             // We need to write the event to the request, so create a MessageWriter.
-            if (isEven(i)) {
+            if (i % 2 == 0) {
                 VertxMessageFactory.createWriter(request)
                     .writeBinary(event); // Use binary mode.
             } else {
@@ -67,9 +67,5 @@ public class SampleHTTPClient {
                     .writeStructured(event, new JsonFormat()); // Use structured mode.
             }
         }
-    }
-
-    private static boolean isEven(final int n) {
-        return n % 2 == 0;
     }
 }

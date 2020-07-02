@@ -2,10 +2,7 @@ package io.cloudevents.examples.vertx;
 
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.http.vertx.VertxMessageFactory;
-import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServer;
-import java.util.Arrays;
 
 public class SampleHTTPServer {
 
@@ -18,8 +15,6 @@ public class SampleHTTPServer {
         final int port = Integer.parseInt(args[0]);
 
         final Vertx vertx = Vertx.vertx();
-
-        final Promise<HttpServer> serverStartedPromise = Promise.promise();
 
         // Create HTTP server.
         vertx.createHttpServer()
@@ -41,12 +36,14 @@ public class SampleHTTPServer {
 
 
             })
-            .listen(port, serverStartedPromise);
-
-        serverStartedPromise.future()
-            .onSuccess(server -> System.out.println(
-                "Server listening on port: " + server.actualPort()
-            ))
-            .onFailure(System.err::println);
+            .listen(port, server -> {
+                if (server.succeeded()) {
+                    System.out.println(
+                        "Server listening on port: " + server.result().actualPort()
+                    );
+                } else {
+                    System.err.println(server.cause().getMessage());
+                }
+            });
     }
 }
