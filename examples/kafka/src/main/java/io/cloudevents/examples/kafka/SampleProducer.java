@@ -29,10 +29,10 @@ public class SampleProducer {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, args[0]);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "sample-cloudevents-producer");
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
         // Configure the CloudEventSerializer to emit events as json structured events
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CloudEventSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CloudEventSerializer.class);
         props.put(CloudEventSerializer.ENCODING_CONFIG, Encoding.BINARY);
         props.put(CloudEventSerializer.EVENT_FORMAT_CONFIG, JsonFormat.CONTENT_TYPE);
 
