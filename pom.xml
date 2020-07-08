@@ -112,6 +112,7 @@
                 </property>
             </activation>
             <modules>
+                <module>benchmarks</module>
                 <module>http/restful-ws-integration-tests</module>
                 <module>examples</module>
             </modules>
