@@ -1,5 +1,7 @@
 # CloudEvents API
 
+[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-api.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-api)
+
 For Maven based projects, use the following dependency:
 
 ```xml

@@ -1,5 +1,7 @@
 # HTTP Protocol Binding for Jakarta RESTful Web Services
 
+[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
+
 For Maven based projects, use the following to configure the CloudEvents Jakarta RESTful Web Services Binding:
 
 ```xml
