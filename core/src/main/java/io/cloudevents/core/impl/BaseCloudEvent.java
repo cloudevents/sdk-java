@@ -40,18 +40,13 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
         return EventDataCodecProvider.getInstance().serialize(this.getDataContentType(), this.data);
     }
 
-    @Override
-    public Object getRawData() {
-        return this.data;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getData(Class<T> c) throws IllegalArgumentException {
         if (this.data == null) {
             return null;
         }
-        if (c.equals(data.getClass())) {
+        if (c.equals(Object.class) || c.equals(data.getClass())) {
             return (T) this.data;
         }
         return EventDataCodecProvider.getInstance().deserialize(this.getDataContentType(), this.data, c);

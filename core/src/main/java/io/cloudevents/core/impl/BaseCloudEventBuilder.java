@@ -46,7 +46,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         this.self = (SELF) this;
 
         this.setAttributes(event);
-        this.data = event.getRawData();
+        this.data = event.getData(Object.class);
         this.extensions = new HashMap<>();
         for (String k : event.getExtensionNames()) {
             this.extensions.put(k, event.getExtension(k));

@@ -111,7 +111,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         // Serialize data
-        Object data = value.getRawData();
+        Object data = value.getData(Object.class);
         String contentType = value.getDataContentType();
         if (data != null) {
             if (data instanceof byte[]) {
