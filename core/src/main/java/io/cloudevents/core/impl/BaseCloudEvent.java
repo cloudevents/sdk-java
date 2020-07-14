@@ -37,7 +37,7 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
 
     @Override
     public byte[] getData() {
-        return getData(byte[].class);
+        return EventDataCodecProvider.getInstance().serialize(this.getDataContentType(), this.data);
     }
 
     @Override
