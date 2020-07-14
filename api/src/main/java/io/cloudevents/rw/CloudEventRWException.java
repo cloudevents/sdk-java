@@ -25,6 +25,7 @@ public class CloudEventRWException extends RuntimeException {
         INVALID_ATTRIBUTE_TYPE,
         INVALID_ATTRIBUTE_VALUE,
         INVALID_EXTENSION_TYPE,
+        DATA_CODEC_ERROR,
         OTHER
     }
 
@@ -82,6 +83,14 @@ public class CloudEventRWException extends RuntimeException {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.INVALID_EXTENSION_TYPE,
             "Invalid extension type for \"" + extensionName + "\": " + clazz.getCanonicalName()
+        );
+    }
+
+    public static CloudEventRWException newDataCodecError(Throwable cause) {
+        return new CloudEventRWException(
+            CloudEventRWExceptionKind.DATA_CODEC_ERROR,
+            "Error while serializing/deserializing data",
+            cause
         );
     }
 

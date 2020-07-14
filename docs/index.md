@@ -71,7 +71,7 @@ For example, given you have in your classpath the [`cloudevents-json-jackson`] m
 
 ```java
 import io.cloudevents.core.format.EventFormatProvider;
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson.Json;
 
 EventFormat format = EventFormatProvider
   .getInstance()

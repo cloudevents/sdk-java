@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JsonFormatTest {
+class JsonTest {
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -196,8 +196,8 @@ class JsonFormatTest {
         }
     }
 
-    private JsonFormat getFormat() {
-        return (JsonFormat) EventFormatProvider.getInstance().resolveFormat(JsonFormat.CONTENT_TYPE);
+    private Json getFormat() {
+        return (Json) EventFormatProvider.getInstance().resolveFormat(Json.CONTENT_TYPE);
     }
 
 }

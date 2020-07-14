@@ -19,9 +19,11 @@ package io.cloudevents.core.mock;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.format.EventSerializationException;
 import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.BaseBinaryMessageReader;
+import io.cloudevents.core.provider.EventDataCodecProvider;
 import io.cloudevents.rw.*;
 
 import java.net.URI;
@@ -66,7 +68,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
         this.readExtensions(visitor);
 
         if (this.data != null && this.data.length != 0) {
-            return visitor.end(this.data);
+            return visitor.end((String) this.attributes.get("datacontenttype"), this.data);
         }
 
         return visitor.end();
@@ -105,9 +107,13 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public MockBinaryMessageWriter end(byte[] value) throws CloudEventRWException {
-        this.data = value;
-        return this;
+    public MockBinaryMessageWriter end(String contentType, Object value) throws CloudEventRWException {
+        try {
+            this.data = EventDataCodecProvider.getInstance().serialize(contentType, value);
+            return this;
+        } catch (EventSerializationException e) {
+            throw CloudEventRWException.newDataCodecError(e);
+        }
     }
 
     @Override

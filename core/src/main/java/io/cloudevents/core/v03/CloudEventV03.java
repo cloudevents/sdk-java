@@ -24,7 +24,6 @@ import io.cloudevents.rw.CloudEventRWException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -47,7 +46,7 @@ public final class CloudEventV03 extends BaseCloudEvent {
     public CloudEventV03(String id, URI source, String type,
                          ZonedDateTime time, URI schemaurl,
                          String datacontenttype, String subject,
-                         byte[] data, Map<String, Object> extensions) {
+                         Object data, Map<String, Object> extensions) {
         super(data, extensions);
 
         this.id = id;
@@ -172,13 +171,13 @@ public final class CloudEventV03 extends BaseCloudEvent {
             Objects.equals(schemaurl, that.schemaurl) &&
             Objects.equals(getSubject(), that.getSubject()) &&
             Objects.equals(getTime(), that.getTime()) &&
-            Arrays.equals(getData(), that.getData()) &&
+            Objects.equals(getRawData(), that.getRawData()) &&
             Objects.equals(this.extensions, that.extensions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSource(), getType(), datacontenttype, schemaurl, getSubject(), getTime(), Arrays.hashCode(getData()), this.extensions);
+        return Objects.hash(getId(), getSource(), getType(), datacontenttype, schemaurl, getSubject(), getTime(), getRawData(), this.extensions);
     }
 
     @Override
@@ -191,7 +190,7 @@ public final class CloudEventV03 extends BaseCloudEvent {
             ", schemaurl=" + schemaurl +
             ", subject='" + subject + '\'' +
             ", time=" + time +
-            ", data=" + Arrays.toString(getData()) +
+            ", data=" + getRawData() +
             ", extensions" + this.extensions +
             '}';
     }

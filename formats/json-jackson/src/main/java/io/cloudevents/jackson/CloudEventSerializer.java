@@ -21,14 +21,15 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.SpecVersion;
 import io.cloudevents.core.impl.CloudEventUtils;
+import io.cloudevents.core.provider.EventDataCodecProvider;
 import io.cloudevents.rw.CloudEventAttributesWriter;
 import io.cloudevents.rw.CloudEventExtensionsWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventReader;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Jackson {@link com.fasterxml.jackson.databind.JsonSerializer} for {@link CloudEvent}
@@ -94,8 +95,10 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
     @Override
     public void serialize(CloudEvent value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+        SpecVersion specVersion = value.getSpecVersion();
+
         gen.writeStartObject();
-        gen.writeStringField("specversion", value.getSpecVersion().toString());
+        gen.writeStringField("specversion", specVersion.toString());
 
         // Serialize attributes
         try {
@@ -108,39 +111,46 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         // Serialize data
-        byte[] data = value.getData();
+        Object data = value.getRawData();
         String contentType = value.getDataContentType();
         if (data != null) {
-            if (shouldSerializeBase64(contentType)) {
-                switch (value.getSpecVersion()) {
-                    case V03:
-                        gen.writeStringField("datacontentencoding", "base64");
-                        gen.writeFieldName("data");
-                        gen.writeBinary(data);
-                        break;
-                    case V1:
-                        gen.writeFieldName("data_base64");
-                        gen.writeBinary(data);
-                        break;
-                }
-            } else if (JsonFormat.dataIsJsonContentType(contentType)) {
-                // TODO really bad b/c it allocates stuff, is there another solution out there?
-                char[] dataAsString = new String(data, StandardCharsets.UTF_8).toCharArray();
-                gen.writeFieldName("data");
-                gen.writeRawValue(dataAsString, 0, dataAsString.length);
+            if (data instanceof byte[]) {
+                writeBase64Data(gen, specVersion, (byte[]) data);
+            } else if (Json.dataIsJsonContentType(contentType) && !shouldSerializeBase64(contentType)) {
+                // Let JsonGenerator serialize the pojo
+                gen.writeObjectField("data", data);
             } else {
-                gen.writeFieldName("data");
-                gen.writeUTF8String(data, 0, data.length);
+                byte[] bytes = EventDataCodecProvider.getInstance().serialize(contentType, data);
+                if (shouldSerializeBase64(contentType)) {
+                    writeBase64Data(gen, specVersion, bytes);
+                } else {
+                    gen.writeFieldName("data");
+                    gen.writeUTF8String(bytes, 0, bytes.length);
+                }
             }
         }
         gen.writeEndObject();
     }
 
     private boolean shouldSerializeBase64(String contentType) {
-        if (JsonFormat.dataIsJsonContentType(contentType)) {
+        if (Json.dataIsJsonContentType(contentType)) {
             return this.forceDataBase64Serialization;
         } else {
             return !this.forceStringSerialization;
+        }
+    }
+
+    private void writeBase64Data(JsonGenerator gen, SpecVersion specVersion, byte[] data) throws IOException {
+        switch (specVersion) {
+            case V03:
+                gen.writeStringField("datacontentencoding", "base64");
+                gen.writeFieldName("data");
+                gen.writeBinary(data);
+                break;
+            case V1:
+                gen.writeFieldName("data_base64");
+                gen.writeBinary(data);
+                break;
         }
     }
 

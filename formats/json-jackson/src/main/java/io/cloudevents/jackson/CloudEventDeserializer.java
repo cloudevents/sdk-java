@@ -80,7 +80,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                     }
                 }
 
-                byte[] data = null;
+                Object data = null;
 
                 // Now let's handle the data
                 switch (specVersion) {
@@ -90,14 +90,12 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                             if (isBase64) {
                                 data = node.remove("data").binaryValue();
                             } else {
-                                if (JsonFormat.dataIsJsonContentType(contentType)) {
-                                    // This solution is quite bad, but i see no alternatives now.
-                                    // Hopefully in future we can improve it
-                                    data = node.remove("data").toString().getBytes();
+                                if (Json.dataIsJsonContentType(contentType)) {
+                                    data = node.remove("data");
                                 } else {
                                     JsonNode dataNode = node.remove("data");
                                     assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
-                                    data = dataNode.asText().getBytes();
+                                    data = dataNode.asText();
                                 }
                             }
                         }
@@ -108,14 +106,12 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                         if (node.has("data_base64")) {
                             data = node.remove("data_base64").binaryValue();
                         } else if (node.has("data")) {
-                            if (JsonFormat.dataIsJsonContentType(contentType)) {
-                                // This solution is quite bad, but i see no alternatives now.
-                                // Hopefully in future we can improve it
-                                data = node.remove("data").toString().getBytes();
+                            if (Json.dataIsJsonContentType(contentType)) {
+                                data = node.remove("data");
                             } else {
                                 JsonNode dataNode = node.remove("data");
                                 assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
-                                data = dataNode.asText().getBytes();
+                                data = dataNode.asText();
                             }
                         }
                 }
@@ -142,7 +138,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                 });
 
                 if (data != null) {
-                    return visitor.end(data);
+                    return visitor.end(contentType, data);
                 }
                 return visitor.end();
             } catch (IOException e) {

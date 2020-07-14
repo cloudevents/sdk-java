@@ -95,7 +95,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param data data of the event
      * @return self
      */
-    CloudEventBuilder withData(byte[] data);
+    CloudEventBuilder withData(Object data);
 
     /**
      * Set the {@code datacontenttype} and {@code data} of the event
@@ -104,7 +104,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param data            data of the event
      * @return self
      */
-    CloudEventBuilder withData(String dataContentType, byte[] data);
+    CloudEventBuilder withData(String dataContentType, Object data);
 
     /**
      * Set the {@code datacontenttype}, {@code dataschema} and {@code data} of the event
@@ -114,7 +114,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param data            data of the event
      * @return self
      */
-    CloudEventBuilder withData(String dataContentType, URI dataSchema, byte[] data);
+    CloudEventBuilder withData(String dataContentType, URI dataSchema, Object data);
 
     /**
      * Set an extension with provided key and string value

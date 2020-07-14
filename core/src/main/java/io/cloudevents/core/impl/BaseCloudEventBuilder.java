@@ -32,7 +32,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     // This is a little trick for enabling fluency
     private final SELF self;
 
-    protected byte[] data;
+    protected Object data;
     protected Map<String, Object> extensions;
 
     @SuppressWarnings("unchecked")
@@ -46,7 +46,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         this.self = (SELF) this;
 
         this.setAttributes(event);
-        this.data = event.getData();
+        this.data = event.getRawData();
         this.extensions = new HashMap<>();
         for (String k : event.getExtensionNames()) {
             this.extensions.put(k, event.getExtension(k));
@@ -55,21 +55,18 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
 
     protected abstract void setAttributes(CloudEvent event);
 
-    //TODO builder should accept data as Object and use data codecs (that we need to implement)
-    // to encode data
-
-    public SELF withData(byte[] data) {
+    public SELF withData(Object data) {
         this.data = data;
         return this.self;
     }
 
-    public SELF withData(String dataContentType, byte[] data) {
+    public SELF withData(String dataContentType, Object data) {
         withDataContentType(dataContentType);
         withData(data);
         return this.self;
     }
 
-    public SELF withData(String dataContentType, URI dataSchema, byte[] data) {
+    public SELF withData(String dataContentType, URI dataSchema, Object data) {
         withDataContentType(dataContentType);
         withDataSchema(dataSchema);
         withData(data);
@@ -117,8 +114,8 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     @Override
-    public CloudEvent end(byte[] value) throws CloudEventRWException {
-        this.data = value;
+    public CloudEvent end(String contentType, Object value) throws CloudEventRWException {
+        withData(contentType, value);
         return build();
     }
 

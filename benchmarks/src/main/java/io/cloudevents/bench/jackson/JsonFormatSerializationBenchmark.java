@@ -19,7 +19,7 @@ package io.cloudevents.bench.jackson;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson.Json;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -32,7 +32,7 @@ public class JsonFormatSerializationBenchmark {
     public static class SerializationState {
         public CloudEvent eventWithJson = CloudEventBuilder.v1(V1_WITH_JSON_DATA_WITH_EXT).build();
         public CloudEvent eventWithXml = CloudEventBuilder.v1(V1_WITH_XML_DATA).build();
-        public JsonFormat format = new JsonFormat();
+        public Json format = new Json();
     }
 
     @Benchmark

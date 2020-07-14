@@ -19,7 +19,7 @@ package io.cloudevents.bench.kafka;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson.Json;
 import io.cloudevents.kafka.KafkaMessageFactory;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -50,7 +50,7 @@ public class CloudEventToKafkaProducerMessageBenchmark {
         bh.consume(
             KafkaMessageFactory
                 .createWriter("aaa")
-                .writeStructured(event.event, JsonFormat.CONTENT_TYPE)
+                .writeStructured(event.event, Json.CONTENT_TYPE)
         );
     }
 

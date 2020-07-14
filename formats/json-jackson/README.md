@@ -2,7 +2,7 @@
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-json-jackson.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
 
-Implementation of [`EventFormat`](../../api/src/main/java/io/cloudevents/format/EventFormat.java) using Jackson.
+Implementation of [`EventFormat`](../../core/src/main/java/io/cloudevents/format/EventFormat.java) and [`EventDataCodec`](../../core/src/main/java/io/cloudevents/codec/EventDataCodec.java) using Jackson.
 
 For Maven:
 

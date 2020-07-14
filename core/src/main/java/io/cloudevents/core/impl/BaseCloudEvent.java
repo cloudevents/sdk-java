@@ -18,6 +18,7 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.core.provider.EventDataCodecProvider;
 import io.cloudevents.rw.*;
 
 import java.util.HashMap;
@@ -26,17 +27,34 @@ import java.util.Set;
 
 public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
 
-    private final byte[] data;
+    private final Object data;
     protected final Map<String, Object> extensions;
 
-    protected BaseCloudEvent(byte[] data, Map<String, Object> extensions) {
+    protected BaseCloudEvent(Object data, Map<String, Object> extensions) {
         this.data = data;
         this.extensions = extensions != null ? extensions : new HashMap<>();
     }
 
     @Override
     public byte[] getData() {
+        return getData(byte[].class);
+    }
+
+    @Override
+    public Object getRawData() {
         return this.data;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getData(Class<T> c) throws IllegalArgumentException {
+        if (this.data == null) {
+            return null;
+        }
+        if (c.equals(data.getClass())) {
+            return (T) this.data;
+        }
+        return EventDataCodecProvider.getInstance().deserialize(this.getDataContentType(), this.data, c);
     }
 
     @Override
@@ -55,7 +73,7 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
         this.readExtensions(visitor);
 
         if (this.data != null) {
-            return visitor.end(this.data);
+            return visitor.end(this.getDataContentType(), this.data);
         }
 
         return visitor.end();

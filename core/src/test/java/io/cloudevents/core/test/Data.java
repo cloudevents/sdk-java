@@ -17,6 +17,8 @@
 
 package io.cloudevents.core.test;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.types.Time;
@@ -52,7 +54,7 @@ public class Data {
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
-        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, new ObjectNode(JsonNodeFactory.instance))
         .withSubject(SUBJECT)
         .withTime(TIME)
         .build();
@@ -61,7 +63,7 @@ public class Data {
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
-        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, new ObjectNode(JsonNodeFactory.instance))
         .withSubject(SUBJECT)
         .withTime(Time.parseTime("2018-04-26T14:48:09.1234Z"))
         .build();
@@ -70,7 +72,7 @@ public class Data {
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
-        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, new ObjectNode(JsonNodeFactory.instance))
         .withSubject(SUBJECT)
         .withTime(TIME)
         .withExtension("astring", "aaa")
@@ -82,7 +84,7 @@ public class Data {
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
-        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+        .withData(DATACONTENTTYPE_JSON, DATASCHEMA, new ObjectNode(JsonNodeFactory.instance))
         .withSubject(SUBJECT)
         .withTime(TIME)
         .withExtension("astring", "aaa")

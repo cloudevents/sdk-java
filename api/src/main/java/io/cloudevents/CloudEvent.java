@@ -28,5 +28,19 @@ public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
      * The event data
      */
     @Nullable
+    Object getRawData();
+
+    /**
+     * The event data
+     */
+    @Nullable
     byte[] getData();
+
+    /**
+     * The event data as T
+     *
+     * @throws IllegalArgumentException if there isn't any unmarshaller from the inner data to T
+     */
+    @Nullable
+    <T> T getData(Class<T> c) throws IllegalArgumentException;
 }

@@ -34,8 +34,8 @@ public class CloudEventReaderAdapter implements CloudEventReader {
         this.readAttributes(visitor);
         this.readExtensions(visitor);
 
-        if (event.getData() != null) {
-            return visitor.end(event.getData());
+        if (event.getRawData() != null) {
+            return visitor.end(event.getDataContentType(), event.getRawData());
         }
 
         return visitor.end();

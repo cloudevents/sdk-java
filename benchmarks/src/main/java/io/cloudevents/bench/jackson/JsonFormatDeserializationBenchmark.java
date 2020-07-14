@@ -17,7 +17,7 @@
 
 package io.cloudevents.bench.jackson;
 
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson.Json;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -31,7 +31,7 @@ public class JsonFormatDeserializationBenchmark {
 
         public byte[] eventWithJson;
         public byte[] eventWithXml;
-        public JsonFormat format = new JsonFormat();
+        public Json format = new Json();
 
         public DeserializationState() {
             eventWithJson = format.serialize(V1_WITH_JSON_DATA_WITH_EXT);

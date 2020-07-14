@@ -4,10 +4,11 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.http.vertx.VertxMessageFactory;
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson.Json;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientRequest;
+
 import java.net.URI;
 import java.util.UUID;
 
@@ -64,7 +65,7 @@ public class SampleHTTPClient {
                     .writeBinary(event); // Use binary mode.
             } else {
                 VertxMessageFactory.createWriter(request)
-                    .writeStructured(event, new JsonFormat()); // Use structured mode.
+                    .writeStructured(event, new Json()); // Use structured mode.
             }
         }
     }

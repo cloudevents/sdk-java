@@ -43,7 +43,7 @@ add `cloudevents-json-jackson` as a dependency and then:
 
 ```java
 import io.cloudevents.core.format.EventFormatProvider;
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson.Json;
 
 EventFormat format = EventFormatProvider
   .getInstance()
