@@ -11,18 +11,6 @@
     </parent>
 
 	<artifactId>spring-boot-starter-web-cloudevents</artifactId>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>11</source>
-					<target>11</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
     <name>CloudEvents - Spring Boot Web Http Binding</name>
 	<description>Simple Helper for Cloud Events in Spring Boot Web</description>
 
