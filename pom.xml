@@ -71,6 +71,8 @@
         <module>formats/json-jackson</module>
         <module>http/vertx</module>
         <module>http/restful-ws</module>
+        <module>http/spring-boot-starter-web-cloudevents</module>
+        <module>http/spring-boot-starter-webflux-cloudevents</module>
         <module>kafka</module>
     </modules>
 
