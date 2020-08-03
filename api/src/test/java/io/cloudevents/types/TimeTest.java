@@ -22,6 +22,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.stream.Stream;
 
@@ -40,6 +42,14 @@ public class TimeTest {
     void testParseDateOffset() {
         assertThat(Time.parseTime("1937-01-01T12:20:27.87+00:20"))
             .isEqualTo("1937-01-01T12:00:27.87Z");
+    }
+
+    @Test
+    void testSerializeDateOffset() {
+        assertThat(Time.writeTime(ZonedDateTime.of(
+            LocalDateTime.of(2020, 8, 3, 18, 10, 0, 0),
+            ZoneId.of("Europe/Rome")
+        ))).isEqualTo("2020-08-03T18:10:00+02:00");
     }
 
     public static Stream<Arguments> parseDateArguments() {
