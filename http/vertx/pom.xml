@@ -31,8 +31,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <vertx.version>3.9.0</vertx.version>
-        <assertj-core.version>3.11.0</assertj-core.version>
+        <vertx.version>3.9.2</vertx.version>
         <module-name>io.cloudevents.http.vertx</module-name>
     </properties>
 

@@ -32,8 +32,8 @@
     <packaging>jar</packaging>
 
     <properties>
-        <vertx.version>3.9.0</vertx.version>
-        <resteasy.version>4.5.3.Final</resteasy.version>
+        <vertx.version>3.9.2</vertx.version>
+        <resteasy.version>4.5.6.Final</resteasy.version>
     </properties>
 
     <dependencies>
