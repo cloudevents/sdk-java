@@ -34,7 +34,7 @@ public final class Time {
     public static final DateTimeFormatter RFC3339_DATE_FORMAT = new DateTimeFormatterBuilder()
         .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
         .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
-        .appendZoneOrOffsetId()
+        .appendOffsetId()
         .toFormatter();
 
     /**
