@@ -51,7 +51,7 @@ public class SampleHTTPClient {
                     .writeBinary(event); // Use binary mode.
             } else {
                 responseFuture = VertxMessageFactory.createWriter(webClient.postAbs(eventSink))
-                    .writeStructured(event, new JsonFormat()); // Use structured mode.
+                    .writeStructured(event, JsonFormat.CONTENT_TYPE); // Use structured mode.
             }
             responseFuture
                 .map(VertxMessageFactory::createReader) // Let's convert the response to message reader...
