@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class VertxMessageFactoryTest {
 
-    @ParameterizedTest()
+    @ParameterizedTest
     @MethodSource("binaryTestArguments")
     public void readBinary(MultiMap headers, Buffer body, CloudEvent event) {
         MessageReader message = VertxMessageFactory.createReader(headers, body);
@@ -47,7 +47,7 @@ public class VertxMessageFactoryTest {
             .isEqualTo(event);
     }
 
-    @ParameterizedTest()
+    @ParameterizedTest
     @MethodSource("io.cloudevents.core.test.Data#allEventsWithoutExtensions")
     public void readStructured(CloudEvent event) {
         byte[] serializedEvent = CSVFormat.INSTANCE.serialize(event);

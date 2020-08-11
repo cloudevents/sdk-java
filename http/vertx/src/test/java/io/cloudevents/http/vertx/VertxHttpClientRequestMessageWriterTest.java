@@ -50,7 +50,7 @@ public class VertxHttpClientRequestMessageWriterTest {
         String expectedContentType = CSVFormat.INSTANCE.serializedContentType();
         byte[] expectedBuffer = CSVFormat.INSTANCE.serialize(event);
 
-        Checkpoint checkpoint = testContext.checkpoint(3);
+        Checkpoint checkpoint = testContext.checkpoint(2);
 
         vertx
             .createHttpServer()
@@ -88,7 +88,7 @@ public class VertxHttpClientRequestMessageWriterTest {
     @ParameterizedTest
     @MethodSource("binaryTestArguments")
     void testRequestWithBinary(CloudEvent event, MultiMap headers, Buffer body, Vertx vertx, VertxTestContext testContext) {
-        Checkpoint checkpoint = testContext.checkpoint(3);
+        Checkpoint checkpoint = testContext.checkpoint(2);
 
         vertx
             .createHttpServer()
