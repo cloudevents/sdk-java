@@ -58,41 +58,34 @@ public class CloudEventServerVerticle extends AbstractVerticle {
 Below is a sample on how to use the client to send and receive a CloudEvent:
 
 ```java
-import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.core.message.MessageReader;
-import io.cloudevents.http.vertx.VertxMessageFactory;
 import io.cloudevents.CloudEvent;
-import io.vertx.core.http.HttpClientRequest;
-import io.vertx.core.http.HttpClient;
+import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.http.vertx.VertxMessageFactory;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.ext.web.client.WebClient;
+
 import java.net.URI;
 
 public class CloudEventClientVerticle extends AbstractVerticle {
 
   public void start() {
-    HttpClient client = vertx.createHttpClient();
+    WebClient client = WebClient.create(vertx);
 
-    HttpClientRequest request = client.postAbs("http://localhost:8080")
-        .handler(httpClientResponse -> {
-          VertxMessageFactory
-            .createReader(httpClientResponse)
-            .onComplete(result -> {
-              if (result.succeeded()) {
-                CloudEvent event = result.result().toEvent();
-              }
-          });
-        });
+    CloudEvent reqEvent = CloudEventBuilder.v1()
+        .withId("hello")
+        .withType("example.vertx")
+        .withSource(URI.create("http://localhost"))
+        .build();
 
-    CloudEvent event = CloudEventBuilder.v1()
-      .withId("hello")
-      .withType("example.vertx")
-      .withSource(URI.create("http://localhost"))
-      .build();
-
-    // Write request as binary
     VertxMessageFactory
-      .createWriter(request)
-      .writeBinary(event);
+        .createWriter(client.postAbs("http://localhost:8080"))
+        .writeBinary(reqEvent)
+        .onSuccess(res -> {
+          CloudEvent resEvent = VertxMessageFactory
+              .createReader(res)
+              .toEvent();
+        })
+        .onFailure(Throwable::printStackTrace);
   }
 }
 ```
