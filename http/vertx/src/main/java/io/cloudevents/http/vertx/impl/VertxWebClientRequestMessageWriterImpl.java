@@ -22,23 +22,26 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
+import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
+import io.vertx.ext.web.client.HttpRequest;
+import io.vertx.ext.web.client.HttpResponse;
 
-public class VertxHttpClientRequestMessageWriterImpl implements MessageWriter<CloudEventWriter<HttpClientRequest>, HttpClientRequest>, CloudEventWriter<HttpClientRequest> {
+public class VertxWebClientRequestMessageWriterImpl implements MessageWriter<CloudEventWriter<Future<HttpResponse<Buffer>>>, Future<HttpResponse<Buffer>>>, CloudEventWriter<Future<HttpResponse<Buffer>>> {
 
-    private final HttpClientRequest request;
+    private final HttpRequest<Buffer> request;
 
-    public VertxHttpClientRequestMessageWriterImpl(HttpClientRequest request) {
+    public VertxWebClientRequestMessageWriterImpl(HttpRequest<Buffer> request) {
         this.request = request;
     }
 
     // Binary visitor factory
 
     @Override
-    public CloudEventWriter<HttpClientRequest> create(SpecVersion version) {
-        this.request.putHeader(CloudEventsHeaders.SPEC_VERSION, version.toString());
+    public CloudEventWriter<Future<HttpResponse<Buffer>>> create(SpecVersion version) {
+        this.request.headers().add(CloudEventsHeaders.SPEC_VERSION, version.toString());
         return this;
     }
 
@@ -46,32 +49,29 @@ public class VertxHttpClientRequestMessageWriterImpl implements MessageWriter<Cl
 
     @Override
     public void setAttribute(String name, String value) throws CloudEventRWException {
-        this.request.putHeader(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
+        this.request.headers().add(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
     }
 
     @Override
     public void setExtension(String name, String value) throws CloudEventRWException {
-        this.request.putHeader("ce-" + name, value);
+        this.request.headers().add("ce-" + name, value);
     }
 
     @Override
-    public HttpClientRequest end(byte[] value) throws CloudEventRWException {
-        this.request.end(Buffer.buffer(value));
-        return this.request;
+    public Future<HttpResponse<Buffer>> end(byte[] value) throws CloudEventRWException {
+        return this.request.sendBuffer(Buffer.buffer(value));
     }
 
     @Override
-    public HttpClientRequest end() {
-        this.request.end();
-        return this.request;
+    public Future<HttpResponse<Buffer>> end() {
+        return this.request.send();
     }
 
     // Structured visitor
 
     @Override
-    public HttpClientRequest setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
-        this.request.putHeader(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
-        this.request.end(Buffer.buffer(value));
-        return this.request;
+    public Future<HttpResponse<Buffer>> setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
+        this.request.headers().add(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
+        return this.request.sendBuffer(Buffer.buffer(value));
     }
 }

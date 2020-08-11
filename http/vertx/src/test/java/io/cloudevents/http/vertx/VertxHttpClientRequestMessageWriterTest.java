@@ -26,6 +26,8 @@ import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientRequest;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.client.WebClient;
 import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -65,22 +67,21 @@ public class VertxHttpClientRequestMessageWriterTest {
                 httpServerRequest.response().end();
             })
             .listen(9000, testContext.succeeding(server -> {
-                HttpClient client = vertx.createHttpClient();
-                HttpClientRequest req = client.get(server.actualPort(), "localhost", "/", httpClientResponse -> {
-                    testContext.verify(() -> {
-                        assertThat(httpClientResponse.statusCode())
-                            .isEqualTo(200);
-                    });
-                    checkpoint.flag();
-                });
+                WebClient client = WebClient.create(vertx);
                 try {
                     VertxMessageFactory
-                        .createWriter(req)
-                        .writeStructured(event, CSVFormat.INSTANCE);
+                        .createWriter(client.post(server.actualPort(), "localhost", "/"))
+                        .writeStructured(event, CSVFormat.INSTANCE)
+                        .onComplete(testContext.succeeding(res -> {
+                            testContext.verify(() -> {
+                                assertThat(res.statusCode())
+                                    .isEqualTo(200);
+                            });
+                            checkpoint.flag();
+                        }));
                 } catch (Throwable e) {
                     testContext.failNow(e);
                 }
-                checkpoint.flag();
             }));
     }
 
@@ -108,22 +109,21 @@ public class VertxHttpClientRequestMessageWriterTest {
                 httpServerRequest.response().end();
             })
             .listen(9000, testContext.succeeding(server -> {
-                HttpClient client = vertx.createHttpClient();
-                HttpClientRequest req = client.get(server.actualPort(), "localhost", "/", httpClientResponse -> {
-                    testContext.verify(() -> {
-                        assertThat(httpClientResponse.statusCode())
-                            .isEqualTo(200);
-                    });
-                    checkpoint.flag();
-                });
+                WebClient client = WebClient.create(vertx);
                 try {
                     VertxMessageFactory
-                        .createWriter(req)
-                        .writeBinary(event);
+                        .createWriter(client.post(server.actualPort(), "localhost", "/"))
+                        .writeBinary(event)
+                        .onComplete(testContext.succeeding(res -> {
+                            testContext.verify(() -> {
+                                assertThat(res.statusCode())
+                                    .isEqualTo(200);
+                            });
+                            checkpoint.flag();
+                        }));
                 } catch (Throwable e) {
                     testContext.failNow(e);
                 }
-                checkpoint.flag();
             }));
     }
 
