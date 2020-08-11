@@ -137,7 +137,7 @@ public class KafkaMessageFactoryTest {
                     header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME)),
                     header("ignored", "ignored")
                 ),
-                DATA_TEXT_SERIALIZED,
+                DATA_TEXT,
                 V03_WITH_TEXT_DATA
             ),
             // V1
@@ -210,7 +210,7 @@ public class KafkaMessageFactoryTest {
                     header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME)),
                     header("ignored", "ignored")
                 ),
-                DATA_TEXT_SERIALIZED,
+                DATA_TEXT,
                 V1_WITH_TEXT_DATA
             )
         );

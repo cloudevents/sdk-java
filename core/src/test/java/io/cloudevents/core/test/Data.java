@@ -40,7 +40,7 @@ public class Data {
 
     public static byte[] DATA_JSON_SERIALIZED = "{}".getBytes();
     public static byte[] DATA_XML_SERIALIZED = "<stuff></stuff>".getBytes();
-    public static byte[] DATA_TEXT_SERIALIZED = "Hello World Lorena!".getBytes();
+    public static String DATA_TEXT = "Hello World Lorena!";
 
     public static final CloudEvent V1_MIN = CloudEventBuilder.v1()
         .withId(ID)
@@ -103,7 +103,7 @@ public class Data {
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
-        .withData(DATACONTENTTYPE_TEXT, DATA_TEXT_SERIALIZED)
+        .withData(DATACONTENTTYPE_TEXT, DATA_TEXT)
         .withSubject(SUBJECT)
         .withTime(TIME)
         .build();

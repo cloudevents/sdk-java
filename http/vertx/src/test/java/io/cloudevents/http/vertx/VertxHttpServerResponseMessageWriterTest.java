@@ -185,7 +185,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("content-type", DATACONTENTTYPE_TEXT)
                     .add("ce-subject", SUBJECT)
                     .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME)),
-                Buffer.buffer(DATA_TEXT_SERIALIZED)
+                Buffer.buffer(DATA_TEXT)
             ),
             // V1
             Arguments.of(
@@ -248,7 +248,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("content-type", DATACONTENTTYPE_TEXT)
                     .add("ce-subject", SUBJECT)
                     .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME)),
-                Buffer.buffer(DATA_TEXT_SERIALIZED)
+                Buffer.buffer(DATA_TEXT)
             )
         );
     }

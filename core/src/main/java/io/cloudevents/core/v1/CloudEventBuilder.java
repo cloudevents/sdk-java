@@ -17,7 +17,6 @@
 
 package io.cloudevents.core.v1;
 
-import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.impl.BaseCloudEventBuilder;
 import io.cloudevents.core.impl.CloudEventUtils;
@@ -100,7 +99,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     }
 
     @Override
-    public CloudEvent build() {
+    public CloudEventV1 build() {
         if (id == null) {
             throw createMissingAttributeException("id");
         }

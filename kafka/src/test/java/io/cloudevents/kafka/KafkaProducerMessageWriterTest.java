@@ -162,7 +162,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_subject", SUBJECT),
                     header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME))
                 ),
-                DATA_TEXT_SERIALIZED
+                    DATA_TEXT
             ),
             // V1
             Arguments.of(
@@ -230,7 +230,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_subject", SUBJECT),
                     header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME))
                 ),
-                DATA_TEXT_SERIALIZED
+                DATA_TEXT
             )
         );
     }

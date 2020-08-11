@@ -17,6 +17,8 @@
 
 package io.cloudevents.rw;
 
+import io.cloudevents.lang.Nullable;
+
 /**
  * Interface to write the content (CloudEvents attributes, extensions and payload) from a
  * {@link io.cloudevents.rw.CloudEventReader} to a new representation.
@@ -27,10 +29,13 @@ public interface CloudEventWriter<R> extends CloudEventAttributesWriter, CloudEv
 
     /**
      * End the visit with a data field
+     * <p>
+     * TODO add note that explains that contentType is already provided before visiting the attributes
+     * TODO explain that value cannot be a base64 serialized byte array
      *
      * @return an eventual return value
      */
-    R end(byte[] value) throws CloudEventRWException;
+    R end(@Nullable String contentType, Object value) throws CloudEventRWException;
 
     /**
      * End the visit

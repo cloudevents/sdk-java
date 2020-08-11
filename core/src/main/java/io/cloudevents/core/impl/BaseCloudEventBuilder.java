@@ -17,8 +17,8 @@
 
 package io.cloudevents.core.impl;
 
-import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
+import io.cloudevents.core.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.rw.CloudEventRWException;
 
@@ -27,12 +27,12 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder {
+public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder<T> {
 
     // This is a little trick for enabling fluency
     private final SELF self;
 
-    protected byte[] data;
+    protected Object data;
     protected Map<String, Object> extensions;
 
     @SuppressWarnings("unchecked")
@@ -42,34 +42,35 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     @SuppressWarnings("unchecked")
-    public BaseCloudEventBuilder(CloudEvent event) {
+    public BaseCloudEventBuilder(io.cloudevents.CloudEvent event) {
         this.self = (SELF) this;
 
         this.setAttributes(event);
-        this.data = event.getData();
+        if (event instanceof CloudEvent) {
+            this.data = ((CloudEvent) event).getRawData();
+        } else {
+            this.data = event.getData();
+        }
         this.extensions = new HashMap<>();
         for (String k : event.getExtensionNames()) {
             this.extensions.put(k, event.getExtension(k));
         }
     }
 
-    protected abstract void setAttributes(CloudEvent event);
+    protected abstract void setAttributes(io.cloudevents.CloudEvent event);
 
-    //TODO builder should accept data as Object and use data codecs (that we need to implement)
-    // to encode data
-
-    public SELF withData(byte[] data) {
+    public SELF withData(Object data) {
         this.data = data;
         return this.self;
     }
 
-    public SELF withData(String dataContentType, byte[] data) {
+    public SELF withData(String dataContentType, Object data) {
         withDataContentType(dataContentType);
         withData(data);
         return this.self;
     }
 
-    public SELF withData(String dataContentType, URI dataSchema, byte[] data) {
+    public SELF withData(String dataContentType, URI dataSchema, Object data) {
         withDataContentType(dataContentType);
         withDataSchema(dataSchema);
         withData(data);
@@ -117,7 +118,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     @Override
-    public CloudEvent end(byte[] value) throws CloudEventRWException {
+    public CloudEvent end(String contentType, Object value) throws CloudEventRWException {
         this.data = value;
         return build();
     }

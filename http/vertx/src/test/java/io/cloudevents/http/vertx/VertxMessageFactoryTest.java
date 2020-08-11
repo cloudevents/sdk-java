@@ -130,7 +130,7 @@ public class VertxMessageFactoryTest {
                     .add("ce-subject", SUBJECT)
                     .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME))
                     .add("ignored", "ignored"),
-                Buffer.buffer(DATA_TEXT_SERIALIZED),
+                Buffer.buffer(DATA_TEXT),
                 V03_WITH_TEXT_DATA
             ),
             // V1
@@ -198,7 +198,7 @@ public class VertxMessageFactoryTest {
                     .add("ce-subject", SUBJECT)
                     .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME))
                     .add("ignored", "ignored"),
-                Buffer.buffer(DATA_TEXT_SERIALIZED),
+                Buffer.buffer(DATA_TEXT),
                 V1_WITH_TEXT_DATA
             ),
             // Headers case insensitivity

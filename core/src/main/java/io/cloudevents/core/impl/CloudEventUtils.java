@@ -26,7 +26,7 @@ public final class CloudEventUtils {
 
     /**
      * Convert a {@link CloudEvent} to a {@link CloudEventReader}. This method provides a default implementation
-     * for CloudEvent that doesn't implement CloudEventVisitable
+     * for {@link CloudEvent} implementations that don't implement {@link CloudEventReader}
      *
      * @param event the event to convert
      * @return the visitable implementation

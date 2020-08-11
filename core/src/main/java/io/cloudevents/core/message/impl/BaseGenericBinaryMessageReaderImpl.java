@@ -21,6 +21,7 @@ import io.cloudevents.SpecVersion;
 import io.cloudevents.rw.*;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 /**
@@ -49,9 +50,12 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
         // Grab from headers the attributes and extensions
         // This implementation avoids to use visitAttributes and visitExtensions
         // in order to complete the visit in one loop
+        AtomicReference<String> dataContentType = new AtomicReference<>();
         this.forEachHeader((key, value) -> {
             if (isContentTypeHeader(key)) {
-                visitor.setAttribute("datacontenttype", toCloudEventsValue(value));
+                String dct = toCloudEventsValue(value);
+                dataContentType.set(dct);
+                visitor.setAttribute("datacontenttype", dct);
             } else if (isCloudEventsHeader(key)) {
                 String name = toCloudEventsKey(key);
                 if (name.equals("specversion")) {
@@ -67,7 +71,7 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
 
         // Set the payload
         if (this.body != null && this.body.length != 0) {
-            return visitor.end(this.body);
+            return visitor.end(dataContentType.get(), this.body);
         }
 
         return visitor.end();

@@ -20,6 +20,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.core.codec.DataSerializationException;
+import io.cloudevents.core.codec.EventDataCodec;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.format.EventSerializationException;
@@ -28,9 +30,11 @@ import java.io.IOException;
 
 /**
  * Implementation of {@link EventFormat} for <a href="https://github.com/cloudevents/spec/blob/v1.0/json-format.md">JSON event format</a>
- * using Jackson. This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #CONTENT_TYPE}.
+ * and of {@link EventDataCodec} using Jackson. <br/>
+ * This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #CONTENT_TYPE}. <br/>
+ * This codec is resolvable with {@link io.cloudevents.core.provider.EventDataCodecProvider} using this class as key.
  */
-public final class JsonFormat implements EventFormat {
+public final class Json implements EventFormat, EventDataCodec {
 
     public static final String CONTENT_TYPE = "application/cloudevents+json";
 
@@ -38,29 +42,33 @@ public final class JsonFormat implements EventFormat {
     private final boolean forceDataBase64Serialization;
     private final boolean forceStringSerialization;
 
-    public JsonFormat(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
+    public Json(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(getCloudEventJacksonModule(forceDataBase64Serialization, forceStringSerialization));
         this.forceDataBase64Serialization = forceDataBase64Serialization;
         this.forceStringSerialization = forceStringSerialization;
     }
 
-    public JsonFormat() {
+    public Json() {
         this(false, false);
+    }
+
+    public ObjectMapper getMapper() {
+        return mapper;
     }
 
     /**
      * @return a copy of this JsonFormat that serialize events with json data with Base64 encoding
      */
-    public JsonFormat withForceJsonDataToBase64() {
-        return new JsonFormat(true, this.forceStringSerialization);
+    public Json withForceJsonDataToBase64() {
+        return new Json(true, this.forceStringSerialization);
     }
 
     /**
      * @return a copy of this JsonFormat that serialize events with non-json data as string
      */
-    public JsonFormat withForceNonJsonDataToString() {
-        return new JsonFormat(this.forceDataBase64Serialization, true);
+    public Json withForceNonJsonDataToString() {
+        return new Json(this.forceDataBase64Serialization, true);
     }
 
     @Override
@@ -84,6 +92,20 @@ public final class JsonFormat implements EventFormat {
     @Override
     public String serializedContentType() {
         return CONTENT_TYPE;
+    }
+
+    @Override
+    public byte[] serialize(String dataContentType, Object data) throws DataSerializationException, IllegalArgumentException {
+        try {
+            return this.mapper.writeValueAsBytes(data);
+        } catch (IOException e) {
+            throw new DataSerializationException(e);
+        }
+    }
+
+    @Override
+    public boolean canSerialize(String dataContentType) {
+        return dataIsJsonContentType(dataContentType);
     }
 
     /**

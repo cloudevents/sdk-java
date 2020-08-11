@@ -17,7 +17,7 @@
 
 package io.cloudevents.bench.kafka;
 
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson.Json;
 import io.cloudevents.kafka.KafkaMessageFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -73,7 +73,7 @@ public class KafkaConsumerMessageToCloudEventBenchmark {
             // Hack to generate a consumer message
             ProducerRecord<Void, byte[]> inRecord = KafkaMessageFactory
                 .createWriter("aaa")
-                .writeStructured(V1_WITH_JSON_DATA_WITH_EXT, JsonFormat.CONTENT_TYPE);
+                .writeStructured(V1_WITH_JSON_DATA_WITH_EXT, Json.CONTENT_TYPE);
 
             this.message = new ConsumerRecord<>(
                 "aaa",

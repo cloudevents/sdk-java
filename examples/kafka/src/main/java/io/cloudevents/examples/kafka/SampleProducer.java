@@ -3,7 +3,7 @@ package io.cloudevents.examples.kafka;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.message.Encoding;
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson.Json;
 import io.cloudevents.kafka.CloudEventSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -34,7 +34,7 @@ public class SampleProducer {
         // Configure the CloudEventSerializer to emit events as json structured events
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CloudEventSerializer.class);
         props.put(CloudEventSerializer.ENCODING_CONFIG, Encoding.BINARY);
-        props.put(CloudEventSerializer.EVENT_FORMAT_CONFIG, JsonFormat.CONTENT_TYPE);
+        props.put(CloudEventSerializer.EVENT_FORMAT_CONFIG, Json.CONTENT_TYPE);
 
         // Create the KafkaProducer
         KafkaProducer<String, CloudEvent> producer = new KafkaProducer<>(props);

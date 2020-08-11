@@ -22,7 +22,7 @@ import io.cloudevents.rw.*;
 
 public class CloudEventReaderAdapter implements CloudEventReader {
 
-    private CloudEvent event;
+    private final CloudEvent event;
 
     CloudEventReaderAdapter(CloudEvent event) {
         this.event = event;
@@ -35,7 +35,7 @@ public class CloudEventReaderAdapter implements CloudEventReader {
         this.readExtensions(visitor);
 
         if (event.getData() != null) {
-            return visitor.end(event.getData());
+            return visitor.end(event.getDataContentType(), event.getData());
         }
 
         return visitor.end();
