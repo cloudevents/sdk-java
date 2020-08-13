@@ -33,7 +33,7 @@ import java.time.format.DateTimeParseException;
  * @author fabiojose
  * @author slinkydeveloper
  */
-public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder, CloudEventV03> {
+public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBuilder> {
 
     private String id;
     private URI source;

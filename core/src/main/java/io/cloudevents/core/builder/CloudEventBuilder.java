@@ -29,11 +29,9 @@ import java.time.ZonedDateTime;
 
 /**
  * Builder interface to build a {@link CloudEvent}.
- *
- * @param <R> The type of returned {@link io.cloudevents.core.CloudEvent}
  */
 @ParametersAreNullableByDefault
-public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWriter<CloudEvent> {
+public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
 
     /**
      * Set the {@code id} of the event
@@ -41,7 +39,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param id id of the event
      * @return self
      */
-    CloudEventBuilder<R> withId(String id);
+    CloudEventBuilder withId(String id);
 
     /**
      * Set the {@code source} of the event
@@ -49,7 +47,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param source source of the event
      * @return self
      */
-    CloudEventBuilder<R> withSource(URI source);
+    CloudEventBuilder withSource(URI source);
 
     /**
      * Set the {@code type} of the event
@@ -57,7 +55,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param type type of the event
      * @return self
      */
-    CloudEventBuilder<R> withType(String type);
+    CloudEventBuilder withType(String type);
 
     /**
      * Set the {@code dataschema} of the event. For CloudEvent v0.3, this will configure the {@code schemaurl} attribute.
@@ -65,7 +63,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param dataSchema dataschema of the event
      * @return self
      */
-    CloudEventBuilder<R> withDataSchema(URI dataSchema);
+    CloudEventBuilder withDataSchema(URI dataSchema);
 
     /**
      * Set the {@code datacontenttype} of the event
@@ -73,7 +71,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param dataContentType datacontenttype of the event
      * @return self
      */
-    CloudEventBuilder<R> withDataContentType(String dataContentType);
+    CloudEventBuilder withDataContentType(String dataContentType);
 
     /**
      * Set the {@code subject} of the event
@@ -81,7 +79,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param subject subject of the event
      * @return self
      */
-    CloudEventBuilder<R> withSubject(String subject);
+    CloudEventBuilder withSubject(String subject);
 
     /**
      * Set the {@code time} of the event
@@ -89,7 +87,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param time time of the event
      * @return self
      */
-    CloudEventBuilder<R> withTime(ZonedDateTime time);
+    CloudEventBuilder withTime(ZonedDateTime time);
 
     /**
      * Set the {@code data} of the event
@@ -97,7 +95,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param data data of the event
      * @return self
      */
-    CloudEventBuilder<R> withData(Object data);
+    CloudEventBuilder withData(Object data);
 
     /**
      * Set the {@code datacontenttype} and {@code data} of the event
@@ -106,7 +104,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param data            data of the event
      * @return self
      */
-    CloudEventBuilder<R> withData(String dataContentType, Object data);
+    CloudEventBuilder withData(String dataContentType, Object data);
 
     /**
      * Set the {@code datacontenttype}, {@code dataschema} and {@code data} of the event
@@ -116,7 +114,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param data            data of the event
      * @return self
      */
-    CloudEventBuilder<R> withData(String dataContentType, URI dataSchema, Object data);
+    CloudEventBuilder withData(String dataContentType, URI dataSchema, Object data);
 
     /**
      * Set an extension with provided key and string value
@@ -125,7 +123,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param value value of the extension attribute
      * @return self
      */
-    CloudEventBuilder<R> withExtension(@Nonnull String key, String value);
+    CloudEventBuilder withExtension(@Nonnull String key, String value);
 
     /**
      * Set an extension with provided key and numeric value
@@ -134,7 +132,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param value value of the extension attribute
      * @return self
      */
-    CloudEventBuilder<R> withExtension(@Nonnull String key, Number value);
+    CloudEventBuilder withExtension(@Nonnull String key, Number value);
 
     /**
      * Set an extension with provided key and boolean value
@@ -143,7 +141,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param value value of the extension attribute
      * @return self
      */
-    CloudEventBuilder<R> withExtension(@Nonnull String key, boolean value);
+    CloudEventBuilder withExtension(@Nonnull String key, boolean value);
 
     /**
      * Add to the builder all the extension key/values of the provided extension
@@ -151,7 +149,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param extension materialized extension to set in the event
      * @return self
      */
-    CloudEventBuilder<R> withExtension(@Nonnull Extension extension);
+    CloudEventBuilder withExtension(@Nonnull Extension extension);
 
     /**
      * Build the event
@@ -159,14 +157,14 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @return the built event
      * @throws IllegalStateException if a required attribute is not configured
      */
-    R build() throws IllegalStateException;
+    CloudEvent build() throws IllegalStateException;
 
     /**
      * Copy this builder, creating a new instance with same values.
      *
      * @return A new builder with same values of this instance
      */
-    CloudEventBuilder<R> newBuilder();
+    CloudEventBuilder newBuilder();
 
     /**
      * @return a new CloudEvent v1 builder
@@ -204,7 +202,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param version version to use for the new builder
      * @return a new builder
      */
-    static CloudEventBuilder<?> fromSpecVersion(@Nonnull SpecVersion version) {
+    static CloudEventBuilder fromSpecVersion(@Nonnull SpecVersion version) {
         switch (version) {
             case V1:
                 return CloudEventBuilder.v1();
@@ -222,7 +220,7 @@ public interface CloudEventBuilder<R extends CloudEvent> extends CloudEventWrite
      * @param event event to copy
      * @return a new builder
      */
-    static CloudEventBuilder<?> from(@Nonnull CloudEvent event) {
+    static CloudEventBuilder from(@Nonnull CloudEvent event) {
         switch (event.getSpecVersion()) {
             case V1:
                 return CloudEventBuilder.v1(event);

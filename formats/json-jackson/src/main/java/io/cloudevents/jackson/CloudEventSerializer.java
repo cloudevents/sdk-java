@@ -30,7 +30,6 @@ import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventReader;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Jackson {@link com.fasterxml.jackson.databind.JsonSerializer} for {@link CloudEvent}
@@ -112,50 +111,21 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         // Serialize data
-        if (value instanceof io.cloudevents.core.CloudEvent) {
-            // Optimized case
-            Object data = ((io.cloudevents.core.CloudEvent) value).getRawData();
-            String contentType = value.getDataContentType();
-            if (data != null) {
-                if (data instanceof byte[]) {
-                    writeBase64Data(gen, specVersion, (byte[]) data);
-                } else if (Json.dataIsJsonContentType(contentType) && !shouldSerializeBase64(contentType)) {
-                    // Let JsonGenerator serialize the pojo
-                    gen.writeObjectField("data", data);
-                } else {
-                    byte[] bytes = EventDataCodecProvider.getInstance().serialize(contentType, data);
-                    if (shouldSerializeBase64(contentType)) {
-                        writeBase64Data(gen, specVersion, bytes);
-                    } else {
-                        gen.writeFieldName("data");
-                        gen.writeUTF8String(bytes, 0, bytes.length);
-                    }
-                }
-            }
-        } else {
-            // Slow case for CloudEvent not implementing the core interface
-            byte[] data = value.getData();
-            String contentType = value.getDataContentType();
-            if (data != null) {
+        Object data = value.getData();
+        String contentType = value.getDataContentType();
+        if (data != null) {
+            if (data instanceof byte[]) {
+                writeBase64Data(gen, specVersion, (byte[]) data);
+            } else if (Json.dataIsJsonContentType(contentType) && !shouldSerializeBase64(contentType)) {
+                // Let JsonGenerator serialize the pojo
+                gen.writeObjectField("data", data);
+            } else {
+                byte[] bytes = EventDataCodecProvider.getInstance().serialize(contentType, data);
                 if (shouldSerializeBase64(contentType)) {
-                    switch (value.getSpecVersion()) {
-                        case V03:
-                            gen.writeStringField("datacontentencoding", "base64");
-                            gen.writeFieldName("data");
-                            gen.writeBinary(data);
-                            break;
-                        case V1:
-                            gen.writeFieldName("data_base64");
-                            gen.writeBinary(data);
-                            break;
-                    }
-                } else if (Json.dataIsJsonContentType(contentType)) {
-                    char[] dataAsString = new String(data, StandardCharsets.UTF_8).toCharArray();
-                    gen.writeFieldName("data");
-                    gen.writeRawValue(dataAsString, 0, dataAsString.length);
+                    writeBase64Data(gen, specVersion, bytes);
                 } else {
                     gen.writeFieldName("data");
-                    gen.writeUTF8String(data, 0, data.length);
+                    gen.writeUTF8String(bytes, 0, bytes.length);
                 }
             }
         }

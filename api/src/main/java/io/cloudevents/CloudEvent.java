@@ -28,5 +28,5 @@ public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
      * The event data
      */
     @Nullable
-    byte[] getData();
+    Object getData();
 }

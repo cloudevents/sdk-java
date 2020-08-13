@@ -166,13 +166,13 @@ public final class CloudEventV1 extends BaseCloudEvent {
             Objects.equals(dataschema, that.getDataSchema()) &&
             Objects.equals(getSubject(), that.getSubject()) &&
             Objects.equals(getTime(), that.getTime()) &&
-            Objects.deepEquals(getRawData(), that.getRawData()) &&
+            Objects.deepEquals(getData(), that.getData()) &&
             Objects.equals(this.extensions, that.extensions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSource(), getType(), datacontenttype, dataschema, getSubject(), getTime(), getRawData(), this.extensions);
+        return Objects.hash(getId(), getSource(), getType(), datacontenttype, dataschema, getSubject(), getTime(), getData(), this.extensions);
     }
 
     @Override
@@ -185,7 +185,7 @@ public final class CloudEventV1 extends BaseCloudEvent {
             ", dataschema=" + dataschema +
             ", subject='" + subject + '\'' +
             ", time=" + time +
-            ", data=" + getRawData() +
+            ", data=" + getData() +
             ", extensions=" + this.extensions +
             '}';
     }

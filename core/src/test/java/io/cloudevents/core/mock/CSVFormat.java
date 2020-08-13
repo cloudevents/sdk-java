@@ -21,6 +21,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.core.provider.EventDataCodecProvider;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
@@ -51,7 +52,7 @@ public class CSVFormat implements EventFormat {
                 ? Time.RFC3339_DATE_FORMAT.format(event.getTime())
                 : "null",
             event.getData() != null
-                ? new String(Base64.getEncoder().encode(event.getData()), StandardCharsets.UTF_8)
+                ? new String(Base64.getEncoder().encode(EventDataCodecProvider.getInstance().serialize(event.getDataContentType(), event.getData())), StandardCharsets.UTF_8)
                 : "null"
         ).getBytes();
     }

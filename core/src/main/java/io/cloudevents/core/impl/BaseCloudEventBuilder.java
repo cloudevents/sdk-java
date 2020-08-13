@@ -17,8 +17,8 @@
 
 package io.cloudevents.core.impl;
 
+import io.cloudevents.CloudEvent;
 import io.cloudevents.Extension;
-import io.cloudevents.core.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.rw.CloudEventRWException;
 
@@ -27,7 +27,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder<T> {
+public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF>> implements CloudEventBuilder {
 
     // This is a little trick for enabling fluency
     private final SELF self;
@@ -42,22 +42,18 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     @SuppressWarnings("unchecked")
-    public BaseCloudEventBuilder(io.cloudevents.CloudEvent event) {
+    public BaseCloudEventBuilder(CloudEvent event) {
         this.self = (SELF) this;
 
         this.setAttributes(event);
-        if (event instanceof CloudEvent) {
-            this.data = ((CloudEvent) event).getRawData();
-        } else {
-            this.data = event.getData();
-        }
+        this.data = event.getData();
         this.extensions = new HashMap<>();
         for (String k : event.getExtensionNames()) {
             this.extensions.put(k, event.getExtension(k));
         }
     }
 
-    protected abstract void setAttributes(io.cloudevents.CloudEvent event);
+    protected abstract void setAttributes(CloudEvent event);
 
     public SELF withData(Object data) {
         this.data = data;
