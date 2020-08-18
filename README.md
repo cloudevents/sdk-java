@@ -15,7 +15,7 @@ __Checkout the [changelog](./CHANGELOG.md)__
 
 This SDK is considered **work in progress**. The community is working hard to bring you a new major version of the SDK with major enhancements both to APIs and to implementation.
 
-If you want to know more about v1 of this SDK, check out the [v1 readme](./README_v1.md)
+If you want to know more about v1 of this SDK, check out the [v1 readme](https://github.com/cloudevents/sdk-java/tree/1.x)
 
 Stay tuned!
 
