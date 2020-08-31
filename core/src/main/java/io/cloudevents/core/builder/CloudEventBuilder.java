@@ -25,7 +25,7 @@ import io.cloudevents.rw.CloudEventWriter;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNullableByDefault;
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Builder interface to build a {@link CloudEvent}.
@@ -87,7 +87,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param time time of the event
      * @return self
      */
-    CloudEventBuilder withTime(ZonedDateTime time);
+    CloudEventBuilder withTime(OffsetDateTime time);
 
     /**
      * Set the {@code data} of the event

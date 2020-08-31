@@ -17,7 +17,7 @@
 
 package io.cloudevents.types;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -38,16 +38,16 @@ public final class Time {
         .toFormatter();
 
     /**
-     * Parse a {@link String} RFC3339 compliant as {@link ZonedDateTime}
+     * Parse a {@link String} RFC3339 compliant as {@link OffsetDateTime}
      */
-    public static ZonedDateTime parseTime(String time) throws DateTimeParseException {
-        return ZonedDateTime.parse(time, RFC3339_DATE_FORMAT);
+    public static OffsetDateTime parseTime(String time) throws DateTimeParseException {
+        return OffsetDateTime.parse(time, RFC3339_DATE_FORMAT);
     }
 
     /**
-     * Convert a {@link ZonedDateTime} to {@link String}
+     * Convert a {@link OffsetDateTime} to {@link String}
      */
-    public static String writeTime(ZonedDateTime time) throws DateTimeParseException {
+    public static String writeTime(OffsetDateTime time) throws DateTimeParseException {
         return time.format(RFC3339_DATE_FORMAT);
     }
 }

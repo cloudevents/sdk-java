@@ -25,7 +25,7 @@ import io.cloudevents.core.message.impl.BaseBinaryMessageReader;
 import io.cloudevents.rw.*;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,8 +77,8 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
         for (Map.Entry<String, Object> e : this.attributes.entrySet()) {
             if (e.getValue() instanceof String) {
                 writer.setAttribute(e.getKey(), (String) e.getValue());
-            } else if (e.getValue() instanceof ZonedDateTime) {
-                writer.setAttribute(e.getKey(), (ZonedDateTime) e.getValue());
+            } else if (e.getValue() instanceof OffsetDateTime) {
+                writer.setAttribute(e.getKey(), (OffsetDateTime) e.getValue());
             } else if (e.getValue() instanceof URI) {
                 writer.setAttribute(e.getKey(), (URI) e.getValue());
             } else {
@@ -126,7 +126,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public void setAttribute(String name, ZonedDateTime value) throws CloudEventRWException {
+    public void setAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
         this.attributes.put(name, value);
     }
 

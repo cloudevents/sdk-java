@@ -25,7 +25,7 @@ import io.cloudevents.types.Time;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Objects;
@@ -67,7 +67,7 @@ public class CSVFormat implements EventFormat {
         String datacontenttype = splitted[4].equals("null") ? null : splitted[4];
         URI dataschema = splitted[5].equals("null") ? null : URI.create(splitted[5]);
         String subject = splitted[6].equals("null") ? null : splitted[6];
-        ZonedDateTime time = splitted[7].equals("null") ? null : Time.parseTime(splitted[7]);
+        OffsetDateTime time = splitted[7].equals("null") ? null : Time.parseTime(splitted[7]);
         byte[] data = splitted[8].equals("null") ? null : Base64.getDecoder().decode(splitted[8].getBytes());
 
         io.cloudevents.core.v1.CloudEventBuilder builder = CloudEventBuilder.v1()

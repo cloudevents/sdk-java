@@ -24,7 +24,7 @@ import io.cloudevents.types.Time;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 
 /**
@@ -38,7 +38,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     private String id;
     private URI source;
     private String type;
-    private ZonedDateTime time;
+    private OffsetDateTime time;
     private URI schemaurl;
     private String datacontenttype;
     private String subject;
@@ -75,7 +75,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         return this;
     }
 
-    public CloudEventBuilder withTime(ZonedDateTime time) {
+    public CloudEventBuilder withTime(OffsetDateTime time) {
         this.time = time;
         return this;
     }
@@ -191,11 +191,11 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     }
 
     @Override
-    public void setAttribute(String name, ZonedDateTime value) throws CloudEventRWException {
+    public void setAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
         if ("time".equals(name)) {
             withTime(value);
             return;
         }
-        throw CloudEventRWException.newInvalidAttributeType(name, ZonedDateTime.class);
+        throw CloudEventRWException.newInvalidAttributeType(name, OffsetDateTime.class);
     }
 }

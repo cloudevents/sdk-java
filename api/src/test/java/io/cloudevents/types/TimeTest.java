@@ -23,8 +23,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +34,8 @@ public class TimeTest {
     @ParameterizedTest
     @MethodSource("parseDateArguments")
     void testParseAndFormatDate(String ts) {
-        ZonedDateTime zonedDateTime = Time.parseTime(ts);
-        assertThat(ts).isEqualTo(zonedDateTime.format(Time.RFC3339_DATE_FORMAT));
+        OffsetDateTime offsetDateTime = Time.parseTime(ts);
+        assertThat(ts).isEqualTo(offsetDateTime.format(Time.RFC3339_DATE_FORMAT));
     }
 
     @Test
@@ -46,9 +46,9 @@ public class TimeTest {
 
     @Test
     void testSerializeDateOffset() {
-        assertThat(Time.writeTime(ZonedDateTime.of(
+        assertThat(Time.writeTime(OffsetDateTime.of(
             LocalDateTime.of(2020, 8, 3, 18, 10, 0, 0),
-            ZoneId.of("Europe/Rome")
+            ZoneOffset.ofHours(2)
         ))).isEqualTo("2020-08-03T18:10:00+02:00");
     }
 

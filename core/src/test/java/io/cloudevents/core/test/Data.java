@@ -22,7 +22,7 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -36,7 +36,7 @@ public class Data {
     public static final String DATACONTENTTYPE_TEXT = "text/plain";
     public static final URI DATASCHEMA = URI.create("http://localhost/schema");
     public static final String SUBJECT = "sub";
-    public static final ZonedDateTime TIME = Time.parseTime("2018-04-26T14:48:09+02:00");
+    public static final OffsetDateTime TIME = Time.parseTime("2018-04-26T14:48:09+02:00");
 
     public static byte[] DATA_JSON_SERIALIZED = "{}".getBytes();
     public static byte[] DATA_XML_SERIALIZED = "<stuff></stuff>".getBytes();

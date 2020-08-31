@@ -21,7 +21,7 @@ import io.cloudevents.lang.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -77,7 +77,7 @@ public interface CloudEventAttributes {
      * @return <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#time">Timestamp</a> of when the occurrence happened
      */
     @Nullable
-    ZonedDateTime getTime();
+    OffsetDateTime getTime();
 
     /**
      * Get the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#context-attributes">context attribute</a> named {@code attributeName}
