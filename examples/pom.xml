@@ -16,6 +16,7 @@
     <modules>
         <module>kafka</module>
         <module>vertx</module>
+        <module>basic-http</module>
     </modules>
 
 
