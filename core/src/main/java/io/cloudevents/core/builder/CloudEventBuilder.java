@@ -152,6 +152,14 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
     CloudEventBuilder withExtension(@Nonnull Extension extension);
 
     /**
+     * Remove from the the builder the provided extension key, if any
+     *
+     * @param key key of the extension attribute
+     * @return self
+     */
+    CloudEventBuilder withoutExtension(@Nonnull String key);
+
+    /**
      * Build the event
      *
      * @return the built event

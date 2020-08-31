@@ -91,6 +91,12 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return self;
     }
 
+    @Override
+    public SELF withoutExtension(@Nonnull String key) {
+        this.extensions.remove(key);
+        return self;
+    }
+
     public SELF withExtension(@Nonnull Extension extension) {
         for (String key : extension.getKeys()) {
             Object value = extension.getValue(key);
