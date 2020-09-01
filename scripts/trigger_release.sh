@@ -77,7 +77,7 @@ git commit --signoff -m "Release $NEW_VERSION"
 git tag $NEW_VERSION
 
 if [ -n "$REMOTE" ]; then
-    git push -u $REMOTE $THIS_BRANCH
+    git push --follow-tags -u $REMOTE $THIS_BRANCH
 fi
 
 echo "Dumping to snapshot $NEW_SNAPSHOT"
