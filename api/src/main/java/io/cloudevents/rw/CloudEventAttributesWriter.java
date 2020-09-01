@@ -20,7 +20,7 @@ package io.cloudevents.rw;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Interface to write the attributes from a {@link io.cloudevents.rw.CloudEventReader} to a new representation.
@@ -49,14 +49,14 @@ public interface CloudEventAttributesWriter {
     }
 
     /**
-     * Set attribute with type {@link ZonedDateTime} attribute.
+     * Set attribute with type {@link OffsetDateTime} attribute.
      *
      * @param name
      * @param value
      * @throws CloudEventRWException
      */
-    default void setAttribute(String name, ZonedDateTime value) throws CloudEventRWException {
-        setAttribute(name, value.format(Time.RFC3339_DATE_FORMAT));
+    default void setAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
+        setAttribute(name, Time.writeTime(value));
     }
 
 }

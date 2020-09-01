@@ -23,7 +23,7 @@ import io.cloudevents.rw.CloudEventAttributesWriter;
 import io.cloudevents.rw.CloudEventRWException;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -42,10 +42,10 @@ public final class CloudEventV03 extends BaseCloudEvent {
     private final String datacontenttype;
     private final URI schemaurl;
     private final String subject;
-    private final ZonedDateTime time;
+    private final OffsetDateTime time;
 
     public CloudEventV03(String id, URI source, String type,
-                         ZonedDateTime time, URI schemaurl,
+                         OffsetDateTime time, URI schemaurl,
                          String datacontenttype, String subject,
                          byte[] data, Map<String, Object> extensions) {
         super(data, extensions);
@@ -93,7 +93,7 @@ public final class CloudEventV03 extends BaseCloudEvent {
         return subject;
     }
 
-    public ZonedDateTime getTime() {
+    public OffsetDateTime getTime() {
         return time;
     }
 

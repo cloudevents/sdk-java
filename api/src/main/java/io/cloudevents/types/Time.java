@@ -17,11 +17,8 @@
 
 package io.cloudevents.types;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
 
 /**
  * Utilities to handle the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#type-system">CloudEvent Attribute Timestamp type</a>
@@ -31,23 +28,17 @@ public final class Time {
     private Time() {
     }
 
-    public static final DateTimeFormatter RFC3339_DATE_FORMAT = new DateTimeFormatterBuilder()
-        .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
-        .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
-        .appendOffsetId()
-        .toFormatter();
-
     /**
-     * Parse a {@link String} RFC3339 compliant as {@link ZonedDateTime}
+     * Parse a {@link String} RFC3339 compliant as {@link OffsetDateTime}
      */
-    public static ZonedDateTime parseTime(String time) throws DateTimeParseException {
-        return ZonedDateTime.parse(time, RFC3339_DATE_FORMAT);
+    public static OffsetDateTime parseTime(String time) throws DateTimeParseException {
+        return OffsetDateTime.parse(time);
     }
 
     /**
-     * Convert a {@link ZonedDateTime} to {@link String}
+     * Convert a {@link OffsetDateTime} to {@link String}
      */
-    public static String writeTime(ZonedDateTime time) throws DateTimeParseException {
-        return time.format(RFC3339_DATE_FORMAT);
+    public static String writeTime(OffsetDateTime time) throws DateTimeParseException {
+        return time.toString();
     }
 }

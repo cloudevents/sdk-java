@@ -117,7 +117,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_schemaurl", DATASCHEMA.toString()),
                     header("content-type", DATACONTENTTYPE_JSON),
                     header("ce_subject", SUBJECT),
-                    header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME))
+                    header("ce_time", Time.writeTime(TIME))
                 ),
                 DATA_JSON_SERIALIZED
             ),
@@ -131,7 +131,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_schemaurl", DATASCHEMA.toString()),
                     header("content-type", DATACONTENTTYPE_JSON),
                     header("ce_subject", SUBJECT),
-                    header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME)),
+                    header("ce_time", Time.writeTime(TIME)),
                     header("ce_astring", "aaa"),
                     header("ce_aboolean", "true"),
                     header("ce_anumber", "10")
@@ -147,7 +147,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_source", SOURCE.toString()),
                     header("content-type", DATACONTENTTYPE_XML),
                     header("ce_subject", SUBJECT),
-                    header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME))
+                    header("ce_time", Time.writeTime(TIME))
                 ),
                 DATA_XML_SERIALIZED
             ),
@@ -160,7 +160,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_source", SOURCE.toString()),
                     header("content-type", DATACONTENTTYPE_TEXT),
                     header("ce_subject", SUBJECT),
-                    header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME))
+                    header("ce_time", Time.writeTime(TIME))
                 ),
                 DATA_TEXT_SERIALIZED
             ),
@@ -185,7 +185,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_dataschema", DATASCHEMA.toString()),
                     header("content-type", DATACONTENTTYPE_JSON),
                     header("ce_subject", SUBJECT),
-                    header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME))
+                    header("ce_time", Time.writeTime(TIME))
                 ),
                 DATA_JSON_SERIALIZED
             ),
@@ -199,7 +199,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_dataschema", DATASCHEMA.toString()),
                     header("content-type", DATACONTENTTYPE_JSON),
                     header("ce_subject", SUBJECT),
-                    header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME)),
+                    header("ce_time", Time.writeTime(TIME)),
                     header("ce_astring", "aaa"),
                     header("ce_aboolean", "true"),
                     header("ce_anumber", "10")
@@ -215,7 +215,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_source", SOURCE.toString()),
                     header("content-type", DATACONTENTTYPE_XML),
                     header("ce_subject", SUBJECT),
-                    header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME))
+                    header("ce_time", Time.writeTime(TIME))
                 ),
                 DATA_XML_SERIALIZED
             ),
@@ -228,7 +228,7 @@ public class KafkaProducerMessageWriterTest {
                     header("ce_source", SOURCE.toString()),
                     header("content-type", DATACONTENTTYPE_TEXT),
                     header("ce_subject", SUBJECT),
-                    header("ce_time", Time.RFC3339_DATE_FORMAT.format(TIME))
+                    header("ce_time", Time.writeTime(TIME))
                 ),
                 DATA_TEXT_SERIALIZED
             )

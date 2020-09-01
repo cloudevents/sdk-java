@@ -18,7 +18,6 @@
 package io.cloudevents.rw;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
 
 /**
  * Interface to write the extensions from a {@link io.cloudevents.rw.CloudEventReader} to a new representation.
@@ -46,7 +45,7 @@ public interface CloudEventExtensionsWriter {
     }
 
     /**
-     * Set attribute with type {@link ZonedDateTime} attribute.
+     * Set attribute with type {@link Boolean} attribute.
      *
      * @param name
      * @param value
