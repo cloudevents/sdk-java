@@ -70,7 +70,7 @@ echo "Dumping to release $NEW_VERSION"
 
 mvn versions:set -DnewVersion="$NEW_VERSION"
 find . -name "pom.xml" -exec git add {} \;
-sed -i -e 's+<version>[a-zA-Z0-9.-]*<\/version>+<version>2.0.0-milestone2</version>+g' ***/*.md
+sed -i -e "s+<version>[a-zA-Z0-9.-]*<\/version>+<version>$NEW_VERSION</version>+g" ***/*.md
 find . -name "*.md" -exec git add {} \;
 
 git commit --signoff -m "Release $NEW_VERSION"
