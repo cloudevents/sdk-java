@@ -144,7 +144,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("ce-schemaurl", DATASCHEMA.toString())
                     .add("content-type", DATACONTENTTYPE_JSON)
                     .add("ce-subject", SUBJECT)
-                    .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME)),
+                    .add("ce-time", Time.writeTime(TIME)),
                 Buffer.buffer(DATA_JSON_SERIALIZED)
             ),
             Arguments.of(
@@ -157,7 +157,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("ce-schemaurl", DATASCHEMA.toString())
                     .add("content-type", DATACONTENTTYPE_JSON)
                     .add("ce-subject", SUBJECT)
-                    .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME))
+                    .add("ce-time", Time.writeTime(TIME))
                     .add("ce-astring", "aaa")
                     .add("ce-aboolean", "true")
                     .add("ce-anumber", "10"),
@@ -172,7 +172,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("ce-source", SOURCE.toString())
                     .add("content-type", DATACONTENTTYPE_XML)
                     .add("ce-subject", SUBJECT)
-                    .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME)),
+                    .add("ce-time", Time.writeTime(TIME)),
                 Buffer.buffer(DATA_XML_SERIALIZED)
             ),
             Arguments.of(
@@ -184,7 +184,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("ce-source", SOURCE.toString())
                     .add("content-type", DATACONTENTTYPE_TEXT)
                     .add("ce-subject", SUBJECT)
-                    .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME)),
+                    .add("ce-time", Time.writeTime(TIME)),
                 Buffer.buffer(DATA_TEXT_SERIALIZED)
             ),
             // V1
@@ -207,7 +207,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("ce-dataschema", DATASCHEMA.toString())
                     .add("content-type", DATACONTENTTYPE_JSON)
                     .add("ce-subject", SUBJECT)
-                    .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME)),
+                    .add("ce-time", Time.writeTime(TIME)),
                 Buffer.buffer(DATA_JSON_SERIALIZED)
             ),
             Arguments.of(
@@ -220,7 +220,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("ce-dataschema", DATASCHEMA.toString())
                     .add("content-type", DATACONTENTTYPE_JSON)
                     .add("ce-subject", SUBJECT)
-                    .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME))
+                    .add("ce-time", Time.writeTime(TIME))
                     .add("ce-astring", "aaa")
                     .add("ce-aboolean", "true")
                     .add("ce-anumber", "10"),
@@ -235,7 +235,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("ce-source", SOURCE.toString())
                     .add("content-type", DATACONTENTTYPE_XML)
                     .add("ce-subject", SUBJECT)
-                    .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME)),
+                    .add("ce-time", Time.writeTime(TIME)),
                 Buffer.buffer(DATA_XML_SERIALIZED)
             ),
             Arguments.of(
@@ -247,7 +247,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     .add("ce-source", SOURCE.toString())
                     .add("content-type", DATACONTENTTYPE_TEXT)
                     .add("ce-subject", SUBJECT)
-                    .add("ce-time", Time.RFC3339_DATE_FORMAT.format(TIME)),
+                    .add("ce-time", Time.writeTime(TIME)),
                 Buffer.buffer(DATA_TEXT_SERIALIZED)
             )
         );

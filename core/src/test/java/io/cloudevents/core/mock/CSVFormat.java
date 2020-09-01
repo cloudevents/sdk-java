@@ -48,7 +48,7 @@ public class CSVFormat implements EventFormat {
             Objects.toString(event.getDataSchema()),
             Objects.toString(event.getSubject()),
             event.getTime() != null
-                ? Time.RFC3339_DATE_FORMAT.format(event.getTime())
+                ? Time.writeTime(event.getTime())
                 : "null",
             event.getData() != null
                 ? new String(Base64.getEncoder().encode(event.getData()), StandardCharsets.UTF_8)
