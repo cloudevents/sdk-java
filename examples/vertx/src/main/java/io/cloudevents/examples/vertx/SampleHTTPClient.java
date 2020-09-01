@@ -5,9 +5,12 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.http.vertx.VertxMessageFactory;
 import io.cloudevents.jackson.JsonFormat;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpClient;
-import io.vertx.core.http.HttpClientRequest;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.ext.web.client.HttpResponse;
+import io.vertx.ext.web.client.WebClient;
+
 import java.net.URI;
 import java.util.UUID;
 
@@ -24,7 +27,7 @@ public class SampleHTTPClient {
         final String eventSink = args[0];
 
         final Vertx vertx = Vertx.vertx();
-        final HttpClient httpClient = vertx.createHttpClient();
+        final WebClient webClient = WebClient.create(vertx);
 
         // Create an event template to set basic CloudEvent attributes.
         CloudEventBuilder eventTemplate = CloudEventBuilder.v1()
@@ -33,39 +36,28 @@ public class SampleHTTPClient {
 
         // Send NUM_EVENTS events.
         for (int i = 0; i < NUM_EVENTS; i++) {
-
-            // create HTTP request.
-            final HttpClientRequest request = httpClient.postAbs(eventSink)
-                .handler(response -> {
-
-                    // We need to read the event from the HTTP response we get, so create a MessageReader.
-                    VertxMessageFactory.createReader(response)
-                        // Covert the MessageReader to a CloudEvent.
-                        .map(MessageReader::toEvent)
-                        // Print out the event.
-                        .onSuccess(System.out::println)
-                        .onFailure(System.err::println);
-
-                })
-                .exceptionHandler(System.err::println);
-
-            String id = UUID.randomUUID().toString();
             String data = "Event number " + i;
 
             // Create the event starting from the template
             final CloudEvent event = eventTemplate.newBuilder()
-                .withId(id)
+                .withId(UUID.randomUUID().toString())
                 .withData("text/plain", data.getBytes())
                 .build();
 
+            Future<HttpResponse<Buffer>> responseFuture;
             // We need to write the event to the request, so create a MessageWriter.
             if (i % 2 == 0) {
-                VertxMessageFactory.createWriter(request)
+                responseFuture = VertxMessageFactory.createWriter(webClient.postAbs(eventSink))
                     .writeBinary(event); // Use binary mode.
             } else {
-                VertxMessageFactory.createWriter(request)
-                    .writeStructured(event, new JsonFormat()); // Use structured mode.
+                responseFuture = VertxMessageFactory.createWriter(webClient.postAbs(eventSink))
+                    .writeStructured(event, JsonFormat.CONTENT_TYPE); // Use structured mode.
             }
+            responseFuture
+                .map(VertxMessageFactory::createReader) // Let's convert the response to message reader...
+                .map(MessageReader::toEvent) // ...then to event
+                .onSuccess(System.out::println) // Print the received message
+                .onFailure(System.err::println); // Print the eventual failure
         }
     }
 }

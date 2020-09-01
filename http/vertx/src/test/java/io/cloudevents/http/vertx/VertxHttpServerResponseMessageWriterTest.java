@@ -26,6 +26,7 @@ import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClient;
+import io.vertx.ext.web.client.WebClient;
 import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -51,33 +52,30 @@ public class VertxHttpServerResponseMessageWriterTest {
             .createHttpServer()
             .requestHandler(httpServerRequest -> {
                 try {
-                    GenericStructuredMessageReader.from(event, CSVFormat.INSTANCE).visit(
-                        VertxMessageFactory.createWriter(httpServerRequest.response())
-                    );
+                    VertxMessageFactory
+                        .createWriter(httpServerRequest.response())
+                        .writeStructured(event, CSVFormat.INSTANCE);
                     checkpoint.flag();
                 } catch (Throwable e) {
                     testContext.failNow(e);
                 }
             })
             .listen(9000, testContext.succeeding(server -> {
-                HttpClient client = vertx.createHttpClient();
-                client
-                    .get(server.actualPort(), "localhost", "/")
-                    .handler(res -> {
-                        res.bodyHandler(buf -> {
-                            testContext.verify(() -> {
-                                assertThat(res.statusCode())
-                                    .isEqualTo(200);
-                                assertThat(res.getHeader("content-type"))
-                                    .isEqualTo(CSVFormat.INSTANCE.serializedContentType());
-                                assertThat(buf.getBytes())
-                                    .isEqualTo(CSVFormat.INSTANCE.serialize(event));
+                WebClient client = WebClient.create(vertx);
+                client.get(server.actualPort(), "localhost", "/")
+                    .send()
+                    .onComplete(testContext.succeeding(res -> {
+                        testContext.verify(() -> {
+                            assertThat(res.statusCode())
+                                .isEqualTo(200);
+                            assertThat(res.getHeader("content-type"))
+                                .isEqualTo(CSVFormat.INSTANCE.serializedContentType());
+                            assertThat(res.body().getBytes())
+                                .isEqualTo(CSVFormat.INSTANCE.serialize(event));
 
-                                checkpoint.flag();
-                            });
+                            checkpoint.flag();
                         });
-                    })
-                    .end();
+                    }));
             }));
     }
 
@@ -99,26 +97,24 @@ public class VertxHttpServerResponseMessageWriterTest {
                 }
             })
             .listen(9000, testContext.succeeding(server -> {
-                HttpClient client = vertx.createHttpClient();
-                client
-                    .get(server.actualPort(), "localhost", "/")
-                    .handler(res -> {
-                        res.bodyHandler(buf -> {
-                            testContext.verify(() -> {
-                                assertThat(res.statusCode())
-                                    .isEqualTo(200);
-                                headers.forEach(e -> {
-                                    assertThat(res.getHeader(e.getKey())).isEqualTo(e.getValue());
-                                });
-                                if (body != null) {
-                                    assertThat(buf.getBytes())
-                                        .isEqualTo(body.getBytes());
-                                }
+                WebClient client = WebClient.create(vertx);
+                client.get(server.actualPort(), "localhost", "/")
+                    .send()
+                    .onComplete(testContext.succeeding(res -> {
+                        testContext.verify(() -> {
+                            assertThat(res.statusCode())
+                                .isEqualTo(200);
+                            headers.forEach(e -> {
+                                assertThat(res.getHeader(e.getKey())).isEqualTo(e.getValue());
                             });
+                            if (body != null) {
+                                assertThat(res.body().getBytes())
+                                    .isEqualTo(body.getBytes());
+                            }
+
                             checkpoint.flag();
                         });
-                    })
-                    .end();
+                    }));
             }));
     }
 
