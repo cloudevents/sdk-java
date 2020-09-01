@@ -56,7 +56,7 @@ public interface CloudEventAttributesWriter {
      * @throws CloudEventRWException
      */
     default void setAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
-        setAttribute(name, value.format(Time.RFC3339_DATE_FORMAT));
+        setAttribute(name, Time.writeTime(value));
     }
 
 }

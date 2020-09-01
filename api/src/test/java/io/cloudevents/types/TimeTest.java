@@ -35,7 +35,7 @@ public class TimeTest {
     @MethodSource("parseDateArguments")
     void testParseAndFormatDate(String ts) {
         OffsetDateTime offsetDateTime = Time.parseTime(ts);
-        assertThat(ts).isEqualTo(offsetDateTime.format(Time.RFC3339_DATE_FORMAT));
+        assertThat(ts).isEqualTo(offsetDateTime.toString());
     }
 
     @Test
@@ -49,15 +49,15 @@ public class TimeTest {
         assertThat(Time.writeTime(OffsetDateTime.of(
             LocalDateTime.of(2020, 8, 3, 18, 10, 0, 0),
             ZoneOffset.ofHours(2)
-        ))).isEqualTo("2020-08-03T18:10:00+02:00");
+        ))).isEqualTo("2020-08-03T18:10+02:00");
     }
 
     public static Stream<Arguments> parseDateArguments() {
         return Stream.of(
-            Arguments.of("1985-04-12T23:20:50.52Z"),
-            Arguments.of("1990-12-31T23:59:00Z"),
-            Arguments.of("1990-12-31T15:59:00-08:00"),
-            Arguments.of("1937-01-01T12:00:27.87+00:20")
+            Arguments.of("1985-04-12T23:20:50.520Z"),
+            Arguments.of("1990-12-31T23:59Z"),
+            Arguments.of("1990-12-31T15:59-08:00"),
+            Arguments.of("1937-01-01T12:00:27.870+00:20")
         );
     }
 }
