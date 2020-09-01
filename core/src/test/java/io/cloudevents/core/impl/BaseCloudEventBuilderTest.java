@@ -35,12 +35,14 @@ public class BaseCloudEventBuilderTest {
             .contains("traceparent")
             .doesNotContain("tracestate");
 
-        CloudEvent event = CloudEventBuilder.v1(given)
+        CloudEvent have = CloudEventBuilder.v1(given)
             .withoutExtension(ext)
             .build();
 
-        assertThat(event.getExtensionNames())
+        assertThat(have.getExtensionNames())
             .doesNotContain("traceparent", "tracestate");
+        assertThat(Data.V1_WITH_JSON_DATA_WITH_EXT)
+            .isEqualTo(have);
     }
 
 }
