@@ -15,7 +15,7 @@
 
     <modules>
         <module>kafka</module>
-        <module>quarkus</module>
+        <module>restful-ws-quarkus</module>
         <module>vertx</module>
     </modules>
 
