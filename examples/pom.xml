@@ -17,6 +17,7 @@
         <module>kafka</module>
         <module>restful-ws-quarkus</module>
         <module>vertx</module>
+        <module>basic-http</module>
     </modules>
 
 
