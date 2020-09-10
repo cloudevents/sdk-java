@@ -37,6 +37,6 @@ public class HttpMessageFactory {
 ```
 
 Examples of usage:
-* [Standard Java HttpServer](../../examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/HttpServer.java)
+* [Standard Java HttpServer](../../examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/BasicHttpServer.java)
 * [Http Client with HttpURLConnection](../../examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/HttpURLConnectionClient.java)
 * [Http Servlet with Jetty](../../examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/JettyServer.java)
