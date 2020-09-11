@@ -27,11 +27,9 @@ jobs:
       script: mvn clean verify -B
     # GraalVM
     - name: "GraalVM 20.1.0 (8)"
-      if: type != pull_request
       install: . ./install-jdk.sh --url "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.1.0/graalvm-ce-java8-linux-amd64-20.1.0.tar.gz"
       script: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B && mvn verify -B
     - name: "GraalVM 20.1.0 (11)"
-      if: type != pull_request
       install: . ./install-jdk.sh --url "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.1.0/graalvm-ce-java11-linux-amd64-20.1.0.tar.gz"
       script: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B && mvn verify -B
     - stage: deploy
