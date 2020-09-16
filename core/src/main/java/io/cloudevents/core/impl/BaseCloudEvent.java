@@ -65,11 +65,11 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
         // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {
-                visitor.setExtension(entry.getKey(), (String) entry.getValue());
+                visitor.withExtension(entry.getKey(), (String) entry.getValue());
             } else if (entry.getValue() instanceof Number) {
-                visitor.setExtension(entry.getKey(), (Number) entry.getValue());
+                visitor.withExtension(entry.getKey(), (Number) entry.getValue());
             } else if (entry.getValue() instanceof Boolean) {
-                visitor.setExtension(entry.getKey(), (Boolean) entry.getValue());
+                visitor.withExtension(entry.getKey(), (Boolean) entry.getValue());
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);

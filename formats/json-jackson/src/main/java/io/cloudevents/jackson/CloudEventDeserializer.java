@@ -60,14 +60,14 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                 // Read mandatory attributes
                 for (String attr : specVersion.getMandatoryAttributes()) {
                     if (!"specversion".equals(attr)) {
-                        visitor.setAttribute(attr, getStringNode(this.node, this.p, attr));
+                        visitor.withAttribute(attr, getStringNode(this.node, this.p, attr));
                     }
                 }
 
                 // Parse datacontenttype if any
                 String contentType = getOptionalStringNode(this.node, this.p, "datacontenttype");
                 if (contentType != null) {
-                    visitor.setAttribute("datacontenttype", contentType);
+                    visitor.withAttribute("datacontenttype", contentType);
                 }
 
                 // Read optional attributes
@@ -75,7 +75,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                     if (!"datacontentencoding".equals(attr)) { // Skip datacontentencoding, we need it later
                         String val = getOptionalStringNode(this.node, this.p, attr);
                         if (val != null) {
-                            visitor.setAttribute(attr, val);
+                            visitor.withAttribute(attr, val);
                         }
                     }
                 }
@@ -127,16 +127,16 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
 
                     switch (extensionValue.getNodeType()) {
                         case BOOLEAN:
-                            visitor.setExtension(extensionName, extensionValue.booleanValue());
+                            visitor.withExtension(extensionName, extensionValue.booleanValue());
                             break;
                         case NUMBER:
-                            visitor.setExtension(extensionName, extensionValue.numberValue());
+                            visitor.withExtension(extensionName, extensionValue.numberValue());
                             break;
                         case STRING:
-                            visitor.setExtension(extensionName, extensionValue.textValue());
+                            visitor.withExtension(extensionName, extensionValue.textValue());
                             break;
                         default:
-                            visitor.setExtension(extensionName, extensionValue.toString());
+                            visitor.withExtension(extensionName, extensionValue.toString());
                     }
 
                 });

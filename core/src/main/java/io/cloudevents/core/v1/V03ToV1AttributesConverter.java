@@ -35,63 +35,63 @@ class V03ToV1AttributesConverter implements CloudEventAttributesWriter {
     }
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventRWException {
+    public V03ToV1AttributesConverter withAttribute(String name, String value) throws CloudEventRWException {
         switch (name) {
             case "id":
                 builder.withId(value);
-                return;
+                return this;
             case "source":
                 try {
                     builder.withSource(new URI(value));
                 } catch (URISyntaxException e) {
                     throw CloudEventRWException.newInvalidAttributeValue("source", value, e);
                 }
-                return;
+                return this;
             case "type":
                 builder.withType(value);
-                return;
+                return this;
             case "datacontenttype":
                 builder.withDataContentType(value);
-                return;
+                return this;
             case "schemaurl":
                 try {
                     builder.withDataSchema(new URI(value));
                 } catch (URISyntaxException e) {
                     throw CloudEventRWException.newInvalidAttributeValue("dataschema", value, e);
                 }
-                return;
+                return this;
             case "subject":
                 builder.withSubject(value);
-                return;
+                return this;
             case "time":
                 try {
                     builder.withTime(Time.parseTime(value));
                 } catch (DateTimeParseException e) {
                     throw CloudEventRWException.newInvalidAttributeValue("time", value, e);
                 }
-                return;
+                return this;
         }
         throw CloudEventRWException.newInvalidAttributeName(name);
     }
 
     @Override
-    public void setAttribute(String name, URI value) throws CloudEventRWException {
+    public V03ToV1AttributesConverter withAttribute(String name, URI value) throws CloudEventRWException {
         switch (name) {
             case "source":
                 builder.withSource(value);
-                return;
+                return this;
             case "schemaurl":
                 builder.withDataSchema(value);
-                return;
+                return this;
         }
         throw CloudEventRWException.newInvalidAttributeType(name, URI.class);
     }
 
     @Override
-    public void setAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
+    public V03ToV1AttributesConverter withAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
         if ("time".equals(name)) {
             builder.withTime(value);
-            return;
+            return this;
         }
         throw CloudEventRWException.newInvalidAttributeType(name, OffsetDateTime.class);
     }

@@ -51,16 +51,16 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
         // in order to complete the visit in one loop
         this.forEachHeader((key, value) -> {
             if (isContentTypeHeader(key)) {
-                visitor.setAttribute("datacontenttype", toCloudEventsValue(value));
+                visitor.withAttribute("datacontenttype", toCloudEventsValue(value));
             } else if (isCloudEventsHeader(key)) {
                 String name = toCloudEventsKey(key);
                 if (name.equals("specversion")) {
                     return;
                 }
                 if (this.version.getAllAttributes().contains(name)) {
-                    visitor.setAttribute(name, toCloudEventsValue(value));
+                    visitor.withAttribute(name, toCloudEventsValue(value));
                 } else {
-                    visitor.setExtension(name, toCloudEventsValue(value));
+                    visitor.withExtension(name, toCloudEventsValue(value));
                 }
             }
         });
@@ -77,14 +77,14 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
     public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
         this.forEachHeader((key, value) -> {
             if (isContentTypeHeader(key)) {
-                writer.setAttribute("datacontenttype", toCloudEventsValue(value));
+                writer.withAttribute("datacontenttype", toCloudEventsValue(value));
             } else if (isCloudEventsHeader(key)) {
                 String name = toCloudEventsKey(key);
                 if (name.equals("specversion")) {
                     return;
                 }
                 if (this.version.getAllAttributes().contains(name)) {
-                    writer.setAttribute(name, toCloudEventsValue(value));
+                    writer.withAttribute(name, toCloudEventsValue(value));
                 }
             }
         });
@@ -97,7 +97,7 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
             if (isCloudEventsHeader(key)) {
                 String name = toCloudEventsKey(key);
                 if (!this.version.getAllAttributes().contains(name)) {
-                    visitor.setExtension(name, toCloudEventsValue(value));
+                    visitor.withExtension(name, toCloudEventsValue(value));
                 }
             }
         });

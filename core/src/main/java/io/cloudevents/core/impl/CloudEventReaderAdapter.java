@@ -43,20 +43,20 @@ public class CloudEventReaderAdapter implements CloudEventReader {
 
     @Override
     public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
-        writer.setAttribute("id", event.getId());
-        writer.setAttribute("source", event.getSource());
-        writer.setAttribute("type", event.getType());
+        writer.withAttribute("id", event.getId());
+        writer.withAttribute("source", event.getSource());
+        writer.withAttribute("type", event.getType());
         if (event.getDataContentType() != null) {
-            writer.setAttribute("datacontenttype", event.getDataContentType());
+            writer.withAttribute("datacontenttype", event.getDataContentType());
         }
         if (event.getDataSchema() != null) {
-            writer.setAttribute("dataschema", event.getDataSchema());
+            writer.withAttribute("dataschema", event.getDataSchema());
         }
         if (event.getSubject() != null) {
-            writer.setAttribute("subject", event.getSubject());
+            writer.withAttribute("subject", event.getSubject());
         }
         if (event.getTime() != null) {
-            writer.setAttribute("time", event.getTime());
+            writer.withAttribute("time", event.getTime());
         }
     }
 
@@ -65,11 +65,11 @@ public class CloudEventReaderAdapter implements CloudEventReader {
         for (String key : event.getExtensionNames()) {
             Object value = event.getExtension(key);
             if (value instanceof String) {
-                visitor.setExtension(key, (String) value);
+                visitor.withExtension(key, (String) value);
             } else if (value instanceof Number) {
-                visitor.setExtension(key, (Number) value);
+                visitor.withExtension(key, (Number) value);
             } else if (value instanceof Boolean) {
-                visitor.setExtension(key, (Boolean) value);
+                visitor.withExtension(key, (Boolean) value);
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + key + " " + value);

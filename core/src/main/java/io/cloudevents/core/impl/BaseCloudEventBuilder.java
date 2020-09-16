@@ -86,7 +86,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return self;
     }
 
-    public SELF withExtension(@Nonnull String key, boolean value) {
+    public SELF withExtension(@Nonnull String key, Boolean value) {
         this.extensions.put(key, value);
         return self;
     }
@@ -111,21 +111,6 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
             }
         }
         return self;
-    }
-
-    @Override
-    public void setExtension(String name, String value) throws CloudEventRWException {
-        this.withExtension(name, value);
-    }
-
-    @Override
-    public void setExtension(String name, Number value) throws CloudEventRWException {
-        this.withExtension(name, value);
-    }
-
-    @Override
-    public void setExtension(String name, Boolean value) throws CloudEventRWException {
-        this.withExtension(name, value);
     }
 
     @Override

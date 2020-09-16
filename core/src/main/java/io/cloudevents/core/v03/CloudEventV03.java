@@ -122,38 +122,38 @@ public final class CloudEventV03 extends BaseCloudEvent {
 
     @Override
     public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException {
-        writer.setAttribute(
+        writer.withAttribute(
             ContextAttributes.ID.name().toLowerCase(),
             this.id
         );
-        writer.setAttribute(
+        writer.withAttribute(
             ContextAttributes.SOURCE.name().toLowerCase(),
             this.source
         );
-        writer.setAttribute(
+        writer.withAttribute(
             ContextAttributes.TYPE.name().toLowerCase(),
             this.type
         );
         if (this.datacontenttype != null) {
-            writer.setAttribute(
+            writer.withAttribute(
                 ContextAttributes.DATACONTENTTYPE.name().toLowerCase(),
                 this.datacontenttype
             );
         }
         if (this.schemaurl != null) {
-            writer.setAttribute(
+            writer.withAttribute(
                 ContextAttributes.SCHEMAURL.name().toLowerCase(),
                 this.schemaurl
             );
         }
         if (this.subject != null) {
-            writer.setAttribute(
+            writer.withAttribute(
                 ContextAttributes.SUBJECT.name().toLowerCase(),
                 this.subject
             );
         }
         if (this.time != null) {
-            writer.setAttribute(
+            writer.withAttribute(
                 ContextAttributes.TIME.name().toLowerCase(),
                 this.time
             );
