@@ -53,6 +53,9 @@ Javadocs are available on [javadoc.io](https://www.javadoc.io):
 * [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
 * [cloudevents-kafka](https://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)
 
+## Used By
+<a href="https://occurrent.org"><img src="https://raw.githubusercontent.com/johanhaleby/occurrent/master/occurrent-logo-196x196.png" width="98" height="98" alt="Occurrent" title="Occurrent - Event Sourcing Utilities for the JVM"></img></a>
+
 ## Community
 
 - There are bi-weekly calls immediately following the [Serverless/CloudEvents
