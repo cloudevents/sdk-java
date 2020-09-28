@@ -138,6 +138,14 @@
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <excludes>
+                            <exclude>.gitignore</exclude>
+                            <exclude>LICENSE</exclude>
+                            <exclude>.mvn</exclude>
+                            <exclude>.travis.*</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
