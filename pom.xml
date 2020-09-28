@@ -79,9 +79,14 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Maven plugins -->
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <maven-editorconfig-plugin.version>0.1.0</maven-editorconfig-plugin.version>
+
+        <!-- Dependencies -->
         <assertj-core.version>3.16.1</assertj-core.version>
         <junit-jupiter.version>5.6.0</junit-jupiter.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     </properties>
 
     <distributionManagement>
@@ -118,6 +123,28 @@
                                 <Automatic-Module-Name>${module-name}</Automatic-Module-Name>
                             </manifestEntries>
                         </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.ec4j.maven</groupId>
+                    <artifactId>editorconfig-maven-plugin</artifactId>
+                    <version>${maven-editorconfig-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>check</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <excludes>
+                            <exclude>.gitignore</exclude>
+                            <exclude>LICENSE</exclude>
+                            <exclude>.mvn</exclude>
+                            <exclude>.travis.*</exclude>
+                        </excludes>
                     </configuration>
                 </plugin>
             </plugins>

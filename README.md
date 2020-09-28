@@ -57,7 +57,7 @@ Javadocs are available on [javadoc.io](https://www.javadoc.io):
 
 <a href="https://occurrent.org"><img src="https://raw.githubusercontent.com/johanhaleby/occurrent/master/occurrent-logo-196x196.png" width="98" height="98" alt="Occurrent" title="Occurrent - Event Sourcing Utilities for the JVM"></img></a>
 
-- [Knative Eventing](https://github.com/knative-sandbox/eventing-kafka-broker) 
+- [Knative Eventing](https://github.com/knative-sandbox/eventing-kafka-broker)
 
 ## Community
 
