@@ -45,13 +45,15 @@ public class VertxHttpServerResponseMessageWriterImpl implements MessageWriter<C
     // Binary visitor
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventRWException {
+    public VertxHttpServerResponseMessageWriterImpl withAttribute(String name, String value) throws CloudEventRWException {
         this.response.putHeader(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
+        return this;
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventRWException {
+    public VertxHttpServerResponseMessageWriterImpl withExtension(String name, String value) throws CloudEventRWException {
         this.response.putHeader("ce-" + name, value);
+        return this;
     }
 
     @Override

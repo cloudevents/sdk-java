@@ -55,37 +55,41 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public void setAttribute(String name, String value) throws CloudEventRWException {
+        public FieldsSerializer withAttribute(String name, String value) throws CloudEventRWException {
             try {
                 gen.writeStringField(name, value);
+                return this;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
         @Override
-        public void setExtension(String name, String value) throws CloudEventRWException {
+        public FieldsSerializer withExtension(String name, String value) throws CloudEventRWException {
             try {
                 gen.writeStringField(name, value);
+                return this;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
         @Override
-        public void setExtension(String name, Number value) throws CloudEventRWException {
+        public FieldsSerializer withExtension(String name, Number value) throws CloudEventRWException {
             try {
                 gen.writeFieldName(name);
                 provider.findValueSerializer(value.getClass()).serialize(value, gen, provider);
+                return this;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
         @Override
-        public void setExtension(String name, Boolean value) throws CloudEventRWException {
+        public FieldsSerializer withExtension(String name, Boolean value) throws CloudEventRWException {
             try {
                 gen.writeBooleanField(name, value);
+                return this;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

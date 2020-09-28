@@ -76,11 +76,11 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException, IllegalStateException {
         for (Map.Entry<String, Object> e : this.attributes.entrySet()) {
             if (e.getValue() instanceof String) {
-                writer.setAttribute(e.getKey(), (String) e.getValue());
+                writer.withAttribute(e.getKey(), (String) e.getValue());
             } else if (e.getValue() instanceof OffsetDateTime) {
-                writer.setAttribute(e.getKey(), (OffsetDateTime) e.getValue());
+                writer.withAttribute(e.getKey(), (OffsetDateTime) e.getValue());
             } else if (e.getValue() instanceof URI) {
-                writer.setAttribute(e.getKey(), (URI) e.getValue());
+                writer.withAttribute(e.getKey(), (URI) e.getValue());
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside attributes map: " + e);
@@ -92,11 +92,11 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException, IllegalStateException {
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {
-                visitor.setExtension(entry.getKey(), (String) entry.getValue());
+                visitor.withExtension(entry.getKey(), (String) entry.getValue());
             } else if (entry.getValue() instanceof Number) {
-                visitor.setExtension(entry.getKey(), (Number) entry.getValue());
+                visitor.withExtension(entry.getKey(), (Number) entry.getValue());
             } else if (entry.getValue() instanceof Boolean) {
-                visitor.setExtension(entry.getKey(), (Boolean) entry.getValue());
+                visitor.withExtension(entry.getKey(), (Boolean) entry.getValue());
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
@@ -116,33 +116,39 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventRWException {
+    public MockBinaryMessageWriter withAttribute(String name, String value) throws CloudEventRWException {
         this.attributes.put(name, value);
+        return this;
     }
 
     @Override
-    public void setAttribute(String name, URI value) throws CloudEventRWException {
+    public MockBinaryMessageWriter withAttribute(String name, URI value) throws CloudEventRWException {
         this.attributes.put(name, value);
+        return this;
     }
 
     @Override
-    public void setAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
+    public MockBinaryMessageWriter withAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
         this.attributes.put(name, value);
+        return this;
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventRWException {
+    public MockBinaryMessageWriter withExtension(String name, String value) throws CloudEventRWException {
         this.extensions.put(name, value);
+        return this;
     }
 
     @Override
-    public void setExtension(String name, Number value) throws CloudEventRWException {
+    public MockBinaryMessageWriter withExtension(String name, Number value) throws CloudEventRWException {
         this.extensions.put(name, value);
+        return this;
     }
 
     @Override
-    public void setExtension(String name, Boolean value) throws CloudEventRWException {
+    public MockBinaryMessageWriter withExtension(String name, Boolean value) throws CloudEventRWException {
         this.extensions.put(name, value);
+        return this;
     }
 
     @Override

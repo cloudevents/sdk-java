@@ -17,6 +17,8 @@
 
 package io.cloudevents.rw;
 
+import io.cloudevents.lang.Nullable;
+
 import java.net.URI;
 
 /**
@@ -31,7 +33,7 @@ public interface CloudEventExtensionsWriter {
      * @param value
      * @throws CloudEventRWException
      */
-    void setExtension(String name, String value) throws CloudEventRWException;
+    CloudEventExtensionsWriter withExtension(String name, @Nullable String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
@@ -40,8 +42,8 @@ public interface CloudEventExtensionsWriter {
      * @param value
      * @throws CloudEventRWException
      */
-    default void setExtension(String name, Number value) throws CloudEventRWException {
-        setExtension(name, value.toString());
+    default CloudEventExtensionsWriter withExtension(String name, @Nullable Number value) throws CloudEventRWException {
+        return withExtension(name, value == null ? null : value.toString());
     }
 
     /**
@@ -51,8 +53,8 @@ public interface CloudEventExtensionsWriter {
      * @param value
      * @throws CloudEventRWException
      */
-    default void setExtension(String name, Boolean value) throws CloudEventRWException {
-        setExtension(name, value.toString());
+    default CloudEventExtensionsWriter withExtension(String name, @Nullable Boolean value) throws CloudEventRWException {
+        return withExtension(name, value == null ? null : value.toString());
     }
 
 }

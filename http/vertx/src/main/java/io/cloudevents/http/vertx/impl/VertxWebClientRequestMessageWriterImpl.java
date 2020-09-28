@@ -24,7 +24,6 @@ import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.HttpResponse;
@@ -48,13 +47,15 @@ public class VertxWebClientRequestMessageWriterImpl implements MessageWriter<Clo
     // Binary visitor
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventRWException {
+    public VertxWebClientRequestMessageWriterImpl withAttribute(String name, String value) throws CloudEventRWException {
         this.request.headers().add(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
+        return this;
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventRWException {
+    public VertxWebClientRequestMessageWriterImpl withExtension(String name, String value) throws CloudEventRWException {
         this.request.headers().add("ce-" + name, value);
+        return this;
     }
 
     @Override

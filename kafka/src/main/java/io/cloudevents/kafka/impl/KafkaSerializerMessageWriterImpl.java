@@ -28,7 +28,7 @@ public final class KafkaSerializerMessageWriterImpl extends BaseKafkaMessageWrit
 
     @Override
     public KafkaSerializerMessageWriterImpl create(SpecVersion version) {
-        this.setAttribute("specversion", version.toString());
+        this.withAttribute("specversion", version.toString());
         return this;
     }
 

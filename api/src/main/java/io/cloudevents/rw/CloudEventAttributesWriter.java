@@ -17,6 +17,7 @@
 
 package io.cloudevents.rw;
 
+import io.cloudevents.lang.Nullable;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
@@ -35,7 +36,7 @@ public interface CloudEventAttributesWriter {
      * @param value
      * @throws CloudEventRWException
      */
-    void setAttribute(String name, String value) throws CloudEventRWException;
+    CloudEventAttributesWriter withAttribute(String name, @Nullable String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
@@ -44,8 +45,8 @@ public interface CloudEventAttributesWriter {
      * @param value
      * @throws CloudEventRWException
      */
-    default void setAttribute(String name, URI value) throws CloudEventRWException {
-        setAttribute(name, value.toString());
+    default CloudEventAttributesWriter withAttribute(String name, @Nullable URI value) throws CloudEventRWException {
+        return withAttribute(name, value == null ? null : value.toString());
     }
 
     /**
@@ -55,8 +56,8 @@ public interface CloudEventAttributesWriter {
      * @param value
      * @throws CloudEventRWException
      */
-    default void setAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
-        setAttribute(name, Time.writeTime(value));
+    default CloudEventAttributesWriter withAttribute(String name, @Nullable OffsetDateTime value) throws CloudEventRWException {
+        return withAttribute(name, value == null ? null : Time.writeTime(value));
     }
 
 }

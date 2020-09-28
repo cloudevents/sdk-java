@@ -135,66 +135,66 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     // Message impl
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventRWException {
+    public CloudEventBuilder withAttribute(String name, String value) throws CloudEventRWException {
         switch (name) {
             case "id":
                 withId(value);
-                return;
+                return this;
             case "source":
                 try {
                     withSource(new URI(value));
                 } catch (URISyntaxException e) {
                     throw CloudEventRWException.newInvalidAttributeValue("source", value, e);
                 }
-                return;
+                return this;
             case "type":
                 withType(value);
-                return;
+                return this;
             case "datacontenttype":
                 withDataContentType(value);
-                return;
+                return this;
             case "datacontentencoding":
                 // No-op, this information is not saved in the event because it's useful only for parsing
-                return;
+                return this;
             case "schemaurl":
                 try {
                     withSchemaUrl(new URI(value));
                 } catch (URISyntaxException e) {
                     throw CloudEventRWException.newInvalidAttributeValue("schemaurl", value, e);
                 }
-                return;
+                return this;
             case "subject":
                 withSubject(value);
-                return;
+                return this;
             case "time":
                 try {
                     withTime(Time.parseTime(value));
                 } catch (DateTimeParseException e) {
                     throw CloudEventRWException.newInvalidAttributeValue("time", value, e);
                 }
-                return;
+                return this;
         }
         throw CloudEventRWException.newInvalidAttributeName(name);
     }
 
     @Override
-    public void setAttribute(String name, URI value) throws CloudEventRWException {
+    public CloudEventBuilder withAttribute(String name, URI value) throws CloudEventRWException {
         switch (name) {
             case "source":
                 withSource(value);
-                return;
+                return this;
             case "schemaurl":
                 withDataSchema(value);
-                return;
+                return this;
         }
         throw CloudEventRWException.newInvalidAttributeType(name, URI.class);
     }
 
     @Override
-    public void setAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
+    public CloudEventBuilder withAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
         if ("time".equals(name)) {
             withTime(value);
-            return;
+            return this;
         }
         throw CloudEventRWException.newInvalidAttributeType(name, OffsetDateTime.class);
     }

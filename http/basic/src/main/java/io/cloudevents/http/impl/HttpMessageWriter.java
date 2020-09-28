@@ -57,13 +57,15 @@ public class HttpMessageWriter implements CloudEventWriter<Void>, MessageWriter<
     }
 
     @Override
-    public void setAttribute(String name, String value) throws CloudEventRWException {
+    public HttpMessageWriter withAttribute(String name, String value) throws CloudEventRWException {
         putHeader.accept(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
+        return this;
     }
 
     @Override
-    public void setExtension(String name, String value) throws CloudEventRWException {
+    public HttpMessageWriter withExtension(String name, String value) throws CloudEventRWException {
         putHeader.accept("ce-" + name, value);
+        return this;
     }
 
     @Override

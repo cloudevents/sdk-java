@@ -44,7 +44,7 @@ public final class KafkaProducerMessageWriterImpl<K>
 
     @Override
     public KafkaProducerMessageWriterImpl<K> create(SpecVersion version) {
-        this.setAttribute("specversion", version.toString());
+        this.withAttribute("specversion", version.toString());
         return this;
     }
 }

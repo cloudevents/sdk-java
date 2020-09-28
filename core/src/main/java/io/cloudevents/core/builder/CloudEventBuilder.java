@@ -123,6 +123,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param value value of the extension attribute
      * @return self
      */
+    @Override
     CloudEventBuilder withExtension(@Nonnull String key, String value);
 
     /**
@@ -132,6 +133,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param value value of the extension attribute
      * @return self
      */
+    @Override
     CloudEventBuilder withExtension(@Nonnull String key, Number value);
 
     /**
@@ -141,7 +143,8 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param value value of the extension attribute
      * @return self
      */
-    CloudEventBuilder withExtension(@Nonnull String key, boolean value);
+    @Override
+    CloudEventBuilder withExtension(@Nonnull String key, Boolean value);
 
     /**
      * Add to the builder all the extension key/values of the provided extension
