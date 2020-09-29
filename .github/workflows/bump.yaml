@@ -19,10 +19,10 @@ jobs:
         with:
           java-version: 8
       - name: Bump version using Maven
-        run: 'mvn versions:set -DnewVersion=$NEW_VERSION'
+        run: 'mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -B'
       - name: Bump version in docs
         if: ${{ !endsWith(github.event.inputs.version, 'SNAPSHOT') }}
-        run: 'sed -i -e "s+<version>[a-zA-Z0-9.-]*<\/version>+<version>$NEW_VERSION</version>+g" ***/*.md'
+        run: 'find . -type f -name "*.md" -exec sed -i -e "s+<version>[a-zA-Z0-9.-]*<\/version>+<version>$NEW_VERSION</version>+g" {} +'
       - name: Create version bump PR
         uses: peter-evans/create-pull-request@v3
         with:
