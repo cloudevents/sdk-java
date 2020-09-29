@@ -1,8 +1,9 @@
-name: Test Java
+name: Test
 
 on:
   pull_request:
-    branches: ['master']
+    branches:
+      - master
 
 jobs:
   test:
