@@ -2,7 +2,7 @@ name: Test Java
 
 on:
   push:
-    - master
+    branches: ['master']
 
 jobs:
   test:
