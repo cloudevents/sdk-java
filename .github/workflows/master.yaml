@@ -20,7 +20,7 @@ jobs:
           java-version: ${{ matrix.java }}
       - run: |
           mvn clean install -DskipTests -B
-          mvn verify
+          mvn verify -B
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
