@@ -18,7 +18,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
-      - run: mvn clean verify -B
+      - run: |
+          mvn clean install -DskipTests -B
+          mvn verify
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
@@ -35,7 +37,7 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
       - name: Publish to Apache Maven Central
-        run: clean deploy -Drelease -DskipTests
+        run: mvn clean deploy -Drelease -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
