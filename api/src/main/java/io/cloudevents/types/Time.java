@@ -20,6 +20,8 @@ package io.cloudevents.types;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
 /**
  * Utilities to handle the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#type-system">CloudEvent Attribute Timestamp type</a>
  */
@@ -36,9 +38,9 @@ public final class Time {
     }
 
     /**
-     * Convert a {@link OffsetDateTime} to {@link String}
+     * Convert a {@link OffsetDateTime} to a RFC3339 compliant {@link String}
      */
     public static String writeTime(OffsetDateTime time) throws DateTimeParseException {
-        return time.toString();
+        return ISO_OFFSET_DATE_TIME.format(time);
     }
 }
