@@ -9,6 +9,7 @@ on:
 jobs:
   bump:
     name: Bump Java version
+    runs-on: ubuntu-latest
     env:
       NEW_VERSION: ${{ github.event.inputs.version }}
     steps:
