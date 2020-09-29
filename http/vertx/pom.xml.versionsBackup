@@ -15,24 +15,24 @@
   ~ limitations under the License.
   ~
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>io.cloudevents</groupId>
         <artifactId>cloudevents-parent</artifactId>
-        <version>2.0.0-milestone3</version>
+        <version>2.0.0-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
     </parent>
 
-    <artifactId>cloudevents-kafka</artifactId>
-    <name>CloudEvents - Kafka Binding</name>
+    <artifactId>cloudevents-http-vertx</artifactId>
+    <name>CloudEvents - Vert.x Http Binding</name>
     <packaging>jar</packaging>
 
     <properties>
-        <kafka.version>2.5.0</kafka.version>
-        <module-name>io.cloudevents.kafka</module-name>
+        <vertx.version>4.0.0.Beta1</vertx.version>
+        <module-name>io.cloudevents.http.vertx</module-name>
     </properties>
 
     <dependencies>
@@ -49,9 +49,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-            <version>${kafka.version}</version>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-client</artifactId>
+            <version>${vertx.version}</version>
         </dependency>
 
         <!-- Test deps -->
@@ -61,6 +66,12 @@
             <classifier>tests</classifier>
             <type>test-jar</type>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-junit5</artifactId>
+            <version>${vertx.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -77,4 +88,3 @@
         </dependency>
     </dependencies>
 </project>
-

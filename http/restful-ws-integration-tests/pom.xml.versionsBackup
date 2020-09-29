@@ -13,35 +13,29 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
+  ~
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>cloudevents-examples</artifactId>
+        <artifactId>cloudevents-parent</artifactId>
         <groupId>io.cloudevents</groupId>
-        <version>2.0.0-milestone3</version>
+        <version>2.0.0-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloudevents-basic-http-example</artifactId>
+    <artifactId>cloudevents-http-restful-ws-integration-tests</artifactId>
+    <name>CloudEvents - JAX-RS Web Http Binding Integration Tests</name>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-http-basic</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-json-jackson</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>9.4.30.v20200611</version>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>restful-ws-common</module>
+        <module>restful-ws-spring</module>
+        <module>restful-ws-jersey</module>
+        <module>restful-ws-resteasy</module>
+    </modules>
+
 </project>
