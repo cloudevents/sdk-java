@@ -49,7 +49,7 @@ public class TimeTest {
         assertThat(Time.writeTime(OffsetDateTime.of(
             LocalDateTime.of(2020, 8, 3, 18, 10, 0, 0),
             ZoneOffset.ofHours(2)
-        ))).isEqualTo("2020-08-03T18:10+02:00");
+        ))).isEqualTo("2020-08-03T18:10:00+02:00");
     }
 
     public static Stream<Arguments> parseDateArguments() {
