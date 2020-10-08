@@ -1,11 +1,7 @@
 package io.cloudevents;
 
-import java.util.function.Function;
-
 /**
- * Interface that defines a container for CloudEvent data.
- *
- * Every CloudEvent data has
+ * Interface that defines a wrapper for CloudEvent data.
  */
 public interface CloudEventData {
 
