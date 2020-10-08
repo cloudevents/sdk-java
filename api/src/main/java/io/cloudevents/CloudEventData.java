@@ -14,7 +14,4 @@ public interface CloudEventData {
      */
     byte[] toBytes();
 
-    //TBD
-    <T> T to(Function<Object, T> mapper);
-
 }
