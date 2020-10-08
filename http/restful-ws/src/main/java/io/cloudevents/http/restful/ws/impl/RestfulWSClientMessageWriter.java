@@ -17,6 +17,7 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
@@ -58,8 +59,8 @@ public final class RestfulWSClientMessageWriter implements CloudEventWriter<Void
     }
 
     @Override
-    public Void end(byte[] value) throws CloudEventRWException {
-        this.context.setEntity(value);
+    public Void end(CloudEventData value) throws CloudEventRWException {
+        this.context.setEntity(value.toBytes());
         return null;
     }
 

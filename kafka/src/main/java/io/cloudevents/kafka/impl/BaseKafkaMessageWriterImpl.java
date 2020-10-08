@@ -17,6 +17,7 @@
 
 package io.cloudevents.kafka.impl;
 
+import io.cloudevents.CloudEventData;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.rw.CloudEventRWException;
@@ -26,8 +27,8 @@ import org.apache.kafka.common.header.internals.RecordHeader;
 
 abstract class BaseKafkaMessageWriterImpl<R> implements MessageWriter<CloudEventWriter<R>, R>, CloudEventWriter<R> {
 
-    byte[] value;
     final Headers headers;
+    byte[] value;
 
     public BaseKafkaMessageWriterImpl(Headers headers) {
         this.headers = headers;
@@ -46,14 +47,15 @@ abstract class BaseKafkaMessageWriterImpl<R> implements MessageWriter<CloudEvent
     }
 
     @Override
-    public R end(byte[] value) throws CloudEventRWException {
-        this.value = value;
+    public R end(CloudEventData value) throws CloudEventRWException {
+        this.value = value.toBytes();
         return this.end();
     }
 
     @Override
     public R setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
         this.headers.add(new RecordHeader(KafkaHeaders.CONTENT_TYPE, format.serializedContentType().getBytes()));
-        return this.end(value);
+        this.value = value;
+        return this.end();
     }
 }

@@ -16,7 +16,9 @@
 
 package io.cloudevents.http.impl;
 
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 
 import java.util.function.BiConsumer;
@@ -27,11 +29,15 @@ import static io.cloudevents.http.impl.CloudEventsHeaders.CONTENT_TYPE;
 
 public class HttpMessageReader extends BaseGenericBinaryMessageReaderImpl<String, String> {
 
-    private final Consumer<BiConsumer<String,String>> forEachHeader;
+    private final Consumer<BiConsumer<String, String>> forEachHeader;
 
-    public HttpMessageReader(SpecVersion version, Consumer<BiConsumer<String,String>> forEachHeader, byte[] body) {
+    public HttpMessageReader(SpecVersion version, Consumer<BiConsumer<String, String>> forEachHeader, CloudEventData body) {
         super(version, body);
         this.forEachHeader = forEachHeader;
+    }
+
+    public HttpMessageReader(SpecVersion version, Consumer<BiConsumer<String, String>> forEachHeader, byte[] body) {
+        this(version, forEachHeader, body != null && body.length > 0 ? new BytesCloudEventData(body) : null);
     }
 
     @Override

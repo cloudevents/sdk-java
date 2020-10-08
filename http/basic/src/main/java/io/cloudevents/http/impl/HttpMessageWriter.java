@@ -16,6 +16,7 @@
 
 package io.cloudevents.http.impl;
 
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
@@ -45,8 +46,8 @@ public class HttpMessageWriter implements CloudEventWriter<Void>, MessageWriter<
     }
 
     @Override
-    public Void end(byte[] value) throws CloudEventRWException {
-        putBody.accept(value);
+    public Void end(CloudEventData value) throws CloudEventRWException {
+        putBody.accept(value.toBytes());
         return null;
     }
 

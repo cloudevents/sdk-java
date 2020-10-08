@@ -57,7 +57,9 @@ public class HttpURLConnectionClient {
         CloudEvent receivedCE = messageReader.toEvent();
 
         System.out.println("CloudEvent: " + receivedCE);
-        System.out.println("Data: " + new String(receivedCE.getData(), StandardCharsets.UTF_8));
+        if (receivedCE.getData() != null) {
+            System.out.println("Data: " + new String(receivedCE.getData().toBytes(), StandardCharsets.UTF_8));
+        }
     }
 
     private static MessageReader createMessageReader(HttpURLConnection httpUrlConnection) throws IOException {

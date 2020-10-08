@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.rw.*;
 
 import java.io.IOException;
@@ -142,7 +143,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                 });
 
                 if (data != null) {
-                    return visitor.end(data);
+                    return visitor.end(new BytesCloudEventData(data));
                 }
                 return visitor.end();
             } catch (IOException e) {

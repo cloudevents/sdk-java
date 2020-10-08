@@ -112,9 +112,9 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         // Serialize data
-        byte[] data = value.getData();
-        String contentType = value.getDataContentType();
-        if (data != null) {
+        if (value.getData() != null) {
+            byte[] data = value.getData().toBytes();
+            String contentType = value.getDataContentType();
             if (shouldSerializeBase64(contentType)) {
                 switch (value.getSpecVersion()) {
                     case V03:

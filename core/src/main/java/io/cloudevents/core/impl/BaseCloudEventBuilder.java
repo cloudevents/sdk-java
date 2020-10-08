@@ -18,8 +18,10 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.Extension;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.rw.CloudEventRWException;
 
 import javax.annotation.Nonnull;
@@ -32,7 +34,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     // This is a little trick for enabling fluency
     private final SELF self;
 
-    protected byte[] data;
+    protected CloudEventData data;
     protected Map<String, Object> extensions;
 
     @SuppressWarnings("unchecked")
@@ -59,7 +61,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     // to encode data
 
     public SELF withData(byte[] data) {
-        this.data = data;
+        this.data = new BytesCloudEventData(data);
         return this.self;
     }
 
@@ -70,6 +72,24 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     public SELF withData(String dataContentType, URI dataSchema, byte[] data) {
+        withDataContentType(dataContentType);
+        withDataSchema(dataSchema);
+        withData(data);
+        return this.self;
+    }
+
+    public SELF withData(CloudEventData data) {
+        this.data = data;
+        return this.self;
+    }
+
+    public SELF withData(String dataContentType, CloudEventData data) {
+        withDataContentType(dataContentType);
+        withData(data);
+        return this.self;
+    }
+
+    public SELF withData(String dataContentType, URI dataSchema, CloudEventData data) {
         withDataContentType(dataContentType);
         withDataSchema(dataSchema);
         withData(data);
@@ -114,7 +134,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     @Override
-    public CloudEvent end(byte[] value) throws CloudEventRWException {
+    public CloudEvent end(CloudEventData value) throws CloudEventRWException {
         this.data = value;
         return build();
     }
