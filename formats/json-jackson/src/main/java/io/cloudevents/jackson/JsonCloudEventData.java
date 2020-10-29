@@ -13,6 +13,7 @@ public class JsonCloudEventData implements CloudEventData {
     private final JsonNode node;
 
     public JsonCloudEventData(JsonNode node) {
+        Objects.requireNonNull(node);
         this.node = node;
     }
 
