@@ -19,7 +19,10 @@ package io.cloudevents.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.SpecVersion;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.provider.EventFormatProvider;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -103,7 +106,7 @@ class JsonFormatTest {
         assertThat(serialized).isNotEmpty();
 
         CloudEvent output = getFormat().deserialize(serialized);
-        assertThat(output).isEqualTo(input);
+        assertThat(output).isEqualTo(normalizeToJsonValueIfNeeded(input));
     }
 
     public static Stream<Arguments> serializeTestArgumentsDefault() {
@@ -151,8 +154,8 @@ class JsonFormatTest {
     public static Stream<Arguments> deserializeTestArguments() {
         return Stream.of(
             Arguments.of("v03/min.json", V03_MIN),
-            Arguments.of("v03/json_data.json", V03_WITH_JSON_DATA),
-            Arguments.of("v03/json_data_with_ext.json", V03_WITH_JSON_DATA_WITH_EXT),
+            Arguments.of("v03/json_data.json", normalizeToJsonValueIfNeeded(V03_WITH_JSON_DATA)),
+            Arguments.of("v03/json_data_with_ext.json", normalizeToJsonValueIfNeeded(V03_WITH_JSON_DATA_WITH_EXT)),
             Arguments.of("v03/base64_json_data.json", V03_WITH_JSON_DATA),
             Arguments.of("v03/base64_json_data_with_ext.json", V03_WITH_JSON_DATA_WITH_EXT),
             Arguments.of("v03/xml_data.json", V03_WITH_XML_DATA),
@@ -160,8 +163,8 @@ class JsonFormatTest {
             Arguments.of("v03/text_data.json", V03_WITH_TEXT_DATA),
             Arguments.of("v03/base64_text_data.json", V03_WITH_TEXT_DATA),
             Arguments.of("v1/min.json", V1_MIN),
-            Arguments.of("v1/json_data.json", V1_WITH_JSON_DATA),
-            Arguments.of("v1/json_data_with_ext.json", V1_WITH_JSON_DATA_WITH_EXT),
+            Arguments.of("v1/json_data.json", normalizeToJsonValueIfNeeded(V1_WITH_JSON_DATA)),
+            Arguments.of("v1/json_data_with_ext.json", normalizeToJsonValueIfNeeded(V1_WITH_JSON_DATA_WITH_EXT)),
             Arguments.of("v1/base64_json_data.json", V1_WITH_JSON_DATA),
             Arguments.of("v1/base64_json_data_with_ext.json", V1_WITH_JSON_DATA_WITH_EXT),
             Arguments.of("v1/xml_data.json", V1_WITH_XML_DATA),
@@ -185,7 +188,11 @@ class JsonFormatTest {
         );
     }
 
-    public static byte[] loadFile(String input) {
+    private JsonFormat getFormat() {
+        return (JsonFormat) EventFormatProvider.getInstance().resolveFormat(JsonFormat.CONTENT_TYPE);
+    }
+
+    private static byte[] loadFile(String input) {
         try {
             return String.join(
                 "",
@@ -196,8 +203,20 @@ class JsonFormatTest {
         }
     }
 
-    private JsonFormat getFormat() {
-        return (JsonFormat) EventFormatProvider.getInstance().resolveFormat(JsonFormat.CONTENT_TYPE);
+    private static CloudEvent normalizeToJsonValueIfNeeded(CloudEvent event) {
+        if (event.getData() != null && JsonFormat.dataIsJsonContentType(event.getDataContentType())) {
+            CloudEventBuilder builder = null;
+            if (event.getSpecVersion() == SpecVersion.V1) {
+                builder = CloudEventBuilder.v1(event);
+            } else {
+                builder = CloudEventBuilder.v03(event);
+            }
+            return builder
+                .withData(new JsonCloudEventData(JsonNodeFactory.instance.objectNode()))
+                .build();
+        } else {
+            return event;
+        }
     }
 
 }

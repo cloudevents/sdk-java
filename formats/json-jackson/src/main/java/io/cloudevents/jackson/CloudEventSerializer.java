@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.rw.CloudEventAttributesWriter;
 import io.cloudevents.rw.CloudEventExtensionsWriter;
@@ -113,28 +114,33 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
         // Serialize data
         if (value.getData() != null) {
-            byte[] data = value.getData().toBytes();
-            String contentType = value.getDataContentType();
-            if (shouldSerializeBase64(contentType)) {
-                switch (value.getSpecVersion()) {
-                    case V03:
-                        gen.writeStringField("datacontentencoding", "base64");
-                        gen.writeFieldName("data");
-                        gen.writeBinary(data);
-                        break;
-                    case V1:
-                        gen.writeFieldName("data_base64");
-                        gen.writeBinary(data);
-                        break;
-                }
-            } else if (JsonFormat.dataIsJsonContentType(contentType)) {
-                // TODO really bad b/c it allocates stuff, is there another solution out there?
-                char[] dataAsString = new String(data, StandardCharsets.UTF_8).toCharArray();
-                gen.writeFieldName("data");
-                gen.writeRawValue(dataAsString, 0, dataAsString.length);
+            CloudEventData data = value.getData();
+            if (data instanceof JsonCloudEventData) {
+                gen.writeObjectField("data", ((JsonCloudEventData) data).getNode());
             } else {
-                gen.writeFieldName("data");
-                gen.writeUTF8String(data, 0, data.length);
+                byte[] dataBytes = data.toBytes();
+                String contentType = value.getDataContentType();
+                if (shouldSerializeBase64(contentType)) {
+                    switch (value.getSpecVersion()) {
+                        case V03:
+                            gen.writeStringField("datacontentencoding", "base64");
+                            gen.writeFieldName("data");
+                            gen.writeBinary(dataBytes);
+                            break;
+                        case V1:
+                            gen.writeFieldName("data_base64");
+                            gen.writeBinary(dataBytes);
+                            break;
+                    }
+                } else if (JsonFormat.dataIsJsonContentType(contentType)) {
+                    // TODO really bad b/c it allocates stuff, is there another solution out there?
+                    char[] dataAsString = new String(dataBytes, StandardCharsets.UTF_8).toCharArray();
+                    gen.writeFieldName("data");
+                    gen.writeRawValue(dataAsString, 0, dataAsString.length);
+                } else {
+                    gen.writeFieldName("data");
+                    gen.writeUTF8String(dataBytes, 0, dataBytes.length);
+                }
             }
         }
         gen.writeEndObject();
