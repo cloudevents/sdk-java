@@ -51,7 +51,7 @@ public class CSVFormat implements EventFormat {
                 ? Time.writeTime(event.getTime())
                 : "null",
             event.getData() != null
-                ? new String(Base64.getEncoder().encode(event.getData()), StandardCharsets.UTF_8)
+                ? new String(Base64.getEncoder().encode(event.getData().toBytes()), StandardCharsets.UTF_8)
                 : "null"
         ).getBytes();
     }

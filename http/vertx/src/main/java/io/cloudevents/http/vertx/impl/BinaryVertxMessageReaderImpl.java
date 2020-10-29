@@ -18,6 +18,7 @@
 package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
@@ -31,7 +32,7 @@ public class BinaryVertxMessageReaderImpl extends BaseGenericBinaryMessageReader
     private final MultiMap headers;
 
     public BinaryVertxMessageReaderImpl(SpecVersion version, MultiMap headers, Buffer body) {
-        super(version, (body != null) ? body.getBytes() : null);
+        super(version, body != null && body.length() > 0 ? new BytesCloudEventData(body.getBytes()) : null);
 
         Objects.requireNonNull(headers);
         this.headers = headers;

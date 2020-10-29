@@ -18,6 +18,7 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.*;
 
 import java.util.HashMap;
@@ -26,16 +27,16 @@ import java.util.Set;
 
 public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
 
-    private final byte[] data;
+    private final CloudEventData data;
     protected final Map<String, Object> extensions;
 
-    protected BaseCloudEvent(byte[] data, Map<String, Object> extensions) {
+    protected BaseCloudEvent(CloudEventData data, Map<String, Object> extensions) {
         this.data = data;
         this.extensions = extensions != null ? extensions : new HashMap<>();
     }
 
     @Override
-    public byte[] getData() {
+    public CloudEventData getData() {
         return this.data;
     }
 

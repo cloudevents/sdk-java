@@ -18,6 +18,7 @@
 package io.cloudevents.core.builder;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.Extension;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.rw.CloudEventWriter;
@@ -115,6 +116,33 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @return self
      */
     CloudEventBuilder withData(String dataContentType, URI dataSchema, byte[] data);
+
+    /**
+     * Set the {@code data} of the event
+     *
+     * @param data data of the event
+     * @return self
+     */
+    CloudEventBuilder withData(CloudEventData data);
+
+    /**
+     * Set the {@code datacontenttype} and {@code data} of the event
+     *
+     * @param dataContentType datacontenttype of the event
+     * @param data            data of the event
+     * @return self
+     */
+    CloudEventBuilder withData(String dataContentType, CloudEventData data);
+
+    /**
+     * Set the {@code datacontenttype}, {@code dataschema} and {@code data} of the event
+     *
+     * @param dataContentType datacontenttype of the event
+     * @param dataSchema      dataschema of the event
+     * @param data            data of the event
+     * @return self
+     */
+    CloudEventBuilder withData(String dataContentType, URI dataSchema, CloudEventData data);
 
     /**
      * Set an extension with provided key and string value

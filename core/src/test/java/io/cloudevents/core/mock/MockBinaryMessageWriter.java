@@ -18,7 +18,9 @@
 package io.cloudevents.core.mock;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.BaseBinaryMessageReader;
@@ -33,14 +35,18 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
 
     private SpecVersion version;
     private Map<String, Object> attributes;
-    private byte[] data;
+    private CloudEventData data;
     private Map<String, Object> extensions;
 
-    public MockBinaryMessageWriter(SpecVersion version, Map<String, Object> attributes, byte[] data, Map<String, Object> extensions) {
+    public MockBinaryMessageWriter(SpecVersion version, Map<String, Object> attributes, CloudEventData data, Map<String, Object> extensions) {
         this.version = version;
         this.attributes = attributes;
         this.data = data;
         this.extensions = extensions;
+    }
+
+    public MockBinaryMessageWriter(SpecVersion version, Map<String, Object> attributes, byte[] data, Map<String, Object> extensions) {
+        this(version, attributes, new BytesCloudEventData(data), extensions);
     }
 
     public MockBinaryMessageWriter() {
@@ -65,7 +71,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
         this.readAttributes(visitor);
         this.readExtensions(visitor);
 
-        if (this.data != null && this.data.length != 0) {
+        if (this.data != null) {
             return visitor.end(this.data);
         }
 
@@ -105,7 +111,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public MockBinaryMessageWriter end(byte[] value) throws CloudEventRWException {
+    public MockBinaryMessageWriter end(CloudEventData value) throws CloudEventRWException {
         this.data = value;
         return this;
     }

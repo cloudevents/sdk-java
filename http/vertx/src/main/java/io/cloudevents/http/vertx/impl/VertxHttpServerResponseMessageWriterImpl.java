@@ -17,6 +17,7 @@
 
 package io.cloudevents.http.vertx.impl;
 
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
@@ -57,11 +58,11 @@ public class VertxHttpServerResponseMessageWriterImpl implements MessageWriter<C
     }
 
     @Override
-    public HttpServerResponse end(byte[] value) throws CloudEventRWException {
+    public HttpServerResponse end(CloudEventData value) throws CloudEventRWException {
         if (this.response.ended()) {
             throw CloudEventRWException.newOther(new IllegalStateException("Cannot set the body because the response is already ended"));
         }
-        this.response.end(Buffer.buffer(value));
+        this.response.end(Buffer.buffer(value.toBytes()));
         return this.response;
     }
 

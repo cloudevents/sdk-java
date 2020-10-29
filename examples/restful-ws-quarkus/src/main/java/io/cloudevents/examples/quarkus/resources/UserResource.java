@@ -1,26 +1,19 @@
 package io.cloudevents.examples.quarkus.resources;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.examples.quarkus.model.User;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -53,7 +46,7 @@ public class UserResource {
         if (event == null || event.getData() == null) {
             throw new BadRequestException("Invalid data received. Null or empty event");
         }
-        User user = Json.decodeValue(Buffer.buffer(event.getData()), User.class);
+        User user = Json.decodeValue(Buffer.buffer(event.getData().toBytes()), User.class);
         if (users.containsKey(user.getUsername())) {
             throw new BadRequestException("Username already exists: " + user.getUsername());
         }

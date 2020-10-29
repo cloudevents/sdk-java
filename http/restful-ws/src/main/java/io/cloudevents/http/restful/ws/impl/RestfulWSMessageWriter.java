@@ -17,6 +17,7 @@
 
 package io.cloudevents.http.restful.ws.impl;
 
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
@@ -60,9 +61,9 @@ public final class RestfulWSMessageWriter implements CloudEventWriter<Void>, Mes
     }
 
     @Override
-    public Void end(byte[] value) throws CloudEventRWException {
+    public Void end(CloudEventData value) throws CloudEventRWException {
         try {
-            this.entityStream.write(value);
+            this.entityStream.write(value.toBytes());
         } catch (IOException e) {
             throw CloudEventRWException.newOther(e);
         }
@@ -82,7 +83,11 @@ public final class RestfulWSMessageWriter implements CloudEventWriter<Void>, Mes
     @Override
     public Void setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
         this.httpHeaders.add(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
-        this.end(value);
-        return null;
+        try {
+            this.entityStream.write(value);
+        } catch (IOException e) {
+            throw CloudEventRWException.newOther(e);
+        }
+        return this.end();
     }
 }

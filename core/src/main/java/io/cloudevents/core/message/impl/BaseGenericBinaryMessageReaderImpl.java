@@ -17,6 +17,7 @@
 
 package io.cloudevents.core.message.impl;
 
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.rw.*;
 
@@ -34,9 +35,9 @@ import java.util.function.BiConsumer;
 public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBinaryMessageReader {
 
     private final SpecVersion version;
-    private final byte[] body;
+    private final CloudEventData body;
 
-    protected BaseGenericBinaryMessageReaderImpl(SpecVersion version, byte[] body) {
+    protected BaseGenericBinaryMessageReaderImpl(SpecVersion version, CloudEventData body) {
         Objects.requireNonNull(version);
         this.version = version;
         this.body = body;
@@ -66,7 +67,7 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
         });
 
         // Set the payload
-        if (this.body != null && this.body.length != 0) {
+        if (this.body != null) {
             return visitor.end(this.body);
         }
 

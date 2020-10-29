@@ -17,6 +17,8 @@
 
 package io.cloudevents.rw;
 
+import io.cloudevents.CloudEventData;
+
 /**
  * Interface to write the content (CloudEvents attributes, extensions and payload) from a
  * {@link io.cloudevents.rw.CloudEventReader} to a new representation.
@@ -30,7 +32,7 @@ public interface CloudEventWriter<R> extends CloudEventAttributesWriter, CloudEv
      *
      * @return an eventual return value
      */
-    R end(byte[] value) throws CloudEventRWException;
+    R end(CloudEventData data) throws CloudEventRWException;
 
     /**
      * End the visit

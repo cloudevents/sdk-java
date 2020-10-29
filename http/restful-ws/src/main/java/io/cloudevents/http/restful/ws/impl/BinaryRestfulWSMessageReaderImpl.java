@@ -18,6 +18,7 @@
 package io.cloudevents.http.restful.ws.impl;
 
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -32,7 +33,7 @@ public final class BinaryRestfulWSMessageReaderImpl extends BaseGenericBinaryMes
     private final MultivaluedMap<String, String> headers;
 
     public BinaryRestfulWSMessageReaderImpl(SpecVersion version, MultivaluedMap<String, String> headers, byte[] body) {
-        super(version, body);
+        super(version, body != null && body.length > 0 ? new BytesCloudEventData(body) : null);
 
         Objects.requireNonNull(headers);
         this.headers = headers;

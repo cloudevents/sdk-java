@@ -17,6 +17,7 @@
 
 package io.cloudevents.http.vertx.impl;
 
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
@@ -59,8 +60,8 @@ public class VertxWebClientRequestMessageWriterImpl implements MessageWriter<Clo
     }
 
     @Override
-    public Future<HttpResponse<Buffer>> end(byte[] value) throws CloudEventRWException {
-        return this.request.sendBuffer(Buffer.buffer(value));
+    public Future<HttpResponse<Buffer>> end(CloudEventData value) throws CloudEventRWException {
+        return this.request.sendBuffer(Buffer.buffer(value.toBytes()));
     }
 
     @Override
