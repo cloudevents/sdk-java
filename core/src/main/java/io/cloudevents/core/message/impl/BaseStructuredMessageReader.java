@@ -19,10 +19,7 @@ package io.cloudevents.core.message.impl;
 
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
-import io.cloudevents.rw.CloudEventAttributesWriter;
-import io.cloudevents.rw.CloudEventExtensionsWriter;
-import io.cloudevents.rw.CloudEventWriter;
-import io.cloudevents.rw.CloudEventWriterFactory;
+import io.cloudevents.rw.*;
 
 public abstract class BaseStructuredMessageReader implements MessageReader {
 
@@ -32,7 +29,7 @@ public abstract class BaseStructuredMessageReader implements MessageReader {
     }
 
     @Override
-    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) {
+    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper mapper) {
         throw MessageUtils.generateWrongEncoding(Encoding.BINARY, Encoding.STRUCTURED);
     }
 

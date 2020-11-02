@@ -18,6 +18,8 @@
 package io.cloudevents.core.format;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.lang.Nullable;
+import io.cloudevents.rw.CloudEventDataMapper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
@@ -53,6 +55,11 @@ public interface EventFormat {
      * @throws EventDeserializationException if something goes wrong during deserialization.
      */
     CloudEvent deserialize(byte[] bytes) throws EventDeserializationException;
+
+    /**
+     * Like {@link EventFormat#deserialize(byte[])}, but allows a mapper that maps the parsed {@link io.cloudevents.CloudEventData} to another one.
+     */
+    CloudEvent deserialize(byte[] bytes, @Nullable CloudEventDataMapper mapper) throws EventDeserializationException;
 
     /**
      * @return the set of content types this event format can deserialize. These content types are used

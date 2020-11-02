@@ -17,9 +17,14 @@
 
 package io.cloudevents.rw;
 
+import io.cloudevents.lang.Nullable;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Represents an object that can be read as CloudEvent
  */
+@ParametersAreNonnullByDefault
 public interface CloudEventReader {
 
     /**
@@ -28,7 +33,14 @@ public interface CloudEventReader {
      * @param writerFactory a factory that generates a visitor starting from the SpecVersion of the event
      * @throws CloudEventRWException if something went wrong during the visit.
      */
-    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException;
+    default <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException {
+        return read(writerFactory, null);
+    }
+
+    /**
+     * Like {@link CloudEventReader#read(CloudEventWriterFactory)}, but providing a mapper for {@link io.cloudevents.CloudEventData} to be invoked when the data field is available.
+     */
+    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, @Nullable CloudEventDataMapper mapper) throws CloudEventRWException;
 
     /**
      * Visit self attributes using the provided writer

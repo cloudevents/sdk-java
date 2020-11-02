@@ -261,4 +261,22 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
         );
     }
 
+    /**
+     * Create a new builder starting from the values of the provided event.
+     *
+     * @param event event to copy values from
+     * @return the new builder
+     */
+    static CloudEventBuilder from(@Nonnull CloudEvent event) {
+        switch (event.getSpecVersion()) {
+            case V1:
+                return CloudEventBuilder.v1(event);
+            case V03:
+                return CloudEventBuilder.v03(event);
+        }
+        throw new IllegalStateException(
+            "The provided spec version doesn't exist. Please make sure your io.cloudevents deps versions are aligned."
+        );
+    }
+
 }

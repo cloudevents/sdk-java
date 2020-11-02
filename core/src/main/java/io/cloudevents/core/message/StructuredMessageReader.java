@@ -20,6 +20,8 @@ package io.cloudevents.core.message;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
+import io.cloudevents.lang.Nullable;
+import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventRWException;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,6 +42,10 @@ public interface StructuredMessageReader {
 
     default CloudEvent toEvent() throws CloudEventRWException, IllegalStateException {
         return this.read(EventFormat::deserialize);
+    }
+
+    default CloudEvent toEvent(@Nullable CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
+        return this.read((format, value) -> format.deserialize(value, mapper));
     }
 
     /**

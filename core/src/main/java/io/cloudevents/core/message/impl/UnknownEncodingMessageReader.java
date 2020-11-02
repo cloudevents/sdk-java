@@ -29,7 +29,7 @@ public class UnknownEncodingMessageReader implements MessageReader {
     }
 
     @Override
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory) throws CloudEventRWException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
         throw new IllegalStateException("Unknown encoding");
     }
 
