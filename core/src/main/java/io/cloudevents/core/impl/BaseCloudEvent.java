@@ -50,13 +50,13 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
         return this.extensions.keySet();
     }
 
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory) throws CloudEventRWException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
         CloudEventWriter<V> visitor = writerFactory.create(this.getSpecVersion());
         this.readAttributes(visitor);
         this.readExtensions(visitor);
 
         if (this.data != null) {
-            return visitor.end(this.data);
+            return visitor.end(mapper != null ? mapper.map(this.data) : this.data);
         }
 
         return visitor.end();

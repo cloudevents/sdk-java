@@ -54,7 +54,9 @@ public interface EventFormat {
      * @return the deserialized event.
      * @throws EventDeserializationException if something goes wrong during deserialization.
      */
-    CloudEvent deserialize(byte[] bytes) throws EventDeserializationException;
+    default CloudEvent deserialize(byte[] bytes) throws EventDeserializationException {
+        return this.deserialize(bytes, null);
+    }
 
     /**
      * Like {@link EventFormat#deserialize(byte[])}, but allows a mapper that maps the parsed {@link io.cloudevents.CloudEventData} to another one.

@@ -54,7 +54,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         @Override
-        public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory) throws CloudEventRWException, IllegalStateException {
+        public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
             try {
                 SpecVersion specVersion = SpecVersion.parse(getStringNode(this.node, this.p, "specversion"));
                 CloudEventWriter<V> visitor = writerFactory.create(specVersion);
@@ -144,7 +144,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                 });
 
                 if (data != null) {
-                    return visitor.end(data);
+                    return visitor.end(mapper != null ? mapper.map(data) : data);
                 }
                 return visitor.end();
             } catch (IOException e) {
