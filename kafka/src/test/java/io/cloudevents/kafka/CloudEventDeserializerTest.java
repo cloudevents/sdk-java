@@ -18,9 +18,14 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.mock.MyCloudEventData;
 import io.cloudevents.core.test.Data;
+import io.cloudevents.rw.CloudEventDataMapper;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,19 +33,44 @@ public class CloudEventDeserializerTest {
 
     @Test
     public void deserializerShouldWork() {
-        String topic = "test";
-        CloudEvent inEvent = Data.V1_WITH_JSON_DATA;
+        testDeserialize(
+            new CloudEventDeserializer(),
+            Data.V1_WITH_JSON_DATA,
+            Data.V1_WITH_JSON_DATA
+        );
+    }
+
+    @Test
+    public void deserializerWithMapper() {
+        CloudEventDataMapper mapper = data -> MyCloudEventData.fromStringBytes(data.toBytes());
 
         CloudEventDeserializer deserializer = new CloudEventDeserializer();
+        HashMap<String, Object> config = new HashMap<>();
+        config.put(CloudEventDeserializer.MAPPER_CONFIG, mapper);
+        deserializer.configure(config, false);
+
+        testDeserialize(
+            deserializer,
+            CloudEventBuilder.v1(Data.V1_MIN)
+                .withData("application/json", "10".getBytes())
+                .build(),
+            CloudEventBuilder.v1(Data.V1_MIN)
+                .withData("application/json", new MyCloudEventData(10))
+                .build()
+        );
+    }
+
+    private void testDeserialize(CloudEventDeserializer deserializer, CloudEvent input, CloudEvent expected) {
+        String topic = "test";
 
         // Serialize the event first
         ProducerRecord<Void, byte[]> inRecord = KafkaMessageFactory
             .createWriter(topic)
-            .writeBinary(inEvent);
+            .writeBinary(input);
         CloudEvent outEvent = deserializer.deserialize(topic, inRecord.headers(), inRecord.value());
 
         assertThat(outEvent)
-            .isEqualTo(inEvent);
+            .isEqualTo(expected);
     }
 
 }

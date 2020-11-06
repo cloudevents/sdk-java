@@ -2,6 +2,8 @@ package io.cloudevents.core.mock;
 
 import io.cloudevents.CloudEventData;
 
+import java.util.Objects;
+
 public class MyCloudEventData implements CloudEventData {
 
     private final int value;
@@ -19,7 +21,21 @@ public class MyCloudEventData implements CloudEventData {
         return value;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MyCloudEventData that = (MyCloudEventData) o;
+        return getValue() == that.getValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getValue());
+    }
+
     public static MyCloudEventData fromStringBytes(byte[] bytes) {
         return new MyCloudEventData(Integer.valueOf(new String(bytes)));
     }
+
 }
