@@ -18,7 +18,7 @@ For Maven based projects, use the following to configure the CloudEvents Generic
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-http-basic</artifactId>
-    <version>2.0.0-milestone3</version>
+    <version>2.0.0-milestone4</version>
 </dependency>
 ```
 
