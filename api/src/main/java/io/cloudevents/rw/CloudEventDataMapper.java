@@ -15,16 +15,26 @@
  *
  */
 
-package io.cloudevents;
+package io.cloudevents.rw;
+
+import io.cloudevents.CloudEventData;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface that defines a wrapper for CloudEvent data.
+ * Interface to convert a {@link CloudEventData} instance to another one.
  */
-public interface CloudEventData {
+@FunctionalInterface
+@ParametersAreNonnullByDefault
+public interface CloudEventDataMapper {
 
     /**
-     * @return this CloudEventData, represented as bytes. Note: this operation may be expensive, depending on the internal representation of data
+     * Map {@code data} to another {@link CloudEventData} instance.
+     *
+     * @param data the input data
+     * @return The new data
+     * @throws CloudEventRWException is anything goes wrong while mapping the input data
      */
-    byte[] toBytes();
+    CloudEventData map(CloudEventData data) throws CloudEventRWException;
 
 }

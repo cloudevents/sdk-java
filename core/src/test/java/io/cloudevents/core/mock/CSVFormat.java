@@ -20,7 +20,9 @@ package io.cloudevents.core.mock;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
@@ -57,7 +59,7 @@ public class CSVFormat implements EventFormat {
     }
 
     @Override
-    public CloudEvent deserialize(byte[] bytes) {
+    public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper mapper) {
         String[] splitted = new String(bytes, StandardCharsets.UTF_8).split(Pattern.quote(","));
         SpecVersion sv = SpecVersion.parse(splitted[0]);
 
@@ -70,7 +72,7 @@ public class CSVFormat implements EventFormat {
         OffsetDateTime time = splitted[7].equals("null") ? null : Time.parseTime(splitted[7]);
         byte[] data = splitted[8].equals("null") ? null : Base64.getDecoder().decode(splitted[8].getBytes());
 
-        io.cloudevents.core.v1.CloudEventBuilder builder = CloudEventBuilder.v1()
+        CloudEventBuilder builder = CloudEventBuilder.fromSpecVersion(sv)
             .withId(id)
             .withType(type)
             .withSource(source);
@@ -88,15 +90,13 @@ public class CSVFormat implements EventFormat {
             builder.withTime(time);
         }
         if (data != null) {
-            builder.withData(data);
+            if (mapper != null) {
+                builder.withData(mapper.map(new BytesCloudEventData(data)));
+            } else {
+                builder.withData(data);
+            }
         }
-        switch (sv) {
-            case V03:
-                return CloudEventBuilder.v03(builder.build()).build();
-            case V1:
-                return builder.build();
-        }
-        return null;
+        return builder.build();
     }
 
     @Override

@@ -44,7 +44,7 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
     }
 
     @Override
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory) throws CloudEventRWException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
         CloudEventWriter<V> visitor = writerFactory.create(this.version);
 
         // Grab from headers the attributes and extensions
@@ -68,7 +68,7 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
 
         // Set the payload
         if (this.body != null) {
-            return visitor.end(this.body);
+            return visitor.end(mapper != null ? mapper.map(this.body) : this.body);
         }
 
         return visitor.end();

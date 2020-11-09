@@ -18,13 +18,34 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.core.message.MessageReader;
+import io.cloudevents.rw.CloudEventDataMapper;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
 
+import java.util.Map;
+
 /**
- * Deserializer for {@link CloudEvent}
+ * Deserializer for {@link CloudEvent}.
+ * <p>
+ * To configure the {@link CloudEventDataMapper} to use, you can provide the instance through the configuration key
+ * {@link CloudEventDeserializer#MAPPER_CONFIG}.
  */
 public class CloudEventDeserializer implements Deserializer<CloudEvent> {
+
+    public final static String MAPPER_CONFIG = "cloudevents.datamapper";
+
+    private CloudEventDataMapper mapper = null;
+
+    @Override
+    public void configure(Map<String, ?> configs, boolean isKey) {
+        Object mapperConfig = configs.get(MAPPER_CONFIG);
+        if (mapperConfig instanceof CloudEventDataMapper) {
+            this.mapper = (CloudEventDataMapper) mapperConfig;
+        } else if (mapperConfig != null) {
+            throw new IllegalArgumentException(MAPPER_CONFIG + " can be of type String or " + CloudEventDataMapper.class.getCanonicalName());
+        }
+    }
 
     @Override
     public CloudEvent deserialize(String topic, byte[] data) {
@@ -33,6 +54,11 @@ public class CloudEventDeserializer implements Deserializer<CloudEvent> {
 
     @Override
     public CloudEvent deserialize(String topic, Headers headers, byte[] data) {
-        return KafkaMessageFactory.createReader(headers, data).toEvent();
+        MessageReader reader = KafkaMessageFactory.createReader(headers, data);
+        if (mapper == null) {
+            return reader.toEvent();
+        } else {
+            return reader.toEvent(mapper);
+        }
     }
 }

@@ -29,13 +29,13 @@ public class CloudEventReaderAdapter implements CloudEventReader {
     }
 
     @Override
-    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws RuntimeException {
+    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper mapper) throws RuntimeException {
         CloudEventWriter<R> visitor = writerFactory.create(event.getSpecVersion());
         this.readAttributes(visitor);
         this.readExtensions(visitor);
 
         if (event.getData() != null) {
-            return visitor.end(event.getData());
+            return visitor.end(mapper != null ? mapper.map(event.getData()) : event.getData());
         }
 
         return visitor.end();
