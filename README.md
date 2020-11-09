@@ -9,8 +9,6 @@ A Java API for the [CloudEvents specification](https://github.com/cloudevents/sp
 
 Look at https://cloudevents.github.io/sdk-java/ for more documentation.
 
-__Checkout the [changelog](./CHANGELOG.md)__
-
 ## Status
 
 This SDK is considered **work in progress**. The community is working hard to bring you a new major version of the SDK with major enhancements both to APIs and to implementation.
@@ -38,7 +36,8 @@ Supported features of the specification:
 
 ## Motivation
 
-The [CloudEvents specification](https://github.com/cloudevents/spec) is a vendor-neutral specification for defining the format of event data that is being exchanged between different cloud systems. The specification basically defines an abstract envelope for any event data payload, without knowing specific implementation details of the actual underlying event. The current version of the spec is at `0.3` and it describes a simple event format, which was demonstrated at [KubeCon 2018](https://youtu.be/TZPPjAv12KU) using different _Serverless platforms_, such as [Apache Openwhisk](https://github.com/apache/incubator-openwhisk).
+The [CloudEvents specification](https://github.com/cloudevents/spec) is a vendor-neutral specification for defining the format of event data that is being exchanged between different cloud systems. The specification basically defines an abstract envelope for any event data payload, without knowing specific implementation details of the actual underlying event.
+The current version of the spec is at `1.0` and it describes a simple event format, which was demonstrated at [KubeCon 2018](https://youtu.be/TZPPjAv12KU) using different _Serverless platforms_, such as [Apache Openwhisk](https://github.com/apache/incubator-openwhisk).
 
 ## Documentation
 
@@ -49,15 +48,15 @@ Javadocs are available on [javadoc.io](https://www.javadoc.io):
 * [cloudevents-api](https://www.javadoc.io/doc/io.cloudevents/cloudevents-api)
 * [cloudevents-core](https://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
 * [cloudevents-json-jackson](https://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
+* [cloudevents-http-basic](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-basic)
 * [cloudevents-http-restful-ws](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
 * [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
 * [cloudevents-kafka](https://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)
 
 ## Used By
 
-<a href="https://occurrent.org"><img src="https://raw.githubusercontent.com/johanhaleby/occurrent/master/occurrent-logo-196x196.png" width="98" height="98" alt="Occurrent" title="Occurrent - Event Sourcing Utilities for the JVM"></img></a>
-
-- [Knative Eventing](https://github.com/knative-sandbox/eventing-kafka-broker)
+| <a href="https://occurrent.org"><img src="https://raw.githubusercontent.com/johanhaleby/occurrent/master/occurrent-logo-196x196.png" width="98" height="98" alt="Occurrent" title="Occurrent - Event Sourcing Utilities for the JVM"></img></a> | <a href="https://github.com/knative-sandbox/eventing-kafka-broker"><img src="https://cloudevents.io/img/logos/integrations/knative.png" height="98"></img></a> |
+| [Occurrent](https://occurrent.org) | [Eventing Kafka Broker](https://github.com/knative-sandbox/eventing-kafka-broker) |
 
 ## Community
 
