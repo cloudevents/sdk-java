@@ -116,7 +116,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * @throws CloudEventRWException if something went wrong during the visit.
      * @throws IllegalStateException if the message has an unknown encoding.
      */
-    default CloudEvent toEvent(@Nullable CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
+    default CloudEvent toEvent(@Nullable CloudEventDataMapper<?> mapper) throws CloudEventRWException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
                 return this.read(CloudEventBuilder::fromSpecVersion, mapper);

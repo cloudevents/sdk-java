@@ -44,7 +44,7 @@ public interface StructuredMessageReader {
         return this.read(EventFormat::deserialize);
     }
 
-    default CloudEvent toEvent(@Nullable CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
+    default CloudEvent toEvent(@Nullable CloudEventDataMapper<?> mapper) throws CloudEventRWException, IllegalStateException {
         return this.read((format, value) -> format.deserialize(value, mapper));
     }
 
