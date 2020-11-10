@@ -25,8 +25,10 @@ public class PojoCloudEventDataMapperTest {
             .withData("application/json", myPojoSerialized.getBytes())
             .build();
 
-        PojoCloudEventData<MyPojo> mappedData = event.toData(PojoCloudEventDataMapper.from(objectMapper, new TypeReference<MyPojo>() {
-        }));
+        PojoCloudEventData<MyPojo> mappedData = PojoCloudEventDataMapper
+            .from(objectMapper, new TypeReference<MyPojo>() {
+            })
+            .map(event.getData());
         assertThat(mappedData)
             .isNotNull()
             .extracting(PojoCloudEventData::getValue)
@@ -41,8 +43,10 @@ public class PojoCloudEventDataMapperTest {
             .withData("application/json", new JsonCloudEventData(myPojoJson))
             .build();
 
-        PojoCloudEventData<MyPojo> mappedData = event.toData(PojoCloudEventDataMapper.from(objectMapper, new TypeReference<MyPojo>() {
-        }));
+        PojoCloudEventData<MyPojo> mappedData = PojoCloudEventDataMapper
+            .from(objectMapper, new TypeReference<MyPojo>() {
+            })
+            .map(event.getData());
         assertThat(mappedData)
             .isNotNull()
             .extracting(PojoCloudEventData::getValue)

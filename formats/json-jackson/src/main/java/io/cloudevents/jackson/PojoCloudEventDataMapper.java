@@ -7,7 +7,7 @@ import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventRWException;
 
-public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoCloudEventData<T>> {
+public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper {
 
     private final ObjectMapper mapper;
     private final TypeReference<T> target;
