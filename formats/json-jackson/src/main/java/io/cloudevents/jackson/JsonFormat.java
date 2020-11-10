@@ -92,7 +92,7 @@ public final class JsonFormat implements EventFormat {
         }
         try {
             return CloudEventBuilder.from(deserialized).withData(
-                mapper.map(deserialized.getData())
+                mapper != null ? mapper.map(deserialized.getData()) : deserialized.getData()
             ).build();
         } catch (CloudEventRWException e) {
             throw new EventDeserializationException(e);
