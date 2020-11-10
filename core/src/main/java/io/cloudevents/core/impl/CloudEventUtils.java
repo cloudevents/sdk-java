@@ -46,7 +46,7 @@ public final class CloudEventUtils {
      * Get the data contained in {@code event} and map it using the provided mapper.
      */
     @Nullable
-    <R extends CloudEventData> R mapData(CloudEvent event, CloudEventDataMapper<R> mapper) {
+    public static <R extends CloudEventData> R mapData(CloudEvent event, CloudEventDataMapper<R> mapper) {
         CloudEventData data = event.getData();
         if (data == null) {
             return null;
