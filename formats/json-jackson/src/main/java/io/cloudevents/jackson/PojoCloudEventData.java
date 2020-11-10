@@ -36,27 +36,4 @@ public class PojoCloudEventData<T> implements CloudEventData {
         }
         return this.memoizedValue;
     }
-//
-//    /**
-//     * Extract the data from the event. Be aware that this doesn't perform the mapping:
-//     * to execute the mapping, you need to use {@link PojoCloudEventDataMapper}.
-//     *
-//     * @param event the event containing a data with {@link PojoCloudEventDataMapper}
-//     * @param <T> the return value type
-//     * @return null if there wasn't any data, otherwise the value casted to T
-//     */
-//    @SuppressWarnings("unchecked")
-//    public static <T> T extractFromEvent(CloudEvent event) {
-//        CloudEventData data = event.getData();
-//        if (data == null) {
-//            return null;
-//        }
-//        PojoCloudEventData pojoData;
-//        try {
-//            pojoData = (PojoCloudEventData) data;
-//        } catch (ClassCastException e) {
-//            throw new IllegalArgumentException("Provided event contains a CloudEventData not instance of PojoCloudEventData. Use the mapper PojoCloudEventDataMapper when you deserialize the event", e);
-//        }
-//        return (T)pojoData.getValue();
-//    }
 }
