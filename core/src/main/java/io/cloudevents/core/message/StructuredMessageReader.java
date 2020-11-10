@@ -18,6 +18,7 @@
 package io.cloudevents.core.message;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.lang.Nullable;
@@ -44,7 +45,7 @@ public interface StructuredMessageReader {
         return this.read(EventFormat::deserialize);
     }
 
-    default CloudEvent toEvent(@Nullable CloudEventDataMapper<?> mapper) throws CloudEventRWException, IllegalStateException {
+    default CloudEvent toEvent(@Nullable CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
         return this.read((format, value) -> format.deserialize(value, mapper));
     }
 
