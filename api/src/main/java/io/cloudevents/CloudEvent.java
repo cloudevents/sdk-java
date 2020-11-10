@@ -17,7 +17,6 @@
 package io.cloudevents;
 
 import io.cloudevents.lang.Nullable;
-import io.cloudevents.rw.CloudEventDataMapper;
 
 /**
  * Interface representing an in memory read only representation of a CloudEvent,
@@ -30,16 +29,4 @@ public interface CloudEvent extends CloudEventAttributes, CloudEventExtensions {
      */
     @Nullable
     CloudEventData getData();
-
-    /**
-     * Get the data contained in this event and map it using the provided mapper.
-     */
-    @Nullable
-    default <R extends CloudEventData> R toData(CloudEventDataMapper<R> mapper) {
-        CloudEventData data = getData();
-        if (data == null) {
-            return null;
-        }
-        return mapper.map(data);
-    }
 }

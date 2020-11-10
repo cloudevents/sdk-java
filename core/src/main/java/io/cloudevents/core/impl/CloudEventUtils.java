@@ -18,6 +18,9 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
+import io.cloudevents.lang.Nullable;
+import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventReader;
 
 public final class CloudEventUtils {
@@ -37,6 +40,18 @@ public final class CloudEventUtils {
         } else {
             return new CloudEventReaderAdapter(event);
         }
+    }
+
+    /**
+     * Get the data contained in {@code event} and map it using the provided mapper.
+     */
+    @Nullable
+    <R extends CloudEventData> R mapData(CloudEvent event, CloudEventDataMapper<R> mapper) {
+        CloudEventData data = event.getData();
+        if (data == null) {
+            return null;
+        }
+        return mapper.map(data);
     }
 
 }
