@@ -18,6 +18,7 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.rw.CloudEventDataMapper;
 import org.apache.kafka.common.header.Headers;
@@ -35,13 +36,13 @@ public class CloudEventDeserializer implements Deserializer<CloudEvent> {
 
     public final static String MAPPER_CONFIG = "cloudevents.datamapper";
 
-    private CloudEventDataMapper<?> mapper = null;
+    private CloudEventDataMapper<? extends CloudEventData> mapper = null;
 
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
         Object mapperConfig = configs.get(MAPPER_CONFIG);
         if (mapperConfig instanceof CloudEventDataMapper) {
-            this.mapper = (CloudEventDataMapper<?>) mapperConfig;
+            this.mapper = (CloudEventDataMapper<? extends CloudEventData>) mapperConfig;
         } else if (mapperConfig != null) {
             throw new IllegalArgumentException(MAPPER_CONFIG + " can be of type String or " + CloudEventDataMapper.class.getCanonicalName());
         }
