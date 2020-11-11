@@ -19,8 +19,8 @@ package io.cloudevents.core.v1;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.impl.BaseCloudEventBuilder;
-import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
 

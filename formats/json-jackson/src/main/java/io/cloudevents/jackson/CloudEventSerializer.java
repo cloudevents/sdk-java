@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
-import io.cloudevents.core.impl.CloudEventUtils;
+import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.rw.CloudEventAttributesWriter;
 import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventExtensionsWriter;

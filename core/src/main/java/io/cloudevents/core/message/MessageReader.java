@@ -19,7 +19,7 @@ package io.cloudevents.core.message;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
-import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.lang.Nullable;
 import io.cloudevents.rw.*;
 
@@ -102,7 +102,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     default CloudEvent toEvent(@Nullable CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
-                return this.read(CloudEventBuilder::fromSpecVersion, mapper);
+                return CloudEventUtils.toEvent(this, mapper);
             case STRUCTURED:
                 return this.read((format, value) -> format.deserialize(value, mapper));
             default:

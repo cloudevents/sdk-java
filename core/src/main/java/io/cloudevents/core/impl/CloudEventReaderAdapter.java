@@ -24,7 +24,7 @@ public class CloudEventReaderAdapter implements CloudEventReader, CloudEventCont
 
     private final CloudEvent event;
 
-    CloudEventReaderAdapter(CloudEvent event) {
+    public CloudEventReaderAdapter(CloudEvent event) {
         this.event = event;
     }
 
