@@ -20,6 +20,7 @@ package io.cloudevents.core.impl;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.lang.Nullable;
+import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventReader;
 
@@ -29,7 +30,9 @@ public final class CloudEventUtils {
 
     /**
      * Convert a {@link CloudEvent} to a {@link CloudEventReader}. This method provides a default implementation
-     * for CloudEvent that doesn't implement CloudEventVisitable
+     * for CloudEvent that doesn't implement CloudEventVisitable.
+     * <p>
+     * It's safe to use this read the returned {@link CloudEventReader} multiple times.
      *
      * @param event the event to convert
      * @return the visitable implementation
@@ -37,6 +40,23 @@ public final class CloudEventUtils {
     public static CloudEventReader toVisitable(CloudEvent event) {
         if (event instanceof CloudEventReader) {
             return (CloudEventReader) event;
+        } else {
+            return new CloudEventReaderAdapter(event);
+        }
+    }
+
+    /**
+     * Convert a {@link CloudEvent} to a {@link CloudEventContextReader}. This method provides a default implementation
+     * for {@link CloudEvent} that doesn't implement {@link CloudEventContextReader}.
+     * <p>
+     * It's safe to use this read the returned {@link CloudEventReader} multiple times.
+     *
+     * @param event the event to convert
+     * @return the context reader implementation
+     */
+    public static CloudEventContextReader toContextReader(CloudEvent event) {
+        if (event instanceof CloudEventContextReader) {
+            return (CloudEventContextReader) event;
         } else {
             return new CloudEventReaderAdapter(event);
         }

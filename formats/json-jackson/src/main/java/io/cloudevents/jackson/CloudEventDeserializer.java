@@ -154,16 +154,6 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
             }
         }
 
-        @Override
-        public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException {
-            // no-op no need for that
-        }
-
-        @Override
-        public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException {
-            // no-op no need for that
-        }
-
         private String getStringNode(ObjectNode objNode, JsonParser p, String attributeName) throws JsonProcessingException {
             String val = getOptionalStringNode(objNode, p, attributeName);
             if (val == null) {

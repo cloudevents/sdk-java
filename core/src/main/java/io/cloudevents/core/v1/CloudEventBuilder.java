@@ -56,9 +56,9 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     @Override
     protected void setAttributes(io.cloudevents.CloudEvent event) {
         if (event.getSpecVersion() == SpecVersion.V1) {
-            CloudEventUtils.toVisitable(event).readAttributes(this);
+            CloudEventUtils.toContextReader(event).readAttributes(this);
         } else {
-            CloudEventUtils.toVisitable(event).readAttributes(new V03ToV1AttributesConverter(this));
+            CloudEventUtils.toContextReader(event).readAttributes(new V03ToV1AttributesConverter(this));
         }
     }
 

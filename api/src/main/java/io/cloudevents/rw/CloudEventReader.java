@@ -22,7 +22,9 @@ import io.cloudevents.lang.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Represents an object that can be read as CloudEvent
+ * Represents an object that can be read as CloudEvent.
+ * <p>
+ * The read may consume this object, hence it's not safe to invoke it multiple times, unless it's explicitly allowed by the implementer.
  */
 @ParametersAreNonnullByDefault
 public interface CloudEventReader {
@@ -41,21 +43,5 @@ public interface CloudEventReader {
      * Like {@link CloudEventReader#read(CloudEventWriterFactory)}, but providing a mapper for {@link io.cloudevents.CloudEventData} to be invoked when the data field is available.
      */
     <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, @Nullable CloudEventDataMapper mapper) throws CloudEventRWException;
-
-    /**
-     * Visit self attributes using the provided writer
-     *
-     * @param writer Attributes writer
-     * @throws CloudEventRWException if something went wrong during the visit.
-     */
-    void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException;
-
-    /**
-     * Visit self extensions using the provided writer
-     *
-     * @param visitor Extensions writer
-     * @throws CloudEventRWException if something went wrong during the visit.
-     */
-    void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException;
 
 }

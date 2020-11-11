@@ -48,24 +48,6 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, @Nullable CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException;
 
     /**
-     * Visit the message attributes as binary encoded event using the provided visitor.
-     *
-     * @param writer Attributes visitor
-     * @throws CloudEventRWException if something went wrong during the visit.
-     * @throws IllegalStateException if the message is not in binary encoding.
-     */
-    void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException, IllegalStateException;
-
-    /**
-     * Visit the message extensions as binary encoded event using the provided visitor.
-     *
-     * @param visitor Extensions visitor
-     * @throws CloudEventRWException if something went wrong during the visit.
-     * @throws IllegalStateException    if the message is not in binary encoding.
-     */
-    void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException, IllegalStateException;
-
-    /**
      * Visit the message as structured encoded event using the provided visitor
      *
      * @param visitor Structured Message visitor
@@ -80,15 +62,15 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     Encoding getEncoding();
 
     /**
-     * Visit the event using a {@link MessageWriter}. This method allows to transcode an event from one transport to another without
+     * Read the content of this object using a {@link MessageWriter}. This method allows to transcode an event from one transport to another without
      * converting it to {@link CloudEvent}. The resulting encoding will be the same as the original encoding.
      *
      * @param visitor the MessageVisitor accepting this Message
      * @return The return value of the MessageVisitor
      * @throws CloudEventRWException if something went wrong during the visit.
-     * @throws IllegalStateException    if the message has an unknown encoding.
+     * @throws IllegalStateException if the message has an unknown encoding.
      */
-    default <BV extends CloudEventWriter<R>, R> R visit(MessageWriter<BV, R> visitor) throws CloudEventRWException, IllegalStateException {
+    default <BV extends CloudEventWriter<R>, R> R read(MessageWriter<BV, R> visitor) throws CloudEventRWException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
                 return this.read((CloudEventWriterFactory<BV, R>) visitor);

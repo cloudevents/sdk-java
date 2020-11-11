@@ -24,9 +24,9 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.rw.CloudEventAttributesWriter;
+import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventExtensionsWriter;
 import io.cloudevents.rw.CloudEventRWException;
-import io.cloudevents.rw.CloudEventReader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -104,7 +104,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
         // Serialize attributes
         try {
-            CloudEventReader visitable = CloudEventUtils.toVisitable(value);
+            CloudEventContextReader visitable = CloudEventUtils.toContextReader(value);
             FieldsSerializer serializer = new FieldsSerializer(gen, provider);
             visitable.readAttributes(serializer);
             visitable.readExtensions(serializer);

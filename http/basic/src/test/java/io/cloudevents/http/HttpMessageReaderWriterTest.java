@@ -22,7 +22,6 @@ import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.mock.CSVFormat;
-import io.cloudevents.http.HttpMessageFactory;
 import io.cloudevents.http.impl.HttpMessageWriter;
 import io.cloudevents.types.Time;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,14 +45,13 @@ public class HttpMessageReaderWriterTest {
 
         final AtomicReference<byte[]> body = new AtomicReference<>();
         final Map<String, String> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        GenericStructuredMessageReader.from(event, CSVFormat.INSTANCE).visit(
+        GenericStructuredMessageReader.from(event, CSVFormat.INSTANCE).read(
             HttpMessageFactory.createWriter(headers::put, body::set)
         );
         assertThat(headers.get("content-type"))
             .isEqualTo(CSVFormat.INSTANCE.serializedContentType());
         assertThat(body.get())
             .isEqualTo(CSVFormat.INSTANCE.serialize(event));
-
     }
 
     @ParameterizedTest

@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader {
+public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader, CloudEventContextReader {
 
     private final CloudEventData data;
     protected final Map<String, Object> extensions;

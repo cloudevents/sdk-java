@@ -43,6 +43,6 @@ public class CloudEventMessageSerializer implements Serializer<MessageReader> {
 
     @Override
     public byte[] serialize(String topic, Headers headers, MessageReader data) {
-        return data.visit(new KafkaSerializerMessageWriterImpl(headers));
+        return data.read(new KafkaSerializerMessageWriterImpl(headers));
     }
 }

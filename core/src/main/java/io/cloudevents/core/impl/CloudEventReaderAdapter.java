@@ -20,9 +20,9 @@ package io.cloudevents.core.impl;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.rw.*;
 
-public class CloudEventReaderAdapter implements CloudEventReader {
+public class CloudEventReaderAdapter implements CloudEventReader, CloudEventContextReader {
 
-    private CloudEvent event;
+    private final CloudEvent event;
 
     CloudEventReaderAdapter(CloudEvent event) {
         this.event = event;
