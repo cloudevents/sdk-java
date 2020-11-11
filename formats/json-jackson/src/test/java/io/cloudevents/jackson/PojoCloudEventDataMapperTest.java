@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.core.test.Data;
 import org.junit.jupiter.api.Test;
 
@@ -25,10 +26,11 @@ public class PojoCloudEventDataMapperTest {
             .withData("application/json", myPojoSerialized.getBytes())
             .build();
 
-        PojoCloudEventData<MyPojo> mappedData = PojoCloudEventDataMapper
-            .from(objectMapper, new TypeReference<MyPojo>() {
+        PojoCloudEventData<MyPojo> mappedData = CloudEventUtils.mapData(
+            event,
+            PojoCloudEventDataMapper.from(objectMapper, new TypeReference<MyPojo>() {
             })
-            .map(event.getData());
+        );
         assertThat(mappedData)
             .isNotNull()
             .extracting(PojoCloudEventData::getValue)
@@ -43,10 +45,11 @@ public class PojoCloudEventDataMapperTest {
             .withData("application/json", new JsonCloudEventData(myPojoJson))
             .build();
 
-        PojoCloudEventData<MyPojo> mappedData = PojoCloudEventDataMapper
-            .from(objectMapper, new TypeReference<MyPojo>() {
+        PojoCloudEventData<MyPojo> mappedData = CloudEventUtils.mapData(
+            event,
+            PojoCloudEventDataMapper.from(objectMapper, new TypeReference<MyPojo>() {
             })
-            .map(event.getData());
+        );
         assertThat(mappedData)
             .isNotNull()
             .extracting(PojoCloudEventData::getValue)
