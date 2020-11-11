@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.CloudEventRWException;
 
+import java.util.Objects;
+
 public class PojoCloudEventData<T> implements CloudEventData {
 
     private final ObjectMapper mapper;
@@ -35,5 +37,18 @@ public class PojoCloudEventData<T> implements CloudEventData {
             }
         }
         return this.memoizedValue;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PojoCloudEventData<?> that = (PojoCloudEventData<?>) o;
+        return Objects.equals(getValue(), that.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getValue());
     }
 }
