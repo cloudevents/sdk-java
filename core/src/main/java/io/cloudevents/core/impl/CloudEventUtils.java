@@ -32,7 +32,7 @@ public final class CloudEventUtils {
      * Convert a {@link CloudEvent} to a {@link CloudEventReader}. This method provides a default implementation
      * for CloudEvent that doesn't implement CloudEventVisitable.
      * <p>
-     * It's safe to use this read the returned {@link CloudEventReader} multiple times.
+     * It's safe to use the returned {@link CloudEventReader} multiple times.
      *
      * @param event the event to convert
      * @return the visitable implementation
@@ -49,7 +49,7 @@ public final class CloudEventUtils {
      * Convert a {@link CloudEvent} to a {@link CloudEventContextReader}. This method provides a default implementation
      * for {@link CloudEvent} that doesn't implement {@link CloudEventContextReader}.
      * <p>
-     * It's safe to use this read the returned {@link CloudEventReader} multiple times.
+     * It's safe to use the returned {@link CloudEventReader} multiple times.
      *
      * @param event the event to convert
      * @return the context reader implementation
