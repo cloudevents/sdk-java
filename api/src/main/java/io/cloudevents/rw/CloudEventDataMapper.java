@@ -26,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 @FunctionalInterface
 @ParametersAreNonnullByDefault
-public interface CloudEventDataMapper {
+public interface CloudEventDataMapper<R extends CloudEventData> {
 
     /**
      * Map {@code data} to another {@link CloudEventData} instance.
@@ -35,6 +35,6 @@ public interface CloudEventDataMapper {
      * @return The new data
      * @throws CloudEventRWException is anything goes wrong while mapping the input data
      */
-    CloudEventData map(CloudEventData data) throws CloudEventRWException;
+    R map(CloudEventData data) throws CloudEventRWException;
 
 }

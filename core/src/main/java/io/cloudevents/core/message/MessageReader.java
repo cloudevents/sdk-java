@@ -18,6 +18,7 @@
 package io.cloudevents.core.message;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.lang.Nullable;
 import io.cloudevents.rw.*;
@@ -116,7 +117,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * @throws CloudEventRWException if something went wrong during the visit.
      * @throws IllegalStateException if the message has an unknown encoding.
      */
-    default CloudEvent toEvent(@Nullable CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
+    default CloudEvent toEvent(@Nullable CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
                 return this.read(CloudEventBuilder::fromSpecVersion, mapper);
