@@ -7,8 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventRWException;
-
-import java.lang.reflect.Type;
+import java.util.List;
 
 public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoCloudEventData<T>> {
 
@@ -45,12 +44,38 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
         return new PojoCloudEventData<>(mapper, value, bytes);
     }
 
+    /**
+     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt{@link T}&gt .
+     *
+     * <p>
+     * When working with generic types (e.g. {@link List}&lt{@link String}&gt),
+     * it's better to use {@link PojoCloudEventDataMapper#from(ObjectMapper, TypeReference)}.
+     * </p>
+     *
+     * @param mapper {@link ObjectMapper} used for POJO deserialization
+     * @param target target type as {@link Class}&lt{@link T}&gt
+     * @param <T> POJO Type
+     * @return {@link CloudEventDataMapper}
+     */
+    public static <T> PojoCloudEventDataMapper<T> from(ObjectMapper mapper, Class<T> target) {
+        return new PojoCloudEventDataMapper<>(mapper, mapper.getTypeFactory().constructType(target));
+    }
+
+    /**
+     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt{@link T}&gt .
+     *
+     * <p>
+     * This overload is more suitable for mapping generic objects (e.g. {@link List}&lt{@link String}&gt),
+     * as opposed to {@link PojoCloudEventDataMapper#from(ObjectMapper, Class)}.
+     * </p>
+     *
+     * @param mapper {@link ObjectMapper} used for POJO deserialization
+     * @param target target type as {@link TypeReference}&lt{@link T}&gt
+     * @param <T> POJO Type
+     * @return {@link CloudEventDataMapper}
+     */
     public static <T> PojoCloudEventDataMapper<T> from(ObjectMapper mapper, TypeReference<T> target) {
         return new PojoCloudEventDataMapper<>(mapper, mapper.getTypeFactory().constructType(target));
     }
 
-
-    public static <T> PojoCloudEventDataMapper<T> from(ObjectMapper mapper, Class<T> target) {
-        return new PojoCloudEventDataMapper<>(mapper, mapper.getTypeFactory().constructType(target));
-    }
 }
