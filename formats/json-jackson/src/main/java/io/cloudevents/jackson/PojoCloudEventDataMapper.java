@@ -45,7 +45,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
     }
 
     /**
-     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt{@link T}&gt .
+     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt;T&gt;.
      *
      * <p>
      * When working with generic types (e.g. {@link List}&lt{@link String}&gt),
@@ -53,7 +53,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
      * </p>
      *
      * @param mapper {@link ObjectMapper} used for POJO deserialization
-     * @param target target type as {@link Class}&lt{@link T}&gt
+     * @param target target type as {@link Class}&lt;T&gt;
      * @param <T> POJO Type
      * @return {@link CloudEventDataMapper}
      */
@@ -62,7 +62,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
     }
 
     /**
-     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt{@link T}&gt .
+     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt;T&gt;.
      *
      * <p>
      * This overload is more suitable for mapping generic objects (e.g. {@link List}&lt{@link String}&gt),
@@ -70,7 +70,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
      * </p>
      *
      * @param mapper {@link ObjectMapper} used for POJO deserialization
-     * @param target target type as {@link TypeReference}&lt{@link T}&gt
+     * @param target target type as {@link TypeReference}&lt;T&gt;
      * @param <T> POJO Type
      * @return {@link CloudEventDataMapper}
      */
