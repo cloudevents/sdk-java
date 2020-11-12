@@ -1,18 +1,21 @@
 package io.cloudevents.jackson;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventRWException;
 
+import java.lang.reflect.Type;
+
 public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoCloudEventData<T>> {
 
     private final ObjectMapper mapper;
-    private final TypeReference<T> target;
+    private final JavaType target;
 
-    private PojoCloudEventDataMapper(ObjectMapper mapper, TypeReference<T> target) {
+    private PojoCloudEventDataMapper(ObjectMapper mapper, JavaType target) {
         this.mapper = mapper;
         this.target = target;
     }
@@ -26,7 +29,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
             try {
                 value = this.mapper.convertValue(node, target);
             } catch (Exception e) {
-                throw CloudEventRWException.newDataConversion(e, target.getType().toString());
+                throw CloudEventRWException.newDataConversion(e, target.getTypeName());
             }
             return new PojoCloudEventData<>(mapper, value);
         }
@@ -37,12 +40,17 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
         try {
             value = this.mapper.readValue(bytes, this.target);
         } catch (Exception e) {
-            throw CloudEventRWException.newDataConversion(e, target.getType().toString());
+            throw CloudEventRWException.newDataConversion(e, target.getTypeName());
         }
         return new PojoCloudEventData<>(mapper, value, bytes);
     }
 
     public static <T> PojoCloudEventDataMapper<T> from(ObjectMapper mapper, TypeReference<T> target) {
-        return new PojoCloudEventDataMapper<>(mapper, target);
+        return new PojoCloudEventDataMapper<>(mapper, mapper.getTypeFactory().constructType(target));
+    }
+
+
+    public static <T> PojoCloudEventDataMapper<T> from(ObjectMapper mapper, Class<T> target) {
+        return new PojoCloudEventDataMapper<>(mapper, mapper.getTypeFactory().constructType(target));
     }
 }

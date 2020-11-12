@@ -47,8 +47,7 @@ public class PojoCloudEventDataMapperTest {
 
         PojoCloudEventData<MyPojo> mappedData = CloudEventUtils.mapData(
             event,
-            PojoCloudEventDataMapper.from(objectMapper, new TypeReference<MyPojo>() {
-            })
+            PojoCloudEventDataMapper.from(objectMapper, MyPojo.class)
         );
         assertThat(mappedData)
             .isNotNull()
