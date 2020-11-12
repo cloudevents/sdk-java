@@ -32,18 +32,20 @@ public interface CloudEventAttributesWriter {
      * Set attribute with type {@link String}. This setter should not be invoked for specversion, because the built Visitor already
      * has the information through the {@link CloudEventWriterFactory}.
      *
-     * @param name
-     * @param value
-     * @throws CloudEventRWException
+     * @param name  name of the attribute
+     * @param value value of the attribute
+     * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      */
     CloudEventAttributesWriter withAttribute(String name, @Nullable String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
      *
-     * @param name
-     * @param value
-     * @throws CloudEventRWException
+     * @param name name of the attribute
+     * @param value value of the attribute
+     * @throws CloudEventRWException if anything goes wrong while writing this attribute.
+     * @return self
      */
     default CloudEventAttributesWriter withAttribute(String name, @Nullable URI value) throws CloudEventRWException {
         return withAttribute(name, value == null ? null : value.toString());
@@ -52,9 +54,10 @@ public interface CloudEventAttributesWriter {
     /**
      * Set attribute with type {@link OffsetDateTime} attribute.
      *
-     * @param name
-     * @param value
-     * @throws CloudEventRWException
+     * @param name name of the attribute
+     * @param value value of the attribute
+     * @throws CloudEventRWException if anything goes wrong while writing this attribute.
+     * @return self
      */
     default CloudEventAttributesWriter withAttribute(String name, @Nullable OffsetDateTime value) throws CloudEventRWException {
         return withAttribute(name, value == null ? null : Time.writeTime(value));

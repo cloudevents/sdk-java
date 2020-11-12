@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Set;
 
 /**
- * The event extensions
+ * The event extensions.
  * <p>
  * Extensions values could be String/Number/Boolean
  */

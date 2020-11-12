@@ -33,7 +33,7 @@ public class PojoCloudEventData<T> implements CloudEventData {
             try {
                 this.memoizedValue = mapper.writeValueAsBytes(value);
             } catch (JsonProcessingException e) {
-                throw CloudEventRWException.newDataConversion(e, "byte[]");
+                throw CloudEventRWException.newDataConversion(e, value.getClass().toString(), "byte[]");
             }
         }
         return this.memoizedValue;

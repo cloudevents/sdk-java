@@ -29,18 +29,20 @@ public interface CloudEventExtensionsWriter {
     /**
      * Set an extension with type {@link String}.
      *
-     * @param name
-     * @param value
-     * @throws CloudEventRWException
+     * @param name  name of the extension
+     * @param value value of the extension
+     * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
      */
     CloudEventExtensionsWriter withExtension(String name, @Nullable String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
      *
-     * @param name
-     * @param value
-     * @throws CloudEventRWException
+     * @param name name of the extension
+     * @param value value of the extension
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
+     * @return self
      */
     default CloudEventExtensionsWriter withExtension(String name, @Nullable Number value) throws CloudEventRWException {
         return withExtension(name, value == null ? null : value.toString());
@@ -49,9 +51,10 @@ public interface CloudEventExtensionsWriter {
     /**
      * Set attribute with type {@link Boolean} attribute.
      *
-     * @param name
-     * @param value
-     * @throws CloudEventRWException
+     * @param name name of the extension
+     * @param value value of the extension
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
+     * @return self
      */
     default CloudEventExtensionsWriter withExtension(String name, @Nullable Boolean value) throws CloudEventRWException {
         return withExtension(name, value == null ? null : value.toString());

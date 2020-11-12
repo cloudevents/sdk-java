@@ -17,31 +17,64 @@
 
 package io.cloudevents.rw;
 
+/**
+ * This class is the exception Protocol Binding and Event Format implementers can use to signal errors while serializing/deserializing CloudEvent.
+ */
 public class CloudEventRWException extends RuntimeException {
 
+    /**
+     * The kind of error that happened while serializing/deserializing
+     */
     public enum CloudEventRWExceptionKind {
+        /**
+         * Spec version string is not recognized by this particular SDK version.
+         */
         INVALID_SPEC_VERSION,
+        /**
+         * The attribute name is not a valid/known context attribute.
+         */
         INVALID_ATTRIBUTE_NAME,
+        /**
+         * The extension name is not valid,
+         * because it doesn't follow the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#attribute-naming-convention">naming convention</a>
+         * enforced by the CloudEvents spec.
+         */
+        INVALID_EXTENSION_NAME,
+        /**
+         * The attribute/extension type is not valid.
+         */
         INVALID_ATTRIBUTE_TYPE,
+        /**
+         * The attribute/extension value is not valid.
+         */
         INVALID_ATTRIBUTE_VALUE,
-        INVALID_EXTENSION_TYPE,
+        /**
+         * The data type is not valid.
+         */
+        INVALID_DATA_TYPE,
+        /**
+         * Error while converting CloudEventData.
+         */
         DATA_CONVERSION,
+        /**
+         * Other error.
+         */
         OTHER
     }
 
     private final CloudEventRWExceptionKind kind;
 
-    public CloudEventRWException(CloudEventRWExceptionKind kind, Throwable cause) {
+    private CloudEventRWException(CloudEventRWExceptionKind kind, Throwable cause) {
         super(cause);
         this.kind = kind;
     }
 
-    public CloudEventRWException(CloudEventRWExceptionKind kind, String message) {
+    private CloudEventRWException(CloudEventRWExceptionKind kind, String message) {
         super(message);
         this.kind = kind;
     }
 
-    public CloudEventRWException(CloudEventRWExceptionKind kind, String message, Throwable cause) {
+    private CloudEventRWException(CloudEventRWExceptionKind kind, String message, Throwable cause) {
         super(message, cause);
         this.kind = kind;
     }
@@ -52,7 +85,7 @@ public class CloudEventRWException extends RuntimeException {
 
     public static CloudEventRWException newInvalidSpecVersion(String specVersion) {
         return new CloudEventRWException(
-            CloudEventRWExceptionKind.INVALID_ATTRIBUTE_TYPE,
+            CloudEventRWExceptionKind.INVALID_SPEC_VERSION,
             "Invalid specversion: " + specVersion
         );
     }
@@ -64,32 +97,45 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
+    public static CloudEventRWException newInvalidExtensionName(String extensionName) {
+        return new CloudEventRWException(
+            CloudEventRWExceptionKind.INVALID_EXTENSION_NAME,
+            "Invalid extensions name: " + extensionName
+        );
+    }
+
     public static CloudEventRWException newInvalidAttributeType(String attributeName, Class<?> clazz) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.INVALID_ATTRIBUTE_TYPE,
-            "Invalid attribute type for \"" + attributeName + "\": " + clazz.getCanonicalName()
+            "Invalid attribute/extension type for \"" + attributeName + "\": " + clazz.getCanonicalName()
         );
     }
 
     public static CloudEventRWException newInvalidAttributeValue(String attributeName, Object value, Throwable cause) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.INVALID_ATTRIBUTE_VALUE,
-            "Invalid attribute value for \"" + attributeName + "\": " + value,
+            "Invalid attribute/extension value for \"" + attributeName + "\": " + value,
             cause
         );
     }
 
-    public static CloudEventRWException newInvalidExtensionType(String extensionName, Class<?> clazz) {
+    public static CloudEventRWException newInvalidDataType(String actual, String... allowed) {
+        String message;
+        if (allowed.length == 0) {
+            message = "Invalid data type: " + actual;
+        } else {
+            message = "Invalid data type: " + actual + ". Allowed: " + String.join(", ", allowed);
+        }
         return new CloudEventRWException(
-            CloudEventRWExceptionKind.INVALID_EXTENSION_TYPE,
-            "Invalid extension type for \"" + extensionName + "\": " + clazz.getCanonicalName()
+            CloudEventRWExceptionKind.INVALID_DATA_TYPE,
+            message
         );
     }
 
-    public static CloudEventRWException newDataConversion(Throwable cause, String to) {
+    public static CloudEventRWException newDataConversion(Throwable cause, String from, String to) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.DATA_CONVERSION,
-            "Error while trying to convert data to " + to,
+            "Error while trying to convert data from " + from + " to " + to,
             cause
         );
     }
