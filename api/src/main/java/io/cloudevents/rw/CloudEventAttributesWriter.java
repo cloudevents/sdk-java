@@ -60,7 +60,7 @@ public interface CloudEventAttributesWriter {
      * @return self
      */
     default CloudEventAttributesWriter withAttribute(String name, @Nullable OffsetDateTime value) throws CloudEventRWException {
-        return withAttribute(name, value == null ? null : Time.writeTime(value));
+        return withAttribute(name, value == null ? null : Time.writeTime(name, value));
     }
 
 }
