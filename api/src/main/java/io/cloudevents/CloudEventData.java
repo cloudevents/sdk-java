@@ -19,11 +19,17 @@ package io.cloudevents;
 
 /**
  * Interface that defines a wrapper for CloudEvent data.
+ * <p>
+ * This interface can be overridden to include any type of data inside a {@link CloudEvent}, given it has a method to convert back to bytes.
  */
 public interface CloudEventData {
 
     /**
-     * @return this CloudEventData, represented as bytes. Note: this operation may be expensive, depending on the internal representation of data
+     * Returns the bytes representation of this data instance.
+     * <p>
+     * Note: depending on the implementation, this operation may be expensive.
+     *
+     * @return this data, represented as bytes.
      */
     byte[] toBytes();
 

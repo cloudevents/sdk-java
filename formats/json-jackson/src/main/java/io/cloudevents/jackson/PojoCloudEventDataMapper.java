@@ -28,7 +28,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
             try {
                 value = this.mapper.convertValue(node, target);
             } catch (Exception e) {
-                throw CloudEventRWException.newDataConversion(e, target.getTypeName());
+                throw CloudEventRWException.newDataConversion(e, JsonNode.class.toString(), target.getTypeName());
             }
             return new PojoCloudEventData<>(mapper, value);
         }
@@ -39,7 +39,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
         try {
             value = this.mapper.readValue(bytes, this.target);
         } catch (Exception e) {
-            throw CloudEventRWException.newDataConversion(e, target.getTypeName());
+            throw CloudEventRWException.newDataConversion(e, byte[].class.toString(), target.getTypeName());
         }
         return new PojoCloudEventData<>(mapper, value, bytes);
     }

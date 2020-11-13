@@ -17,6 +17,7 @@
 package io.cloudevents.types;
 
 
+import io.cloudevents.rw.CloudEventRWException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -28,6 +29,7 @@ import java.time.ZoneOffset;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class TimeTest {
 
@@ -42,6 +44,13 @@ public class TimeTest {
     void testParseDateOffset() {
         assertThat(Time.parseTime("1937-01-01T12:20:27.87+00:20"))
             .isEqualTo("1937-01-01T12:00:27.87Z");
+    }
+
+    @Test
+    void testParseTimeException() {
+        assertThatCode(() -> Time.parseTime("time", "01-01T12:20:27.87+00:20"))
+            .isInstanceOf(CloudEventRWException.class)
+            .hasMessage(CloudEventRWException.newInvalidAttributeValue("time", "01-01T12:20:27.87+00:20", null).getMessage());
     }
 
     @Test

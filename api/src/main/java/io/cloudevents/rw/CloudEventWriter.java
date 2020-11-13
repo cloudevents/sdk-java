@@ -31,6 +31,7 @@ public interface CloudEventWriter<R> extends CloudEventAttributesWriter, CloudEv
      * End the visit with a data field
      *
      * @return an eventual return value
+     * @throws CloudEventRWException if the message writer cannot be ended.
      */
     R end(CloudEventData data) throws CloudEventRWException;
 
@@ -38,7 +39,8 @@ public interface CloudEventWriter<R> extends CloudEventAttributesWriter, CloudEv
      * End the visit
      *
      * @return an eventual return value
+     * @throws CloudEventRWException if the message writer cannot be ended.
      */
-    R end();
+    R end() throws CloudEventRWException;
 
 }
