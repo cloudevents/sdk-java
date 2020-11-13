@@ -19,14 +19,18 @@ package io.cloudevents.core.message.impl;
 
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.rw.*;
+import io.cloudevents.rw.CloudEventDataMapper;
+import io.cloudevents.rw.CloudEventRWException;
+import io.cloudevents.rw.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriterFactory;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
 /**
- * This class implements a Binary {@link io.cloudevents.core.message.MessageReader}, providing common logic to most protocol bindings
- * which supports both Binary and Structured mode.
+ * This class implements a Binary {@link io.cloudevents.core.message.MessageReader},
+ * providing common logic to most protocol bindings which supports both Binary and Structured mode.
+ * <p>
  * Content-type is handled separately using a key not prefixed with CloudEvents header prefix.
  *
  * @param <HK> Header key type
@@ -72,36 +76,6 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
         }
 
         return visitor.end();
-    }
-
-    @Override
-    public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
-        this.forEachHeader((key, value) -> {
-            if (isContentTypeHeader(key)) {
-                writer.withAttribute("datacontenttype", toCloudEventsValue(value));
-            } else if (isCloudEventsHeader(key)) {
-                String name = toCloudEventsKey(key);
-                if (name.equals("specversion")) {
-                    return;
-                }
-                if (this.version.getAllAttributes().contains(name)) {
-                    writer.withAttribute(name, toCloudEventsValue(value));
-                }
-            }
-        });
-    }
-
-    @Override
-    public void readExtensions(CloudEventExtensionsWriter visitor) throws RuntimeException {
-        // Grab from headers the attributes and extensions
-        this.forEachHeader((key, value) -> {
-            if (isCloudEventsHeader(key)) {
-                String name = toCloudEventsKey(key);
-                if (!this.version.getAllAttributes().contains(name)) {
-                    visitor.withExtension(name, toCloudEventsValue(value));
-                }
-            }
-        });
     }
 
     protected abstract boolean isContentTypeHeader(HK key);

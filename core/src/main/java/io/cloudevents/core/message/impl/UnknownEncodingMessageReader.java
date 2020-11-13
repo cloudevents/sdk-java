@@ -20,7 +20,10 @@ package io.cloudevents.core.message.impl;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.StructuredMessageWriter;
-import io.cloudevents.rw.*;
+import io.cloudevents.rw.CloudEventDataMapper;
+import io.cloudevents.rw.CloudEventRWException;
+import io.cloudevents.rw.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriterFactory;
 
 public class UnknownEncodingMessageReader implements MessageReader {
     @Override
@@ -30,16 +33,6 @@ public class UnknownEncodingMessageReader implements MessageReader {
 
     @Override
     public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
-        throw new IllegalStateException("Unknown encoding");
-    }
-
-    @Override
-    public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException {
-        throw new IllegalStateException("Unknown encoding");
-    }
-
-    @Override
-    public void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException {
         throw new IllegalStateException("Unknown encoding");
     }
 

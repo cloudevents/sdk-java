@@ -145,7 +145,7 @@ public final class HttpMessageFactory {
      * @param sendBody  a function that sends body (e.g. sets HTTP status code, content-length and writes the bytes into output stream).
      * @return a message writer
      */
-    public static MessageWriter createWriter(BiConsumer<String, String> putHeader, Consumer<byte[]> sendBody) {
+    public static HttpMessageWriter createWriter(BiConsumer<String, String> putHeader, Consumer<byte[]> sendBody) {
         return new HttpMessageWriter(putHeader, sendBody);
     }
 
