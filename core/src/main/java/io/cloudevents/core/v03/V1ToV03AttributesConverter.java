@@ -24,7 +24,6 @@ import io.cloudevents.types.Time;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeParseException;
 
 class V1ToV03AttributesConverter implements CloudEventAttributesWriter {
 
@@ -64,11 +63,7 @@ class V1ToV03AttributesConverter implements CloudEventAttributesWriter {
                 builder.withSubject(value);
                 return this;
             case "time":
-                try {
-                    builder.withTime(Time.parseTime(value));
-                } catch (DateTimeParseException e) {
-                    throw CloudEventRWException.newInvalidAttributeValue("time", value, e);
-                }
+                builder.withTime(Time.parseTime("time", value));
                 return this;
         }
         throw CloudEventRWException.newInvalidAttributeName(name);

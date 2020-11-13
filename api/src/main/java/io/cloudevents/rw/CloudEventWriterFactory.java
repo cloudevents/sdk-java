@@ -25,8 +25,9 @@ public interface CloudEventWriterFactory<V extends CloudEventWriter<R>, R> {
     /**
      * Create a {@link CloudEventWriter} starting from the provided {@link SpecVersion}
      *
-     * @param version
-     * @return
+     * @param version the spec version to create the writer
+     * @return the new writer
+     * @throws CloudEventRWException if the spec version is invalid or the writer cannot be instantiated.
      */
-    V create(SpecVersion version);
+    V create(SpecVersion version) throws CloudEventRWException;
 }

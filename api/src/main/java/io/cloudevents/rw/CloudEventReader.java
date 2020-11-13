@@ -33,7 +33,7 @@ public interface CloudEventReader {
      * Visit self using the provided visitor factory
      *
      * @param writerFactory a factory that generates a visitor starting from the SpecVersion of the event
-     * @throws CloudEventRWException if something went wrong during the visit.
+     * @throws CloudEventRWException if something went wrong during the read.
      */
     default <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException {
         return read(writerFactory, null);

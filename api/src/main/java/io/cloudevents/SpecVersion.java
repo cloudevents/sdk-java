@@ -17,6 +17,8 @@
 
 package io.cloudevents;
 
+import io.cloudevents.rw.CloudEventRWException;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,7 +64,7 @@ public enum SpecVersion {
      *
      * @param sv String representing the spec version
      * @return The parsed spec version
-     * @throws IllegalArgumentException When the spec version string is unrecognized
+     * @throws CloudEventRWException When the spec version string is unrecognized
      */
     public static SpecVersion parse(String sv) {
         switch (sv) {
@@ -71,7 +73,7 @@ public enum SpecVersion {
             case "1.0":
                 return SpecVersion.V1;
             default:
-                throw new IllegalArgumentException("Unrecognized SpecVersion " + sv);
+                throw CloudEventRWException.newInvalidSpecVersion(sv);
         }
     }
 

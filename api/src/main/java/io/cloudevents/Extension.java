@@ -29,17 +29,17 @@ import java.util.Set;
 public interface Extension {
 
     /**
-     * Fill this materialized extension with values from a {@link CloudEventExtensions} implementation
+     * Fill this materialized extension with values from a {@link CloudEventExtensions} implementation.
      *
-     * @param extensions
+     * @param extensions the extensions where to read from
      */
     void readFrom(CloudEventExtensions extensions);
 
     /**
-     * Get the attribute of extension named {@code key}
+     * Get the attribute of extension named {@code key}.
      *
      * @param key the name of the extension attribute
-     * @return the extension value
+     * @return the extension value in one of the valid types String/Number/Boolean
      * @throws IllegalArgumentException if the key is unknown to this extension
      */
     @Nullable

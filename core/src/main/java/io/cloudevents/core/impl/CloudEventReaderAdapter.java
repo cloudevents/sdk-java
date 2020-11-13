@@ -61,15 +61,15 @@ public class CloudEventReaderAdapter implements CloudEventReader, CloudEventCont
     }
 
     @Override
-    public void readExtensions(CloudEventExtensionsWriter visitor) throws RuntimeException {
+    public void readExtensions(CloudEventExtensionsWriter writer) throws RuntimeException {
         for (String key : event.getExtensionNames()) {
             Object value = event.getExtension(key);
             if (value instanceof String) {
-                visitor.withExtension(key, (String) value);
+                writer.withExtension(key, (String) value);
             } else if (value instanceof Number) {
-                visitor.withExtension(key, (Number) value);
+                writer.withExtension(key, (Number) value);
             } else if (value instanceof Boolean) {
-                visitor.withExtension(key, (Boolean) value);
+                writer.withExtension(key, (Boolean) value);
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + key + " " + value);
