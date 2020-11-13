@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-Present The CloudEvents Authors
+ * Copyright 2018-Present The CloudEvents Authors
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.amqp.impl.ProtonBasedAmqpMessageWriter;
 import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.types.Time;
 
 /**
- * Tests verifying the behavior of the {@code AmqpBinaryMessageWriter}.
+ * Tests verifying the behavior of the {@code ProtonBasedAmqpMessageWriter}.
  */
-public class AmqpBinaryMessageWriterTest {
+public class ProtonBasedAmqpMessageWriterTest {
 
     /**
      * Verifies that a binary CloudEvent message can be successfully represented
@@ -51,7 +53,7 @@ public class AmqpBinaryMessageWriterTest {
         final CloudEvent binaryEvent = Data.V1_WITH_JSON_DATA;
         final Message expectedMessage = translateBinaryEvent(binaryEvent);
 
-        final AmqpBinaryMessageWriter writer = new AmqpBinaryMessageWriter();
+        final MessageWriter<?, Message> writer = new ProtonBasedAmqpMessageWriter<Message>();
         final Message actualMessage = writer.writeBinary(binaryEvent);
 
         assertThat(actualMessage.getContentType()).isEqualTo(expectedMessage.getContentType());
@@ -70,7 +72,7 @@ public class AmqpBinaryMessageWriterTest {
         final EventFormat format = CSVFormat.INSTANCE;
         final Message expectedMessage = translateStructured(event, format);
 
-        final AmqpBinaryMessageWriter writer = new AmqpBinaryMessageWriter();
+        final MessageWriter<?, Message> writer = new ProtonBasedAmqpMessageWriter<Message>();
         final Message actualMessage = writer.writeStructured(event, format.serializedContentType());
 
         assertThat(actualMessage.getContentType()).isEqualTo(expectedMessage.getContentType());

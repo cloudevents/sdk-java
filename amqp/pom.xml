@@ -9,20 +9,31 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>cloudevents-amqp</artifactId>
-	<name>CloudEvents - AMQP Binding</name>
+	<artifactId>cloudevents-amqp-proton</artifactId>
+	<name>CloudEvents - Proton AMQP Binding</name>
 	<packaging>jar</packaging>
 
+    <properties>
+       <protonj.version>0.33.7</protonj.version>
+       <jsr305.version>3.0.2</jsr305.version>
+    </properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.qpid</groupId>
 			<artifactId>proton-j</artifactId>
-			<version>0.33.7</version>
+			<version>${protonj.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.cloudevents</groupId>
 			<artifactId>cloudevents-core</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.code.findbugs</groupId>
+		    <artifactId>jsr305</artifactId>
+		    <version>${jsr305.version}</version>
+		    <scope>provided</scope>
+		    <optional>true</optional>
 		</dependency>
 
 		<!-- test dependencies -->

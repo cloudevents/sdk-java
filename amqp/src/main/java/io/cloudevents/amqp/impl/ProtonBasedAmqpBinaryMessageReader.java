@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-Present The CloudEvents Authors
+ * Copyright 2018-Present The CloudEvents Authors
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.amqp;
+package io.cloudevents.amqp.impl;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -39,10 +39,10 @@ import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
  * </ul>
  * 
  */
-public final class AmqpBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
+public final class ProtonBasedAmqpBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
 
     private final String contentType;
-    private final ApplicationProperties applicationPropereties;
+    private final ApplicationProperties applicationProperties;
 
     /**
      * Create an instance of an AMQP message reader.
@@ -56,11 +56,11 @@ public final class AmqpBinaryMessageReader extends BaseGenericBinaryMessageReade
      * 
      * @throws NullPointerException if the applicationPropereties is {@code null}.
      */
-    protected AmqpBinaryMessageReader(final SpecVersion version, final ApplicationProperties applicationPropereties, 
+    public ProtonBasedAmqpBinaryMessageReader(final SpecVersion version, final ApplicationProperties applicationProperties, 
             final String contentType, final byte[] payload) {
         super(version, payload != null && payload.length > 0 ? new BytesCloudEventData(payload) : null);
         this.contentType = contentType;
-        this.applicationPropereties = Objects.requireNonNull(applicationPropereties);
+        this.applicationProperties = Objects.requireNonNull(applicationProperties);
     }
 
     @Override
@@ -94,9 +94,10 @@ public final class AmqpBinaryMessageReader extends BaseGenericBinaryMessageReade
     }
 
     /**
-     * Visits the <em>content-type</em> message property and all <em>application-properties</em> 
-     * of this message reader.
-     * 
+     * Visits the <em>content-type</em> message property and all <em>application-properties</em> of this message reader.
+     * <p>
+     * This method only visits properties containing a name and value which are not {@code null}.
+     *
      * @param  fn A callback to consume this reader's application-properties
      *            and content-type property.
      */
@@ -107,7 +108,11 @@ public final class AmqpBinaryMessageReader extends BaseGenericBinaryMessageReade
             fn.accept(AmqpConstants.PROPERTY_CONTENT_TYPE, contentType);
         }
         // visit application-properties
-        applicationPropereties.getValue().forEach((k, v) -> fn.accept(k, v));
+        applicationProperties.getValue().forEach((k, v) -> {
+            if (k != null && v != null) {
+                fn.accept(k, v);
+            }
+        });
     }
 
     /**
@@ -116,12 +121,11 @@ public final class AmqpBinaryMessageReader extends BaseGenericBinaryMessageReade
      * This method simply returns the string representation of the type of value passed as argument.
      * 
      * @param value The value of a CloudEvent attribute or extension.
+     *
      * @return The string representation of the specified value.
-     * 
-     * @throws NullpointerException if the value is {@code null}.
      */
     @Override
     protected String toCloudEventsValue(final Object value) {
-        return Objects.requireNonNull(value).toString();
+        return value.toString();
     }
 }
