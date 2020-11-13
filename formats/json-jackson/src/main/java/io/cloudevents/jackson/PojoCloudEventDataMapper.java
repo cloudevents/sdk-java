@@ -48,7 +48,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
      * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt;T&gt;.
      *
      * <p>
-     * When working with generic types (e.g. {@link List}&lt{@link String}&gt),
+     * When working with generic types (e.g. {@link List}&lt;{@link String}&gt;),
      * it's better to use {@link PojoCloudEventDataMapper#from(ObjectMapper, TypeReference)}.
      * </p>
      *
@@ -65,7 +65,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
      * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt;T&gt;.
      *
      * <p>
-     * This overload is more suitable for mapping generic objects (e.g. {@link List}&lt{@link String}&gt),
+     * This overload is more suitable for mapping generic objects (e.g. {@link List}&lt;{@link String}&gt;),
      * as opposed to {@link PojoCloudEventDataMapper#from(ObjectMapper, Class)}.
      * </p>
      *
