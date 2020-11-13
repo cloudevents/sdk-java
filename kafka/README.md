@@ -57,18 +57,6 @@ You can configure the Encoding and EventFormat to use to emit the event.
 Check out the [`CloudEventSerializer`](src/main/java/io/cloudevents/kafka/CloudEventSerializer.java)
 javadoc for more info.
 
-### Partition key extension
-
-If you want your producer to use the `partitionkey` extension, you can use the [`PartitionKeyExtensionInterceptor`](src/main/java/io/cloudevents/kafka/PartitionKeyExtensionInterceptor.java).
-
-```java
-props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, io.cloudevents.kafka.PartitionKeyExtensionInterceptor.class);
-```
-
-When using in your producer, this interceptor will pick the `partitionkey` extension from the event and will set it as record key.
-Check out the [`PartitionKeyExtensionInterceptor`](src/main/java/io/cloudevents/kafka/PartitionKeyExtensionInterceptor.java)
-javadoc for more info.
-
 ## Consuming CloudEvents
 
 To consume CloudEvents in Kafka, configure the KafkaConsumer to use the provided [`CloudEventDeserializer`](src/main/java/io/cloudevents/kafka/CloudEventDeserializer.java):
