@@ -15,29 +15,36 @@
  *
  */
 
-package io.cloudevents.core.impl;
+package io.cloudevents.core;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
+import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.impl.CloudEventReaderAdapter;
 import io.cloudevents.lang.Nullable;
 import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventDataMapper;
+import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventReader;
 
+/**
+ * This class contains a set of utility methods to deal with conversions of io.cloudevents related interfaces
+ */
 public final class CloudEventUtils {
 
     private CloudEventUtils() {}
 
     /**
      * Convert a {@link CloudEvent} to a {@link CloudEventReader}. This method provides a default implementation
+     * for CloudEvent that doesn't implement {@link CloudEventReader}
      * for CloudEvent that doesn't implement CloudEventVisitable.
      * <p>
      * It's safe to use the returned {@link CloudEventReader} multiple times.
      *
      * @param event the event to convert
-     * @return the visitable implementation
+     * @return the reader implementation
      */
-    public static CloudEventReader toVisitable(CloudEvent event) {
+    public static CloudEventReader toReader(CloudEvent event) {
         if (event instanceof CloudEventReader) {
             return (CloudEventReader) event;
         } else {
@@ -60,6 +67,27 @@ public final class CloudEventUtils {
         } else {
             return new CloudEventReaderAdapter(event);
         }
+    }
+
+    /**
+     * Convert a {@link CloudEventReader} to a {@link CloudEvent}.
+     *
+     * @param reader the reader where to read the message from
+     * @return the reader implementation
+     */
+    public static CloudEvent toEvent(CloudEventReader reader) throws CloudEventRWException {
+        return toEvent(reader, null);
+    }
+
+    /**
+     * Convert a {@link CloudEventReader} to a {@link CloudEvent} mapping the data with the provided {@code mapper}.
+     *
+     * @param reader the reader where to read the message from
+     * @param mapper the mapper to use when reading the data
+     * @return the reader implementation
+     */
+    public static CloudEvent toEvent(CloudEventReader reader, @Nullable CloudEventDataMapper<?> mapper) throws CloudEventRWException {
+        return reader.read(CloudEventBuilder::fromSpecVersion, mapper);
     }
 
     /**

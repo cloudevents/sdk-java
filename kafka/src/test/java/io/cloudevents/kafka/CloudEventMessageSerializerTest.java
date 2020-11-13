@@ -18,7 +18,7 @@
 package io.cloudevents.kafka;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.impl.CloudEventUtils;
+import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.mock.MockBinaryMessageWriter;
@@ -41,7 +41,7 @@ public class CloudEventMessageSerializerTest {
         Headers headers = new RecordHeaders();
 
         MockBinaryMessageWriter inMessage = new MockBinaryMessageWriter();
-        CloudEventUtils.toVisitable(event).read(inMessage);
+        CloudEventUtils.toReader(event).read(inMessage);
 
         byte[] payload = serializer.serialize(topic, headers, inMessage);
 

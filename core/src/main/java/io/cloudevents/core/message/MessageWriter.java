@@ -18,8 +18,8 @@
 package io.cloudevents.core.message;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.rw.CloudEventWriter;
 import io.cloudevents.rw.CloudEventWriterFactory;
@@ -68,7 +68,7 @@ public interface MessageWriter<CEV extends CloudEventWriter<R>, R> extends Cloud
      * @return return value at the end of the write process.
      */
     default R writeBinary(CloudEvent event) {
-        return CloudEventUtils.toVisitable(event).read(this);
+        return CloudEventUtils.toReader(event).read(this);
     }
 
 }

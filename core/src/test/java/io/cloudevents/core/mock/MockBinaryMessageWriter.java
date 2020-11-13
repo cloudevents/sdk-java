@@ -20,8 +20,8 @@ package io.cloudevents.core.mock;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.data.BytesCloudEventData;
-import io.cloudevents.core.impl.CloudEventUtils;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.BaseBinaryMessageReader;
 import io.cloudevents.rw.*;
@@ -57,7 +57,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     public MockBinaryMessageWriter(CloudEvent event) {
         this();
         CloudEventUtils
-            .toVisitable(event)
+            .toReader(event)
             .read(this);
     }
 

@@ -1,4 +1,4 @@
-package io.cloudevents.core.impl;
+package io.cloudevents.core;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
