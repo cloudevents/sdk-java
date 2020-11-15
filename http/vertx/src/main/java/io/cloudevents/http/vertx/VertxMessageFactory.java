@@ -4,7 +4,6 @@ import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
 import io.cloudevents.http.vertx.impl.BinaryVertxMessageReaderImpl;
 import io.cloudevents.http.vertx.impl.CloudEventsHeaders;
 import io.cloudevents.http.vertx.impl.VertxWebClientRequestMessageWriterImpl;
@@ -43,8 +42,7 @@ public final class VertxMessageFactory {
             () -> headers.get(HttpHeaders.CONTENT_TYPE),
             format -> new GenericStructuredMessageReader(format, body.getBytes()),
             () -> headers.get(CloudEventsHeaders.SPEC_VERSION),
-            sv -> new BinaryVertxMessageReaderImpl(sv, headers, body),
-            UnknownEncodingMessageReader::new
+            sv -> new BinaryVertxMessageReaderImpl(sv, headers, body)
         );
     }
 

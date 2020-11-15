@@ -21,7 +21,6 @@ import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
 import io.cloudevents.kafka.impl.KafkaBinaryMessageReaderImpl;
 import io.cloudevents.kafka.impl.KafkaHeaders;
 import io.cloudevents.kafka.impl.KafkaProducerMessageWriterImpl;
@@ -61,8 +60,7 @@ public final class KafkaMessageFactory {
             () -> KafkaHeaders.getParsedKafkaHeader(headers, KafkaHeaders.CONTENT_TYPE),
             format -> new GenericStructuredMessageReader(format, payload),
             () -> KafkaHeaders.getParsedKafkaHeader(headers, KafkaHeaders.SPEC_VERSION),
-            sv -> new KafkaBinaryMessageReaderImpl(sv, headers, payload),
-            UnknownEncodingMessageReader::new
+            sv -> new KafkaBinaryMessageReaderImpl(sv, headers, payload)
         );
     }
 

@@ -22,6 +22,5 @@ package io.cloudevents.core.message;
  */
 public enum Encoding {
     STRUCTURED,
-    BINARY,
-    UNKNOWN
+    BINARY
 }

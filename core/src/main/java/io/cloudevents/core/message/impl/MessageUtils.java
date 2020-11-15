@@ -22,12 +22,15 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.provider.EventFormatProvider;
+import io.cloudevents.rw.CloudEventRWException;
 
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static io.cloudevents.rw.CloudEventRWException.CloudEventRWExceptionKind.OTHER;
 
 public class MessageUtils {
 
@@ -38,8 +41,7 @@ public class MessageUtils {
         Supplier<String> contentTypeHeaderReader,
         Function<EventFormat, MessageReader> structuredMessageFactory,
         Supplier<String> specVersionHeaderReader,
-        Function<SpecVersion, MessageReader> binaryMessageFactory,
-        Supplier<MessageReader> unknownMessageFactory
+        Function<SpecVersion, MessageReader> binaryMessageFactory
     ) {
         // Let's try structured mode
         String ct = contentTypeHeaderReader.get();
@@ -57,7 +59,7 @@ public class MessageUtils {
             return binaryMessageFactory.apply(SpecVersion.parse(specVersionUnparsed));
         }
 
-        return unknownMessageFactory.get();
+        throw CloudEventRWException.newOther(new IllegalStateException("Invalid content type or spec version"));
     }
 
     /**
