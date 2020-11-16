@@ -36,6 +36,16 @@ import java.util.Objects;
  */
 public final class CloudEventV03 extends BaseCloudEvent {
 
+    private final static String ID = "id";
+    private final static String SOURCE = "source";
+    private final static String SPECVERSION = "specversion";
+    private final static String TYPE = "type";
+    private final static String TIME = "time";
+    private final static String SCHEMAURL = "schemaurl";
+    private final static String DATACONTENTTYPE = "datacontenttype";
+    private final static String DATACONTENTENCODING = "datacontentencoding";
+    private final static String SUBJECT = "subject";
+
     private final String id;
     private final URI source;
     private final String type;
@@ -100,21 +110,21 @@ public final class CloudEventV03 extends BaseCloudEvent {
     @Override
     public Object getAttribute(String attributeName) {
         switch (attributeName) {
-            case "specversion":
+            case SPECVERSION:
                 return getSpecVersion();
-            case "id":
+            case ID:
                 return this.id;
-            case "source":
+            case SOURCE:
                 return this.source;
-            case "type":
+            case TYPE:
                 return this.type;
-            case "datacontenttype":
+            case DATACONTENTTYPE:
                 return this.datacontenttype;
-            case "schemaurl":
+            case SCHEMAURL:
                 return this.schemaurl;
-            case "subject":
+            case SUBJECT:
                 return this.subject;
-            case "time":
+            case TIME:
                 return this.time;
             case "datacontentencoding":
                 // We don't save datacontentencoding, but the attribute name is valid, hence we just return always null
@@ -126,38 +136,38 @@ public final class CloudEventV03 extends BaseCloudEvent {
     @Override
     public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException {
         writer.withAttribute(
-            ContextAttributes.ID.name().toLowerCase(),
+            ID,
             this.id
         );
         writer.withAttribute(
-            ContextAttributes.SOURCE.name().toLowerCase(),
+            SOURCE,
             this.source
         );
         writer.withAttribute(
-            ContextAttributes.TYPE.name().toLowerCase(),
+            TYPE,
             this.type
         );
         if (this.datacontenttype != null) {
             writer.withAttribute(
-                ContextAttributes.DATACONTENTTYPE.name().toLowerCase(),
+                DATACONTENTTYPE,
                 this.datacontenttype
             );
         }
         if (this.schemaurl != null) {
             writer.withAttribute(
-                ContextAttributes.SCHEMAURL.name().toLowerCase(),
+                SCHEMAURL,
                 this.schemaurl
             );
         }
         if (this.subject != null) {
             writer.withAttribute(
-                ContextAttributes.SUBJECT.name().toLowerCase(),
+                SUBJECT,
                 this.subject
             );
         }
         if (this.time != null) {
             writer.withAttribute(
-                ContextAttributes.TIME.name().toLowerCase(),
+                TIME,
                 this.time
             );
         }
