@@ -33,8 +33,7 @@ import io.cloudevents.core.message.impl.MessageUtils;
 import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
 import io.cloudevents.rw.CloudEventWriter;
 /**
- * A factory class providing convenience methods for creating MessageReader and MessageWriter instances based on
- * {@link <a href="https://github.com/apache/qpid-proton-j">Qpid Proton</a>}.
+ * A factory class providing convenience methods for creating MessageReader and MessageWriter instances based on Qpid Proton.
  */
 @ParametersAreNonnullByDefault
 public final class ProtonAmqpMessageFactory {

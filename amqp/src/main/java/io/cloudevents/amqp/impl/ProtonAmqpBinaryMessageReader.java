@@ -48,10 +48,10 @@ public final class ProtonAmqpBinaryMessageReader extends BaseGenericBinaryMessag
      * Create an instance of an AMQP message reader.
      *
      * @param version                  The version of the cloud event message.
-     * @param applicationPropereties   The application properties of the AMQP message that contains
+     * @param applicationProperties    The application properties of the AMQP message that contains
      *                                 the cloud event metadata (i.e attributes and extensions).
      *                                 The applicationProperties MUST not be {@code null}.
-     * @param contentType              The content-type property of the AMQP message or {@null} if the message content type is unknown.
+     * @param contentType              The content-type property of the AMQP message or {@code null} if the message content type is unknown.
      * @param payload                  The message payload or {@code null} if the message does not contain any payload.
      * 
      * @throws NullPointerException if the applicationPropereties is {@code null}.

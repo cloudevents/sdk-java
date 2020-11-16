@@ -49,13 +49,7 @@ public class ProtonAmqpMessageWriterTest {
     @MethodSource("io.cloudevents.core.test.Data#allEventsWithStringExtensions")
     public void testWriteBinaryCloudEventToAmqpRepresentation(final CloudEvent binaryEvent) {
 
-        Message expectedMessage = null;
-        try {
-            expectedMessage = translateBinaryEvent(binaryEvent);
-        } catch (final Exception e) {
-            System.out.println(e);
-        }
-        
+        final Message expectedMessage = translateBinaryEvent(binaryEvent);
 
         final MessageWriter<?, Message> writer = new ProtonAmqpMessageWriter<Message>();
         final Message actualMessage = writer.writeBinary(binaryEvent);
@@ -94,7 +88,7 @@ public class ProtonAmqpMessageWriterTest {
             event.getAttributeNames().forEach(name -> {
                 if (name.equals("datacontentencoding")) {
                     // ignore
-                }else if (name.equals("datacontenttype") && event.getAttribute(name) != null) {
+                } else if (name.equals("datacontenttype") && event.getAttribute(name) != null) {
                     message.setContentType(event.getAttribute(name).toString());
                 } else {
                     addProperty(map, name, Objects.toString(event.getAttribute(name)), true);
