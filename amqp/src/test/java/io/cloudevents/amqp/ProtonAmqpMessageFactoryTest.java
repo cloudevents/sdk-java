@@ -38,9 +38,9 @@ import io.cloudevents.core.test.Data;
 import io.cloudevents.types.Time;
 
 /**
- * Tests verifying the behavior of the {@code ProtonBasedAmqpMessageFactory}.
+ * Tests verifying the behavior of the {@code ProtonAmqpMessageFactory}.
  */
-public class ProtonBasedAmqpMessageFactoryTest {
+public class ProtonAmqpMessageFactoryTest {
 
     private static final String PREFIX_TEMPLATE = "cloudEvents:%s";
     private static final String DATACONTENTTYPE_NULL = null;
@@ -50,7 +50,7 @@ public class ProtonBasedAmqpMessageFactoryTest {
     @MethodSource("binaryTestArguments")
     public void readBinary(final Map<String, Object> props, final String contentType, final byte[] body,
             final CloudEvent event) {
-        final MessageReader amqpReader = ProtonBasedAmqpMessageFactory.createReader(contentType, new ApplicationProperties(props), body);
+        final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, new ApplicationProperties(props), body);
         assertThat(amqpReader.getEncoding()).isEqualTo(Encoding.BINARY);
         assertThat(amqpReader.toEvent()).isEqualTo(event);
     }
@@ -61,7 +61,7 @@ public class ProtonBasedAmqpMessageFactoryTest {
         final String contentType = CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8";
         final byte[] contentPayload = CSVFormat.INSTANCE.serialize(event);
 
-        final MessageReader amqpReader = ProtonBasedAmqpMessageFactory.createReader(contentType, null, contentPayload);
+        final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, null, contentPayload);
         assertThat(amqpReader.getEncoding()).isEqualTo(Encoding.STRUCTURED);
         assertThat(amqpReader.toEvent()).isEqualTo(event);
     }

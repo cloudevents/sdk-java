@@ -39,7 +39,7 @@ import io.cloudevents.rw.CloudEventWriter;
  * <p>
  * This writer returns an AMQP message at the end of the write process.
  */
-public final class ProtonBasedAmqpMessageWriter<R> implements MessageWriter<CloudEventWriter<Message>, Message>, CloudEventWriter<Message> {
+public final class ProtonAmqpMessageWriter<R> implements MessageWriter<CloudEventWriter<Message>, Message>, CloudEventWriter<Message> {
 
     private ApplicationProperties applicationProperties;
     private Message message;
@@ -47,7 +47,7 @@ public final class ProtonBasedAmqpMessageWriter<R> implements MessageWriter<Clou
     /**
      * Creates a proton-base message writer.
      */
-    public ProtonBasedAmqpMessageWriter() {
+    public ProtonAmqpMessageWriter() {
         message = Message.Factory.create();
     }
 
@@ -76,7 +76,7 @@ public final class ProtonBasedAmqpMessageWriter<R> implements MessageWriter<Clou
     }
 
     @Override
-    public ProtonBasedAmqpMessageWriter<R> create(final SpecVersion version) {
+    public ProtonAmqpMessageWriter<R> create(final SpecVersion version) {
         if (applicationProperties == null) {
             applicationProperties = new ApplicationProperties(new HashMap<String, Object>());
         }

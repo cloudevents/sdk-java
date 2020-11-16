@@ -23,8 +23,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
 import org.apache.qpid.proton.message.Message;
 
-import io.cloudevents.amqp.impl.ProtonBasedAmqpBinaryMessageReader;
-import io.cloudevents.amqp.impl.ProtonBasedAmqpMessageWriter;
+import io.cloudevents.amqp.impl.ProtonAmqpBinaryMessageReader;
+import io.cloudevents.amqp.impl.ProtonAmqpMessageWriter;
 import io.cloudevents.amqp.impl.AmqpConstants;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
@@ -37,9 +37,9 @@ import io.cloudevents.rw.CloudEventWriter;
  * {@link <a href="https://github.com/apache/qpid-proton-j">Qpid Proton</a>}.
  */
 @ParametersAreNonnullByDefault
-public final class ProtonBasedAmqpMessageFactory {
+public final class ProtonAmqpMessageFactory {
 
-    private ProtonBasedAmqpMessageFactory() {
+    private ProtonAmqpMessageFactory() {
         // prevent instantiation
     }
 
@@ -79,7 +79,7 @@ public final class ProtonBasedAmqpMessageFactory {
      * @return A message writer to read structured and binary cloud event from a proton-based message.
      */
     public static MessageWriter<CloudEventWriter<Message>, Message> createWriter() {
-        return new ProtonBasedAmqpMessageWriter<>();
+        return new ProtonAmqpMessageWriter<>();
     }
 
     /**
@@ -98,7 +98,7 @@ public final class ProtonBasedAmqpMessageFactory {
                 () -> contentType, 
                 format -> new GenericStructuredMessageReader(format, payload),
                 () -> AmqpConstants.getApplicationProperty(props, AmqpConstants.APP_PROPERTY_SPEC_VERSION, String.class),
-                sv -> new ProtonBasedAmqpBinaryMessageReader(sv, props, contentType, payload),
+                sv -> new ProtonAmqpBinaryMessageReader(sv, props, contentType, payload),
                 UnknownEncodingMessageReader::new);
 
     }

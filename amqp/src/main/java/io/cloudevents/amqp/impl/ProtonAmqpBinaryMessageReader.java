@@ -39,7 +39,7 @@ import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
  * </ul>
  * 
  */
-public final class ProtonBasedAmqpBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
+public final class ProtonAmqpBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
 
     private final String contentType;
     private final ApplicationProperties applicationProperties;
@@ -56,7 +56,7 @@ public final class ProtonBasedAmqpBinaryMessageReader extends BaseGenericBinaryM
      * 
      * @throws NullPointerException if the applicationPropereties is {@code null}.
      */
-    public ProtonBasedAmqpBinaryMessageReader(final SpecVersion version, final ApplicationProperties applicationProperties, 
+    public ProtonAmqpBinaryMessageReader(final SpecVersion version, final ApplicationProperties applicationProperties, 
             final String contentType, final byte[] payload) {
         super(version, payload != null && payload.length > 0 ? new BytesCloudEventData(payload) : null);
         this.contentType = contentType;
