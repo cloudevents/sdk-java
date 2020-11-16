@@ -93,6 +93,24 @@ public class CloudEventBuilderTest {
     }
 
     @Test
+    void testDataContentEncoding() {
+        CloudEvent event = CloudEventBuilder.v03()
+            .withId(ID)
+            .withType(TYPE)
+            .withSource(SOURCE)
+            .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+            .withSubject(SUBJECT)
+            .withTime(TIME)
+            .withExtension("astring", "aaa")
+            .withExtension("aboolean", "true")
+            .withExtension("anumber", "10")
+            .build();
+
+        assertThat(event.getAttribute("datacontentencoding"))
+            .isNull();
+    }
+
+    @Test
     void testMissingId() {
         assertThatCode(() -> CloudEventBuilder
             .v03()

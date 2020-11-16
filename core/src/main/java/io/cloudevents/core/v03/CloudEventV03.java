@@ -116,6 +116,9 @@ public final class CloudEventV03 extends BaseCloudEvent {
                 return this.subject;
             case "time":
                 return this.time;
+            case "datacontentencoding":
+                // We don't save datacontentencoding, but the attribute name is valid, hence we just return always null
+                return null;
         }
         throw new IllegalArgumentException("Spec version v0.3 doesn't have attribute named " + attributeName);
     }
