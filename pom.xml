@@ -74,6 +74,7 @@
         <module>http/vertx</module>
         <module>http/restful-ws</module>
         <module>kafka</module>
+        <module>spring</module>
     </modules>
 
     <properties>
