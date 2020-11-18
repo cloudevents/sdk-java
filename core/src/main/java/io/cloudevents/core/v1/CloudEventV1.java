@@ -35,14 +35,45 @@ import java.util.Objects;
  */
 public final class CloudEventV1 extends BaseCloudEvent {
 
-    private final static String ID = "id";
-    private final static String SOURCE = "source";
-    private final static String SPECVERSION = "specversion";
-    private final static String TYPE = "type";
-    private final static String TIME = "time";
-    private final static String DATASCHEMA = "dataschema";
-    private final static String DATACONTENTTYPE = "datacontenttype";
-    private final static String SUBJECT = "subject";
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#id">id</a> attribute
+     */
+    public final static String ID = "id";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#source">source</a> attribute
+     */
+    public final static String SOURCE = "source";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#specversion">specversion</a> attribute
+     */
+    public final static String SPECVERSION = "specversion";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#type">type</a> attribute
+     */
+    public final static String TYPE = "type";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#time">time</a> attribute
+     */
+    public final static String TIME = "time";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#dataschema">dataschema</a> attribute
+     */
+    public final static String DATASCHEMA = "dataschema";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#datacontenttype">datacontenttype</a> attribute
+     */
+    public final static String DATACONTENTTYPE = "datacontenttype";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#subject">subject</a> attribute
+     */
+    public final static String SUBJECT = "subject";
 
     private final String id;
     private final URI source;

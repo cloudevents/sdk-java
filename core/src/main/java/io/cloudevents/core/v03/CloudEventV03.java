@@ -36,15 +36,50 @@ import java.util.Objects;
  */
 public final class CloudEventV03 extends BaseCloudEvent {
 
-    private final static String ID = "id";
-    private final static String SOURCE = "source";
-    private final static String SPECVERSION = "specversion";
-    private final static String TYPE = "type";
-    private final static String TIME = "time";
-    private final static String SCHEMAURL = "schemaurl";
-    private final static String DATACONTENTTYPE = "datacontenttype";
-    private final static String DATACONTENTENCODING = "datacontentencoding";
-    private final static String SUBJECT = "subject";
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#id">id</a> attribute
+     */
+    public final static String ID = "id";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#source">source</a> attribute
+     */
+    public final static String SOURCE = "source";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#specversion">specversion</a> attribute
+     */
+    public final static String SPECVERSION = "specversion";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#type">type</a> attribute
+     */
+    public final static String TYPE = "type";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#time">time</a> attribute
+     */
+    public final static String TIME = "time";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#schemaurl">schemaurl</a> attribute
+     */
+    public final static String SCHEMAURL = "schemaurl";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#datacontenttype">datacontenttype</a> attribute
+     */
+    public final static String DATACONTENTTYPE = "datacontenttype";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#datacontentencoding">datacontentencoding</a> attribute
+     */
+    public final static String DATACONTENTENCODING = "datacontentencoding";
+
+    /**
+     * The name of the <a href="https://github.com/cloudevents/spec/blob/v0.3/spec.md#subject">subject</a> attribute
+     */
+    public final static String SUBJECT = "subject";
 
     private final String id;
     private final URI source;
