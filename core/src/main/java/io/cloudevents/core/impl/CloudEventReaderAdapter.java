@@ -18,6 +18,7 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.*;
 
 public class CloudEventReaderAdapter implements CloudEventReader, CloudEventContextReader {
@@ -29,13 +30,13 @@ public class CloudEventReaderAdapter implements CloudEventReader, CloudEventCont
     }
 
     @Override
-    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper mapper) throws RuntimeException {
+    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws RuntimeException {
         CloudEventWriter<R> visitor = writerFactory.create(event.getSpecVersion());
         this.readAttributes(visitor);
         this.readExtensions(visitor);
 
         if (event.getData() != null) {
-            return visitor.end(mapper != null ? mapper.map(event.getData()) : event.getData());
+            return visitor.end(mapper.map(event.getData()));
         }
 
         return visitor.end();

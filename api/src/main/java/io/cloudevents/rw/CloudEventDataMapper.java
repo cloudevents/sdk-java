@@ -37,4 +37,8 @@ public interface CloudEventDataMapper<R extends CloudEventData> {
      */
     R map(CloudEventData data) throws CloudEventRWException;
 
+    /**
+     * No-op mapper which can be used as default when no mapper is provided
+     */
+    CloudEventDataMapper<?> NOOP = d -> d;
 }

@@ -72,7 +72,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
         this.readExtensions(visitor);
 
         if (this.data != null) {
-            return visitor.end(mapper != null ? mapper.map(this.data) : this.data);
+            return visitor.end(mapper.map(this.data));
         }
 
         return visitor.end();
