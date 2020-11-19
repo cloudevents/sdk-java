@@ -42,7 +42,7 @@ public class DatarefExtensionTest {
             .build();
 
         assertThat(event.getExtension(DatarefExtension.DATAREF))
-            .isEqualTo(URI.create("http://example"));
+            .isEqualTo("http://example");
     }
 
     @Test
