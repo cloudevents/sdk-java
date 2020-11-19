@@ -27,7 +27,6 @@
 
     <artifactId>cloudevents-core</artifactId>
     <name>CloudEvents - Core</name>
-    <version>${project.parent.version}</version>
     <packaging>jar</packaging>
 
     <properties>
