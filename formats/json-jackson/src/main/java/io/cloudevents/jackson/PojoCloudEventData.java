@@ -51,4 +51,11 @@ public class PojoCloudEventData<T> implements CloudEventData {
     public int hashCode() {
         return Objects.hash(getValue());
     }
+
+    /**
+     * Wrap the provided data in an object serializable by the provided object mapper.
+     */
+    public PojoCloudEventData<T> wrap(T data, ObjectMapper mapper) {
+        return new PojoCloudEventData<>(mapper, data);
+    }
 }
