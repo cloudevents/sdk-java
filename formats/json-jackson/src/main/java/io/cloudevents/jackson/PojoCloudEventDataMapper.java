@@ -43,7 +43,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
         } catch (Exception e) {
             throw CloudEventRWException.newDataConversion(e, byte[].class.toString(), target.getTypeName());
         }
-        return PojoCloudEventData.wrap(value, bytes);
+        return PojoCloudEventData.wrap(value, v -> bytes);
     }
 
     /**

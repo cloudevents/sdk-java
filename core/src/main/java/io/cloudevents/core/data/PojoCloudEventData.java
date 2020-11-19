@@ -22,6 +22,10 @@ public class PojoCloudEventData<T> implements CloudEventData {
     private byte[] memoizedValue;
     private final ToBytes<T> mapper;
 
+    private PojoCloudEventData(T value, ToBytes<T> mapper) {
+        this(value, null, mapper);
+    }
+
     private PojoCloudEventData(T value, byte[] memoizedValue, ToBytes<T> mapper) {
         Objects.requireNonNull(value);
         if (memoizedValue == null && mapper == null) {
@@ -30,14 +34,6 @@ public class PojoCloudEventData<T> implements CloudEventData {
         this.value = value;
         this.memoizedValue = memoizedValue;
         this.mapper = mapper;
-    }
-
-    protected PojoCloudEventData(T value, ToBytes<T> mapper) {
-        this(value, null, mapper);
-    }
-
-    protected PojoCloudEventData(T value, byte[] memoizedValue) {
-        this(value, memoizedValue, null);
     }
 
     public T getValue() {
@@ -74,12 +70,5 @@ public class PojoCloudEventData<T> implements CloudEventData {
      */
     public static <T> PojoCloudEventData<T> wrap(T data, ToBytes<T> mapper) {
         return new PojoCloudEventData<>(data, mapper);
-    }
-
-    /**
-     * Wrap the provided data and its serialized value in a {@link PojoCloudEventData}.
-     */
-    public static <T> PojoCloudEventData<T> wrap(T data, byte[] serializedData) {
-        return new PojoCloudEventData<>(data, serializedData);
     }
 }
