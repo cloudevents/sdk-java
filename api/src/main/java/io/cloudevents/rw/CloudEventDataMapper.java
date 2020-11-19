@@ -40,7 +40,7 @@ public interface CloudEventDataMapper<R extends CloudEventData> {
     /**
      * No-op identity mapper which can be used as default when no mapper is provided.
      */
-    static CloudEventDataMapper<? extends CloudEventData> identity() {
+    static CloudEventDataMapper<CloudEventData> identity() {
         return d -> d;
     }
 }
