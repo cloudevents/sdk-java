@@ -38,7 +38,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * @throws IllegalStateException if the message is not in binary encoding.
      */
     default <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException, IllegalStateException {
-        return read(writerFactory, CloudEventDataMapper.NOOP);
+        return read(writerFactory, CloudEventDataMapper.identity());
     }
 
     /**
@@ -88,7 +88,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * @throws IllegalStateException    if the message has an unknown encoding.
      */
     default CloudEvent toEvent() throws CloudEventRWException, IllegalStateException {
-        return toEvent(CloudEventDataMapper.NOOP);
+        return toEvent(CloudEventDataMapper.identity());
     }
 
     /**

@@ -76,7 +76,7 @@ public final class CloudEventUtils {
      * @return the reader implementation
      */
     public static CloudEvent toEvent(CloudEventReader reader) throws CloudEventRWException {
-        return toEvent(reader, CloudEventDataMapper.NOOP);
+        return toEvent(reader, CloudEventDataMapper.identity());
     }
 
     /**

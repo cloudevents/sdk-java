@@ -36,7 +36,7 @@ public interface CloudEventReader {
      * @throws CloudEventRWException if something went wrong during the read.
      */
     default <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException {
-        return read(writerFactory, CloudEventDataMapper.NOOP);
+        return read(writerFactory, CloudEventDataMapper.identity());
     }
 
     /**
