@@ -31,7 +31,7 @@ public class KafkaBinaryMessageReaderImpl extends BaseGenericBinaryMessageReader
     private final Headers headers;
 
     public KafkaBinaryMessageReaderImpl(SpecVersion version, Headers headers, byte[] payload) {
-        super(version, payload != null && payload.length > 0 ? new BytesCloudEventData(payload) : null);
+        super(version, payload != null && payload.length > 0 ? BytesCloudEventData.wrap(payload) : null);
 
         Objects.requireNonNull(headers);
         this.headers = headers;

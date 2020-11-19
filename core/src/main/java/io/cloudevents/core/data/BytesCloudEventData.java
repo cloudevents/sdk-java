@@ -46,7 +46,7 @@ public class BytesCloudEventData implements CloudEventData {
      * @param value byte array to wrap
      * @return byte array wrapped in a {@link BytesCloudEventData}, which implements {@link CloudEventData}.
      */
-    public BytesCloudEventData wrap(byte[] value) {
+    public static BytesCloudEventData wrap(byte[] value) {
         return new BytesCloudEventData(value);
     }
 }

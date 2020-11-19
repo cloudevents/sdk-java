@@ -46,7 +46,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     public MockBinaryMessageWriter(SpecVersion version, Map<String, Object> attributes, byte[] data, Map<String, Object> extensions) {
-        this(version, attributes, new BytesCloudEventData(data), extensions);
+        this(version, attributes, BytesCloudEventData.wrap(data), extensions);
     }
 
     public MockBinaryMessageWriter() {

@@ -90,7 +90,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                         boolean isBase64 = "base64".equals(getOptionalStringNode(this.node, this.p, "datacontentencoding"));
                         if (node.has("data")) {
                             if (isBase64) {
-                                data = new BytesCloudEventData(node.remove("data").binaryValue());
+                                data = BytesCloudEventData.wrap(node.remove("data").binaryValue());
                             } else {
                                 if (JsonFormat.dataIsJsonContentType(contentType)) {
                                     // This solution is quite bad, but i see no alternatives now.
@@ -99,7 +99,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                                 } else {
                                     JsonNode dataNode = node.remove("data");
                                     assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
-                                    data = new BytesCloudEventData(dataNode.asText().getBytes());
+                                    data = BytesCloudEventData.wrap(dataNode.asText().getBytes());
                                 }
                             }
                         }
@@ -108,7 +108,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                             throw MismatchedInputException.from(p, CloudEvent.class, "CloudEvent cannot have both 'data' and 'data_base64' fields");
                         }
                         if (node.has("data_base64")) {
-                            data = new BytesCloudEventData(node.remove("data_base64").binaryValue());
+                            data = BytesCloudEventData.wrap(node.remove("data_base64").binaryValue());
                         } else if (node.has("data")) {
                             if (JsonFormat.dataIsJsonContentType(contentType)) {
                                 // This solution is quite bad, but i see no alternatives now.
@@ -117,7 +117,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                             } else {
                                 JsonNode dataNode = node.remove("data");
                                 assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
-                                data = new BytesCloudEventData(dataNode.asText().getBytes());
+                                data = BytesCloudEventData.wrap(dataNode.asText().getBytes());
                             }
                         }
                 }
