@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
@@ -85,15 +86,15 @@ public final class JsonFormat implements EventFormat {
     }
 
     @Override
-    public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper mapper) throws EventDeserializationException {
+    public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper) throws EventDeserializationException {
         CloudEvent deserialized = this.deserialize(bytes);
         if (deserialized.getData() == null) {
             return deserialized;
         }
         try {
-            return CloudEventBuilder.from(deserialized).withData(
-                mapper != null ? mapper.map(deserialized.getData()) : deserialized.getData()
-            ).build();
+            return CloudEventBuilder.from(deserialized)
+                .withData(mapper.map(deserialized.getData()))
+                .build();
         } catch (CloudEventRWException e) {
             throw new EventDeserializationException(e);
         }

@@ -18,6 +18,7 @@
 package io.cloudevents.core.mock;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
@@ -59,7 +60,7 @@ public class CSVFormat implements EventFormat {
     }
 
     @Override
-    public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper mapper) {
+    public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper) {
         String[] splitted = new String(bytes, StandardCharsets.UTF_8).split(Pattern.quote(","));
         SpecVersion sv = SpecVersion.parse(splitted[0]);
 
@@ -90,11 +91,7 @@ public class CSVFormat implements EventFormat {
             builder.withTime(time);
         }
         if (data != null) {
-            if (mapper != null) {
-                builder.withData(mapper.map(new BytesCloudEventData(data)));
-            } else {
-                builder.withData(data);
-            }
+            builder.withData(mapper.map(new BytesCloudEventData(data)));
         }
         return builder.build();
     }

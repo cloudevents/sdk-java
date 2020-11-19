@@ -20,7 +20,6 @@ package io.cloudevents.core.message;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.CloudEventUtils;
-import io.cloudevents.lang.Nullable;
 import io.cloudevents.rw.*;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -39,13 +38,13 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * @throws IllegalStateException if the message is not in binary encoding.
      */
     default <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException, IllegalStateException {
-        return read(writerFactory, null);
+        return read(writerFactory, CloudEventDataMapper.identity());
     }
 
     /**
      * Like {@link MessageReader#read(CloudEventWriterFactory)}, but providing a mapper for {@link io.cloudevents.CloudEventData} to be invoked when the data field is available.
      */
-    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, @Nullable CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException;
+    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException;
 
     /**
      * Visit the message as structured encoded event using the provided visitor
@@ -89,7 +88,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * @throws IllegalStateException    if the message has an unknown encoding.
      */
     default CloudEvent toEvent() throws CloudEventRWException, IllegalStateException {
-        return toEvent(null);
+        return toEvent(CloudEventDataMapper.identity());
     }
 
     /**
@@ -99,7 +98,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * @throws CloudEventRWException if something went wrong during the visit.
      * @throws IllegalStateException if the message has an unknown encoding.
      */
-    default CloudEvent toEvent(@Nullable CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
+    default CloudEvent toEvent(CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
                 return CloudEventUtils.toEvent(this, mapper);
