@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEventData;
+import io.cloudevents.core.data.PojoCloudEventData;
 import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventRWException;
+
 import java.util.List;
 
 public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoCloudEventData<T>> {
@@ -30,7 +32,7 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
             } catch (Exception e) {
                 throw CloudEventRWException.newDataConversion(e, JsonNode.class.toString(), target.getTypeName());
             }
-            return new PojoCloudEventData<>(mapper, value);
+            return PojoCloudEventData.wrap(value, mapper::writeValueAsBytes);
         }
 
         // Worst case, deserialize from bytes
@@ -41,11 +43,12 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
         } catch (Exception e) {
             throw CloudEventRWException.newDataConversion(e, byte[].class.toString(), target.getTypeName());
         }
-        return new PojoCloudEventData<>(mapper, value, bytes);
+        return PojoCloudEventData.wrap(value, bytes);
     }
 
     /**
-     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt;T&gt;.
+     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt;T&gt;
+     * using a Jackson {@link ObjectMapper}.
      *
      * <p>
      * When working with generic types (e.g. {@link List}&lt;{@link String}&gt;),
@@ -62,7 +65,8 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
     }
 
     /**
-     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt;T&gt;.
+     * Creates a {@link PojoCloudEventDataMapper} mapping {@link CloudEventData} into {@link PojoCloudEventData}&lt;T&gt;
+     * using a Jackson {@link ObjectMapper}.
      *
      * <p>
      * This overload is more suitable for mapping generic objects (e.g. {@link List}&lt;{@link String}&gt;),
