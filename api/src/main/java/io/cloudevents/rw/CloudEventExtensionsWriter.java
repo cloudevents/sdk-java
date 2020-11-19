@@ -17,8 +17,6 @@
 
 package io.cloudevents.rw;
 
-import io.cloudevents.lang.Nullable;
-
 import java.net.URI;
 
 /**
@@ -34,29 +32,29 @@ public interface CloudEventExtensionsWriter {
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this extension.
      */
-    CloudEventExtensionsWriter withExtension(String name, @Nullable String value) throws CloudEventRWException;
+    CloudEventExtensionsWriter withExtension(String name, String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
      *
-     * @param name name of the extension
+     * @param name  name of the extension
      * @param value value of the extension
-     * @throws CloudEventRWException if anything goes wrong while writing this extension.
      * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
      */
-    default CloudEventExtensionsWriter withExtension(String name, @Nullable Number value) throws CloudEventRWException {
+    default CloudEventExtensionsWriter withExtension(String name, Number value) throws CloudEventRWException {
         return withExtension(name, value == null ? null : value.toString());
     }
 
     /**
      * Set attribute with type {@link Boolean} attribute.
      *
-     * @param name name of the extension
+     * @param name  name of the extension
      * @param value value of the extension
-     * @throws CloudEventRWException if anything goes wrong while writing this extension.
      * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
      */
-    default CloudEventExtensionsWriter withExtension(String name, @Nullable Boolean value) throws CloudEventRWException {
+    default CloudEventExtensionsWriter withExtension(String name, Boolean value) throws CloudEventRWException {
         return withExtension(name, value == null ? null : value.toString());
     }
 

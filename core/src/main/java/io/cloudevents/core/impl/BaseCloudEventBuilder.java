@@ -96,24 +96,24 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return this.self;
     }
 
-    public SELF withExtension(@Nonnull String key, String value) {
-        if(!isValidExtensionName(key)){
+    public SELF withExtension(@Nonnull String key, @Nonnull String value) {
+        if (!isValidExtensionName(key)) {
             throw CloudEventRWException.newInvalidExtensionName(key);
         }
         this.extensions.put(key, value);
         return self;
     }
 
-    public SELF withExtension(@Nonnull String key, Number value) {
-        if(!isValidExtensionName(key)){
+    public SELF withExtension(@Nonnull String key, @Nonnull Number value) {
+        if (!isValidExtensionName(key)) {
             throw CloudEventRWException.newInvalidExtensionName(key);
         }
         this.extensions.put(key, value);
         return self;
     }
 
-    public SELF withExtension(@Nonnull String key, Boolean value) {
-        if(!isValidExtensionName(key)){
+    public SELF withExtension(@Nonnull String key, @Nonnull Boolean value) {
+        if (!isValidExtensionName(key)) {
             throw CloudEventRWException.newInvalidExtensionName(key);
         }
         this.extensions.put(key, value);
