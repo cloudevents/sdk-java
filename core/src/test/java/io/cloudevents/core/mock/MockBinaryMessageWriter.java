@@ -62,7 +62,7 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper mapper) throws CloudEventRWException, IllegalStateException {
+    public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
         if (version == null) {
             throw new IllegalStateException("MockBinaryMessage is empty");
         }

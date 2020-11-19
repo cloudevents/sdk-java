@@ -42,7 +42,7 @@ public class CloudEventDeserializerTest {
 
     @Test
     public void deserializerWithMapper() {
-        CloudEventDataMapper mapper = data -> MyCloudEventData.fromStringBytes(data.toBytes());
+        CloudEventDataMapper<MyCloudEventData> mapper = data -> MyCloudEventData.fromStringBytes(data.toBytes());
 
         CloudEventDeserializer deserializer = new CloudEventDeserializer();
         HashMap<String, Object> config = new HashMap<>();
