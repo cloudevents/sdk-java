@@ -37,4 +37,10 @@ public interface CloudEventDataMapper<R extends CloudEventData> {
      */
     R map(CloudEventData data) throws CloudEventRWException;
 
+    /**
+     * No-op identity mapper which can be used as default when no mapper is provided.
+     */
+    static CloudEventDataMapper<CloudEventData> identity() {
+        return d -> d;
+    }
 }

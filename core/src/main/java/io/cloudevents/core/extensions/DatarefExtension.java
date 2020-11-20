@@ -55,7 +55,7 @@ public final class DatarefExtension implements Extension {
     @Override
     public Object getValue(String key) {
         if (DATAREF.equals(key)) {
-            return this.dataref;
+            return this.dataref.toString();
         }
         throw ExtensionUtils.generateInvalidKeyException(this.getClass().getSimpleName(), key);
     }

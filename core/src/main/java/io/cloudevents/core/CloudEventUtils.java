@@ -76,7 +76,7 @@ public final class CloudEventUtils {
      * @return the reader implementation
      */
     public static CloudEvent toEvent(CloudEventReader reader) throws CloudEventRWException {
-        return toEvent(reader, null);
+        return toEvent(reader, CloudEventDataMapper.identity());
     }
 
     /**
@@ -86,7 +86,7 @@ public final class CloudEventUtils {
      * @param mapper the mapper to use when reading the data
      * @return the reader implementation
      */
-    public static CloudEvent toEvent(CloudEventReader reader, @Nullable CloudEventDataMapper<?> mapper) throws CloudEventRWException {
+    public static CloudEvent toEvent(CloudEventReader reader, CloudEventDataMapper<?> mapper) throws CloudEventRWException {
         return reader.read(CloudEventBuilder::fromSpecVersion, mapper);
     }
 
