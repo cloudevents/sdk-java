@@ -97,16 +97,25 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     public SELF withExtension(@Nonnull String key, String value) {
+        if(!isValidExtensionName(key)){
+            throw CloudEventRWException.newInvalidExtensionName(key);
+        }
         this.extensions.put(key, value);
         return self;
     }
 
     public SELF withExtension(@Nonnull String key, Number value) {
+        if(!isValidExtensionName(key)){
+            throw CloudEventRWException.newInvalidExtensionName(key);
+        }
         this.extensions.put(key, value);
         return self;
     }
 
     public SELF withExtension(@Nonnull String key, Boolean value) {
+        if(!isValidExtensionName(key)){
+            throw CloudEventRWException.newInvalidExtensionName(key);
+        }
         this.extensions.put(key, value);
         return self;
     }
@@ -150,5 +159,26 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
 
     protected static IllegalStateException createMissingAttributeException(String attributeName) {
         return new IllegalStateException("Attribute '" + attributeName + "' cannot be null");
+    }
+    /**
+     * Validates the extension name as defined in  CloudEvents spec
+     * See <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
+     * @param name the extension name
+     * @return true if extension name is valid, false otherwise
+     */
+    private static boolean isValidExtensionName(String name) {
+        if(name.length() > 20){
+            return false;
+        }
+        char[] chars = name.toCharArray();
+        for (char c: chars)
+        if (!isValidChar(c)) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean isValidChar(char c) {
+        return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
     }
 }

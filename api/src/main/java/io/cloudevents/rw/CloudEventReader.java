@@ -17,7 +17,7 @@
 
 package io.cloudevents.rw;
 
-import io.cloudevents.lang.Nullable;
+import io.cloudevents.CloudEventData;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -36,12 +36,12 @@ public interface CloudEventReader {
      * @throws CloudEventRWException if something went wrong during the read.
      */
     default <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException {
-        return read(writerFactory, null);
+        return read(writerFactory, CloudEventDataMapper.identity());
     }
 
     /**
      * Like {@link CloudEventReader#read(CloudEventWriterFactory)}, but providing a mapper for {@link io.cloudevents.CloudEventData} to be invoked when the data field is available.
      */
-    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, @Nullable CloudEventDataMapper mapper) throws CloudEventRWException;
+    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException;
 
 }
