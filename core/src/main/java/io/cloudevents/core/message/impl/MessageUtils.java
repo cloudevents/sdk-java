@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.cloudevents.rw.CloudEventRWException.CloudEventRWExceptionKind.OTHER;
+import static io.cloudevents.rw.CloudEventRWException.newParseException;
 
 public class MessageUtils {
 
@@ -59,7 +60,7 @@ public class MessageUtils {
             return binaryMessageFactory.apply(SpecVersion.parse(specVersionUnparsed));
         }
 
-        throw CloudEventRWException.newOther(new IllegalStateException("Invalid content type or spec version"));
+        throw newParseException();
     }
 
     /**

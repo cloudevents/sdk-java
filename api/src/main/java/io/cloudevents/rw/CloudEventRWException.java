@@ -57,6 +57,10 @@ public class CloudEventRWException extends RuntimeException {
          */
         DATA_CONVERSION,
         /**
+         * Invalid content type or spec version
+         */
+        PARSE_EXCEPTION,
+        /**
          * Other error.
          */
         OTHER
@@ -144,6 +148,13 @@ public class CloudEventRWException extends RuntimeException {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.OTHER,
             cause
+        );
+    }
+
+    public static CloudEventRWException newParseException() {
+        return new CloudEventRWException(
+            CloudEventRWExceptionKind.PARSE_EXCEPTION,
+            "Could not parse. Invalid content type or spec version"
         );
     }
 }
