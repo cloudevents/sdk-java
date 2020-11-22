@@ -59,7 +59,7 @@ public class CloudEventRWException extends RuntimeException {
         /**
          * Invalid content type or spec version
          */
-        PARSE_EXCEPTION,
+        UNKNOWN_ENCODING,
         /**
          * Other error.
          */
@@ -151,10 +151,10 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
-    public static CloudEventRWException newParseException() {
+    public static CloudEventRWException newUnknownEncodingException() {
         return new CloudEventRWException(
-            CloudEventRWExceptionKind.PARSE_EXCEPTION,
-            "Could not parse. Invalid content type or spec version"
+            CloudEventRWExceptionKind.UNKNOWN_ENCODING,
+            "Could not parse. Unknown encoding. Invalid content type or spec version"
         );
     }
 }

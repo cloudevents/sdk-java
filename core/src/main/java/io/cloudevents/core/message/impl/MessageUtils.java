@@ -22,7 +22,6 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.provider.EventFormatProvider;
-import io.cloudevents.rw.CloudEventRWException;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -30,8 +29,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.cloudevents.rw.CloudEventRWException.CloudEventRWExceptionKind.OTHER;
-import static io.cloudevents.rw.CloudEventRWException.newParseException;
+import static io.cloudevents.rw.CloudEventRWException.newUnknownEncodingException;
 
 public class MessageUtils {
 
@@ -60,7 +58,7 @@ public class MessageUtils {
             return binaryMessageFactory.apply(SpecVersion.parse(specVersionUnparsed));
         }
 
-        throw newParseException();
+        throw newUnknownEncodingException();
     }
 
     /**
