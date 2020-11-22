@@ -99,6 +99,7 @@ public class AmqpClient {
                             final CloudEvent event = reader.toEvent();
                             writer.printf("[Client] received CloudEvent[Id=%s, Source=%s]", event.getId(),
                                     event.getSource().toString());
+                            connection.close();
                         });
                     }).otherwise(t -> {
                         writer.println("[Client] Connection failed");
