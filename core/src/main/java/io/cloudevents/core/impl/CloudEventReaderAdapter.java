@@ -25,8 +25,11 @@ public class CloudEventReaderAdapter implements CloudEventReader, CloudEventCont
 
     private final CloudEvent event;
 
+    private final CloudEventContextReader context;
+
     public CloudEventReaderAdapter(CloudEvent event) {
         this.event = event;
+        this.context = new CloudEventContextReaderAdapter(event);
     }
 
     @Override
@@ -44,39 +47,12 @@ public class CloudEventReaderAdapter implements CloudEventReader, CloudEventCont
 
     @Override
     public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
-        writer.withAttribute("id", event.getId());
-        writer.withAttribute("source", event.getSource());
-        writer.withAttribute("type", event.getType());
-        if (event.getDataContentType() != null) {
-            writer.withAttribute("datacontenttype", event.getDataContentType());
-        }
-        if (event.getDataSchema() != null) {
-            writer.withAttribute("dataschema", event.getDataSchema());
-        }
-        if (event.getSubject() != null) {
-            writer.withAttribute("subject", event.getSubject());
-        }
-        if (event.getTime() != null) {
-            writer.withAttribute("time", event.getTime());
-        }
+        context.readAttributes(writer);
     }
 
     @Override
     public void readExtensions(CloudEventExtensionsWriter writer) throws RuntimeException {
-        for (String key : event.getExtensionNames()) {
-            Object value = event.getExtension(key);
-            if (value instanceof String) {
-                writer.withExtension(key, (String) value);
-            } else if (value instanceof Number) {
-                writer.withExtension(key, (Number) value);
-            } else if (value instanceof Boolean) {
-                writer.withExtension(key, (Boolean) value);
-            } else {
-                // This should never happen because we build that map only through our builders
-                throw new IllegalStateException("Illegal value inside extensions map: " + key + " " + value);
-            }
-        }
-        ;
+        context.readExtensions(writer);
     }
 
 }

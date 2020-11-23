@@ -18,8 +18,10 @@
 package io.cloudevents.core;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventContext;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.impl.CloudEventContextReaderAdapter;
 import io.cloudevents.core.impl.CloudEventReaderAdapter;
 import io.cloudevents.lang.Nullable;
 import io.cloudevents.rw.CloudEventContextReader;
@@ -61,11 +63,11 @@ public final class CloudEventUtils {
      * @param event the event to convert
      * @return the context reader implementation
      */
-    public static CloudEventContextReader toContextReader(CloudEvent event) {
+    public static CloudEventContextReader toContextReader(CloudEventContext event) {
         if (event instanceof CloudEventContextReader) {
             return (CloudEventContextReader) event;
         } else {
-            return new CloudEventReaderAdapter(event);
+            return new CloudEventContextReaderAdapter(event);
         }
     }
 
