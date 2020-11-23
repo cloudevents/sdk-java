@@ -50,6 +50,7 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader, Cl
         return this.extensions.keySet();
     }
 
+    @Override
     public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
         CloudEventWriter<V> visitor = writerFactory.create(this.getSpecVersion());
         this.readAttributes(visitor);

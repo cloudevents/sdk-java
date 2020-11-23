@@ -13,6 +13,7 @@ release.properties
 .classpath
 .project
 .settings/
+.vscode/
 
 # Log file
 *.log

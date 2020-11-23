@@ -17,16 +17,18 @@
 
 package io.cloudevents.core.builder;
 
+import java.net.URI;
+import java.time.OffsetDateTime;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNullableByDefault;
+
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventContext;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.Extension;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.rw.CloudEventWriter;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNullableByDefault;
-import java.net.URI;
-import java.time.OffsetDateTime;
 
 /**
  * Builder interface to build a {@link CloudEvent}.
@@ -273,6 +275,24 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
                 return CloudEventBuilder.v1(event);
             case V03:
                 return CloudEventBuilder.v03(event);
+        }
+        throw new IllegalStateException(
+            "The provided spec version doesn't exist. Please make sure your io.cloudevents deps versions are aligned."
+        );
+    }
+
+    /**
+     * Create a new builder starting from the values of the provided context.
+     *
+     * @param context context to copy values from
+     * @return the new builder
+     */
+    static CloudEventBuilder fromContext(@Nonnull CloudEventContext context) {
+        switch (context.getSpecVersion()) {
+            case V1:
+            return new io.cloudevents.core.v1.CloudEventBuilder(context);
+            case V03:
+            return new io.cloudevents.core.v03.CloudEventBuilder(context);
         }
         throw new IllegalStateException(
             "The provided spec version doesn't exist. Please make sure your io.cloudevents deps versions are aligned."
