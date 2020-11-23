@@ -21,16 +21,18 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.*;
 
-public class CloudEventReaderAdapter implements CloudEventReader, CloudEventContextReader {
+public class CloudEventReaderAdapter extends CloudEventContextReaderAdapter implements CloudEventReader {
 
     private final CloudEvent event;
 
     public CloudEventReaderAdapter(CloudEvent event) {
+        super(event);
         this.event = event;
     }
 
     @Override
-    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws RuntimeException {
+    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory,
+            CloudEventDataMapper<? extends CloudEventData> mapper) throws RuntimeException {
         CloudEventWriter<R> visitor = writerFactory.create(event.getSpecVersion());
         this.readAttributes(visitor);
         this.readExtensions(visitor);
@@ -40,43 +42,6 @@ public class CloudEventReaderAdapter implements CloudEventReader, CloudEventCont
         }
 
         return visitor.end();
-    }
-
-    @Override
-    public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
-        writer.withAttribute("id", event.getId());
-        writer.withAttribute("source", event.getSource());
-        writer.withAttribute("type", event.getType());
-        if (event.getDataContentType() != null) {
-            writer.withAttribute("datacontenttype", event.getDataContentType());
-        }
-        if (event.getDataSchema() != null) {
-            writer.withAttribute("dataschema", event.getDataSchema());
-        }
-        if (event.getSubject() != null) {
-            writer.withAttribute("subject", event.getSubject());
-        }
-        if (event.getTime() != null) {
-            writer.withAttribute("time", event.getTime());
-        }
-    }
-
-    @Override
-    public void readExtensions(CloudEventExtensionsWriter writer) throws RuntimeException {
-        for (String key : event.getExtensionNames()) {
-            Object value = event.getExtension(key);
-            if (value instanceof String) {
-                writer.withExtension(key, (String) value);
-            } else if (value instanceof Number) {
-                writer.withExtension(key, (Number) value);
-            } else if (value instanceof Boolean) {
-                writer.withExtension(key, (Boolean) value);
-            } else {
-                // This should never happen because we build that map only through our builders
-                throw new IllegalStateException("Illegal value inside extensions map: " + key + " " + value);
-            }
-        }
-        ;
     }
 
 }

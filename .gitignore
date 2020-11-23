@@ -13,6 +13,8 @@ release.properties
 .classpath
 .project
 .settings/
+.vscode/
+.attach_pid*
 
 # Log file
 *.log

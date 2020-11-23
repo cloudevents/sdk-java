@@ -21,6 +21,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.impl.BaseCloudEventBuilder;
+import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
 
@@ -52,13 +53,19 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         super(event);
     }
 
+    public CloudEventBuilder(io.cloudevents.CloudEventContext context) {
+        super(context);
+    }
+
     @Override
-    protected void setAttributes(io.cloudevents.CloudEvent event) {
+    protected void setAttributes(io.cloudevents.CloudEventContext event) {
+        CloudEventContextReader contextReader = CloudEventUtils.toContextReader(event);
         if (event.getSpecVersion() == SpecVersion.V1) {
-            CloudEventUtils.toContextReader(event).readAttributes(this);
+            contextReader.readAttributes(this);
         } else {
-            CloudEventUtils.toContextReader(event).readAttributes(new V03ToV1AttributesConverter(this));
+            contextReader.readAttributes(new V03ToV1AttributesConverter(this));
         }
+        contextReader.readExtensions(this);
     }
 
     public CloudEventBuilder withId(String id) {

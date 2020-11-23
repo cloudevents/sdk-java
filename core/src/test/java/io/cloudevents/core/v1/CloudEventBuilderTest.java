@@ -75,6 +75,25 @@ public class CloudEventBuilderTest {
     }
 
     @Test
+    void testCopyExtensions() {
+        io.cloudevents.core.v1.CloudEventBuilder templateBuilder = CloudEventBuilder.v1()
+            .withId(ID)
+            .withType(TYPE)
+            .withSource(SOURCE)
+            .withData(DATACONTENTTYPE_JSON, DATASCHEMA, DATA_JSON_SERIALIZED)
+            .withSubject(SUBJECT)
+            .withTime(TIME)
+            .withExtension("astring", "aaa")
+            .withExtension("aboolean", "true")
+            .withExtension("anumber", "10");
+
+        CloudEvent event = templateBuilder.build();
+        CloudEvent cloned = new io.cloudevents.core.v1.CloudEventBuilder(event).build();
+
+        assertThat(cloned).isEqualTo(event);
+    }
+
+    @Test
     void testNewBuilder() {
         io.cloudevents.core.v1.CloudEventBuilder templateBuilder = CloudEventBuilder.v1()
             .withId(ID)

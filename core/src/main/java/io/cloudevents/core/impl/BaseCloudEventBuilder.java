@@ -17,17 +17,20 @@
 
 package io.cloudevents.core.impl;
 
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventContext;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.Extension;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.rw.CloudEventRWException;
-
-import javax.annotation.Nonnull;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder {
 
@@ -35,12 +38,16 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     private final SELF self;
 
     protected CloudEventData data;
-    protected Map<String, Object> extensions;
+    protected Map<String, Object> extensions = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     public BaseCloudEventBuilder() {
         this.self = (SELF) this;
-        this.extensions = new HashMap<>();
+    }
+
+    public BaseCloudEventBuilder(CloudEventContext context) {
+        this();
+        setAttributes(context);
     }
 
     @SuppressWarnings("unchecked")
@@ -55,7 +62,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         }
     }
 
-    protected abstract void setAttributes(CloudEvent event);
+    protected abstract void setAttributes(CloudEventContext event);
 
     //TODO builder should accept data as Object and use data codecs (that we need to implement)
     // to encode data
