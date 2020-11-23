@@ -17,7 +17,6 @@
 
 package io.cloudevents.rw;
 
-import io.cloudevents.lang.Nullable;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
@@ -37,29 +36,29 @@ public interface CloudEventAttributesWriter {
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      */
-    CloudEventAttributesWriter withAttribute(String name, @Nullable String value) throws CloudEventRWException;
+    CloudEventAttributesWriter withAttribute(String name, String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
      *
-     * @param name name of the attribute
+     * @param name  name of the attribute
      * @param value value of the attribute
-     * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      */
-    default CloudEventAttributesWriter withAttribute(String name, @Nullable URI value) throws CloudEventRWException {
+    default CloudEventAttributesWriter withAttribute(String name, URI value) throws CloudEventRWException {
         return withAttribute(name, value == null ? null : value.toString());
     }
 
     /**
      * Set attribute with type {@link OffsetDateTime} attribute.
      *
-     * @param name name of the attribute
+     * @param name  name of the attribute
      * @param value value of the attribute
-     * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      */
-    default CloudEventAttributesWriter withAttribute(String name, @Nullable OffsetDateTime value) throws CloudEventRWException {
+    default CloudEventAttributesWriter withAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
         return withAttribute(name, value == null ? null : Time.writeTime(name, value));
     }
 

@@ -152,7 +152,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @return self
      */
     @Override
-    CloudEventBuilder withExtension(@Nonnull String key, String value);
+    CloudEventBuilder withExtension(@Nonnull String key, @Nonnull String value);
 
     /**
      * Set an extension with provided key and numeric value
@@ -162,7 +162,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @return self
      */
     @Override
-    CloudEventBuilder withExtension(@Nonnull String key, Number value);
+    CloudEventBuilder withExtension(@Nonnull String key, @Nonnull Number value);
 
     /**
      * Set an extension with provided key and boolean value
@@ -172,7 +172,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @return self
      */
     @Override
-    CloudEventBuilder withExtension(@Nonnull String key, Boolean value);
+    CloudEventBuilder withExtension(@Nonnull String key, @Nonnull Boolean value);
 
     /**
      * Add to the builder all the extension key/values of the provided extension
