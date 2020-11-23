@@ -21,19 +21,18 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.*;
 
-public class CloudEventReaderAdapter implements CloudEventReader, CloudEventContextReader {
+public class CloudEventReaderAdapter extends CloudEventContextReaderAdapter implements CloudEventReader {
 
     private final CloudEvent event;
 
-    private final CloudEventContextReader context;
-
     public CloudEventReaderAdapter(CloudEvent event) {
+        super(event);
         this.event = event;
-        this.context = new CloudEventContextReaderAdapter(event);
     }
 
     @Override
-    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws RuntimeException {
+    public <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory,
+            CloudEventDataMapper<? extends CloudEventData> mapper) throws RuntimeException {
         CloudEventWriter<R> visitor = writerFactory.create(event.getSpecVersion());
         this.readAttributes(visitor);
         this.readExtensions(visitor);
@@ -43,16 +42,6 @@ public class CloudEventReaderAdapter implements CloudEventReader, CloudEventCont
         }
 
         return visitor.end();
-    }
-
-    @Override
-    public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
-        context.readAttributes(writer);
-    }
-
-    @Override
-    public void readExtensions(CloudEventExtensionsWriter writer) throws RuntimeException {
-        context.readExtensions(writer);
     }
 
 }
