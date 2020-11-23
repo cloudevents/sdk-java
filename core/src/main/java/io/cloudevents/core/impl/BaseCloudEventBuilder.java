@@ -18,6 +18,7 @@
 package io.cloudevents.core.impl;
 
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,9 +53,21 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
                 Object value = context.getAttribute(name);
                 if (value instanceof String) {
                     withAttribute(name, (String) value);
-                } else {
-                    withAttribute(name, value.toString());
+                } else if (value instanceof URI) {
+                    withAttribute(name, (URI) value);
+                } else if (value instanceof OffsetDateTime) {
+                    withAttribute(name, (OffsetDateTime) value);
                 }
+            }
+        }
+        for (String name: context.getExtensionNames()) {
+            Object value = context.getExtension(name);
+            if (value instanceof String) {
+                withExtension(name, (String) value);
+            } else if (value instanceof Number) {
+                withExtension(name, (Number) value);
+            } else if (value instanceof Boolean) {
+                withExtension(name, (Boolean) value);
             }
         }
     }
