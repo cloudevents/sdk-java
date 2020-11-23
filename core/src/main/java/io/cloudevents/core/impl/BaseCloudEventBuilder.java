@@ -17,17 +17,19 @@
 
 package io.cloudevents.core.impl;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventContext;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.Extension;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.rw.CloudEventRWException;
-
-import javax.annotation.Nonnull;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<SELF, T>, T extends CloudEvent> implements CloudEventBuilder {
 
@@ -41,6 +43,20 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     public BaseCloudEventBuilder() {
         this.self = (SELF) this;
         this.extensions = new HashMap<>();
+    }
+
+    public BaseCloudEventBuilder(CloudEventContext context) {
+        this();
+        for (String name: context.getAttributeNames()) {
+            if (!name.equals("specversion")) {
+                Object value = context.getAttribute(name);
+                if (value instanceof String) {
+                    withAttribute(name, (String) value);
+                } else {
+                    withAttribute(name, value.toString());
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
