@@ -18,6 +18,7 @@
         <module>restful-ws-quarkus</module>
         <module>vertx</module>
         <module>basic-http</module>
+        <module>restful-ws-spring-boot</module>
     </modules>
 
 
