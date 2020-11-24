@@ -7,23 +7,26 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>cloudevents-amqp-vertx</artifactId>
+  <artifactId>cloudevents-amqp-proton-example</artifactId>
 
+	<properties>
+       <vertx.version>4.0.0.Beta1</vertx.version>
+	</properties>
   <dependencies>
   	 <dependency>
-  	    <groupId>io.cloudevents</groupId>
-  	    <artifactId>cloudevents-amqp-proton</artifactId>
-  	    <version>${project.version}</version>
+         <groupId>io.cloudevents</groupId>
+  	     <artifactId>cloudevents-amqp-proton</artifactId>
+  	     <version>${project.version}</version>
   	 </dependency>
      <dependency>
-     	<groupId>io.vertx</groupId>
-     	<artifactId>vertx-core</artifactId>
-     	<version>3.9.3</version>
+         <groupId>io.vertx</groupId>
+         <artifactId>vertx-core</artifactId>
+         <version>${vertx.version}</version>
      </dependency>
      <dependency>
-       <groupId>io.vertx</groupId>
-  	   <artifactId>vertx-proton</artifactId>
-  	   <version>3.9.3</version>
+         <groupId>io.vertx</groupId>
+  	     <artifactId>vertx-proton</artifactId>
+  	     <version>${vertx.version}</version>
      </dependency>
 
   </dependencies>

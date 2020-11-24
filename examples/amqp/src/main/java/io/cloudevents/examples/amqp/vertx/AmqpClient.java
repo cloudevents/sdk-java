@@ -1,16 +1,15 @@
 package io.cloudevents.examples.amqp.vertx;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.qpid.proton.amqp.messaging.Accepted;
-import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
 import org.apache.qpid.proton.message.Message;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.amqp.ProtonAmqpMessageFactory;
 import io.cloudevents.core.message.MessageReader;
+import io.cloudevents.core.v1.CloudEventBuilder;
+import io.cloudevents.core.v1.CloudEventV1;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
@@ -18,7 +17,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.proton.ProtonClient;
 import io.vertx.proton.ProtonClientOptions;
 import io.vertx.proton.ProtonConnection;
-import io.vertx.proton.ProtonHelper;
 import io.vertx.proton.ProtonMessageHandler;
 import io.vertx.proton.ProtonQoS;
 import io.vertx.proton.ProtonReceiver;
@@ -36,6 +34,7 @@ public class AmqpClient {
     private static final String SEND_MESSAGE = "send";
     private static final String RECEIVE_MESSAGE = "receive";
 
+    final static Vertx VERTX = Vertx.vertx();
     private static PrintWriter writer = new PrintWriter(System.out, true);
 
     public static void main(String args[]) {
@@ -47,75 +46,78 @@ public class AmqpClient {
 
         final String action = args[0].toLowerCase();
 
-        final Vertx vertx = Vertx.vertx();
-
         switch (action) {
 
         case SEND_MESSAGE:
-            connectToServer(vertx, SERVER_HOST, SERVER_PORT)
-                    .compose(conn -> {
-                        connection = conn;
-                        writer.printf("[Client] Connected to %s:%s", SERVER_HOST, SERVER_PORT);
-
-                        return openSenderLink();
-                    }).map(sender -> {
-
-                        final JsonObject payload = new JsonObject().put("temp", 50);
-                        final String to = "/telemetry";
-
-                        final Message message = ProtonHelper.message(to, payload.toString());
-
-                        // set attributes
-                        final Map<String, Object> attributes = new HashMap<>();
-                        attributes.put("cloudEvents:type", "com.example.sampletype1");
-                        attributes.put("cloudEvents:source", "http://127.0.0.1/amqp-client");
-                        attributes.put("cloudEvents:id", "client-id");
-                        attributes.put("cloudEvents:specversion", "1.0");
-                        attributes.put("cloudEvents:time", "2020-11-06T21:47:12.037467+00:00");
-                        message.setApplicationProperties(new ApplicationProperties(attributes));
-
-                        sender.send(message, delivery -> {
-                            if (Accepted.class.isInstance(delivery.getRemoteState())) {
-                                writer.println("[Client:] message delivered and accepted by remote peer");
-                            }
-                            connection.close();
-                        });
-                        return null;
-                    }).otherwise(t -> {
-                        writer.printf("[Client] Connection failed (%s)", t.getCause().getMessage()); 
-                        return null;
-                    });
+            sendMessage();
             break;
+
         case RECEIVE_MESSAGE:
-            connectToServer(vertx, SERVER_HOST, SERVER_PORT)
-                    .compose(conn -> {
-                        connection = conn;
-                        writer.println("[Client] Connected");
-                        return Future.succeededFuture();
-                    }).map(success -> {
-
-                        return openReceiverLink((delivery, message) -> {
-                            final MessageReader reader = ProtonAmqpMessageFactory.createReader(message);
-                            final CloudEvent event = reader.toEvent();
-                            writer.printf("[Client] received CloudEvent[Id=%s, Source=%s]", event.getId(),
-                                    event.getSource().toString());
-                            connection.close();
-                        });
-                    }).otherwise(t -> {
-                        writer.println("[Client] Connection failed");
-                        return null;
-                    });
+            receiveMessage();
             break;
+
         default:
             writer.println("Unknown action");
         }
     }
 
-    private static Future<ProtonConnection> connectToServer(final Vertx vertx, final String host, final int port) {
+    private static void sendMessage() {
+        connectToServer(SERVER_HOST, SERVER_PORT)
+        .compose(conn -> {
+            connection = conn;
+            writer.printf("[Client] Connected to %s:%s", SERVER_HOST, SERVER_PORT);
+
+            return openSenderLink();
+        }).onSuccess(sender -> {
+
+            final JsonObject payload = new JsonObject().put("temp", 50);
+
+            final CloudEvent event = new CloudEventBuilder()
+                    .withAttribute(CloudEventV1.ID, "client-id")
+                    .withAttribute(CloudEventV1.SOURCE, "http://127.0.0.1/amqp-client")
+                    .withAttribute(CloudEventV1.TYPE, "com.example.sampletype1")
+                    .withAttribute(CloudEventV1.TIME, "2020-11-06T21:47:12.037467+00:00")
+                    .withData(payload.toString().getBytes())
+                    .build();
+
+            final Message message = ProtonAmqpMessageFactory.createWriter().writeBinary(event);
+            message.setAddress("/telemetry");
+            sender.send(message, delivery -> {
+                if (Accepted.class.isInstance(delivery.getRemoteState())) {
+                    writer.println("[Client:] message delivered and accepted by remote peer");
+                }
+                connection.close();
+            });
+        }).onFailure(t -> {
+            writer.printf("[Client] Connection failed (%s)", t.getCause().getMessage());
+        });
+
+    }
+
+    private static void receiveMessage() {
+        connectToServer(SERVER_HOST, SERVER_PORT)
+        .compose(conn -> {
+            connection = conn;
+            writer.println("[Client] Connected");
+            return Future.succeededFuture();
+        }).onSuccess(success -> 
+                openReceiverLink((delivery, message) -> {
+                final MessageReader reader = ProtonAmqpMessageFactory.createReader(message);
+                final CloudEvent event = reader.toEvent();
+                writer.printf("[Client] received CloudEvent[Id=%s, Source=%s]", event.getId(),
+                        event.getSource().toString());
+                connection.close();
+            })
+        ).onFailure(t -> {
+            writer.println("[Client] Connection failed");
+        });
+    }
+
+    private static Future<ProtonConnection> connectToServer(final String host, final int port) {
 
         final Promise<ProtonConnection> connectAttempt = Promise.promise();
         final ProtonClientOptions options = new ProtonClientOptions();
-        final ProtonClient client = ProtonClient.create(vertx);
+        final ProtonClient client = ProtonClient.create(VERTX);
 
         client.connect(options, host, port, connectAttempt);
 
