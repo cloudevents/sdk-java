@@ -1,27 +1,32 @@
 package io.cloudevents.examples.quarkus.client;
 
-import java.net.URI;
-import java.time.Duration;
-import java.util.UUID;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
+import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.data.PojoCloudEventData;
+import io.cloudevents.examples.quarkus.model.User;
+import io.quarkus.runtime.StartupEvent;
+import io.smallrye.mutiny.Multi;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
-
-import io.cloudevents.CloudEvent;
-import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.examples.quarkus.model.User;
-import io.quarkus.runtime.StartupEvent;
-import io.smallrye.mutiny.Multi;
-import io.vertx.core.json.Json;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.net.URI;
+import java.time.Duration;
+import java.util.UUID;
 
 @ApplicationScoped
 public class UserEventsGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEventsGenerator.class);
+
+    @Inject
+    ObjectMapper mapper;
 
     @Inject
     @RestClient
@@ -44,16 +49,16 @@ public class UserEventsGenerator {
             .withType("io.cloudevents.examples.quarkus.user")
             .withId(UUID.randomUUID().toString())
             .withDataContentType(MediaType.APPLICATION_JSON)
-            .withData(createUserAsByteArray(id))
+            .withData(createUser(id))
             .build();
     }
 
-    private byte[] createUserAsByteArray(Long id) {
+    private CloudEventData createUser(Long id) {
         User user = new User()
             .setAge(id.intValue())
             .setUsername("user" + id)
             .setFirstName("firstName" + id)
             .setLastName("lastName" + id);
-        return Json.encode(user).getBytes();
+        return PojoCloudEventData.wrap(user, mapper::writeValueAsBytes);
     }
 }
