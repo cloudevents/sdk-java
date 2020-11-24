@@ -50,16 +50,10 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         setAttributes(context);
     }
 
-    @SuppressWarnings("unchecked")
     public BaseCloudEventBuilder(CloudEvent event) {
-        this.self = (SELF) this;
-
+        this();
         this.setAttributes(event);
         this.data = event.getData();
-        this.extensions = new HashMap<>();
-        for (String k : event.getExtensionNames()) {
-            this.extensions.put(k, event.getExtension(k));
-        }
     }
 
     protected abstract void setAttributes(CloudEventContext event);
