@@ -32,7 +32,7 @@ public class BinaryVertxMessageReaderImpl extends BaseGenericBinaryMessageReader
     private final MultiMap headers;
 
     public BinaryVertxMessageReaderImpl(SpecVersion version, MultiMap headers, Buffer body) {
-        super(version, body != null && body.length() > 0 ? new BytesCloudEventData(body.getBytes()) : null);
+        super(version, body != null && body.length() > 0 ? BytesCloudEventData.wrap(body.getBytes()) : null);
 
         Objects.requireNonNull(headers);
         this.headers = headers;

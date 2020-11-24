@@ -33,7 +33,7 @@ public final class BinaryRestfulWSMessageReaderImpl extends BaseGenericBinaryMes
     private final MultivaluedMap<String, String> headers;
 
     public BinaryRestfulWSMessageReaderImpl(SpecVersion version, MultivaluedMap<String, String> headers, byte[] body) {
-        super(version, body != null && body.length > 0 ? new BytesCloudEventData(body) : null);
+        super(version, body != null && body.length > 0 ? BytesCloudEventData.wrap(body) : null);
 
         Objects.requireNonNull(headers);
         this.headers = headers;

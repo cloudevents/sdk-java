@@ -68,7 +68,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     // to encode data
 
     public SELF withData(byte[] data) {
-        this.data = new BytesCloudEventData(data);
+        this.data = BytesCloudEventData.wrap(data);
         return this.self;
     }
 

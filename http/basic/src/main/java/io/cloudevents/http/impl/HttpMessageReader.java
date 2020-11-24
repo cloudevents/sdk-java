@@ -37,7 +37,7 @@ public class HttpMessageReader extends BaseGenericBinaryMessageReaderImpl<String
     }
 
     public HttpMessageReader(SpecVersion version, Consumer<BiConsumer<String, String>> forEachHeader, byte[] body) {
-        this(version, forEachHeader, body != null && body.length > 0 ? new BytesCloudEventData(body) : null);
+        this(version, forEachHeader, body != null && body.length > 0 ? BytesCloudEventData.wrap(body) : null);
     }
 
     @Override

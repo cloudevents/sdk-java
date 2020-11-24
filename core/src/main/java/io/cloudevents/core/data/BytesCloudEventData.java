@@ -9,6 +9,9 @@ public class BytesCloudEventData implements CloudEventData {
 
     private final byte[] value;
 
+    /**
+     * @deprecated use {@link BytesCloudEventData#wrap(byte[])}
+     */
     public BytesCloudEventData(byte[] value) {
         Objects.requireNonNull(value);
         this.value = value;
@@ -37,5 +40,13 @@ public class BytesCloudEventData implements CloudEventData {
         return "BytesCloudEventData{" +
             "value=" + Arrays.toString(value) +
             '}';
+    }
+
+    /**
+     * @param value byte array to wrap
+     * @return byte array wrapped in a {@link BytesCloudEventData}, which implements {@link CloudEventData}.
+     */
+    public static BytesCloudEventData wrap(byte[] value) {
+        return new BytesCloudEventData(value);
     }
 }
