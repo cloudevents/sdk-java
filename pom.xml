@@ -144,7 +144,6 @@
                             <exclude>.gitignore</exclude>
                             <exclude>LICENSE</exclude>
                             <exclude>.mvn</exclude>
-                            <exclude>.travis.*</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
