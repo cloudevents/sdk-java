@@ -19,6 +19,7 @@ package io.cloudevents.core.message.impl;
 
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
@@ -56,10 +57,10 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
         // in order to complete the visit in one loop
         this.forEachHeader((key, value) -> {
             if (isContentTypeHeader(key)) {
-                visitor.withAttribute("datacontenttype", toCloudEventsValue(value));
+                visitor.withAttribute(CloudEventV1.DATACONTENTTYPE, toCloudEventsValue(value));
             } else if (isCloudEventsHeader(key)) {
                 String name = toCloudEventsKey(key);
-                if (name.equals("specversion")) {
+                if (name.equals(CloudEventV1.SPECVERSION)) {
                     return;
                 }
                 if (this.version.getAllAttributes().contains(name)) {

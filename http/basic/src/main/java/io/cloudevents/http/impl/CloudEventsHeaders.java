@@ -17,6 +17,7 @@
 package io.cloudevents.http.impl;
 
 import io.cloudevents.core.message.impl.MessageUtils;
+import io.cloudevents.core.v1.CloudEventV1;
 
 import java.util.Collections;
 import java.util.Map;
@@ -30,12 +31,12 @@ public final class CloudEventsHeaders {
     public static final String CE_PREFIX = "ce-";
 
     public static final Map<String, String> ATTRIBUTES_TO_HEADERS = Collections.unmodifiableMap(MessageUtils.generateAttributesToHeadersMapping(v -> {
-        if (v.equals("datacontenttype")) {
+        if (v.equals(CloudEventV1.DATACONTENTTYPE)) {
             return CONTENT_TYPE;
         }
         return CE_PREFIX + v;
     }));
 
-    public static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
+    public static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get(CloudEventV1.SPECVERSION);
 
 }

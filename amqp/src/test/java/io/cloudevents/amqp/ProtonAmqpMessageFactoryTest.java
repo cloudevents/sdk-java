@@ -31,10 +31,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.amqp.impl.AmqpConstants;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.test.Data;
+import io.cloudevents.core.v03.CloudEventV03;
+import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.types.Time;
 
 /**
@@ -42,7 +45,7 @@ import io.cloudevents.types.Time;
  */
 public class ProtonAmqpMessageFactoryTest {
 
-    private static final String PREFIX_TEMPLATE = "cloudEvents:%s";
+    private static final String PREFIX_TEMPLATE = AmqpConstants.CE_PREFIX + "%s";
     private static final String DATACONTENTTYPE_NULL = null;
     private static final byte[] DATAPAYLOAD_NULL = null;
 
@@ -72,10 +75,10 @@ public class ProtonAmqpMessageFactoryTest {
                 // V03
                 Arguments.of(
                         properties(
-                                property("specversion", SpecVersion.V03.toString()),
-                                property("id", Data.ID),
-                                property("type", Data.TYPE),
-                                property("source", Data.SOURCE),
+                                property(CloudEventV03.SPECVERSION, SpecVersion.V03.toString()),
+                                property(CloudEventV03.ID, Data.ID),
+                                property(CloudEventV03.TYPE, Data.TYPE),
+                                property(CloudEventV03.SOURCE, Data.SOURCE),
                                 property("ignored", "ignore")
                         ),
                         DATACONTENTTYPE_NULL,
@@ -84,13 +87,13 @@ public class ProtonAmqpMessageFactoryTest {
                 ),
                 Arguments.of(
                         properties(
-                                property("specversion", SpecVersion.V03.toString()),
-                                property("id", Data.ID),
-                                property("type", Data.TYPE),
-                                property("source", Data.SOURCE.toString()),
-                                property("schemaurl", Data.DATASCHEMA.toString()),
-                                property("subject", Data.SUBJECT),
-                                property("time", Time.writeTime(Data.TIME)),
+                                property(CloudEventV03.SPECVERSION, SpecVersion.V03.toString()),
+                                property(CloudEventV03.ID, Data.ID),
+                                property(CloudEventV03.TYPE, Data.TYPE),
+                                property(CloudEventV03.SOURCE, Data.SOURCE.toString()),
+                                property(CloudEventV03.SCHEMAURL, Data.DATASCHEMA.toString()),
+                                property(CloudEventV03.SUBJECT, Data.SUBJECT),
+                                property(CloudEventV03.TIME, Time.writeTime(Data.TIME)),
                                 property("ignored", "ignore")
                         ),
                         Data.DATACONTENTTYPE_JSON,
@@ -99,13 +102,13 @@ public class ProtonAmqpMessageFactoryTest {
                 ),
                 Arguments.of(
                         properties(
-                            property("specversion", SpecVersion.V03.toString()),
-                            property("id", Data.ID),
-                            property("type", Data.TYPE),
-                            property("source", Data.SOURCE.toString()),
-                            property("schemaurl", Data.DATASCHEMA.toString()),
-                            property("subject", Data.SUBJECT),
-                            property("time", Time.writeTime(Data.TIME)),
+                            property(CloudEventV03.SPECVERSION, SpecVersion.V03.toString()),
+                            property(CloudEventV03.ID, Data.ID),
+                            property(CloudEventV03.TYPE, Data.TYPE),
+                            property(CloudEventV03.SOURCE, Data.SOURCE.toString()),
+                            property(CloudEventV03.SCHEMAURL, Data.DATASCHEMA.toString()),
+                            property(CloudEventV03.SUBJECT, Data.SUBJECT),
+                            property(CloudEventV03.TIME, Time.writeTime(Data.TIME)),
                             property("astring", "aaa"),
                             property("aboolean", "true"),
                             property("anumber", "10"),
@@ -117,12 +120,12 @@ public class ProtonAmqpMessageFactoryTest {
                     ),
                 Arguments.of(
                         properties(
-                            property("specversion", SpecVersion.V03.toString()),
-                            property("id", Data.ID),
-                            property("type", Data.TYPE),
-                            property("source", Data.SOURCE.toString()),
-                            property("subject", Data.SUBJECT),
-                            property("time", Time.writeTime(Data.TIME)),
+                            property(CloudEventV03.SPECVERSION, SpecVersion.V03.toString()),
+                            property(CloudEventV03.ID, Data.ID),
+                            property(CloudEventV03.TYPE, Data.TYPE),
+                            property(CloudEventV03.SOURCE, Data.SOURCE.toString()),
+                            property(CloudEventV03.SUBJECT, Data.SUBJECT),
+                            property(CloudEventV03.TIME, Time.writeTime(Data.TIME)),
                             property("ignored", "ignored")
                         ),
                         Data.DATACONTENTTYPE_XML,
@@ -131,12 +134,12 @@ public class ProtonAmqpMessageFactoryTest {
                     ),
                 Arguments.of(
                         properties(
-                            property("specversion", SpecVersion.V03.toString()),
-                            property("id", Data.ID),
-                            property("type", Data.TYPE),
-                            property("source", Data.SOURCE.toString()),
-                            property("subject", Data.SUBJECT),
-                            property("time", Time.writeTime(Data.TIME)),
+                            property(CloudEventV03.SPECVERSION, SpecVersion.V03.toString()),
+                            property(CloudEventV03.ID, Data.ID),
+                            property(CloudEventV03.TYPE, Data.TYPE),
+                            property(CloudEventV03.SOURCE, Data.SOURCE.toString()),
+                            property(CloudEventV03.SUBJECT, Data.SUBJECT),
+                            property(CloudEventV03.TIME, Time.writeTime(Data.TIME)),
                             property("ignored", "ignored")
                         ),
                         Data.DATACONTENTTYPE_TEXT,
@@ -146,10 +149,10 @@ public class ProtonAmqpMessageFactoryTest {
                 // V1
                 Arguments.of(
                     properties(
-                        property("specversion", SpecVersion.V1.toString()),
-                        property("id", Data.ID),
-                        property("type", Data.TYPE),
-                        property("source", Data.SOURCE.toString()),
+                        property(CloudEventV1.SPECVERSION, SpecVersion.V1.toString()),
+                        property(CloudEventV1.ID, Data.ID),
+                        property(CloudEventV1.TYPE, Data.TYPE),
+                        property(CloudEventV1.SOURCE, Data.SOURCE.toString()),
                         property("ignored", "ignored")
                     ),
                     DATACONTENTTYPE_NULL,
@@ -158,13 +161,13 @@ public class ProtonAmqpMessageFactoryTest {
                 ),
                 Arguments.of(
                         properties(
-                            property("specversion", SpecVersion.V1.toString()),
-                            property("id", Data.ID),
-                            property("type", Data.TYPE),
-                            property("source", Data.SOURCE.toString()),
-                            property("dataschema", Data.DATASCHEMA.toString()),
-                            property("subject", Data.SUBJECT),
-                            property("time", Time.writeTime(Data.TIME)),
+                            property(CloudEventV1.SPECVERSION, SpecVersion.V1.toString()),
+                            property(CloudEventV1.ID, Data.ID),
+                            property(CloudEventV1.TYPE, Data.TYPE),
+                            property(CloudEventV1.SOURCE, Data.SOURCE.toString()),
+                            property(CloudEventV1.DATASCHEMA, Data.DATASCHEMA.toString()),
+                            property(CloudEventV1.SUBJECT, Data.SUBJECT),
+                            property(CloudEventV1.TIME, Time.writeTime(Data.TIME)),
                             property("ignored", "ignored")
                         ),
                         Data.DATACONTENTTYPE_JSON,
@@ -173,13 +176,13 @@ public class ProtonAmqpMessageFactoryTest {
                     ),
                 Arguments.of(
                         properties(
-                            property("specversion", SpecVersion.V1.toString()),
-                            property("id", Data.ID),
-                            property("type", Data.TYPE),
-                            property("source", Data.SOURCE.toString()),
-                            property("dataschema", Data.DATASCHEMA.toString()),
-                            property("subject", Data.SUBJECT),
-                            property("time", Time.writeTime(Data.TIME)),
+                            property(CloudEventV1.SPECVERSION, SpecVersion.V1.toString()),
+                            property(CloudEventV1.ID, Data.ID),
+                            property(CloudEventV1.TYPE, Data.TYPE),
+                            property(CloudEventV1.SOURCE, Data.SOURCE.toString()),
+                            property(CloudEventV1.DATASCHEMA, Data.DATASCHEMA.toString()),
+                            property(CloudEventV1.SUBJECT, Data.SUBJECT),
+                            property(CloudEventV1.TIME, Time.writeTime(Data.TIME)),
                             property("astring", "aaa"),
                             property("aboolean", "true"),
                             property("anumber", "10"),
@@ -191,12 +194,12 @@ public class ProtonAmqpMessageFactoryTest {
                     ),
                 Arguments.of(
                         properties(
-                            property("specversion", SpecVersion.V1.toString()),
-                            property("id", Data.ID),
-                            property("type", Data.TYPE),
-                            property("source", Data.SOURCE.toString()),
-                            property("subject", Data.SUBJECT),
-                            property("time", Time.writeTime(Data.TIME)),
+                            property(CloudEventV1.SPECVERSION, SpecVersion.V1.toString()),
+                            property(CloudEventV1.ID, Data.ID),
+                            property(CloudEventV1.TYPE, Data.TYPE),
+                            property(CloudEventV1.SOURCE, Data.SOURCE.toString()),
+                            property(CloudEventV1.SUBJECT, Data.SUBJECT),
+                            property(CloudEventV1.TIME, Time.writeTime(Data.TIME)),
                             property("ignored", "ignored")
                         ),
                         Data.DATACONTENTTYPE_XML,
@@ -205,12 +208,12 @@ public class ProtonAmqpMessageFactoryTest {
                     ),
                 Arguments.of(
                         properties(
-                            property("specversion", SpecVersion.V1.toString()),
-                            property("id", Data.ID),
-                            property("type", Data.TYPE),
-                            property("source", Data.SOURCE.toString()),
-                            property("subject", Data.SUBJECT),
-                            property("time", Time.writeTime(Data.TIME)),
+                            property(CloudEventV1.SPECVERSION, SpecVersion.V1.toString()),
+                            property(CloudEventV1.ID, Data.ID),
+                            property(CloudEventV1.TYPE, Data.TYPE),
+                            property(CloudEventV1.SOURCE, Data.SOURCE.toString()),
+                            property(CloudEventV1.SUBJECT, Data.SUBJECT),
+                            property(CloudEventV1.TIME, Time.writeTime(Data.TIME)),
                             property("ignored", "ignored")
                         ),
                         Data.DATACONTENTTYPE_TEXT,

@@ -17,6 +17,8 @@
 package io.cloudevents.kafka.impl;
 
 import io.cloudevents.core.message.impl.MessageUtils;
+import io.cloudevents.core.v1.CloudEventV1;
+
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
 
@@ -37,13 +39,13 @@ public class KafkaHeaders {
 
     protected static final Map<String, String> ATTRIBUTES_TO_HEADERS = MessageUtils.generateAttributesToHeadersMapping(
         v -> {
-            if (v.equals("datacontenttype")) {
+            if (v.equals(CloudEventV1.DATACONTENTTYPE)) {
                 return CONTENT_TYPE;
             }
             return CE_PREFIX + v;
         });
 
-    public static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
+    public static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get(CloudEventV1.SPECVERSION);
 
     public static String getParsedKafkaHeader(Headers headers, String key) {
         Header h = headers.lastHeader(key);
