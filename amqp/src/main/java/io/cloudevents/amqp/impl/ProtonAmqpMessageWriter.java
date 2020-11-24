@@ -28,6 +28,7 @@ import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
+import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.rw.CloudEventAttributesWriter;
 import io.cloudevents.rw.CloudEventExtensionsWriter;
 import io.cloudevents.rw.CloudEventRWException;
@@ -53,7 +54,7 @@ public final class ProtonAmqpMessageWriter<R> implements MessageWriter<CloudEven
 
     @Override
     public CloudEventAttributesWriter withAttribute(final String name, final String value) throws CloudEventRWException {
-        if (name.equals("datacontenttype")) {
+        if (name.equals(CloudEventV1.DATACONTENTTYPE)) {
             message.setContentType(value);
         } else {
             if (applicationProperties == null) {
