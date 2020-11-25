@@ -46,7 +46,7 @@ public class CloudEventHttpMessageWriter implements HttpMessageWriter<CloudEvent
 	public Mono<Void> write(Publisher<? extends CloudEvent> inputStream, ResolvableType elementType,
 			MediaType mediaType, ReactiveHttpOutputMessage message, Map<String, Object> hints) {
 		return Mono.from(inputStream).flatMap(event -> {
-			message.getHeaders().addAll(CloudEventHttpUtils.toHttp(event));
+			message.getHeaders().putAll(CloudEventHttpUtils.toHttp(event));
 			byte[] bytes = event.getData().toBytes();
 			DataBuffer data = message.bufferFactory().wrap(bytes);
 			message.getHeaders().setContentLength(bytes.length);
