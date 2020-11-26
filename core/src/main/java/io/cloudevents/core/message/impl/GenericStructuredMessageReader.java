@@ -26,8 +26,8 @@ import io.cloudevents.rw.CloudEventRWException;
 
 public class GenericStructuredMessageReader extends BaseStructuredMessageReader {
 
-    private EventFormat format;
-    private byte[] payload;
+    private final EventFormat format;
+    private final byte[] payload;
 
     public GenericStructuredMessageReader(EventFormat format, byte[] payload) {
         this.format = format;
