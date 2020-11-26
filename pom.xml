@@ -87,7 +87,7 @@
 
         <!-- Dependencies -->
         <assertj-core.version>3.16.1</assertj-core.version>
-        <junit-jupiter.version>5.6.0</junit-jupiter.version>
+        <junit-jupiter.version>5.7.0</junit-jupiter.version>
     </properties>
 
     <distributionManagement>
