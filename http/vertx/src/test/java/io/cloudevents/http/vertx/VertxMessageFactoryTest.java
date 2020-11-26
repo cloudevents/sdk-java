@@ -22,6 +22,7 @@ import io.cloudevents.SpecVersion;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.mock.CSVFormat;
+import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
@@ -45,6 +46,8 @@ public class VertxMessageFactoryTest {
             .add("content-type", CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8");
 
         assertThatCode(() -> VertxMessageFactory.createReader(headers, null))
+            .isInstanceOf(CloudEventRWException.class)
+            .hasCauseInstanceOf(IllegalStateException.class)
             .hasMessageContaining("null body");
     }
 
