@@ -8,7 +8,7 @@ For Maven based projects, use the following to configure the CloudEvents Vertx H
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-http-vertx</artifactId>
-    <version>2.0.0-milestone4</version>
+    <version>2.0.0.RC1</version>
 </dependency>
 ```
 
