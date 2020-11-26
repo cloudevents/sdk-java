@@ -18,20 +18,18 @@
 package io.cloudevents.amqp;
 
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
-import org.apache.qpid.proton.message.Message;
-
+import io.cloudevents.amqp.impl.AmqpConstants;
 import io.cloudevents.amqp.impl.ProtonAmqpBinaryMessageReader;
 import io.cloudevents.amqp.impl.ProtonAmqpMessageWriter;
-import io.cloudevents.amqp.impl.AmqpConstants;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
 import io.cloudevents.rw.CloudEventWriter;
+import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
+import org.apache.qpid.proton.message.Message;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * A factory class providing convenience methods for creating MessageReader and MessageWriter instances based on Qpid Proton.
  */
