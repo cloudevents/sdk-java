@@ -18,20 +18,18 @@
 package io.cloudevents.amqp;
 
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
-import org.apache.qpid.proton.message.Message;
-
+import io.cloudevents.amqp.impl.AmqpConstants;
 import io.cloudevents.amqp.impl.ProtonAmqpBinaryMessageReader;
 import io.cloudevents.amqp.impl.ProtonAmqpMessageWriter;
-import io.cloudevents.amqp.impl.AmqpConstants;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
 import io.cloudevents.rw.CloudEventWriter;
+import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
+import org.apache.qpid.proton.message.Message;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * A factory class providing convenience methods for creating MessageReader and MessageWriter instances based on Qpid Proton.
  */
@@ -46,9 +44,9 @@ public final class ProtonAmqpMessageFactory {
      * Creates a MessageReader to read a proton-based {@link Message}.
      * <p>
      * This implementation simply calls {@link #createReader(String, ApplicationProperties, byte[])}.
-     * 
+     *
      * @param message The proton message to read from.
-     * 
+     *
      * @return        A message reader that can read the given proton message to a cloud event representation.
      */
     public static MessageReader createReader(final Message message) {
@@ -61,7 +59,7 @@ public final class ProtonAmqpMessageFactory {
      * Creates a MessageReader using the content-type property and payload of a proton-based message.
      * <p>
      * This method simply calls {@link #createReader(String, ApplicationProperties, byte[])}.
-     * 
+     *
      * @param contentType The content-type of the message payload.
      * @param payload     The message payload in bytes.
      * @return            A message reader capable of representing a CloudEvent from
@@ -74,7 +72,7 @@ public final class ProtonAmqpMessageFactory {
     /**
      * Creates a MessageWriter capable of translating both a structured and binary CloudEvent
      * to a proton-based AMQP 1.0 representation.
-     * 
+     *
      * @return A message writer to read structured and binary cloud event from a proton-based message.
      */
     public static MessageWriter<CloudEventWriter<Message>, Message> createWriter() {
@@ -84,7 +82,7 @@ public final class ProtonAmqpMessageFactory {
     /**
      * Creates a MessageReader to read using the content-type property, application-propeties and data payload
      * of a proton-based message.
-     * 
+     *
      * @param contentType  The content-type of the message payload.
      * @param props        The application-properties section of the proton-message containing cloud event metadata (attributes and/or extensions).
      * @param payload      The message payload in bytes or {@code null} if the message does not contain any payload.
@@ -94,12 +92,11 @@ public final class ProtonAmqpMessageFactory {
     public static MessageReader createReader(final String contentType, final ApplicationProperties props, final byte[] payload) {
 
         return MessageUtils.parseStructuredOrBinaryMessage(
-                () -> contentType, 
+                () -> contentType,
                 format -> new GenericStructuredMessageReader(format, payload),
                 () -> AmqpConstants.getApplicationProperty(props, AmqpConstants.APP_PROPERTY_SPEC_VERSION, String.class),
-                sv -> new ProtonAmqpBinaryMessageReader(sv, props, contentType, payload),
-                UnknownEncodingMessageReader::new);
+                sv -> new ProtonAmqpBinaryMessageReader(sv, props, contentType, payload));
 
     }
-    
+
 }

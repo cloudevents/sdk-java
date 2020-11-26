@@ -56,9 +56,6 @@ public class CloudEventSerializer implements Serializer<CloudEvent> {
         } else if (encodingConfig != null) {
             throw new IllegalArgumentException(ENCODING_CONFIG + " can be of type String or " + Encoding.class.getCanonicalName());
         }
-        if (this.encoding == Encoding.UNKNOWN) {
-            throw new IllegalArgumentException(ENCODING_CONFIG + " cannot be " + Encoding.UNKNOWN);
-        }
 
         if (this.encoding == Encoding.STRUCTURED) {
             Object eventFormatConfig = configs.get(EVENT_FORMAT_CONFIG);

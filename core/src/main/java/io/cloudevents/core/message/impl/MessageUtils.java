@@ -29,6 +29,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.cloudevents.rw.CloudEventRWException.newUnknownEncodingException;
+
 public class MessageUtils {
 
     /**
@@ -38,8 +40,7 @@ public class MessageUtils {
         Supplier<String> contentTypeHeaderReader,
         Function<EventFormat, MessageReader> structuredMessageFactory,
         Supplier<String> specVersionHeaderReader,
-        Function<SpecVersion, MessageReader> binaryMessageFactory,
-        Supplier<MessageReader> unknownMessageFactory
+        Function<SpecVersion, MessageReader> binaryMessageFactory
     ) {
         // Let's try structured mode
         String ct = contentTypeHeaderReader.get();
@@ -57,7 +58,7 @@ public class MessageUtils {
             return binaryMessageFactory.apply(SpecVersion.parse(specVersionUnparsed));
         }
 
-        return unknownMessageFactory.get();
+        throw newUnknownEncodingException();
     }
 
     /**

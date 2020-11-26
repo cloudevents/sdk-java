@@ -20,7 +20,6 @@ package io.cloudevents.http.restful.ws.impl;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -36,8 +35,7 @@ public final class RestfulWSMessageFactory {
             () -> headers.getFirst(HttpHeaders.CONTENT_TYPE),
             format -> new GenericStructuredMessageReader(format, payload),
             () -> headers.getFirst(CloudEventsHeaders.SPEC_VERSION),
-            sv -> new BinaryRestfulWSMessageReaderImpl(sv, headers, payload),
-            UnknownEncodingMessageReader::new
+            sv -> new BinaryRestfulWSMessageReaderImpl(sv, headers, payload)
         );
     }
 

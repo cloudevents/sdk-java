@@ -20,7 +20,6 @@ import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.core.message.impl.UnknownEncodingMessageReader;
 import io.cloudevents.http.impl.CloudEventsHeaders;
 import io.cloudevents.http.impl.HttpMessageReader;
 import io.cloudevents.http.impl.HttpMessageWriter;
@@ -80,8 +79,7 @@ public final class HttpMessageFactory {
             contentType::get,
             format -> new GenericStructuredMessageReader(format, body),
             specVersion::get,
-            sv -> new HttpMessageReader(sv, forEachHeader, body),
-            UnknownEncodingMessageReader::new
+            sv -> new HttpMessageReader(sv, forEachHeader, body)
         );
     }
 

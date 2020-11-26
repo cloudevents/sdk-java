@@ -57,6 +57,10 @@ public class CloudEventRWException extends RuntimeException {
          */
         DATA_CONVERSION,
         /**
+         * Invalid content type or spec version
+         */
+        UNKNOWN_ENCODING,
+        /**
          * Other error.
          */
         OTHER
@@ -144,6 +148,13 @@ public class CloudEventRWException extends RuntimeException {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.OTHER,
             cause
+        );
+    }
+
+    public static CloudEventRWException newUnknownEncodingException() {
+        return new CloudEventRWException(
+            CloudEventRWExceptionKind.UNKNOWN_ENCODING,
+            "Could not parse. Unknown encoding. Invalid content type or spec version"
         );
     }
 }
