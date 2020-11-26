@@ -22,9 +22,11 @@ import io.cloudevents.SpecVersion;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.mock.CSVFormat;
+import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -33,8 +35,21 @@ import java.util.stream.Stream;
 
 import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class VertxMessageFactoryTest {
+
+    @Test
+    public void structuredMessageWithoutBody() {
+        MultiMap headers = MultiMap
+            .caseInsensitiveMultiMap()
+            .add("content-type", CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8");
+
+        assertThatCode(() -> VertxMessageFactory.createReader(headers, null))
+            .isInstanceOf(CloudEventRWException.class)
+            .hasCauseInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("null body");
+    }
 
     @ParameterizedTest
     @MethodSource("binaryTestArguments")
