@@ -33,7 +33,7 @@ public interface CloudEventContextReader {
      * @param writer Attributes writer
      * @throws CloudEventRWException if something went wrong during the visit.
      */
-    void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException;
+    void readAttributes(CloudEventContextWriter writer) throws CloudEventRWException;
 
     /**
      * Visit self extensions using the provided writer
@@ -41,6 +41,6 @@ public interface CloudEventContextReader {
      * @param visitor Extensions writer
      * @throws CloudEventRWException if something went wrong during the visit.
      */
-    void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException;
+    void readExtensions(CloudEventContextWriter visitor) throws CloudEventRWException;
 
 }

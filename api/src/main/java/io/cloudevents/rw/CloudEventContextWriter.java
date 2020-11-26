@@ -19,13 +19,15 @@ package io.cloudevents.rw;
 
 import io.cloudevents.types.Time;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.URI;
 import java.time.OffsetDateTime;
 
 /**
- * Interface to write the attributes from a {@link io.cloudevents.rw.CloudEventReader} to a new representation.
+ * Interface to write the context attributes/extensions from a {@link io.cloudevents.rw.CloudEventContextReader} to a new representation.
  */
-public interface CloudEventAttributesWriter {
+@ParametersAreNonnullByDefault
+public interface CloudEventContextWriter {
 
     /**
      * Set attribute with type {@link String}. This setter should not be invoked for specversion, because the built Visitor already
@@ -36,7 +38,7 @@ public interface CloudEventAttributesWriter {
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      */
-    CloudEventAttributesWriter withAttribute(String name, String value) throws CloudEventRWException;
+    CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
@@ -46,8 +48,8 @@ public interface CloudEventAttributesWriter {
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      */
-    default CloudEventAttributesWriter withAttribute(String name, URI value) throws CloudEventRWException {
-        return withAttribute(name, value == null ? null : value.toString());
+    default CloudEventContextWriter withContextAttribute(String name, URI value) throws CloudEventRWException {
+        return withContextAttribute(name, value.toString());
     }
 
     /**
@@ -58,8 +60,32 @@ public interface CloudEventAttributesWriter {
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this attribute.
      */
-    default CloudEventAttributesWriter withAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
-        return withAttribute(name, value == null ? null : Time.writeTime(name, value));
+    default CloudEventContextWriter withContextAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
+        return withContextAttribute(name, Time.writeTime(name, value));
+    }
+
+    /**
+     * Set attribute with type {@link URI}.
+     *
+     * @param name  name of the attribute
+     * @param value value of the attribute
+     * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
+     */
+    default CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
+        return withContextAttribute(name, value.toString());
+    }
+
+    /**
+     * Set attribute with type {@link Boolean} attribute.
+     *
+     * @param name  name of the attribute
+     * @param value value of the attribute
+     * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
+     */
+    default CloudEventContextWriter withContextAttribute(String name, Boolean value) throws CloudEventRWException {
+        return withContextAttribute(name, value.toString());
     }
 
 }
