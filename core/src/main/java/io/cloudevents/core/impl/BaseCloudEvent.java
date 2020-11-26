@@ -54,18 +54,17 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader, Cl
 
     @Override
     public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
-        CloudEventWriter<V> visitor = writerFactory.create(this.getSpecVersion());
-        this.readAttributes(visitor);
-        this.readExtensions(visitor);
+        CloudEventWriter<V> writer = writerFactory.create(this.getSpecVersion());
+        this.readContext(writer);
 
         if (this.data != null) {
-            return visitor.end(mapper.map(this.data));
+            return writer.end(mapper.map(this.data));
         }
 
-        return visitor.end();
+        return writer.end();
     }
 
-    public void readExtensions(CloudEventContextWriter writer) throws CloudEventRWException {
+    protected void readExtensions(CloudEventContextWriter writer) throws CloudEventRWException {
         // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {

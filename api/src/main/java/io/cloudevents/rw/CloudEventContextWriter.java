@@ -30,23 +30,28 @@ import java.time.OffsetDateTime;
 public interface CloudEventContextWriter {
 
     /**
-     * Set attribute with type {@link String}. This setter should not be invoked for specversion, because the built Visitor already
-     * has the information through the {@link CloudEventWriterFactory}.
+     * Set attribute with type {@link String}.
+     * This setter should not be invoked for specversion, because the writer should
+     * already know the specversion or because it doesn't need it to correctly write the value.
      *
      * @param name  name of the attribute
      * @param value value of the attribute
      * @return self
-     * @throws CloudEventRWException if anything goes wrong while writing this attribute.
+     * @throws CloudEventRWException    if anything goes wrong while writing this attribute.
+     * @throws IllegalArgumentException if you're trying to set the specversion attribute.
      */
     CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException;
 
     /**
      * Set attribute with type {@link URI}.
+     * This setter should not be invoked for specversion, because the writer should
+     * already know the specversion or because it doesn't need it to correctly write the value.
      *
      * @param name  name of the attribute
      * @param value value of the attribute
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this attribute.
+     * @throws IllegalArgumentException if you're trying to set the specversion attribute.
      */
     default CloudEventContextWriter withContextAttribute(String name, URI value) throws CloudEventRWException {
         return withContextAttribute(name, value.toString());
@@ -54,11 +59,14 @@ public interface CloudEventContextWriter {
 
     /**
      * Set attribute with type {@link OffsetDateTime} attribute.
+     * This setter should not be invoked for specversion, because the writer should
+     * already know the specversion or because it doesn't need it to correctly write the value.
      *
      * @param name  name of the attribute
      * @param value value of the attribute
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this attribute.
+     * @throws IllegalArgumentException if you're trying to set the specversion attribute.
      */
     default CloudEventContextWriter withContextAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
         return withContextAttribute(name, Time.writeTime(name, value));
@@ -66,11 +74,14 @@ public interface CloudEventContextWriter {
 
     /**
      * Set attribute with type {@link URI}.
+     * This setter should not be invoked for specversion, because the writer should
+     * already know the specversion or because it doesn't need it to correctly write the value.
      *
      * @param name  name of the attribute
      * @param value value of the attribute
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this extension.
+     * @throws IllegalArgumentException if you're trying to set the specversion attribute.
      */
     default CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
         return withContextAttribute(name, value.toString());
@@ -78,11 +89,14 @@ public interface CloudEventContextWriter {
 
     /**
      * Set attribute with type {@link Boolean} attribute.
+     * This setter should not be invoked for specversion, because the writer should
+     * already know the specversion or because it doesn't need it to correctly write the value.
      *
      * @param name  name of the attribute
      * @param value value of the attribute
      * @return self
      * @throws CloudEventRWException if anything goes wrong while writing this extension.
+     * @throws IllegalArgumentException if you're trying to set the specversion attribute.
      */
     default CloudEventContextWriter withContextAttribute(String name, Boolean value) throws CloudEventRWException {
         return withContextAttribute(name, value.toString());

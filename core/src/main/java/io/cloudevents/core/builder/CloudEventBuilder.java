@@ -17,18 +17,13 @@
 
 package io.cloudevents.core.builder;
 
-import java.net.URI;
-import java.time.OffsetDateTime;
+import io.cloudevents.*;
+import io.cloudevents.rw.CloudEventWriter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNullableByDefault;
-
-import io.cloudevents.CloudEvent;
-import io.cloudevents.CloudEventContext;
-import io.cloudevents.CloudEventData;
-import io.cloudevents.Extension;
-import io.cloudevents.SpecVersion;
-import io.cloudevents.rw.CloudEventWriter;
+import java.net.URI;
+import java.time.OffsetDateTime;
 
 /**
  * Builder interface to build a {@link CloudEvent}.
@@ -153,7 +148,6 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param value value of the extension attribute
      * @return self
      */
-    @Override
     CloudEventBuilder withExtension(@Nonnull String key, @Nonnull String value);
 
     /**
@@ -163,7 +157,6 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param value value of the extension attribute
      * @return self
      */
-    @Override
     CloudEventBuilder withExtension(@Nonnull String key, @Nonnull Number value);
 
     /**
@@ -173,8 +166,25 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param value value of the extension attribute
      * @return self
      */
-    @Override
     CloudEventBuilder withExtension(@Nonnull String key, @Nonnull Boolean value);
+
+    /**
+     * Set an extension with provided key and uri value
+     *
+     * @param key   key of the extension attribute
+     * @param value value of the extension attribute
+     * @return self
+     */
+    CloudEventBuilder withExtension(@Nonnull String key, @Nonnull URI value);
+
+    /**
+     * Set an extension with provided key and boolean value
+     *
+     * @param key   key of the extension attribute
+     * @param value value of the extension attribute
+     * @return self
+     */
+    CloudEventBuilder withExtension(@Nonnull String key, @Nonnull OffsetDateTime value);
 
     /**
      * Add to the builder all the extension key/values of the provided extension

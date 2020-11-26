@@ -49,14 +49,12 @@ public final class RestfulWSMessageWriter implements CloudEventWriter<Void>, Mes
     }
 
     @Override
-    public RestfulWSMessageWriter withAttribute(String name, String value) throws CloudEventRWException {
-        this.httpHeaders.add(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
-        return this;
-    }
-
-    @Override
-    public RestfulWSMessageWriter withExtension(String name, String value) throws CloudEventRWException {
-        this.httpHeaders.add(CloudEventsHeaders.CE_PREFIX + name, value);
+    public RestfulWSMessageWriter withContextAttribute(String name, String value) throws CloudEventRWException {
+        String headerName = CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name);
+        if (headerName == null) {
+            headerName = CloudEventsHeaders.CE_PREFIX + name;
+        }
+        this.httpHeaders.add(headerName, value);
         return this;
     }
 

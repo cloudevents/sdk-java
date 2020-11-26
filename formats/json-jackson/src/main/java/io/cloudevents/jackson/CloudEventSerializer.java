@@ -23,9 +23,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.CloudEventUtils;
-import io.cloudevents.rw.CloudEventAttributesWriter;
 import io.cloudevents.rw.CloudEventContextReader;
-import io.cloudevents.rw.CloudEventExtensionsWriter;
+import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 
 import java.io.IOException;
@@ -45,18 +44,18 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         this.forceStringSerialization = forceStringSerialization;
     }
 
-    private static class FieldsSerializer implements CloudEventAttributesWriter, CloudEventExtensionsWriter {
+    private static class JsonContextWriter implements CloudEventContextWriter {
 
         private final JsonGenerator gen;
         private final SerializerProvider provider;
 
-        public FieldsSerializer(JsonGenerator gen, SerializerProvider provider) {
+        public JsonContextWriter(JsonGenerator gen, SerializerProvider provider) {
             this.gen = gen;
             this.provider = provider;
         }
 
         @Override
-        public FieldsSerializer withAttribute(String name, String value) throws CloudEventRWException {
+        public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
             try {
                 gen.writeStringField(name, value);
                 return this;
@@ -66,17 +65,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public FieldsSerializer withExtension(String name, String value) throws CloudEventRWException {
-            try {
-                gen.writeStringField(name, value);
-                return this;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public FieldsSerializer withExtension(String name, Number value) throws CloudEventRWException {
+        public CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
             try {
                 gen.writeFieldName(name);
                 provider.findValueSerializer(value.getClass()).serialize(value, gen, provider);
@@ -87,7 +76,7 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
         }
 
         @Override
-        public FieldsSerializer withExtension(String name, Boolean value) throws CloudEventRWException {
+        public CloudEventContextWriter withContextAttribute(String name, Boolean value) throws CloudEventRWException {
             try {
                 gen.writeBooleanField(name, value);
                 return this;
@@ -104,10 +93,9 @@ public class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
         // Serialize attributes
         try {
-            CloudEventContextReader visitable = CloudEventUtils.toContextReader(value);
-            FieldsSerializer serializer = new FieldsSerializer(gen, provider);
-            visitable.readAttributes(serializer);
-            visitable.readExtensions(serializer);
+            CloudEventContextReader contextReader = CloudEventUtils.toContextReader(value);
+            JsonContextWriter contextWriter = new JsonContextWriter(gen, provider);
+            contextReader.readContext(contextWriter);
         } catch (RuntimeException e) {
             throw (IOException) e.getCause();
         }

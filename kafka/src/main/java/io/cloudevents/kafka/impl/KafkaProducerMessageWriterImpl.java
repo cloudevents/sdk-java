@@ -19,7 +19,6 @@ package io.cloudevents.kafka.impl;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.v1.CloudEventV1;
-
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 
@@ -46,7 +45,7 @@ public final class KafkaProducerMessageWriterImpl<K>
 
     @Override
     public KafkaProducerMessageWriterImpl<K> create(SpecVersion version) {
-        this.withAttribute(CloudEventV1.SPECVERSION, version.toString());
+        this.withContextAttribute(CloudEventV1.SPECVERSION, version.toString());
         return this;
     }
 }

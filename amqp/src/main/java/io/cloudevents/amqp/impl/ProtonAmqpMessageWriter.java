@@ -17,22 +17,20 @@
 
 package io.cloudevents.amqp.impl;
 
-import java.util.HashMap;
-
-import org.apache.qpid.proton.amqp.Binary;
-import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
-import org.apache.qpid.proton.amqp.messaging.Data;
-import org.apache.qpid.proton.message.Message;
-
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.v1.CloudEventV1;
-import io.cloudevents.rw.CloudEventAttributesWriter;
-import io.cloudevents.rw.CloudEventExtensionsWriter;
+import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
+import org.apache.qpid.proton.amqp.Binary;
+import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
+import org.apache.qpid.proton.amqp.messaging.Data;
+import org.apache.qpid.proton.message.Message;
+
+import java.util.HashMap;
 
 /**
  * A proton-based MessageWriter capable of writing both structured and binary CloudEvent messages to an AMQP 1.0 representation as
@@ -53,33 +51,28 @@ public final class ProtonAmqpMessageWriter<R> implements MessageWriter<CloudEven
     }
 
     @Override
-    public CloudEventAttributesWriter withAttribute(final String name, final String value) throws CloudEventRWException {
+    public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
         if (name.equals(CloudEventV1.DATACONTENTTYPE)) {
             message.setContentType(value);
         } else {
+            // for now, extensions are mapped to application-properties
+            // see https://github.com/cloudevents/sdk-java/issues/30#issuecomment-723982190
             if (applicationProperties == null) {
                 throw new IllegalStateException("This Writer is not initialized");
             }
-            applicationProperties.getValue().put(AmqpConstants.ATTRIBUTES_TO_PROPERTYNAMES.get(name), value);
+            String propName = AmqpConstants.ATTRIBUTES_TO_PROPERTYNAMES.get(name);
+            if (propName == null) {
+                propName = name;
+            }
+            applicationProperties.getValue().put(propName, value);
         }
-        return null;
-    }
-
-    @Override
-    public CloudEventExtensionsWriter withExtension(final String name, final String value) throws CloudEventRWException {
-        // for now, extensions are mapped to application-properties 
-        // see https://github.com/cloudevents/sdk-java/issues/30#issuecomment-723982190
-        if (applicationProperties == null) {
-            throw new IllegalStateException("This Writer is not initialized");
-        }
-        applicationProperties.getValue().put(name, value);
-        return null;
+        return this;
     }
 
     @Override
     public ProtonAmqpMessageWriter<R> create(final SpecVersion version) {
         if (applicationProperties == null) {
-            applicationProperties = new ApplicationProperties(new HashMap<String, Object>());
+            applicationProperties = new ApplicationProperties(new HashMap<>());
         }
         applicationProperties.getValue().put(AmqpConstants.APP_PROPERTY_SPEC_VERSION, version.toString());
         return this;
@@ -105,5 +98,4 @@ public final class ProtonAmqpMessageWriter<R> implements MessageWriter<CloudEven
         message.setApplicationProperties(applicationProperties);
         return message;
     }
-
 }

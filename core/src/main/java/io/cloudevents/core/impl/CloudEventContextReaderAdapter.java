@@ -20,6 +20,7 @@ package io.cloudevents.core.impl;
 import io.cloudevents.CloudEventContext;
 import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventContextWriter;
+import io.cloudevents.rw.CloudEventRWException;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -32,7 +33,6 @@ public class CloudEventContextReaderAdapter implements CloudEventContextReader {
         this.event = event;
     }
 
-    @Override
     public void readAttributes(CloudEventContextWriter writer) throws RuntimeException {
         writer.withContextAttribute("id", event.getId());
         writer.withContextAttribute("source", event.getSource());
@@ -51,7 +51,6 @@ public class CloudEventContextReaderAdapter implements CloudEventContextReader {
         }
     }
 
-    @Override
     public void readExtensions(CloudEventContextWriter writer) throws RuntimeException {
         for (String key : event.getExtensionNames()) {
             Object value = event.getExtension(key);
@@ -72,4 +71,9 @@ public class CloudEventContextReaderAdapter implements CloudEventContextReader {
         }
     }
 
+    @Override
+    public void readContext(CloudEventContextWriter writer) throws CloudEventRWException {
+        this.readAttributes(writer);
+        this.readExtensions(writer);
+    }
 }

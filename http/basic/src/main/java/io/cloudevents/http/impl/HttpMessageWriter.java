@@ -20,6 +20,7 @@ import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
+import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 
@@ -58,14 +59,12 @@ public class HttpMessageWriter implements CloudEventWriter<Void>, MessageWriter<
     }
 
     @Override
-    public HttpMessageWriter withAttribute(String name, String value) throws CloudEventRWException {
-        putHeader.accept(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
-        return this;
-    }
-
-    @Override
-    public HttpMessageWriter withExtension(String name, String value) throws CloudEventRWException {
-        putHeader.accept("ce-" + name, value);
+    public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
+        String headerName = CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name);
+        if (headerName == null) {
+            headerName = "ce-" + name;
+        }
+        putHeader.accept(headerName, value);
         return this;
     }
 
