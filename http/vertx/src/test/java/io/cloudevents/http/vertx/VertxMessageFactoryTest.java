@@ -17,6 +17,31 @@
 
 package io.cloudevents.http.vertx;
 
+import static io.cloudevents.core.test.Data.DATACONTENTTYPE_JSON;
+import static io.cloudevents.core.test.Data.DATACONTENTTYPE_TEXT;
+import static io.cloudevents.core.test.Data.DATACONTENTTYPE_XML;
+import static io.cloudevents.core.test.Data.DATASCHEMA;
+import static io.cloudevents.core.test.Data.DATA_JSON_SERIALIZED;
+import static io.cloudevents.core.test.Data.DATA_TEXT_SERIALIZED;
+import static io.cloudevents.core.test.Data.DATA_XML_SERIALIZED;
+import static io.cloudevents.core.test.Data.ID;
+import static io.cloudevents.core.test.Data.SOURCE;
+import static io.cloudevents.core.test.Data.SUBJECT;
+import static io.cloudevents.core.test.Data.TIME;
+import static io.cloudevents.core.test.Data.TYPE;
+import static io.cloudevents.core.test.Data.V03_MIN;
+import static io.cloudevents.core.test.Data.V03_WITH_JSON_DATA;
+import static io.cloudevents.core.test.Data.V03_WITH_JSON_DATA_WITH_EXT_STRING;
+import static io.cloudevents.core.test.Data.V03_WITH_TEXT_DATA;
+import static io.cloudevents.core.test.Data.V03_WITH_XML_DATA;
+import static io.cloudevents.core.test.Data.V1_MIN;
+import static io.cloudevents.core.test.Data.V1_WITH_JSON_DATA;
+import static io.cloudevents.core.test.Data.V1_WITH_JSON_DATA_WITH_EXT_STRING;
+import static io.cloudevents.core.test.Data.V1_WITH_TEXT_DATA;
+import static io.cloudevents.core.test.Data.V1_WITH_XML_DATA;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.message.Encoding;
@@ -25,18 +50,22 @@ import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
 import io.vertx.core.MultiMap;
+import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.ext.web.client.WebClient;
+import io.vertx.junit5.Timeout;
+import io.vertx.junit5.VertxExtension;
+import io.vertx.junit5.VertxTestContext;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.stream.Stream;
-
-import static io.cloudevents.core.test.Data.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-
+@ExtendWith(VertxExtension.class)
 public class VertxMessageFactoryTest {
 
     @Test
@@ -76,6 +105,36 @@ public class VertxMessageFactoryTest {
             .isEqualTo(Encoding.STRUCTURED);
         assertThat(message.toEvent())
             .isEqualTo(event);
+    }
+
+    @Test
+    @Timeout(timeUnit = TimeUnit.SECONDS, value = 2)
+    public void shouldCatchAllExceptions(final Vertx vertx, final VertxTestContext context) throws InterruptedException {
+
+        final int port = 4200;
+
+        final CountDownLatch cd = new CountDownLatch(1);
+
+        vertx.createHttpServer()
+            .exceptionHandler(context::failNow)
+            .requestHandler(r -> VertxMessageFactory.createReader(r)
+                .onFailure(cause -> context.completeNow())
+                .onSuccess(reader -> context.failNow("Expected failed future"))
+            )
+            .listen(port, context.succeeding(s -> cd.countDown()));
+
+        cd.await(2, TimeUnit.SECONDS);
+
+        WebClient.create(vertx)
+            .post(port, "127.0.0.1", "")
+            .putHeader("Content-Type", "application/cloudevents+json; charset=UTF-8")
+            .putHeader("ce-specversion", "9000.1")
+            .putHeader("ce-type", "type")
+            .putHeader("ce-source", "/mysource")
+            .send()
+            .onFailure(context::failNow)
+            .onSuccess(r -> {
+            });
     }
 
     public static Stream<Arguments> binaryTestArguments() {

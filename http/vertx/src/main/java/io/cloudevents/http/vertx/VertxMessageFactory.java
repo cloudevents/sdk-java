@@ -67,7 +67,7 @@ public final class VertxMessageFactory {
         request.bodyHandler(b -> {
             try {
                 prom.complete(createReader(request.headers(), b));
-            } catch (IllegalArgumentException e) {
+            } catch (final Exception e) {
                 prom.fail(e);
             }
         });
