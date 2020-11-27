@@ -41,12 +41,12 @@ public class MockStructuredMessageReader extends BaseStructuredMessageReader imp
     }
 
     @Override
-    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException {
+    public <T> T read(StructuredMessageWriter<T> writer) throws CloudEventRWException, IllegalStateException {
         if (this.format == null) {
             throw new IllegalStateException("MockStructuredMessage is empty");
         }
 
-        return visitor.setEvent(this.format, this.payload);
+        return writer.setEvent(this.format, this.payload);
     }
 
     @Override

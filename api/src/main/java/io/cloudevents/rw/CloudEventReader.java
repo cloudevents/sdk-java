@@ -30,18 +30,24 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface CloudEventReader {
 
     /**
-     * Visit self using the provided visitor factory
+     * Like {@link #read(CloudEventWriterFactory, CloudEventDataMapper)}, but with the identity {@link CloudEventDataMapper}.
      *
-     * @param writerFactory a factory that generates a visitor starting from the SpecVersion of the event
-     * @throws CloudEventRWException if something went wrong during the read.
+     * @see #read(CloudEventWriterFactory, CloudEventDataMapper)
      */
-    default <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException {
+    default <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory) throws CloudEventRWException {
         return read(writerFactory, CloudEventDataMapper.identity());
     }
 
     /**
-     * Like {@link CloudEventReader#read(CloudEventWriterFactory)}, but providing a mapper for {@link io.cloudevents.CloudEventData} to be invoked when the data field is available.
+     * Read self using the provided writer factory.
+     *
+     * @param <W>           the {@link CloudEventWriter} type
+     * @param <R>           the return type of the {@link CloudEventWriter}
+     * @param writerFactory a factory that generates a visitor starting from the SpecVersion of the event
+     * @param mapper        the mapper to invoke when building the {@link CloudEventData}
+     * @return the return value returned by {@link CloudEventWriter#end()} or {@link CloudEventWriter#end(CloudEventData)}
+     * @throws CloudEventRWException if something went wrong during the read.
      */
-    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException;
+    <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException;
 
 }

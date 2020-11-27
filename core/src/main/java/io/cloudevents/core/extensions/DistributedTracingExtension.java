@@ -21,10 +21,7 @@ import io.cloudevents.CloudEventExtensions;
 import io.cloudevents.Extension;
 import io.cloudevents.core.extensions.impl.ExtensionUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This extension embeds context from Distributed Tracing so that distributed systems can include traces that span an event-driven system.
@@ -33,25 +30,45 @@ import java.util.Set;
  */
 public final class DistributedTracingExtension implements Extension {
 
+    /**
+     * The key of the {@code traceparent} extension
+     */
     public static final String TRACEPARENT = "traceparent";
+
+    /**
+     * The key of the {@code tracestate} extension
+     */
     public static final String TRACESTATE = "tracestate";
+
     private static final Set<String> KEY_SET = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TRACEPARENT, TRACESTATE)));
 
     private String traceparent;
     private String tracestate;
 
+    /**
+     * @return the {@code traceparent} contained in this extension.
+     */
     public String getTraceparent() {
         return traceparent;
     }
 
+    /**
+     * @param traceparent the string to set as {@code traceparent}.
+     */
     public void setTraceparent(String traceparent) {
         this.traceparent = traceparent;
     }
 
+    /**
+     * @return the {@code tracestate} contained in this extension.
+     */
     public String getTracestate() {
         return tracestate;
     }
 
+    /**
+     * @param tracestate the string to set as {@code tracestate}.
+     */
     public void setTracestate(String tracestate) {
         this.tracestate = tracestate;
     }
@@ -76,7 +93,7 @@ public final class DistributedTracingExtension implements Extension {
             case TRACESTATE:
                 return this.tracestate;
         }
-        throw ExtensionUtils.generateInvalidKeyException(this.getClass().getSimpleName(), key);
+        throw ExtensionUtils.generateInvalidKeyException(this.getClass(), key);
     }
 
     @Override
@@ -93,35 +110,16 @@ public final class DistributedTracingExtension implements Extension {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((traceparent == null) ? 0
-            : traceparent.hashCode());
-        result = prime * result + ((tracestate == null) ? 0
-            : tracestate.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DistributedTracingExtension that = (DistributedTracingExtension) o;
+        return Objects.equals(getTraceparent(), that.getTraceparent()) &&
+            Objects.equals(getTracestate(), that.getTracestate());
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        DistributedTracingExtension other = (DistributedTracingExtension) obj;
-        if (traceparent == null) {
-            if (other.traceparent != null)
-                return false;
-        } else if (!traceparent.equals(other.traceparent))
-            return false;
-        if (tracestate == null) {
-            if (other.tracestate != null)
-                return false;
-        } else if (!tracestate.equals(other.tracestate))
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(getTraceparent(), getTracestate());
     }
 }

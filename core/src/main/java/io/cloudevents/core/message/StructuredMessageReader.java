@@ -34,11 +34,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface StructuredMessageReader {
 
     /**
-     * @param visitor
+     * Read self using the provided writer.
+     *
+     * @param <R>    the return type of the {@link StructuredMessageWriter}
+     * @param writer the writer to use to write out the message
+     * @return the return value returned by {@link StructuredMessageWriter#setEvent(EventFormat, byte[])}
      * @throws CloudEventRWException If something went wrong when
      * @throws IllegalStateException If the message is not a valid structured message
      */
-    <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException;
+    <R> R read(StructuredMessageWriter<R> writer) throws CloudEventRWException, IllegalStateException;
 
     default CloudEvent toEvent() throws CloudEventRWException, IllegalStateException {
         return this.read(EventFormat::deserialize);
@@ -49,9 +53,9 @@ public interface StructuredMessageReader {
     }
 
     /**
-     * Create a generic structured message from a {@link CloudEvent}
+     * Create a generic structured message from a {@link CloudEvent}.
      *
-     * @param event
+     * @param event the event to convert to {@link StructuredMessageReader}
      * @param contentType content type to use to resolve the {@link EventFormat}
      * @return null if format was not found, otherwise returns the built message
      */
@@ -60,10 +64,10 @@ public interface StructuredMessageReader {
     }
 
     /**
-     * Create a generic structured message from a {@link CloudEvent}
+     * Create a generic structured message from a {@link CloudEvent}.
      *
-     * @param event
-     * @param format
+     * @param event the event to convert to {@link StructuredMessageReader}
+     * @param format the format to use to perform the conversion
      * @return null if format was not found, otherwise returns the built message
      */
     static StructuredMessageReader from(CloudEvent event, EventFormat format) {

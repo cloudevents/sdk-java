@@ -24,6 +24,9 @@ import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventWriter;
 import io.cloudevents.rw.CloudEventWriterFactory;
 
+/**
+ * Base {@link MessageReader} implementation for a structured message
+ */
 public abstract class BaseStructuredMessageReader implements MessageReader {
 
     @Override

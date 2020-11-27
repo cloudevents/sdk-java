@@ -17,6 +17,8 @@
 
 package io.cloudevents.rw;
 
+import io.cloudevents.lang.Nullable;
+
 /**
  * This class is the exception Protocol Binding and Event Format implementers can use to signal errors while serializing/deserializing CloudEvent.
  */
@@ -35,9 +37,9 @@ public class CloudEventRWException extends RuntimeException {
          */
         INVALID_ATTRIBUTE_NAME,
         /**
-         * The extension name is not valid,
-         * because it doesn't follow the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#attribute-naming-convention">naming convention</a>
-         * enforced by the CloudEvents spec.
+         * The extension name is not valid because it doesn't follow the naming convention enforced by the CloudEvents spec.
+         *
+         * @see <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#attribute-naming-convention">naming convention</a>
          */
         INVALID_EXTENSION_NAME,
         /**
@@ -83,10 +85,17 @@ public class CloudEventRWException extends RuntimeException {
         this.kind = kind;
     }
 
+    /**
+     * @return the {@link CloudEventRWExceptionKind} associated to this exception instance.
+     */
     public CloudEventRWExceptionKind getKind() {
         return kind;
     }
 
+    /**
+     * @param specVersion the invalid input spec version
+     * @return a new {@link CloudEventRWException} instance
+     */
     public static CloudEventRWException newInvalidSpecVersion(String specVersion) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.INVALID_SPEC_VERSION,
@@ -94,6 +103,10 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
+    /**
+     * @param attributeName the invalid attribute name
+     * @return a new {@link CloudEventRWException} instance
+     */
     public static CloudEventRWException newInvalidAttributeName(String attributeName) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.INVALID_ATTRIBUTE_NAME,
@@ -101,6 +114,10 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
+    /**
+     * @param extensionName the invalid extension name
+     * @return a new {@link CloudEventRWException} instance
+     */
     public static CloudEventRWException newInvalidExtensionName(String extensionName) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.INVALID_EXTENSION_NAME,
@@ -108,6 +125,11 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
+    /**
+     * @param attributeName the invalid attribute name
+     * @param clazz         the type of the attribute
+     * @return a new {@link CloudEventRWException} instance
+     */
     public static CloudEventRWException newInvalidAttributeType(String attributeName, Class<?> clazz) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.INVALID_ATTRIBUTE_TYPE,
@@ -115,7 +137,13 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
-    public static CloudEventRWException newInvalidAttributeValue(String attributeName, Object value, Throwable cause) {
+    /**
+     * @param attributeName the invalid attribute name
+     * @param value         the value of the attribute
+     * @param cause         an optional cause identifying the eventual validation error
+     * @return a new {@link CloudEventRWException} instance
+     */
+    public static CloudEventRWException newInvalidAttributeValue(String attributeName, Object value, @Nullable Throwable cause) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.INVALID_ATTRIBUTE_VALUE,
             "Invalid attribute/extension value for \"" + attributeName + "\": " + value,
@@ -123,6 +151,11 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
+    /**
+     * @param actual  the actual data type
+     * @param allowed the list of allowed data types
+     * @return a new {@link CloudEventRWException} instance
+     */
     public static CloudEventRWException newInvalidDataType(String actual, String... allowed) {
         String message;
         if (allowed.length == 0) {
@@ -136,6 +169,12 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
+    /**
+     * @param cause the cause of the conversion failure
+     * @param from  the input data type
+     * @param to    the target data type
+     * @return a new {@link CloudEventRWException} instance
+     */
     public static CloudEventRWException newDataConversion(Throwable cause, String from, String to) {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.DATA_CONVERSION,
@@ -144,17 +183,26 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
-    public static CloudEventRWException newOther(Throwable cause) {
-        return new CloudEventRWException(
-            CloudEventRWExceptionKind.OTHER,
-            cause
-        );
-    }
-
+    /**
+     * @return a new {@link CloudEventRWException} instance.
+     */
     public static CloudEventRWException newUnknownEncodingException() {
         return new CloudEventRWException(
             CloudEventRWExceptionKind.UNKNOWN_ENCODING,
             "Could not parse. Unknown encoding. Invalid content type or spec version"
+        );
+    }
+
+    /**
+     * This wraps a {@link Throwable} in a new generic instance of this exception.
+     *
+     * @param cause the cause of the exception
+     * @return a new {@link CloudEventRWException} instance
+     */
+    public static CloudEventRWException newOther(Throwable cause) {
+        return new CloudEventRWException(
+            CloudEventRWExceptionKind.OTHER,
+            cause
         );
     }
 }

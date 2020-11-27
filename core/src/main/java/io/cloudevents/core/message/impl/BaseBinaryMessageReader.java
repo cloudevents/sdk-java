@@ -22,6 +22,9 @@ import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.StructuredMessageWriter;
 import io.cloudevents.rw.CloudEventRWException;
 
+/**
+ * Base {@link MessageReader} implementation for a binary message
+ */
 public abstract class BaseBinaryMessageReader implements MessageReader {
 
     @Override
@@ -30,7 +33,7 @@ public abstract class BaseBinaryMessageReader implements MessageReader {
     }
 
     @Override
-    public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException {
+    public <T> T read(StructuredMessageWriter<T> writer) throws CloudEventRWException, IllegalStateException {
         throw MessageUtils.generateWrongEncoding(Encoding.STRUCTURED, Encoding.BINARY);
     }
 }

@@ -20,6 +20,7 @@ package io.cloudevents.core.extensions;
 import io.cloudevents.CloudEventExtensions;
 import io.cloudevents.Extension;
 import io.cloudevents.core.extensions.impl.ExtensionUtils;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,19 +28,30 @@ import java.util.Set;
 
 /**
  * This extension supports the "Claim Check Pattern". It allows to specify a reference to a location where the event payload is stored.
+ *
  * @see <a href=https://github.com/cloudevents/spec/blob/v1.0/extensions/dataref.md>https://github.com/cloudevents/spec/blob/v1.0/extensions/dataref.md</a>
  */
 public final class DatarefExtension implements Extension {
 
+    /**
+     * The key of the {@code dataref} extension
+     */
     public static final String DATAREF = "dataref";
+
     private static final Set<String> KEY_SET = Collections.unmodifiableSet(new HashSet<>(Collections.singletonList(DATAREF)));
 
     private URI dataref;
 
+    /**
+     * @return the {@code dataref} contained in this extension.
+     */
     public URI getDataref() {
         return dataref;
     }
 
+    /**
+     * @param dataref the uri to set as {@code dataref}.
+     */
     public void setDataref(URI dataref) {
         this.dataref = dataref;
     }
@@ -57,7 +69,7 @@ public final class DatarefExtension implements Extension {
         if (DATAREF.equals(key)) {
             return this.dataref.toString();
         }
-        throw ExtensionUtils.generateInvalidKeyException(this.getClass().getSimpleName(), key);
+        throw ExtensionUtils.generateInvalidKeyException(this.getClass(), key);
     }
 
     @Override

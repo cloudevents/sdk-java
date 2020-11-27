@@ -5,11 +5,15 @@ import io.cloudevents.CloudEventData;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * An implementation of {@link CloudEventData} that wraps a byte array.
+ */
 public class BytesCloudEventData implements CloudEventData {
 
     private final byte[] value;
 
     /**
+     * @param value the bytes to wrap
      * @deprecated use {@link BytesCloudEventData#wrap(byte[])}
      */
     public BytesCloudEventData(byte[] value) {

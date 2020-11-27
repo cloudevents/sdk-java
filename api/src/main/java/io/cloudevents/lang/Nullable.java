@@ -27,6 +27,9 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static javax.annotation.meta.When.MAYBE;
 
+/**
+ * This annotation is used to define a method parameter or return type as nullable.
+ */
 @Target(value = {METHOD, PARAMETER, FIELD})
 @Retention(value = RUNTIME)
 @Documented

@@ -23,6 +23,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface to convert a {@link CloudEventData} instance to another one.
+ *
+ * @param <R> the returned {@link CloudEventData} from this mapper.
  */
 @FunctionalInterface
 @ParametersAreNonnullByDefault
@@ -38,7 +40,7 @@ public interface CloudEventDataMapper<R extends CloudEventData> {
     R map(CloudEventData data) throws CloudEventRWException;
 
     /**
-     * No-op identity mapper which can be used as default when no mapper is provided.
+     * @return No-op identity mapper which can be used as default when no mapper is provided.
      */
     static CloudEventDataMapper<CloudEventData> identity() {
         return d -> d;

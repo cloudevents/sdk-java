@@ -28,15 +28,16 @@ import io.cloudevents.CloudEventData;
 public interface CloudEventWriter<R> extends CloudEventContextWriter {
 
     /**
-     * End the visit with a data field
+     * End the read with a data payload.
      *
+     * @param data the data to write
      * @return an eventual return value
      * @throws CloudEventRWException if the message writer cannot be ended.
      */
     R end(CloudEventData data) throws CloudEventRWException;
 
     /**
-     * End the visit
+     * End the read.
      *
      * @return an eventual return value
      * @throws CloudEventRWException if the message writer cannot be ended.

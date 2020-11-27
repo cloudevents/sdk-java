@@ -25,15 +25,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Interface to write the {@link MessageReader} content (CloudEvents attributes, extensions and payload) to a new representation structured representation.
  *
- * @param <T> return value at the end of the write process.
+ * @param <R> return value at the end of the write process.
  */
 @ParametersAreNonnullByDefault
 @FunctionalInterface
-public interface StructuredMessageWriter<T> {
+public interface StructuredMessageWriter<R> {
 
     /**
      * Write an event using the provided {@link EventFormat}.
      */
-    T setEvent(EventFormat format, byte[] value) throws CloudEventRWException;
+    R setEvent(EventFormat format, byte[] value) throws CloudEventRWException;
 
 }

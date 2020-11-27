@@ -19,41 +19,50 @@ package io.cloudevents.core.message;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
+import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.rw.*;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Represents a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a>.
+ * Represents a <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#message">CloudEvent message</a> reader.
+ * <p>
+ * This class expands the {@link CloudEventReader} to define reading both binary and structured messages.
  */
 @ParametersAreNonnullByDefault
 public interface MessageReader extends StructuredMessageReader, CloudEventReader {
 
     /**
-     * Visit the message as binary encoded event using the provided visitor factory.
+     * Like {@link #read(CloudEventWriterFactory, CloudEventDataMapper)}, but with the identity {@link CloudEventDataMapper}.
      *
-     * @param writerFactory a factory that generates a visitor starting from the SpecVersion of the event
-     * @throws CloudEventRWException if something went wrong during the visit.
-     * @throws IllegalStateException if the message is not in binary encoding.
+     * @see #read(CloudEventWriterFactory, CloudEventDataMapper)
      */
-    default <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory) throws CloudEventRWException, IllegalStateException {
+    default <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory) throws CloudEventRWException, IllegalStateException {
         return read(writerFactory, CloudEventDataMapper.identity());
     }
 
     /**
-     * Like {@link MessageReader#read(CloudEventWriterFactory)}, but providing a mapper for {@link io.cloudevents.CloudEventData} to be invoked when the data field is available.
+     * Read the message as binary encoded message using the provided reader factory.
+     *
+     * @param <W>           the {@link CloudEventWriter} type
+     * @param <R>           the return type of the {@link CloudEventWriter}
+     * @param writerFactory a factory that generates a reader starting from the {@link SpecVersion} of the event
+     * @param mapper        the mapper to use to map the data, if any.
+     * @throws CloudEventRWException if something went wrong during the visit.
+     * @throws IllegalStateException if the message is not in binary encoding.
      */
-    <V extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<V, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException;
+    <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException;
 
     /**
-     * Visit the message as structured encoded event using the provided visitor
+     * Read the message as structured encoded message using the provided reader
      *
-     * @param visitor Structured Message visitor
+     * @param <R>    the return type of the {@link StructuredMessageWriter}
+     * @param writer Structured Message reader
      * @throws CloudEventRWException if something went wrong during the visit.
-     * @throws IllegalStateException    if the message is not in structured encoding.
+     * @throws IllegalStateException if the message is not in structured encoding.
      */
-    <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException;
+    <R> R read(StructuredMessageWriter<R> writer) throws CloudEventRWException, IllegalStateException;
 
     /**
      * @return The message encoding
@@ -64,36 +73,39 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * Read the content of this object using a {@link MessageWriter}. This method allows to transcode an event from one transport to another without
      * converting it to {@link CloudEvent}. The resulting encoding will be the same as the original encoding.
      *
-     * @param visitor the MessageVisitor accepting this Message
-     * @return The return value of the MessageVisitor
+     * @param <BW>           the {@link CloudEventWriter} type
+     * @param <R>           the return type of both {@link CloudEventWriter} and {@link StructuredMessageWriter}
+     * @param reader the MessageReader accepting this Message
+     * @return The return value of the MessageReader
      * @throws CloudEventRWException if something went wrong during the visit.
      * @throws IllegalStateException if the message has an unknown encoding.
      */
-    default <BV extends CloudEventWriter<R>, R> R read(MessageWriter<BV, R> visitor) throws CloudEventRWException, IllegalStateException {
+    default <BW extends CloudEventWriter<R>, R> R read(MessageWriter<BW, R> reader) throws CloudEventRWException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
-                return this.read((CloudEventWriterFactory<BV, R>) visitor);
+                return this.read((CloudEventWriterFactory<BW, R>) reader);
             case STRUCTURED:
-                return this.read((StructuredMessageWriter<R>) visitor);
+                return this.read((StructuredMessageWriter<R>) reader);
             default:
-                throw new IllegalStateException("Unknown encoding");
+                throw new IllegalStateException(
+                    "The provided Encoding doesn't exist. Please make sure your io.cloudevents deps versions are aligned."
+                );
         }
     }
 
     /**
-     * Translate this message into a {@link CloudEvent} representation.
+     * Like {@link #toEvent(CloudEventDataMapper)}, but with the identity {@link CloudEventDataMapper}.
      *
-     * @return A {@link CloudEvent} with the contents of this message.
-     * @throws CloudEventRWException if something went wrong during the visit.
-     * @throws IllegalStateException    if the message has an unknown encoding.
+     * @see #toEvent(CloudEventDataMapper)
      */
     default CloudEvent toEvent() throws CloudEventRWException, IllegalStateException {
         return toEvent(CloudEventDataMapper.identity());
     }
 
     /**
-     * Translate this message into a {@link CloudEvent} representation.
+     * Translate this message into a {@link CloudEvent} representation, mapping the data with the provided {@code mapper}.
      *
+     * @param mapper the mapper to use to map the data, if any.
      * @return A {@link CloudEvent} with the contents of this message.
      * @throws CloudEventRWException if something went wrong during the visit.
      * @throws IllegalStateException if the message has an unknown encoding.
@@ -105,7 +117,9 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
             case STRUCTURED:
                 return this.read((format, value) -> format.deserialize(value, mapper));
             default:
-                throw new IllegalStateException("Unknown encoding");
+                throw new IllegalStateException(
+                    "The provided Encoding doesn't exist. Please make sure your io.cloudevents deps versions are aligned."
+                );
         }
     }
 
