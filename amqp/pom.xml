@@ -16,8 +16,10 @@
     <properties>
        <protonj.version>0.33.7</protonj.version>
        <jsr305.version>3.0.2</jsr305.version>
+        <module-name>io.cloudevents.amqp.proton</module-name>
     </properties>
-	<dependencies>
+
+    <dependencies>
 		<dependency>
 			<groupId>org.apache.qpid</groupId>
 			<artifactId>proton-j</artifactId>
