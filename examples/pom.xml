@@ -20,6 +20,7 @@
         <module>basic-http</module>
         <module>restful-ws-spring-boot</module>
         <module>amqp-proton</module>
+        <module>spring-reactive</module>
     </modules>
 
 </project>
