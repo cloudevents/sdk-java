@@ -31,6 +31,11 @@
     <name>CloudEvents - JAX-RS Web Http Binding Integration Tests</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <!-- No need to generate javadocs for these IT tests -->
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+    </properties>
+
     <modules>
         <module>restful-ws-common</module>
         <module>restful-ws-spring</module>

@@ -19,5 +19,5 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - run: |
-          mvn clean install -Drelease -DskipTests -B
+          mvn clean install -DskipTests -B
           mvn verify -B
