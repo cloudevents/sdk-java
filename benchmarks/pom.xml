@@ -34,7 +34,6 @@
         <javac.target>1.8</javac.target>
         <!-- Name of the benchmark Uber-JAR to generate. -->
         <uberjar.name>benchmarks</uberjar.name>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
     <dependencies>
