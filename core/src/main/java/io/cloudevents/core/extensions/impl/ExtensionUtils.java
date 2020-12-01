@@ -33,7 +33,7 @@ public final class ExtensionUtils {
      * @return an {@link IllegalArgumentException} when trying to access a key of the extension not existing.
      */
     public static IllegalArgumentException generateInvalidKeyException(Class<? extends Extension> clazz, String key) {
-        return new IllegalArgumentException(clazz.getSimpleName() + " doesn't expect the attribute key \"" + key + "\"");
+        return new IllegalArgumentException(clazz.getName() + " doesn't expect the attribute key \"" + key + "\"");
     }
 
 }

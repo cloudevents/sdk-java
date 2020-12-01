@@ -43,7 +43,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     }
 
     /**
-     * Read the message as binary encoded message using the provided reader factory.
+     * Read the message as binary encoded message using the provided writer factory.
      *
      * @param <W>           the {@link CloudEventWriter} type
      * @param <R>           the return type of the {@link CloudEventWriter}
@@ -55,7 +55,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException;
 
     /**
-     * Read the message as structured encoded message using the provided reader
+     * Read the message as structured encoded message using the provided writer
      *
      * @param <R>    the return type of the {@link StructuredMessageWriter}
      * @param writer Structured Message reader
