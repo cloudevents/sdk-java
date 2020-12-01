@@ -73,19 +73,19 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * Read the content of this object using a {@link MessageWriter}. This method allows to transcode an event from one transport to another without
      * converting it to {@link CloudEvent}. The resulting encoding will be the same as the original encoding.
      *
-     * @param <BW>           the {@link CloudEventWriter} type
-     * @param <R>           the return type of both {@link CloudEventWriter} and {@link StructuredMessageWriter}
-     * @param reader the MessageReader accepting this Message
-     * @return The return value of the MessageReader
+     * @param <BW>   the {@link CloudEventWriter} type
+     * @param <R>    the return type of both {@link CloudEventWriter} and {@link StructuredMessageWriter}
+     * @param writer the {@link MessageWriter} accepting this Message
+     * @return The return value of the {@link MessageWriter}
      * @throws CloudEventRWException if something went wrong during the visit.
      * @throws IllegalStateException if the message has an unknown encoding.
      */
-    default <BW extends CloudEventWriter<R>, R> R read(MessageWriter<BW, R> reader) throws CloudEventRWException, IllegalStateException {
+    default <BW extends CloudEventWriter<R>, R> R read(MessageWriter<BW, R> writer) throws CloudEventRWException, IllegalStateException {
         switch (getEncoding()) {
             case BINARY:
-                return this.read((CloudEventWriterFactory<BW, R>) reader);
+                return this.read((CloudEventWriterFactory<BW, R>) writer);
             case STRUCTURED:
-                return this.read((StructuredMessageWriter<R>) reader);
+                return this.read((StructuredMessageWriter<R>) writer);
             default:
                 throw new IllegalStateException(
                     "The provided Encoding doesn't exist. Please make sure your io.cloudevents deps versions are aligned."
