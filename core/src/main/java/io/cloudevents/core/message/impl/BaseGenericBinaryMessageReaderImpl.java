@@ -57,17 +57,13 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
         // in order to complete the visit in one loop
         this.forEachHeader((key, value) -> {
             if (isContentTypeHeader(key)) {
-                visitor.withAttribute(CloudEventV1.DATACONTENTTYPE, toCloudEventsValue(value));
+                visitor.withContextAttribute(CloudEventV1.DATACONTENTTYPE, toCloudEventsValue(value));
             } else if (isCloudEventsHeader(key)) {
                 String name = toCloudEventsKey(key);
                 if (name.equals(CloudEventV1.SPECVERSION)) {
                     return;
                 }
-                if (this.version.getAllAttributes().contains(name)) {
-                    visitor.withAttribute(name, toCloudEventsValue(value));
-                } else {
-                    visitor.withExtension(name, toCloudEventsValue(value));
-                }
+                visitor.withContextAttribute(name, toCloudEventsValue(value));
             }
         });
 

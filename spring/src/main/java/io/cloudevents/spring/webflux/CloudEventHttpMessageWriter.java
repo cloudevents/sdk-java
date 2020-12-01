@@ -15,34 +15,34 @@
  */
 package io.cloudevents.spring.webflux;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
+import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 import io.cloudevents.spring.http.CloudEventsHeaders;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
-
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.codec.HttpMessageWriter;
+import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A reactive {@link HttpMessageWriter} for {@link CloudEvent CloudEvents}, converting
  * from a cloud event to an HTTP response. Supports the use of {@link CloudEvent} as an
  * output from a reactive endpoint.
- * 
+ *
  * @author Dave Syer
  *
  */
@@ -74,37 +74,35 @@ public class CloudEventHttpMessageWriter implements HttpMessageWriter<CloudEvent
 			this.response = response;
 		}
 
-		// Binary visitor factory
+        // Binary visitor factory
 
-		@Override
-		public CloudEventWriter<Mono<Void>> create(SpecVersion version) {
-			this.response.getHeaders().set(CloudEventsHeaders.SPEC_VERSION, version.toString());
-			return this;
-		}
+        @Override
+        public CloudEventWriter<Mono<Void>> create(SpecVersion version) {
+            this.response.getHeaders().set(CloudEventsHeaders.SPEC_VERSION, version.toString());
+            return this;
+        }
 
-		// Binary visitor
+        // Binary visitor
 
-		@Override
-		public ReactiveHttpMessageWriter withAttribute(String name, String value) throws CloudEventRWException {
-			this.response.getHeaders().set(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
-			return this;
-		}
+        @Override
+        public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
+            String headerName = CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name);
+            if (headerName == null) {
+                headerName = "ce-" + name;
+            }
+            this.response.getHeaders().set(headerName, value);
+            return this;
+        }
 
-		@Override
-		public ReactiveHttpMessageWriter withExtension(String name, String value) throws CloudEventRWException {
-			this.response.getHeaders().set("ce-" + name, value);
-			return this;
-		}
+        @Override
+        public Mono<Void> end(CloudEventData value) throws CloudEventRWException {
+            return copy(value.toBytes(), this.response);
+        }
 
-		@Override
-		public Mono<Void> end(CloudEventData value) throws CloudEventRWException {
-			return copy(value.toBytes(), this.response);
-		}
-
-		@Override
-		public Mono<Void> end() {
-			return copy(new byte[0], this.response);
-		}
+        @Override
+        public Mono<Void> end() {
+            return copy(new byte[0], this.response);
+        }
 
 		// Structured visitor
 
@@ -119,7 +117,6 @@ public class CloudEventHttpMessageWriter implements HttpMessageWriter<CloudEvent
 			message.getHeaders().setContentLength(bytes.length);
 			return message.writeWith(Mono.just(data));
 		}
-
-	}
+    }
 
 }

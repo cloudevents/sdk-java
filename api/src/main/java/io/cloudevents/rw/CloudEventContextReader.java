@@ -28,19 +28,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface CloudEventContextReader {
 
     /**
-     * Visit self attributes using the provided writer
+     * Read the context attributes and extensions using the provided writer
      *
-     * @param writer Attributes writer
-     * @throws CloudEventRWException if something went wrong during the visit.
+     * @param writer context writer
+     * @throws CloudEventRWException if something went wrong during the read.
      */
-    void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException;
-
-    /**
-     * Visit self extensions using the provided writer
-     *
-     * @param visitor Extensions writer
-     * @throws CloudEventRWException if something went wrong during the visit.
-     */
-    void readExtensions(CloudEventExtensionsWriter visitor) throws CloudEventRWException;
+    void readContext(CloudEventContextWriter writer) throws CloudEventRWException;
 
 }

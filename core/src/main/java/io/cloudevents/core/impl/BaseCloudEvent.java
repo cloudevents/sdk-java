@@ -21,6 +21,8 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.rw.*;
 
+import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -52,26 +54,29 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader, Cl
 
     @Override
     public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
-        CloudEventWriter<V> visitor = writerFactory.create(this.getSpecVersion());
-        this.readAttributes(visitor);
-        this.readExtensions(visitor);
+        CloudEventWriter<V> writer = writerFactory.create(this.getSpecVersion());
+        this.readContext(writer);
 
         if (this.data != null) {
-            return visitor.end(mapper.map(this.data));
+            return writer.end(mapper.map(this.data));
         }
 
-        return visitor.end();
+        return writer.end();
     }
 
-    public void readExtensions(CloudEventExtensionsWriter writer) throws CloudEventRWException {
+    protected void readExtensions(CloudEventContextWriter writer) throws CloudEventRWException {
         // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
             if (entry.getValue() instanceof String) {
-                writer.withExtension(entry.getKey(), (String) entry.getValue());
+                writer.withContextAttribute(entry.getKey(), (String) entry.getValue());
             } else if (entry.getValue() instanceof Number) {
-                writer.withExtension(entry.getKey(), (Number) entry.getValue());
+                writer.withContextAttribute(entry.getKey(), (Number) entry.getValue());
             } else if (entry.getValue() instanceof Boolean) {
-                writer.withExtension(entry.getKey(), (Boolean) entry.getValue());
+                writer.withContextAttribute(entry.getKey(), (Boolean) entry.getValue());
+            } else if (entry.getValue() instanceof URI) {
+                writer.withContextAttribute(entry.getKey(), (URI) entry.getValue());
+            } else if (entry.getValue() instanceof OffsetDateTime) {
+                writer.withContextAttribute(entry.getKey(), (OffsetDateTime) entry.getValue());
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);

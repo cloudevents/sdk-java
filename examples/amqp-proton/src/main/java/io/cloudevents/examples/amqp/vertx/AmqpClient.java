@@ -1,26 +1,20 @@
 package io.cloudevents.examples.amqp.vertx;
 
-import java.io.PrintWriter;
-
-import org.apache.qpid.proton.amqp.messaging.Accepted;
-import org.apache.qpid.proton.message.Message;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.amqp.ProtonAmqpMessageFactory;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.v1.CloudEventBuilder;
-import io.cloudevents.core.v1.CloudEventV1;
+import io.cloudevents.types.Time;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.proton.ProtonClient;
-import io.vertx.proton.ProtonClientOptions;
-import io.vertx.proton.ProtonConnection;
-import io.vertx.proton.ProtonMessageHandler;
-import io.vertx.proton.ProtonQoS;
-import io.vertx.proton.ProtonReceiver;
-import io.vertx.proton.ProtonSender;
+import io.vertx.proton.*;
+import org.apache.qpid.proton.amqp.messaging.Accepted;
+import org.apache.qpid.proton.message.Message;
+
+import java.io.PrintWriter;
+import java.net.URI;
 
 /**
  * A example vertx-based AMQP client that interacts with a remote AMQP server to send and receive CloudEvent messages.
@@ -73,10 +67,10 @@ public class AmqpClient {
             final JsonObject payload = new JsonObject().put("temp", 50);
 
             final CloudEvent event = new CloudEventBuilder()
-                    .withAttribute(CloudEventV1.ID, "client-id")
-                    .withAttribute(CloudEventV1.SOURCE, "http://127.0.0.1/amqp-client")
-                    .withAttribute(CloudEventV1.TYPE, "com.example.sampletype1")
-                    .withAttribute(CloudEventV1.TIME, "2020-11-06T21:47:12.037467+00:00")
+                .withId("client-id")
+                .withSource(URI.create("http://127.0.0.1/amqp-client"))
+                .withType("com.example.sampletype1")
+                .withTime(Time.parseTime("2020-11-06T21:47:12.037467+00:00"))
                     .withData(payload.toString().getBytes())
                     .build();
 
@@ -96,16 +90,16 @@ public class AmqpClient {
 
     private static void receiveMessage() {
         connectToServer(SERVER_HOST, SERVER_PORT)
-        .compose(conn -> {
-            connection = conn;
-            writer.println("[Client] Connected");
-            return Future.succeededFuture();
-        }).onSuccess(success -> 
-                openReceiverLink((delivery, message) -> {
+            .compose(conn -> {
+                connection = conn;
+                writer.println("[Client] Connected");
+                return Future.succeededFuture();
+            }).onSuccess(success ->
+            openReceiverLink((delivery, message) -> {
                 final MessageReader reader = ProtonAmqpMessageFactory.createReader(message);
                 final CloudEvent event = reader.toEvent();
                 writer.printf("[Client] received CloudEvent[Id=%s, Source=%s]", event.getId(),
-                        event.getSource().toString());
+                    event.getSource().toString());
                 connection.close();
             })
         ).onFailure(t -> {

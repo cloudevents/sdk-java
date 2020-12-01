@@ -35,14 +35,12 @@ abstract class BaseKafkaMessageWriterImpl<R> implements MessageWriter<CloudEvent
     }
 
     @Override
-    public BaseKafkaMessageWriterImpl<R> withAttribute(String name, String value) throws CloudEventRWException {
-        headers.add(new RecordHeader(KafkaHeaders.ATTRIBUTES_TO_HEADERS.get(name), value.getBytes()));
-        return this;
-    }
-
-    @Override
-    public BaseKafkaMessageWriterImpl<R> withExtension(String name, String value) throws CloudEventRWException {
-        headers.add(new RecordHeader(KafkaHeaders.CE_PREFIX + name, value.getBytes()));
+    public BaseKafkaMessageWriterImpl<R> withContextAttribute(String name, String value) throws CloudEventRWException {
+        String headerName = KafkaHeaders.ATTRIBUTES_TO_HEADERS.get(name);
+        if (headerName == null) {
+            headerName = KafkaHeaders.CE_PREFIX + name;
+        }
+        headers.add(new RecordHeader(headerName, value.getBytes()));
         return this;
     }
 

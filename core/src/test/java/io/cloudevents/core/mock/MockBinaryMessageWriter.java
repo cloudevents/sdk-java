@@ -34,24 +34,21 @@ import java.util.Map;
 public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements MessageReader, CloudEventContextReader, CloudEventWriterFactory<MockBinaryMessageWriter, MockBinaryMessageWriter>, CloudEventWriter<MockBinaryMessageWriter> {
 
     private SpecVersion version;
-    private Map<String, Object> attributes;
+    private Map<String, Object> context;
     private CloudEventData data;
-    private Map<String, Object> extensions;
 
-    public MockBinaryMessageWriter(SpecVersion version, Map<String, Object> attributes, CloudEventData data, Map<String, Object> extensions) {
+    public MockBinaryMessageWriter(SpecVersion version, Map<String, Object> context, CloudEventData data) {
         this.version = version;
-        this.attributes = attributes;
+        this.context = context;
         this.data = data;
-        this.extensions = extensions;
     }
 
-    public MockBinaryMessageWriter(SpecVersion version, Map<String, Object> attributes, byte[] data, Map<String, Object> extensions) {
-        this(version, attributes, BytesCloudEventData.wrap(data), extensions);
+    public MockBinaryMessageWriter(SpecVersion version, Map<String, Object> context, byte[] data) {
+        this(version, context, BytesCloudEventData.wrap(data));
     }
 
     public MockBinaryMessageWriter() {
-        this.attributes = new HashMap<>();
-        this.extensions = new HashMap<>();
+        this.context = new HashMap<>();
     }
 
     public MockBinaryMessageWriter(CloudEvent event) {
@@ -67,47 +64,14 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
             throw new IllegalStateException("MockBinaryMessage is empty");
         }
 
-        CloudEventWriter<V> visitor = writerFactory.create(version);
-        this.readAttributes(visitor);
-        this.readExtensions(visitor);
+        CloudEventWriter<V> writer = writerFactory.create(version);
+        this.readContext(writer);
 
         if (this.data != null) {
-            return visitor.end(mapper.map(this.data));
+            return writer.end(mapper.map(this.data));
         }
 
-        return visitor.end();
-    }
-
-    @Override
-    public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException, IllegalStateException {
-        for (Map.Entry<String, Object> e : this.attributes.entrySet()) {
-            if (e.getValue() instanceof String) {
-                writer.withAttribute(e.getKey(), (String) e.getValue());
-            } else if (e.getValue() instanceof OffsetDateTime) {
-                writer.withAttribute(e.getKey(), (OffsetDateTime) e.getValue());
-            } else if (e.getValue() instanceof URI) {
-                writer.withAttribute(e.getKey(), (URI) e.getValue());
-            } else {
-                // This should never happen because we build that map only through our builders
-                throw new IllegalStateException("Illegal value inside attributes map: " + e);
-            }
-        }
-    }
-
-    @Override
-    public void readExtensions(CloudEventExtensionsWriter writer) throws CloudEventRWException, IllegalStateException {
-        for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
-            if (entry.getValue() instanceof String) {
-                writer.withExtension(entry.getKey(), (String) entry.getValue());
-            } else if (entry.getValue() instanceof Number) {
-                writer.withExtension(entry.getKey(), (Number) entry.getValue());
-            } else if (entry.getValue() instanceof Boolean) {
-                writer.withExtension(entry.getKey(), (Boolean) entry.getValue());
-            } else {
-                // This should never happen because we build that map only through our builders
-                throw new IllegalStateException("Illegal value inside extensions map: " + entry);
-            }
-        }
+        return writer.end();
     }
 
     @Override
@@ -122,45 +86,59 @@ public class MockBinaryMessageWriter extends BaseBinaryMessageReader implements 
     }
 
     @Override
-    public MockBinaryMessageWriter withAttribute(String name, String value) throws CloudEventRWException {
-        this.attributes.put(name, value);
-        return this;
-    }
-
-    @Override
-    public MockBinaryMessageWriter withAttribute(String name, URI value) throws CloudEventRWException {
-        this.attributes.put(name, value);
-        return this;
-    }
-
-    @Override
-    public MockBinaryMessageWriter withAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
-        this.attributes.put(name, value);
-        return this;
-    }
-
-    @Override
-    public MockBinaryMessageWriter withExtension(String name, String value) throws CloudEventRWException {
-        this.extensions.put(name, value);
-        return this;
-    }
-
-    @Override
-    public MockBinaryMessageWriter withExtension(String name, Number value) throws CloudEventRWException {
-        this.extensions.put(name, value);
-        return this;
-    }
-
-    @Override
-    public MockBinaryMessageWriter withExtension(String name, Boolean value) throws CloudEventRWException {
-        this.extensions.put(name, value);
-        return this;
-    }
-
-    @Override
     public MockBinaryMessageWriter create(SpecVersion version) {
         this.version = version;
 
+        return this;
+    }
+
+    @Override
+    public void readContext(CloudEventContextWriter writer) throws CloudEventRWException {
+        for (Map.Entry<String, Object> entry : this.context.entrySet()) {
+            if (entry.getValue() instanceof String) {
+                writer.withContextAttribute(entry.getKey(), (String) entry.getValue());
+            } else if (entry.getValue() instanceof OffsetDateTime) {
+                writer.withContextAttribute(entry.getKey(), (OffsetDateTime) entry.getValue());
+            } else if (entry.getValue() instanceof URI) {
+                writer.withContextAttribute(entry.getKey(), (URI) entry.getValue());
+            } else if (entry.getValue() instanceof Number) {
+                writer.withContextAttribute(entry.getKey(), (Number) entry.getValue());
+            } else if (entry.getValue() instanceof Boolean) {
+                writer.withContextAttribute(entry.getKey(), (Boolean) entry.getValue());
+            } else {
+                // This should never happen because we build that map only through our builders
+                throw new IllegalStateException("Illegal value inside context map: " + entry);
+            }
+        }
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
+        this.context.put(name, value);
+        return this;
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, URI value) throws CloudEventRWException {
+        this.context.put(name, value);
+        return this;
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
+        this.context.put(name, value);
+        return this;
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
+        this.context.put(name, value);
+        return this;
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, Boolean value) throws CloudEventRWException {
+        this.context.put(name, value);
         return this;
     }
 }

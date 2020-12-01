@@ -57,19 +57,21 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         public <T extends CloudEventWriter<V>, V> V read(CloudEventWriterFactory<T, V> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
             try {
                 SpecVersion specVersion = SpecVersion.parse(getStringNode(this.node, this.p, "specversion"));
-                CloudEventWriter<V> visitor = writerFactory.create(specVersion);
+                CloudEventWriter<V> writer = writerFactory.create(specVersion);
+
+                // TODO remove all the unnecessary code specversion aware
 
                 // Read mandatory attributes
                 for (String attr : specVersion.getMandatoryAttributes()) {
                     if (!"specversion".equals(attr)) {
-                        visitor.withAttribute(attr, getStringNode(this.node, this.p, attr));
+                        writer.withContextAttribute(attr, getStringNode(this.node, this.p, attr));
                     }
                 }
 
                 // Parse datacontenttype if any
                 String contentType = getOptionalStringNode(this.node, this.p, "datacontenttype");
                 if (contentType != null) {
-                    visitor.withAttribute("datacontenttype", contentType);
+                    writer.withContextAttribute("datacontenttype", contentType);
                 }
 
                 // Read optional attributes
@@ -77,7 +79,7 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                     if (!"datacontentencoding".equals(attr)) { // Skip datacontentencoding, we need it later
                         String val = getOptionalStringNode(this.node, this.p, attr);
                         if (val != null) {
-                            visitor.withAttribute(attr, val);
+                            writer.withContextAttribute(attr, val);
                         }
                     }
                 }
@@ -129,24 +131,24 @@ public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
 
                     switch (extensionValue.getNodeType()) {
                         case BOOLEAN:
-                            visitor.withExtension(extensionName, extensionValue.booleanValue());
+                            writer.withContextAttribute(extensionName, extensionValue.booleanValue());
                             break;
                         case NUMBER:
-                            visitor.withExtension(extensionName, extensionValue.numberValue());
+                            writer.withContextAttribute(extensionName, extensionValue.numberValue());
                             break;
                         case STRING:
-                            visitor.withExtension(extensionName, extensionValue.textValue());
+                            writer.withContextAttribute(extensionName, extensionValue.textValue());
                             break;
                         default:
-                            visitor.withExtension(extensionName, extensionValue.toString());
+                            writer.withContextAttribute(extensionName, extensionValue.toString());
                     }
 
                 });
 
                 if (data != null) {
-                    return visitor.end(mapper.map(data));
+                    return writer.end(mapper.map(data));
                 }
-                return visitor.end();
+                return writer.end();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (IllegalArgumentException e) {

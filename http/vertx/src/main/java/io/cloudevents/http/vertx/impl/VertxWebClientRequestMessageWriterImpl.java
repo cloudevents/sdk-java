@@ -48,14 +48,12 @@ public class VertxWebClientRequestMessageWriterImpl implements MessageWriter<Clo
     // Binary visitor
 
     @Override
-    public VertxWebClientRequestMessageWriterImpl withAttribute(String name, String value) throws CloudEventRWException {
-        this.request.headers().add(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
-        return this;
-    }
-
-    @Override
-    public VertxWebClientRequestMessageWriterImpl withExtension(String name, String value) throws CloudEventRWException {
-        this.request.headers().add("ce-" + name, value);
+    public VertxWebClientRequestMessageWriterImpl withContextAttribute(String name, String value) throws CloudEventRWException {
+        CharSequence headerName = CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name);
+        if (headerName == null) {
+            headerName = "ce-" + name;
+        }
+        this.request.headers().add(headerName, value);
         return this;
     }
 

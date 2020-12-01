@@ -17,7 +17,7 @@
 
 package io.cloudevents.core.v1;
 
-import io.cloudevents.rw.CloudEventAttributesWriter;
+import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
 
@@ -25,7 +25,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
 
-class V03ToV1AttributesConverter implements CloudEventAttributesWriter {
+import static io.cloudevents.core.v03.CloudEventV03.*;
+
+class V03ToV1AttributesConverter implements CloudEventContextWriter {
 
     private final CloudEventBuilder builder;
 
@@ -34,60 +36,114 @@ class V03ToV1AttributesConverter implements CloudEventAttributesWriter {
     }
 
     @Override
-    public V03ToV1AttributesConverter withAttribute(String name, String value) throws CloudEventRWException {
+    public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
         switch (name) {
-            case "id":
+            case ID:
                 builder.withId(value);
                 return this;
-            case "source":
+            case SOURCE:
                 try {
                     builder.withSource(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventRWException.newInvalidAttributeValue("source", value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue(SOURCE, value, e);
                 }
                 return this;
-            case "type":
+            case TYPE:
                 builder.withType(value);
                 return this;
-            case "datacontenttype":
+            case DATACONTENTTYPE:
                 builder.withDataContentType(value);
                 return this;
-            case "schemaurl":
+            case SCHEMAURL:
                 try {
                     builder.withDataSchema(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventRWException.newInvalidAttributeValue("dataschema", value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue(SCHEMAURL, value, e);
                 }
                 return this;
-            case "subject":
+            case SUBJECT:
                 builder.withSubject(value);
                 return this;
-            case "time":
-                builder.withTime(Time.parseTime("time", value));
+            case TIME:
+                builder.withTime(Time.parseTime(TIME, value));
+                return this;
+            default:
+                builder.withExtension(name, value);
                 return this;
         }
-        throw CloudEventRWException.newInvalidAttributeName(name);
     }
 
     @Override
-    public V03ToV1AttributesConverter withAttribute(String name, URI value) throws CloudEventRWException {
+    public CloudEventContextWriter withContextAttribute(String name, URI value) throws CloudEventRWException {
         switch (name) {
-            case "source":
+            case SOURCE:
                 builder.withSource(value);
                 return this;
-            case "schemaurl":
+            case SCHEMAURL:
                 builder.withDataSchema(value);
                 return this;
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+            case TIME:
+                throw CloudEventRWException.newInvalidAttributeType(name, URI.class);
+            default:
+                builder.withExtension(name, value);
+                return this;
         }
-        throw CloudEventRWException.newInvalidAttributeType(name, URI.class);
     }
 
     @Override
-    public V03ToV1AttributesConverter withAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
-        if ("time".equals(name)) {
-            builder.withTime(value);
-            return this;
+    public CloudEventContextWriter withContextAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
+        switch (name) {
+            case TIME:
+                builder.withTime(value);
+                return this;
+            case SOURCE:
+            case SCHEMAURL:
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+                throw CloudEventRWException.newInvalidAttributeType(name, OffsetDateTime.class);
+            default:
+                builder.withExtension(name, value);
+                return this;
         }
-        throw CloudEventRWException.newInvalidAttributeType(name, OffsetDateTime.class);
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
+        switch (name) {
+            case TIME:
+            case SOURCE:
+            case SCHEMAURL:
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+                throw CloudEventRWException.newInvalidAttributeType(name, Number.class);
+            default:
+                builder.withExtension(name, value);
+                return this;
+        }
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, Boolean value) throws CloudEventRWException {
+        switch (name) {
+            case TIME:
+            case SOURCE:
+            case SCHEMAURL:
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+                throw CloudEventRWException.newInvalidAttributeType(name, Boolean.class);
+            default:
+                builder.withExtension(name, value);
+                return this;
+        }
     }
 }

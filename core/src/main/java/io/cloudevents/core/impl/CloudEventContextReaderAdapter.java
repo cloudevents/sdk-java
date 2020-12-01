@@ -18,9 +18,12 @@
 package io.cloudevents.core.impl;
 
 import io.cloudevents.CloudEventContext;
-import io.cloudevents.rw.CloudEventAttributesWriter;
 import io.cloudevents.rw.CloudEventContextReader;
-import io.cloudevents.rw.CloudEventExtensionsWriter;
+import io.cloudevents.rw.CloudEventContextWriter;
+import io.cloudevents.rw.CloudEventRWException;
+
+import java.net.URI;
+import java.time.OffsetDateTime;
 
 public class CloudEventContextReaderAdapter implements CloudEventContextReader {
 
@@ -30,41 +33,47 @@ public class CloudEventContextReaderAdapter implements CloudEventContextReader {
         this.event = event;
     }
 
-    @Override
-    public void readAttributes(CloudEventAttributesWriter writer) throws RuntimeException {
-        writer.withAttribute("id", event.getId());
-        writer.withAttribute("source", event.getSource());
-        writer.withAttribute("type", event.getType());
+    public void readAttributes(CloudEventContextWriter writer) throws RuntimeException {
+        writer.withContextAttribute("id", event.getId());
+        writer.withContextAttribute("source", event.getSource());
+        writer.withContextAttribute("type", event.getType());
         if (event.getDataContentType() != null) {
-            writer.withAttribute("datacontenttype", event.getDataContentType());
+            writer.withContextAttribute("datacontenttype", event.getDataContentType());
         }
         if (event.getDataSchema() != null) {
-            writer.withAttribute("dataschema", event.getDataSchema());
+            writer.withContextAttribute("dataschema", event.getDataSchema());
         }
         if (event.getSubject() != null) {
-            writer.withAttribute("subject", event.getSubject());
+            writer.withContextAttribute("subject", event.getSubject());
         }
         if (event.getTime() != null) {
-            writer.withAttribute("time", event.getTime());
+            writer.withContextAttribute("time", event.getTime());
         }
     }
 
-    @Override
-    public void readExtensions(CloudEventExtensionsWriter writer) throws RuntimeException {
+    public void readExtensions(CloudEventContextWriter writer) throws RuntimeException {
         for (String key : event.getExtensionNames()) {
             Object value = event.getExtension(key);
             if (value instanceof String) {
-                writer.withExtension(key, (String) value);
+                writer.withContextAttribute(key, (String) value);
             } else if (value instanceof Number) {
-                writer.withExtension(key, (Number) value);
+                writer.withContextAttribute(key, (Number) value);
             } else if (value instanceof Boolean) {
-                writer.withExtension(key, (Boolean) value);
+                writer.withContextAttribute(key, (Boolean) value);
+            } else if (value instanceof URI) {
+                writer.withContextAttribute(key, (URI) value);
+            } else if (value instanceof OffsetDateTime) {
+                writer.withContextAttribute(key, (OffsetDateTime) value);
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + key + " " + value);
             }
         }
-        ;
     }
 
+    @Override
+    public void readContext(CloudEventContextWriter writer) throws CloudEventRWException {
+        this.readAttributes(writer);
+        this.readExtensions(writer);
+    }
 }

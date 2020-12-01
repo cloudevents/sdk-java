@@ -22,12 +22,15 @@ import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.impl.BaseCloudEventBuilder;
 import io.cloudevents.rw.CloudEventContextReader;
+import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.types.Time;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
+
+import static io.cloudevents.core.v1.CloudEventV1.*;
 
 /**
  * CloudEvent V1.0 builder.
@@ -61,11 +64,10 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     protected void setAttributes(io.cloudevents.CloudEventContext event) {
         CloudEventContextReader contextReader = CloudEventUtils.toContextReader(event);
         if (event.getSpecVersion() == SpecVersion.V1) {
-            contextReader.readAttributes(this);
+            contextReader.readContext(this);
         } else {
-            contextReader.readAttributes(new V03ToV1AttributesConverter(this));
+            contextReader.readContext(new V03ToV1AttributesConverter(this));
         }
-        contextReader.readExtensions(this);
     }
 
     public CloudEventBuilder withId(String id) {
@@ -108,13 +110,13 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     @Override
     public CloudEvent build() {
         if (id == null) {
-            throw createMissingAttributeException(CloudEventV1.ID);
+            throw createMissingAttributeException(ID);
         }
         if (source == null) {
-            throw createMissingAttributeException(CloudEventV1.SOURCE);
+            throw createMissingAttributeException(SOURCE);
         }
         if (type == null) {
-            throw createMissingAttributeException(CloudEventV1.TYPE);
+            throw createMissingAttributeException(TYPE);
         }
 
         return new CloudEventV1(id, source, type, datacontenttype, dataschema, subject, time, this.data, this.extensions);
@@ -138,60 +140,119 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
     // Message impl
 
     @Override
-    public CloudEventBuilder withAttribute(String name, String value) throws CloudEventRWException {
+    public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
+        requireValidAttributeWrite(name);
         switch (name) {
-            case CloudEventV1.ID:
+            case ID:
                 withId(value);
                 return this;
-            case CloudEventV1.SOURCE:
+            case SOURCE:
                 try {
                     withSource(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventRWException.newInvalidAttributeValue(CloudEventV1.SOURCE, value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue(SOURCE, value, e);
                 }
                 return this;
-            case CloudEventV1.TYPE:
+            case TYPE:
                 withType(value);
                 return this;
-            case CloudEventV1.DATACONTENTTYPE:
+            case DATACONTENTTYPE:
                 withDataContentType(value);
                 return this;
-            case CloudEventV1.DATASCHEMA:
+            case DATASCHEMA:
                 try {
                     withDataSchema(new URI(value));
                 } catch (URISyntaxException e) {
-                    throw CloudEventRWException.newInvalidAttributeValue(CloudEventV1.DATASCHEMA, value, e);
+                    throw CloudEventRWException.newInvalidAttributeValue(DATASCHEMA, value, e);
                 }
                 return this;
-            case CloudEventV1.SUBJECT:
+            case SUBJECT:
                 withSubject(value);
                 return this;
-            case CloudEventV1.TIME:
-                withTime(Time.parseTime(CloudEventV1.TIME, value));
+            case TIME:
+                withTime(Time.parseTime(TIME, value));
+                return this;
+            default:
+                withExtension(name, value);
                 return this;
         }
-        throw CloudEventRWException.newInvalidAttributeName(name);
     }
 
     @Override
-    public CloudEventBuilder withAttribute(String name, URI value) throws CloudEventRWException {
+    public CloudEventContextWriter withContextAttribute(String name, URI value) throws CloudEventRWException {
+        requireValidAttributeWrite(name);
         switch (name) {
-            case CloudEventV1.SOURCE:
+            case SOURCE:
                 withSource(value);
                 return this;
-            case CloudEventV1.DATASCHEMA:
+            case DATASCHEMA:
                 withDataSchema(value);
                 return this;
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+            case TIME:
+                throw CloudEventRWException.newInvalidAttributeType(name, URI.class);
+            default:
+                withExtension(name, value);
+                return this;
         }
-        throw CloudEventRWException.newInvalidAttributeType(name, URI.class);
     }
 
     @Override
-    public CloudEventBuilder withAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
-        if (CloudEventV1.TIME.equals(name)) {
-            withTime(value);
-            return this;
+    public CloudEventContextWriter withContextAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
+        requireValidAttributeWrite(name);
+        switch (name) {
+            case TIME:
+                withTime(value);
+                return this;
+            case DATASCHEMA:
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+            case SOURCE:
+                throw CloudEventRWException.newInvalidAttributeType(name, OffsetDateTime.class);
+            default:
+                withExtension(name, value);
+                return this;
         }
-        throw CloudEventRWException.newInvalidAttributeType(name, OffsetDateTime.class);
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
+        requireValidAttributeWrite(name);
+        switch (name) {
+            case TIME:
+            case DATASCHEMA:
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+            case SOURCE:
+                throw CloudEventRWException.newInvalidAttributeType(name, Number.class);
+            default:
+                withExtension(name, value);
+                return this;
+        }
+    }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, Boolean value) throws CloudEventRWException {
+        requireValidAttributeWrite(name);
+        switch (name) {
+            case TIME:
+            case DATASCHEMA:
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+            case SOURCE:
+                throw CloudEventRWException.newInvalidAttributeType(name, Boolean.class);
+            default:
+                withExtension(name, value);
+                return this;
+        }
     }
 }

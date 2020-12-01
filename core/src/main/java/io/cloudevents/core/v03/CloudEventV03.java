@@ -20,7 +20,7 @@ import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.impl.BaseCloudEvent;
 import io.cloudevents.lang.Nullable;
-import io.cloudevents.rw.CloudEventAttributesWriter;
+import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 
 import java.net.URI;
@@ -169,43 +169,44 @@ public final class CloudEventV03 extends BaseCloudEvent {
     }
 
     @Override
-    public void readAttributes(CloudEventAttributesWriter writer) throws CloudEventRWException {
-        writer.withAttribute(
+    public void readContext(CloudEventContextWriter writer) throws CloudEventRWException {
+        writer.withContextAttribute(
             ID,
             this.id
         );
-        writer.withAttribute(
+        writer.withContextAttribute(
             SOURCE,
             this.source
         );
-        writer.withAttribute(
+        writer.withContextAttribute(
             TYPE,
             this.type
         );
         if (this.datacontenttype != null) {
-            writer.withAttribute(
+            writer.withContextAttribute(
                 DATACONTENTTYPE,
                 this.datacontenttype
             );
         }
         if (this.schemaurl != null) {
-            writer.withAttribute(
+            writer.withContextAttribute(
                 SCHEMAURL,
                 this.schemaurl
             );
         }
         if (this.subject != null) {
-            writer.withAttribute(
+            writer.withContextAttribute(
                 SUBJECT,
                 this.subject
             );
         }
         if (this.time != null) {
-            writer.withAttribute(
+            writer.withContextAttribute(
                 TIME,
                 this.time
             );
         }
+        this.readExtensions(writer);
     }
 
     @Override

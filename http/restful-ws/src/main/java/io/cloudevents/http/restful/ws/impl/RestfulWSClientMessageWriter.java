@@ -47,14 +47,12 @@ public final class RestfulWSClientMessageWriter implements CloudEventWriter<Void
     }
 
     @Override
-    public RestfulWSClientMessageWriter withAttribute(String name, String value) throws CloudEventRWException {
-        this.context.getHeaders().add(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
-        return this;
-    }
-
-    @Override
-    public RestfulWSClientMessageWriter withExtension(String name, String value) throws CloudEventRWException {
-        this.context.getHeaders().add(CloudEventsHeaders.CE_PREFIX + name, value);
+    public RestfulWSClientMessageWriter withContextAttribute(String name, String value) throws CloudEventRWException {
+        String headerName = CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name);
+        if (headerName == null) {
+            headerName = CloudEventsHeaders.CE_PREFIX + name;
+        }
+        this.context.getHeaders().add(headerName, value);
         return this;
     }
 
