@@ -17,24 +17,12 @@
 
 package io.cloudevents.spring.messaging;
 
-import java.util.Map;
-
-import io.cloudevents.core.message.impl.MessageUtils;
-
-import org.springframework.http.HttpHeaders;
-
 public class CloudEventsHeaders {
 
 	public static final String CE_PREFIX = "ce-";
 
-	public static final Map<String, String> ATTRIBUTES_TO_HEADERS = MessageUtils
-			.generateAttributesToHeadersMapping(v -> {
-				if (v.equals("datacontenttype")) {
-					return HttpHeaders.CONTENT_TYPE;
-				}
-				return CE_PREFIX + v;
-			});
+	public static final String SPEC_VERSION = CE_PREFIX + "specversion";
 
-	public static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
+	public static final String CONTENT_TYPE = CE_PREFIX + "datacontenttype";
 
 }

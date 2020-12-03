@@ -38,18 +38,28 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  */
 class CloudEventMessageConverterTests {
 
+	private static final String JSON = "{\"specversion\":\"1.0\"," //
+			+ "\"id\":\"12345\"," //
+			+ "\"source\":\"https://spring.io/events\"," //
+			+ "\"type\":\"io.spring.event\"," //
+			+ "\"datacontenttype\":\"application/json\"," //
+			+ "\"data\":{\"value\":\"Dave\"}" //
+			+ "}";
+
 	private CloudEventMessageConverter converter = new CloudEventMessageConverter();
 
 	@Test
 	void noSpecVersion() {
 		Message<?> message = MessageBuilder.withPayload(new byte[0]).build();
-		assertThat(converter.fromMessage(message, CloudEvent.class)).isNull();
+		assertThatExceptionOfType(CloudEventRWException.class).isThrownBy(() -> {
+			assertThat(converter.fromMessage(message, CloudEvent.class)).isNull();
+		});
 	}
 
 	@Test
 	void notValidCloudEvent() {
 		Message<?> message = MessageBuilder.withPayload(new byte[0]).setHeader("ce-specversion", "1.0").build();
-		assertThatExceptionOfType(CloudEventRWException.class).isThrownBy(() -> {
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
 			assertThat(converter.fromMessage(message, CloudEvent.class)).isNull();
 		});
 	}
@@ -65,6 +75,31 @@ class CloudEventMessageConverterTests {
 		Message<?> message = MessageBuilder.withPayload(new byte[0]).setHeader("ce-specversion", "1.0")
 				.setHeader("ce-id", "12345").setHeader("ce-source", "https://spring.io/events")
 				.setHeader("ce-type", "io.spring.event").build();
+		CloudEvent event = (CloudEvent) converter.fromMessage(message, CloudEvent.class);
+		assertThat(event).isNotNull();
+		assertThat(event.getSpecVersion()).isEqualTo(SpecVersion.V1);
+		assertThat(event.getId()).isEqualTo("12345");
+		assertThat(event.getSource()).isEqualTo(URI.create("https://spring.io/events"));
+		assertThat(event.getType()).isEqualTo("io.spring.event");
+	}
+
+	@Test
+	void binaryCloudEvent() {
+		byte[] payload = JSON.getBytes();
+		Message<?> message = MessageBuilder.withPayload(payload)
+				.setHeader(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json").build();
+		CloudEvent event = (CloudEvent) converter.fromMessage(message, CloudEvent.class);
+		assertThat(event).isNotNull();
+		assertThat(event.getSpecVersion()).isEqualTo(SpecVersion.V1);
+		assertThat(event.getId()).isEqualTo("12345");
+		assertThat(event.getSource()).isEqualTo(URI.create("https://spring.io/events"));
+		assertThat(event.getType()).isEqualTo("io.spring.event");
+	}
+
+	@Test
+	void binaryCloudEventStringPayload() {
+		Message<?> message = MessageBuilder.withPayload(JSON)
+				.setHeader(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json").build();
 		CloudEvent event = (CloudEvent) converter.fromMessage(message, CloudEvent.class);
 		assertThat(event).isNotNull();
 		assertThat(event.getSpecVersion()).isEqualTo(SpecVersion.V1);

@@ -22,16 +22,12 @@ import java.util.function.Consumer;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventContext;
-import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
-import io.cloudevents.rw.CloudEventWriter;
 
 import org.springframework.messaging.MessageHeaders;
 
@@ -69,7 +65,9 @@ public class CloudEventHeaderUtils {
 	 */
 	public static Map<String, ?> toMap(CloudEvent event) {
 		Map<String, Object> headers = new HashMap<>();
-		CloudEventUtils.toReader(event).read(new MapContextMessageWriter(headers::put));
+		CloudEventUtils.toContextReader(event).readContext(new MapWriter(headers));
+		// Probably this should be done in CloudEventContextReaderAdapter
+		headers.put(CE_PREFIX + "specversion", event.getSpecVersion().toString());
 		return headers;
 	}
 
@@ -110,40 +108,17 @@ public class CloudEventHeaderUtils {
 
 	}
 
-	private static class MapContextMessageWriter
-			implements CloudEventWriter<Void>, MessageWriter<MapContextMessageWriter, Void> {
+	private static class MapWriter implements CloudEventContextWriter {
 
-		private final BiConsumer<String, String> putHeader;
+		private final Map<String, Object> map;
 
-		public MapContextMessageWriter(BiConsumer<String, String> putHeader) {
-			this.putHeader = putHeader;
-		}
-
-		@Override
-		public Void setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
-			putHeader.accept(CONTENT_TYPE, format.serializedContentType());
-			return null;
-		}
-
-		@Override
-		public Void end(CloudEventData value) throws CloudEventRWException {
-			return null;
-		}
-
-		@Override
-		public Void end() {
-			return null;
+		public MapWriter(Map<String, Object> map) {
+			this.map = map;
 		}
 
 		@Override
 		public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
-			putHeader.accept(CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name), value);
-			return this;
-		}
-
-		@Override
-		public MapContextMessageWriter create(SpecVersion version) {
-			putHeader.accept(CloudEventsHeaders.SPEC_VERSION, version.toString());
+			map.put(CE_PREFIX + name, value);
 			return this;
 		}
 

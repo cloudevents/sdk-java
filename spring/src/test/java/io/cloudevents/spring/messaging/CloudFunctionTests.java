@@ -82,6 +82,34 @@ class CloudFunctionTests {
 
 	}
 
+	@Test
+	void structuredRequestResponseEvents() {
+
+		ResponseEntity<String> response = rest.exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/")) //
+				.contentType(new MediaType("application", "cloudevents+json")) //
+				.body("{" //
+						+ "\"id\":\"12345\"," //
+						+ "\"specversion\":\"1.0\"," //
+						+ "\"type\":\"io.spring.event\"," //
+						+ "\"source\":\"https://spring.io/events\"," //
+						+ "\"data\":{\"value\":\"Dave\"}}"),
+				String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
+
+		HttpHeaders headers = response.getHeaders();
+
+		assertThat(headers).containsKey("ce-id");
+		assertThat(headers).containsKey("ce-source");
+		assertThat(headers).containsKey("ce-type");
+
+		assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
+		assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
+		assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
+
+	}
+
 	@SpringBootApplication
 	static class TestApplication {
 
