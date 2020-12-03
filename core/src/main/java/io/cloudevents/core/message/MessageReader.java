@@ -107,7 +107,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      *
      * @param mapper the mapper to use to map the data, if any.
      * @return A {@link CloudEvent} with the contents of this message.
-     * @throws CloudEventRWException if something went wrong during the visit.
+     * @throws CloudEventRWException if something went wrong during the read.
      * @throws IllegalStateException if the message has an unknown encoding.
      */
     default CloudEvent toEvent(CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException {
