@@ -16,21 +16,21 @@
 package io.cloudevents.spring.messaging;
 
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventContext;
-import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
+import io.cloudevents.core.provider.EventFormatProvider;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.MessageConverter;
-import org.springframework.messaging.support.MessageBuilder;
 
 /**
  * A {@link MessageConverter} that can translate to and from a {@link Message
@@ -55,45 +55,57 @@ public class CloudEventMessageConverter implements MessageConverter {
 	public Message<?> toMessage(Object payload, MessageHeaders headers) {
 		if (payload instanceof CloudEvent) {
 			CloudEvent event = (CloudEvent) payload;
-			CloudEventData data = event.getData();
-			byte[] bytes = data == null ? new byte[0] : data.toBytes();
-			return MessageBuilder.withPayload(bytes).copyHeaders(headers)
-					.copyHeaders(CloudEventHeaderUtils.toMap(event)).build();
+			Map<String, Object> map = new HashMap<>();
+			String contentType = contentType(headers);
+			if (contentType == null || EventFormatProvider.getInstance().resolveFormat(contentType) == null) {
+				// binary format
+				map.putAll(CloudEventHeaderUtils.toMap(event));
+			}
+			map.putAll(headers);
+			return createMessageReader(event, headers).read(new MessageBuilderMessageWriter(map));
 		}
 		return null;
 	}
 
+	private MessageReader createMessageReader(CloudEvent event, MessageHeaders headers) {
+		return MessageUtils.parseStructuredOrBinaryMessage( //
+				() -> contentType(headers), //
+				format -> new GenericStructuredMessageReader(format, event.getData().toBytes()), //
+				() -> event.getSpecVersion().toString(), //
+				version -> new MessageBinaryMessageReader(version, headers, event.getData().toBytes()) //
+		);
+	}
+
 	private MessageReader createMessageReader(Message<?> message) {
 		return MessageUtils.parseStructuredOrBinaryMessage( //
-				() -> contentType(message), //
+				() -> contentType(message.getHeaders()), //
 				format -> structuredMessageReader(message, format), //
-				() -> version(message), //
+				() -> version(message.getHeaders()), //
 				version -> binaryMessageReader(message, version) //
 		);
 	}
 
-	private String version(Message<?> message) {
-		if (message.getHeaders().containsKey(CloudEventsHeaders.SPEC_VERSION)) {
-			return message.getHeaders().get(CloudEventsHeaders.SPEC_VERSION).toString();
+	private String version(MessageHeaders message) {
+		if (message.containsKey(CloudEventsHeaders.SPEC_VERSION)) {
+			return message.get(CloudEventsHeaders.SPEC_VERSION).toString();
 		}
 		return null;
 	}
 
 	private MessageReader binaryMessageReader(Message<?> message, SpecVersion version) {
-		return new SpringMessageReader(version, message.getHeaders()::forEach,
-				BytesCloudEventData.wrap(getBinaryData(message)));
+		return new MessageBinaryMessageReader(version, message.getHeaders(), getBinaryData(message));
 	}
 
 	private MessageReader structuredMessageReader(Message<?> message, EventFormat format) {
 		return new GenericStructuredMessageReader(format, getBinaryData(message));
 	}
 
-	private String contentType(Message<?> message) {
-		if (message.getHeaders().containsKey(MessageHeaders.CONTENT_TYPE)) {
-			return message.getHeaders().get(MessageHeaders.CONTENT_TYPE).toString();
+	private String contentType(MessageHeaders message) {
+		if (message.containsKey(MessageHeaders.CONTENT_TYPE)) {
+			return message.get(MessageHeaders.CONTENT_TYPE).toString();
 		}
-		if (message.getHeaders().containsKey(CloudEventsHeaders.CONTENT_TYPE)) {
-			return message.getHeaders().get(CloudEventsHeaders.CONTENT_TYPE).toString();
+		if (message.containsKey(CloudEventsHeaders.CONTENT_TYPE)) {
+			return message.get(CloudEventsHeaders.CONTENT_TYPE).toString();
 		}
 		return null;
 	}

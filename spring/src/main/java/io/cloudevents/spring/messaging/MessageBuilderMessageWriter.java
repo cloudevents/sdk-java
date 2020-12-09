@@ -15,8 +15,8 @@
  */
 package io.cloudevents.spring.messaging;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
@@ -26,6 +26,9 @@ import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
+
 /**
  * Internal utility class for copying <code>CloudEvent</code> context to a map (message
  * headers).
@@ -33,49 +36,43 @@ import io.cloudevents.rw.CloudEventWriter;
  * @author Dave Syer
  *
  */
-class SpringMessageWriter implements CloudEventWriter<Void>, MessageWriter<SpringMessageWriter, Void> {
+class MessageBuilderMessageWriter
+		implements CloudEventWriter<Message<byte[]>>, MessageWriter<MessageBuilderMessageWriter, Message<byte[]>> {
 
-	private final BiConsumer<String, String> putHeader;
+	private Map<String, Object> headers = new HashMap<>();
 
-	private final Consumer<byte[]> putBody;
-
-	public SpringMessageWriter(BiConsumer<String, String> putHeader) {
-		this(putHeader, body -> {
-		});
+	public MessageBuilderMessageWriter(Map<String, Object> headers) {
+		this.headers.putAll(headers);
 	}
 
-	public SpringMessageWriter(BiConsumer<String, String> putHeader, Consumer<byte[]> putBody) {
-		this.putHeader = putHeader;
-		this.putBody = putBody;
+	public MessageBuilderMessageWriter() {
 	}
 
 	@Override
-	public Void setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
-		putHeader.accept(CloudEventsHeaders.CONTENT_TYPE, format.serializedContentType());
-		putBody.accept(value);
-		return null;
+	public Message<byte[]> setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
+		headers.put(CloudEventsHeaders.CONTENT_TYPE, format.serializedContentType());
+		return MessageBuilder.withPayload(value).copyHeaders(headers).build();
 	}
 
 	@Override
-	public Void end(CloudEventData value) throws CloudEventRWException {
-		putBody.accept(value.toBytes());
-		return null;
+	public Message<byte[]> end(CloudEventData value) throws CloudEventRWException {
+		return MessageBuilder.withPayload(value == null ? new byte[0] : value.toBytes()).copyHeaders(headers).build();
 	}
 
 	@Override
-	public Void end() {
-		return null;
+	public Message<byte[]> end() {
+		return MessageBuilder.withPayload(new byte[0]).copyHeaders(headers).build();
 	}
 
 	@Override
 	public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
-		putHeader.accept(CloudEventsHeaders.CE_PREFIX + name, value);
+		headers.put(CloudEventsHeaders.CE_PREFIX + name, value);
 		return this;
 	}
 
 	@Override
-	public SpringMessageWriter create(SpecVersion version) {
-		putHeader.accept(CloudEventsHeaders.SPEC_VERSION, version.toString());
+	public MessageBuilderMessageWriter create(SpecVersion version) {
+		headers.put(CloudEventsHeaders.SPEC_VERSION, version.toString());
 		return this;
 	}
 

@@ -11,6 +11,8 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.rw.CloudEventRWException;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.messaging.MessageHeaders;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -20,7 +22,7 @@ public class CloudEventHeaderUtilsTests {
 	public void testWithEmpty() {
 		Map<String, Object> headers = new HashMap<>();
 		assertThatExceptionOfType(CloudEventRWException.class).isThrownBy(() -> {
-			CloudEventContext attributes = CloudEventHeaderUtils.fromMap(headers);
+			CloudEventContext attributes = CloudEventHeaderUtils.fromMap(new MessageHeaders(headers));
 			assertThat(attributes.getSpecVersion()).isEqualTo(SpecVersion.V1);
 			assertThat(attributes.getId()).isNull();
 			assertThat(attributes.getSource()).isNull();
@@ -36,7 +38,7 @@ public class CloudEventHeaderUtilsTests {
 		headers.put("ce-source", "https://spring.io/");
 		headers.put("ce-type", "org.springframework");
 		headers.put("ce-datacontenttype", "application/json");
-		CloudEventContext attributes = CloudEventHeaderUtils.fromMap(headers);
+		CloudEventContext attributes = CloudEventHeaderUtils.fromMap(new MessageHeaders(headers));
 		assertThat(attributes.getSpecVersion()).isEqualTo(SpecVersion.V1);
 		assertThat(attributes.getId()).isEqualTo("A234-1234-1234");
 		assertThat(attributes.getSource()).isEqualTo(URI.create("https://spring.io/"));
@@ -52,7 +54,7 @@ public class CloudEventHeaderUtilsTests {
 		headers.put("ce-source", "https://spring.io/");
 		headers.put("ce-type", "org.springframework");
 		headers.put("ce-foo", "bar");
-		CloudEventContext attributes = CloudEventHeaderUtils.fromMap(headers);
+		CloudEventContext attributes = CloudEventHeaderUtils.fromMap(new MessageHeaders(headers));
 		assertThat(attributes.getSpecVersion()).isEqualTo(SpecVersion.V1);
 		assertThat(attributes.getId()).isEqualTo("A234-1234-1234");
 		assertThat(attributes.getSource()).isEqualTo(URI.create("https://spring.io/"));

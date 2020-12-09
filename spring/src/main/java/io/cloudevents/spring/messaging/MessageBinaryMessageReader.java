@@ -15,11 +15,11 @@
  */
 package io.cloudevents.spring.messaging;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
-import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 
 import static io.cloudevents.spring.messaging.CloudEventsHeaders.CE_PREFIX;
@@ -31,18 +31,17 @@ import static org.springframework.messaging.MessageHeaders.CONTENT_TYPE;
  * @author Dave Syer
  *
  */
-class SpringMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
+class MessageBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
 
-	private final Consumer<BiConsumer<String, Object>> forEachHeader;
+	private final Map<String, Object> headers;
 
-	public SpringMessageReader(SpecVersion version, Consumer<BiConsumer<String, Object>> forEachHeader,
-			CloudEventData data) {
-		super(version, data);
-		this.forEachHeader = forEachHeader;
+	public MessageBinaryMessageReader(SpecVersion version, Map<String, Object> headers, byte[] payload) {
+		super(version, payload == null ? null : BytesCloudEventData.wrap(payload));
+		this.headers = headers;
 	}
 
-	public SpringMessageReader(SpecVersion version, Consumer<BiConsumer<String, Object>> forEachHeader) {
-		this(version, forEachHeader, null);
+	public MessageBinaryMessageReader(SpecVersion version, Map<String, Object> headers) {
+		this(version, headers, null);
 	}
 
 	@Override
@@ -63,7 +62,7 @@ class SpringMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Obj
 
 	@Override
 	protected void forEachHeader(BiConsumer<String, Object> fn) {
-		forEachHeader.accept(fn);
+		headers.forEach((k, v) -> fn.accept(k, v));
 	}
 
 	@Override

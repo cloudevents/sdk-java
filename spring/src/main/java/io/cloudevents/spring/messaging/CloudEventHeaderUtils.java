@@ -44,10 +44,10 @@ public class CloudEventHeaderUtils {
 	 * {@link CloudEvent}
 	 * 
 	 */
-	public static CloudEventContext fromMap(Map<String, ?> headers) {
+	public static CloudEventContext fromMap(Map<String, Object> headers) {
 		Object value = headers.get(CloudEventsHeaders.SPEC_VERSION);
 		SpecVersion version = value == null ? SpecVersion.V1 : SpecVersion.parse(value.toString());
-		return CloudEventUtils.toEvent(new SpringMessageReader(version, headers::forEach));
+		return CloudEventUtils.toEvent(new MessageBinaryMessageReader(version, headers));
 	}
 
 	/**
@@ -57,12 +57,13 @@ public class CloudEventHeaderUtils {
 	 * @param event the input {@link CloudEvent}
 	 * @return the response headers represented by the event
 	 */
-	public static Map<String, ?> toMap(CloudEvent event) {
+	public static Map<String, Object> toMap(CloudEvent event) {
 		Map<String, Object> headers = new HashMap<>();
 		// Probably this should be done in CloudEventContextReaderAdapter
 		headers.put(CE_PREFIX + "specversion", event.getSpecVersion().toString());
-		CloudEventUtils.toContextReader(event).readContext(new SpringMessageWriter(headers::put));
-		return headers;
+		MessageBuilderMessageWriter writer = new MessageBuilderMessageWriter(headers);
+		CloudEventUtils.toContextReader(event).readContext(writer);
+		return writer.end().getHeaders();
 	}
 
 }

@@ -84,7 +84,7 @@ class CloudEventMessageConverterTests {
 	}
 
 	@Test
-	void binaryCloudEvent() {
+	void structuredCloudEvent() {
 		byte[] payload = JSON.getBytes();
 		Message<?> message = MessageBuilder.withPayload(payload)
 				.setHeader(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json").build();
@@ -97,7 +97,7 @@ class CloudEventMessageConverterTests {
 	}
 
 	@Test
-	void binaryCloudEventStringPayload() {
+	void structuredCloudEventStringPayload() {
 		Message<?> message = MessageBuilder.withPayload(JSON)
 				.setHeader(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json").build();
 		CloudEvent event = (CloudEvent) converter.fromMessage(message, CloudEvent.class);
@@ -111,15 +111,27 @@ class CloudEventMessageConverterTests {
 	@Test
 	void fromCloudEvent() {
 		CloudEvent attributes = CloudEventBuilder.v1().withId("A234-1234-1234")
-				.withSource(URI.create("https://spring.io/")).withType("org.springframework").build();
-		@SuppressWarnings("unchecked")
-		Message<CloudEvent> message = (Message<CloudEvent>) converter.toMessage(attributes,
-				new MessageHeaders(Collections.emptyMap()));
+				.withSource(URI.create("https://spring.io/")).withType("org.springframework")
+				.withData("hello".getBytes()).build();
+		Message<?> message = converter.toMessage(attributes, new MessageHeaders(Collections.emptyMap()));
 		Map<String, ?> headers = message.getHeaders();
 		assertThat(headers.get("ce-id")).isEqualTo("A234-1234-1234");
 		assertThat(headers.get("ce-specversion")).isEqualTo("1.0");
 		assertThat(headers.get("ce-source")).isEqualTo("https://spring.io/");
 		assertThat(headers.get("ce-type")).isEqualTo("org.springframework");
+		assertThat("hello".getBytes().equals(message.getPayload()));
+	}
+
+	@Test
+	void fromCloudEventStructured() {
+		CloudEvent attributes = CloudEventBuilder.v1().withId("A234-1234-1234")
+				.withSource(URI.create("https://spring.io/")).withType("org.springframework")
+				.withData("hello".getBytes()).build();
+		Message<?> message = converter.toMessage(attributes, new MessageHeaders(
+				Collections.singletonMap(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json")));
+		Map<String, ?> headers = message.getHeaders();
+		assertThat(headers.get("ce-id")).isNull();
+		assertThat(message.getPayload());
 	}
 
 	@Test
