@@ -16,17 +16,15 @@
 package io.cloudevents.spring.messaging;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventContext;
 import io.cloudevents.SpecVersion;
+import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.core.provider.EventFormatProvider;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -55,25 +53,9 @@ public class CloudEventMessageConverter implements MessageConverter {
 	public Message<?> toMessage(Object payload, MessageHeaders headers) {
 		if (payload instanceof CloudEvent) {
 			CloudEvent event = (CloudEvent) payload;
-			Map<String, Object> map = new HashMap<>();
-			String contentType = contentType(headers);
-			if (contentType == null || EventFormatProvider.getInstance().resolveFormat(contentType) == null) {
-				// binary format
-				map.putAll(CloudEventHeaderUtils.toMap(event));
-			}
-			map.putAll(headers);
-			return createMessageReader(event, headers).read(new MessageBuilderMessageWriter(map));
+			return CloudEventUtils.toReader(event).read(new MessageBuilderMessageWriter(headers));
 		}
 		return null;
-	}
-
-	private MessageReader createMessageReader(CloudEvent event, MessageHeaders headers) {
-		return MessageUtils.parseStructuredOrBinaryMessage( //
-				() -> contentType(headers), //
-				format -> new GenericStructuredMessageReader(format, event.getData().toBytes()), //
-				() -> event.getSpecVersion().toString(), //
-				version -> new MessageBinaryMessageReader(version, headers, event.getData().toBytes()) //
-		);
 	}
 
 	private MessageReader createMessageReader(Message<?> message) {

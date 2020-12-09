@@ -123,18 +123,6 @@ class CloudEventMessageConverterTests {
 	}
 
 	@Test
-	void fromCloudEventStructured() {
-		CloudEvent attributes = CloudEventBuilder.v1().withId("A234-1234-1234")
-				.withSource(URI.create("https://spring.io/")).withType("org.springframework")
-				.withData("hello".getBytes()).build();
-		Message<?> message = converter.toMessage(attributes, new MessageHeaders(
-				Collections.singletonMap(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json")));
-		Map<String, ?> headers = message.getHeaders();
-		assertThat(headers.get("ce-id")).isNull();
-		assertThat(message.getPayload());
-	}
-
-	@Test
 	void fromNonCloudEvent() {
 		assertThat(converter.toMessage(new byte[0], new MessageHeaders(Collections.emptyMap()))).isNull();
 	}
