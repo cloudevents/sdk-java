@@ -58,7 +58,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
      * Read the message as structured encoded message using the provided writer
      *
      * @param <R>    the return type of the {@link StructuredMessageWriter}
-     * @param writer Structured Message reader
+     * @param writer Structured Message writer
      * @throws CloudEventRWException if something went wrong during the visit.
      * @throws IllegalStateException if the message is not in structured encoding.
      */
