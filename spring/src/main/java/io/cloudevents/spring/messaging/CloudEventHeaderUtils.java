@@ -17,22 +17,16 @@ package io.cloudevents.spring.messaging;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventContext;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
-import io.cloudevents.rw.CloudEventContextWriter;
-import io.cloudevents.rw.CloudEventRWException;
 
 import org.springframework.messaging.MessageHeaders;
 
 import static io.cloudevents.spring.messaging.CloudEventsHeaders.CE_PREFIX;
-import static org.springframework.messaging.MessageHeaders.CONTENT_TYPE;
 
 /**
  * Utility class for copying message headers to and from {@link CloudEventContext}.
@@ -65,63 +59,10 @@ public class CloudEventHeaderUtils {
 	 */
 	public static Map<String, ?> toMap(CloudEvent event) {
 		Map<String, Object> headers = new HashMap<>();
-		CloudEventUtils.toContextReader(event).readContext(new MapWriter(headers));
+		CloudEventUtils.toContextReader(event).readContext(new MapContextMessageWriter(headers::put));
 		// Probably this should be done in CloudEventContextReaderAdapter
 		headers.put(CE_PREFIX + "specversion", event.getSpecVersion().toString());
 		return headers;
-	}
-
-	private static class MapContextMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
-
-		private final Consumer<BiConsumer<String, Object>> forEachHeader;
-
-		public MapContextMessageReader(SpecVersion version, Consumer<BiConsumer<String, Object>> forEachHeader) {
-			super(version, null);
-			this.forEachHeader = forEachHeader;
-		}
-
-		@Override
-		protected boolean isContentTypeHeader(String key) {
-			return CONTENT_TYPE.equalsIgnoreCase(key);
-		}
-
-		@Override
-		protected boolean isCloudEventsHeader(String key) {
-			return key != null && key.length() > 3
-					&& key.substring(0, CE_PREFIX.length()).toLowerCase().startsWith(CE_PREFIX);
-		}
-
-		@Override
-		protected String toCloudEventsKey(String key) {
-			return key.substring(CE_PREFIX.length()).toLowerCase();
-		}
-
-		@Override
-		protected void forEachHeader(BiConsumer<String, Object> fn) {
-			forEachHeader.accept(fn);
-		}
-
-		@Override
-		protected String toCloudEventsValue(Object value) {
-			return value.toString();
-		}
-
-	}
-
-	private static class MapWriter implements CloudEventContextWriter {
-
-		private final Map<String, Object> map;
-
-		public MapWriter(Map<String, Object> map) {
-			this.map = map;
-		}
-
-		@Override
-		public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
-			map.put(CE_PREFIX + name, value);
-			return this;
-		}
-
 	}
 
 }

@@ -16,9 +16,6 @@
 package io.cloudevents.spring.messaging;
 
 import java.nio.charset.Charset;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventContext;
@@ -28,7 +25,6 @@ import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.StructuredMessageWriter;
-import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 import io.cloudevents.core.message.impl.BaseStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
 import io.cloudevents.rw.CloudEventRWException;
@@ -70,13 +66,12 @@ public class CloudEventMessageConverter implements MessageConverter {
 	}
 
 	private MessageReader createMessageReader(Message<?> message) {
-		Supplier<String> contentTypeHeaderReader = () -> contentType(message);
-		Function<EventFormat, MessageReader> structuredMessageFactory = format -> structuredMessageReader(message,
-				format);
-		Supplier<String> specVersionHeaderReader = () -> version(message);
-		Function<SpecVersion, MessageReader> binaryMessageFactory = version -> binaryMessageReader(message, version);
-		return MessageUtils.parseStructuredOrBinaryMessage(contentTypeHeaderReader, structuredMessageFactory,
-				specVersionHeaderReader, binaryMessageFactory);
+		return MessageUtils.parseStructuredOrBinaryMessage( //
+				() -> contentType(message), //
+				format -> structuredMessageReader(message, format), //
+				() -> version(message), //
+				version -> binaryMessageReader(message, version) //
+		);
 	}
 
 	private String version(Message<?> message) {
@@ -87,34 +82,8 @@ public class CloudEventMessageConverter implements MessageConverter {
 	}
 
 	private MessageReader binaryMessageReader(Message<?> message, SpecVersion version) {
-		return new BaseGenericBinaryMessageReaderImpl<String, Object>(version,
-				BytesCloudEventData.wrap(getBinaryData(message))) {
-
-			@Override
-			protected boolean isContentTypeHeader(String key) {
-				return MessageHeaders.CONTENT_TYPE.equals(key) || CloudEventsHeaders.CONTENT_TYPE.equals(key);
-			}
-
-			@Override
-			protected boolean isCloudEventsHeader(String key) {
-				return key.startsWith(CloudEventsHeaders.CE_PREFIX);
-			}
-
-			@Override
-			protected String toCloudEventsKey(String key) {
-				return isCloudEventsHeader(key) ? key.substring(CloudEventsHeaders.CE_PREFIX.length()) : key;
-			}
-
-			@Override
-			protected void forEachHeader(BiConsumer<String, Object> fn) {
-				message.getHeaders().forEach((k, v) -> fn.accept(k, v));
-			}
-
-			@Override
-			protected String toCloudEventsValue(Object value) {
-				return value.toString();
-			}
-		};
+		return new MapContextMessageReader(version, message.getHeaders()::forEach,
+				BytesCloudEventData.wrap(getBinaryData(message)));
 	}
 
 	private MessageReader structuredMessageReader(Message<?> message, EventFormat format) {
