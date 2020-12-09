@@ -33,7 +33,6 @@
     <properties>
         <module-name>io.cloudevents.spring</module-name>
         <spring-boot.version>2.4.0</spring-boot.version>
-        <spring-cloud-function.version>3.1.0-SNAPSHOT</spring-cloud-function.version>
     </properties>
 
     <dependencyManagement>
@@ -106,12 +105,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-           <groupId>org.springframework.cloud</groupId>
-           <artifactId>spring-cloud-starter-function-webflux</artifactId>
-           <version>${spring-cloud-function.version}</version>
-           <scope>test</scope>
-       </dependency>
     </dependencies>
 
 
