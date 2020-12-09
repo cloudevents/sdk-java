@@ -59,6 +59,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-core</artifactId>
             <version>${project.version}</version>
@@ -67,7 +72,7 @@
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-http-basic</artifactId>
             <version>${project.version}</version>
-            <!-- This will be optional too if we want to support messaging -->
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
@@ -101,5 +106,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>
 
