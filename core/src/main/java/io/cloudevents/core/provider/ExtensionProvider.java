@@ -39,6 +39,9 @@ public final class ExtensionProvider {
         private static final ExtensionProvider INSTANCE = new ExtensionProvider();
     }
 
+    /**
+     * @return instance of {@link ExtensionProvider}
+     */
     public static ExtensionProvider getInstance() {
         return SingletonContainer.INSTANCE;
     }
@@ -55,9 +58,9 @@ public final class ExtensionProvider {
     /**
      * Register a new extension type.
      *
+     * @param <T>            the type of the extension
      * @param extensionClass the class implementing {@link Extension}
-     * @param factory the empty arguments factory
-     * @param <T> the type of the extension
+     * @param factory        the empty arguments factory
      */
     public <T extends Extension> void registerExtension(Class<T> extensionClass, Supplier<T> factory) {
         this.extensionFactories.put(extensionClass, factory);
@@ -66,9 +69,10 @@ public final class ExtensionProvider {
     /**
      * Parse an extension from the {@link CloudEventExtensions}, materializing the corresponding POJO.
      *
+     * @param <T>             the type of the extension
      * @param extensionClass  the class implementing {@link Extension}
      * @param eventExtensions the event extensions to read
-     * @param <T>             the type of the extension
+     * @return the parsed extension
      */
     @SuppressWarnings("unchecked")
     @Nullable

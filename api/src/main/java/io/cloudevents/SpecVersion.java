@@ -29,11 +29,17 @@ import java.util.stream.Stream;
  */
 @ParametersAreNonnullByDefault
 public enum SpecVersion {
+    /**
+     * @see <a href="https://github.com/cloudevents/spec/releases/tag/v0.3">CloudEvents release v0.3</a>
+     */
     V03(
         "0.3",
         Arrays.asList("specversion", "id", "type", "source"),
         Arrays.asList("datacontenttype", "datacontentencoding", "schemaurl", "subject", "time")
     ),
+    /**
+     * @see <a href="https://github.com/cloudevents/spec/releases/tag/v1.0">CloudEvents release v1.0</a>
+     */
     V1(
         "1.0",
         Arrays.asList("specversion", "id", "type", "source"),

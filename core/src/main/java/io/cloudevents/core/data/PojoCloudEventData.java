@@ -5,6 +5,11 @@ import io.cloudevents.rw.CloudEventRWException;
 
 import java.util.Objects;
 
+/**
+ * An implementation of {@link CloudEventData} that wraps any POJO.
+ *
+ * @param <T> the type of the wrapped POJO.
+ */
 public class PojoCloudEventData<T> implements CloudEventData {
 
     /**
@@ -15,6 +20,11 @@ public class PojoCloudEventData<T> implements CloudEventData {
      */
     @FunctionalInterface
     public interface ToBytes<T> {
+        /**
+         * @param data the POJO to convert
+         * @return the serialized byte array.
+         * @throws Exception when something goes wrong during the conversion.
+         */
         byte[] convert(T data) throws Exception;
     }
 
@@ -36,6 +46,9 @@ public class PojoCloudEventData<T> implements CloudEventData {
         this.mapper = mapper;
     }
 
+    /**
+     * @return the wrapped POJO
+     */
     public T getValue() {
         return value;
     }
@@ -67,6 +80,11 @@ public class PojoCloudEventData<T> implements CloudEventData {
 
     /**
      * Wrap the provided data in a {@link PojoCloudEventData} serializable by the provided mapper.
+     *
+     * @param <T>    The type of {@code data}
+     * @param data   the POJO to wrap
+     * @param mapper converter from {@code data} to bytes, used to implement {@link #toBytes()}
+     * @return the new {@link PojoCloudEventData}
      */
     public static <T> PojoCloudEventData<T> wrap(T data, ToBytes<T> mapper) {
         return new PojoCloudEventData<>(data, mapper);

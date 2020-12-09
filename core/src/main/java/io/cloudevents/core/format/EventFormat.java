@@ -48,18 +48,21 @@ public interface EventFormat {
     byte[] serialize(CloudEvent event) throws EventSerializationException;
 
     /**
-     * Deserialize a byte array to a {@link CloudEvent}.
+     * Like {@link #deserialize(byte[], CloudEventDataMapper)}, but with the identity {@link CloudEventDataMapper}.
      *
-     * @param bytes the serialized event.
-     * @return the deserialized event.
-     * @throws EventDeserializationException if something goes wrong during deserialization.
+     * @see #deserialize(byte[], CloudEventDataMapper)
      */
     default CloudEvent deserialize(byte[] bytes) throws EventDeserializationException {
-        return this.deserialize(bytes, null);
+        return this.deserialize(bytes, CloudEventDataMapper.identity());
     }
 
     /**
-     * Like {@link EventFormat#deserialize(byte[])}, but allows a mapper that maps the parsed {@link io.cloudevents.CloudEventData} to another one.
+     * Deserialize a byte array to a {@link CloudEvent}.
+     *
+     * @param bytes  the serialized event.
+     * @param mapper the mapper to use to map the data.
+     * @return the deserialized event.
+     * @throws EventDeserializationException if something goes wrong during deserialization.
      */
     CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper) throws EventDeserializationException;
 

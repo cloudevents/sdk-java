@@ -13,6 +13,11 @@
     <name>Cloudevents - Examples</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <!-- No need to generate javadocs for examples -->
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+    </properties>
+
     <modules>
         <module>kafka</module>
         <module>restful-ws-quarkus</module>

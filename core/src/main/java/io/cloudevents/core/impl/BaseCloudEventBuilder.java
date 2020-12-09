@@ -181,10 +181,11 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return new IllegalStateException("Attribute '" + attributeName + "' cannot be null");
     }
     /**
-     * Validates the extension name as defined in  CloudEvents spec
-     * See <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
+     * Validates the extension name as defined in  CloudEvents spec.
+     *
      * @param name the extension name
      * @return true if extension name is valid, false otherwise
+     * @see <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
      */
     private static boolean isValidExtensionName(String name) {
         if(name.length() > 20){

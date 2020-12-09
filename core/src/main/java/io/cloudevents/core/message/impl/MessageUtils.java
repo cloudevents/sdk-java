@@ -22,6 +22,7 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.Encoding;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.provider.EventFormatProvider;
+import io.cloudevents.rw.CloudEventRWException;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -31,17 +32,27 @@ import java.util.stream.Stream;
 
 import static io.cloudevents.rw.CloudEventRWException.newUnknownEncodingException;
 
+/**
+ * Collection of utilities useful to implement {@link MessageReader} and {@link io.cloudevents.core.message.MessageWriter} related code.
+ */
 public class MessageUtils {
 
     /**
      * Common flow to parse an incoming message that could be structured or binary.
+     *
+     * @param contentTypeHeaderReader  supplier that returns the content type header, if any
+     * @param structuredMessageFactory factory to create the structured {@link MessageReader} from the provided {@link EventFormat}
+     * @param specVersionHeaderReader  supplier that returns the spec version header, if any
+     * @param binaryMessageFactory     factory to create the binary {@link MessageReader} from the provided {@link SpecVersion}
+     * @return the instantiated {@link MessageReader}
+     * @throws CloudEventRWException if something goes wrong while resolving the {@link SpecVersion} or if the message has unknown encoding
      */
     public static MessageReader parseStructuredOrBinaryMessage(
         Supplier<String> contentTypeHeaderReader,
         Function<EventFormat, MessageReader> structuredMessageFactory,
         Supplier<String> specVersionHeaderReader,
         Function<SpecVersion, MessageReader> binaryMessageFactory
-    ) {
+    ) throws CloudEventRWException {
         // Let's try structured mode
         String ct = contentTypeHeaderReader.get();
         if (ct != null) {
@@ -49,7 +60,6 @@ public class MessageUtils {
             if (format != null) {
                 return structuredMessageFactory.apply(format);
             }
-
         }
 
         // Let's try binary mode
@@ -77,6 +87,11 @@ public class MessageUtils {
             .collect(Collectors.toMap(Function.identity(), headerNameMapping));
     }
 
+    /**
+     * @param expected the expected encoding
+     * @param actual   the actual encoding
+     * @return a new instance of {@link IllegalStateException}.
+     */
     public static IllegalStateException generateWrongEncoding(Encoding expected, Encoding actual) {
         return new IllegalStateException("Cannot visit message as " + expected + " because the actual encoding is " + actual);
     }

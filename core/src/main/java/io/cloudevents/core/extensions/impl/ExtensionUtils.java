@@ -17,13 +17,23 @@
 
 package io.cloudevents.core.extensions.impl;
 
+import io.cloudevents.Extension;
+
+/**
+ * Collection of utilities to deal with materialized extensions
+ */
 public final class ExtensionUtils {
 
     private ExtensionUtils() {
     }
 
-    public static IllegalArgumentException generateInvalidKeyException(String extensionName, String key) {
-        return new IllegalArgumentException(extensionName + " doesn't expect the attribute key \"" + key + "\"");
+    /**
+     * @param clazz the {@link Extension} class
+     * @param key   the invalid key
+     * @return an {@link IllegalArgumentException} when trying to access a key of the extension not existing.
+     */
+    public static IllegalArgumentException generateInvalidKeyException(Class<? extends Extension> clazz, String key) {
+        return new IllegalArgumentException(clazz.getName() + " doesn't expect the attribute key \"" + key + "\"");
     }
 
 }

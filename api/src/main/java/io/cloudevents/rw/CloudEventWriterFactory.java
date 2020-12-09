@@ -19,8 +19,14 @@ package io.cloudevents.rw;
 
 import io.cloudevents.SpecVersion;
 
+/**
+ * This factory is used to enforce setting the {@link SpecVersion} as first step in the writing process.
+ *
+ * @param <W> The type of the {@link CloudEventWriter} created by this factory
+ * @param <R> The return value of the {@link CloudEventWriter} created by this factory
+ */
 @FunctionalInterface
-public interface CloudEventWriterFactory<V extends CloudEventWriter<R>, R> {
+public interface CloudEventWriterFactory<W extends CloudEventWriter<R>, R> {
 
     /**
      * Create a {@link CloudEventWriter} starting from the provided {@link SpecVersion}
@@ -29,5 +35,5 @@ public interface CloudEventWriterFactory<V extends CloudEventWriter<R>, R> {
      * @return the new writer
      * @throws CloudEventRWException if the spec version is invalid or the writer cannot be instantiated.
      */
-    V create(SpecVersion version) throws CloudEventRWException;
+    W create(SpecVersion version) throws CloudEventRWException;
 }

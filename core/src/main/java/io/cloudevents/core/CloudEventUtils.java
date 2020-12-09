@@ -30,7 +30,7 @@ import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventReader;
 
 /**
- * This class contains a set of utility methods to deal with conversions of io.cloudevents related interfaces
+ * This class contains a set of utility methods to deal with conversions of {@link io.cloudevents} related interfaces
  */
 public final class CloudEventUtils {
 
@@ -38,8 +38,7 @@ public final class CloudEventUtils {
 
     /**
      * Convert a {@link CloudEvent} to a {@link CloudEventReader}. This method provides a default implementation
-     * for CloudEvent that doesn't implement {@link CloudEventReader}
-     * for CloudEvent that doesn't implement CloudEventVisitable.
+     * for CloudEvent that doesn't implement {@link CloudEventReader}.
      * <p>
      * It's safe to use the returned {@link CloudEventReader} multiple times.
      *
@@ -94,6 +93,11 @@ public final class CloudEventUtils {
 
     /**
      * Get the data contained in {@code event} and map it using the provided mapper.
+     *
+     * @param event  the event eventually containing the data
+     * @param mapper the mapper to use to map the data
+     * @param <R>    the returned {@link CloudEventData} implementation from the provided mapper
+     * @return the data contained in {@code event} and mapped with {@code mapper}, if any, otherwise null
      */
     @Nullable
     public static <R extends CloudEventData> R mapData(CloudEvent event, CloudEventDataMapper<R> mapper) {
