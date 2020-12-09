@@ -72,7 +72,7 @@
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-http-basic</artifactId>
             <version>${project.version}</version>
-            <!-- This will be optional too if we want to support messaging -->
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
