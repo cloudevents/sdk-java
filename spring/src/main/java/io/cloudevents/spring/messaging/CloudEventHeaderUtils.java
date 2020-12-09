@@ -22,7 +22,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventContext;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
-import io.cloudevents.core.builder.CloudEventBuilder;
 
 import org.springframework.messaging.MessageHeaders;
 
@@ -37,31 +36,32 @@ import static io.cloudevents.spring.messaging.CloudEventsHeaders.CE_PREFIX;
 public class CloudEventHeaderUtils {
 
 	/**
-	 * Helper method for converting {@link MessageHeaders} to a {@link CloudEvent}. The
-	 * input headers must represent a valid event in "binary" form, i.e. it must have
+	 * Helper method for converting {@link MessageHeaders} to a {@link CloudEventContext}.
+	 * The input headers must represent a valid event in "binary" form, i.e. it must have
 	 * headers "ce-id", "ce-specversion" etc.
 	 * @param headers the input request headers
-	 * @return a {@link CloudEventBuilder} that can be used to create a new
+	 * @return a {@link CloudEventContext} that can be used to create a new
 	 * {@link CloudEvent}
 	 * 
 	 */
-	public static CloudEventBuilder fromMap(Map<String, ?> headers) {
+	public static CloudEventContext fromMap(Map<String, ?> headers) {
 		Object value = headers.get(CloudEventsHeaders.SPEC_VERSION);
 		SpecVersion version = value == null ? SpecVersion.V1 : SpecVersion.parse(value.toString());
-		return CloudEventBuilder
-				.fromContext(CloudEventUtils.toEvent(new MapContextMessageReader(version, headers::forEach)));
+		return CloudEventUtils.toEvent(new SpringMessageReader(version, headers::forEach));
 	}
 
 	/**
-	 * Helper method for extracting {@link MessageHeaders} from a {@link CloudEvent}.
+	 * Helper method for extracting {@link MessageHeaders} from a {@link CloudEvent}. The
+	 * result will contain headers canonicalized with a "ce-" prefix, analogous to the
+	 * "binary" message format in Cloud Events.
 	 * @param event the input {@link CloudEvent}
 	 * @return the response headers represented by the event
 	 */
 	public static Map<String, ?> toMap(CloudEvent event) {
 		Map<String, Object> headers = new HashMap<>();
-		CloudEventUtils.toContextReader(event).readContext(new MapContextMessageWriter(headers::put));
 		// Probably this should be done in CloudEventContextReaderAdapter
 		headers.put(CE_PREFIX + "specversion", event.getSpecVersion().toString());
+		CloudEventUtils.toContextReader(event).readContext(new SpringMessageWriter(headers::put));
 		return headers;
 	}
 

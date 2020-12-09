@@ -24,10 +24,8 @@ import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageReader;
-import io.cloudevents.core.message.StructuredMessageWriter;
-import io.cloudevents.core.message.impl.BaseStructuredMessageReader;
+import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-import io.cloudevents.rw.CloudEventRWException;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -82,18 +80,12 @@ public class CloudEventMessageConverter implements MessageConverter {
 	}
 
 	private MessageReader binaryMessageReader(Message<?> message, SpecVersion version) {
-		return new MapContextMessageReader(version, message.getHeaders()::forEach,
+		return new SpringMessageReader(version, message.getHeaders()::forEach,
 				BytesCloudEventData.wrap(getBinaryData(message)));
 	}
 
 	private MessageReader structuredMessageReader(Message<?> message, EventFormat format) {
-		return new BaseStructuredMessageReader() {
-
-			@Override
-			public <T> T read(StructuredMessageWriter<T> visitor) throws CloudEventRWException, IllegalStateException {
-				return visitor.setEvent(format, getBinaryData(message));
-			}
-		};
+		return new GenericStructuredMessageReader(format, getBinaryData(message));
 	}
 
 	private String contentType(Message<?> message) {

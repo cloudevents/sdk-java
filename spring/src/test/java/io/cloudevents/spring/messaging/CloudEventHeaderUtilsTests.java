@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventContext;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.rw.CloudEventRWException;
@@ -19,7 +20,7 @@ public class CloudEventHeaderUtilsTests {
 	public void testWithEmpty() {
 		Map<String, Object> headers = new HashMap<>();
 		assertThatExceptionOfType(CloudEventRWException.class).isThrownBy(() -> {
-			CloudEvent attributes = CloudEventHeaderUtils.fromMap(headers).build();
+			CloudEventContext attributes = CloudEventHeaderUtils.fromMap(headers);
 			assertThat(attributes.getSpecVersion()).isEqualTo(SpecVersion.V1);
 			assertThat(attributes.getId()).isNull();
 			assertThat(attributes.getSource()).isNull();
@@ -35,7 +36,7 @@ public class CloudEventHeaderUtilsTests {
 		headers.put("ce-source", "https://spring.io/");
 		headers.put("ce-type", "org.springframework");
 		headers.put("ce-datacontenttype", "application/json");
-		CloudEvent attributes = CloudEventHeaderUtils.fromMap(headers).build();
+		CloudEventContext attributes = CloudEventHeaderUtils.fromMap(headers);
 		assertThat(attributes.getSpecVersion()).isEqualTo(SpecVersion.V1);
 		assertThat(attributes.getId()).isEqualTo("A234-1234-1234");
 		assertThat(attributes.getSource()).isEqualTo(URI.create("https://spring.io/"));
@@ -51,7 +52,7 @@ public class CloudEventHeaderUtilsTests {
 		headers.put("ce-source", "https://spring.io/");
 		headers.put("ce-type", "org.springframework");
 		headers.put("ce-foo", "bar");
-		CloudEvent attributes = CloudEventHeaderUtils.fromMap(headers).build();
+		CloudEventContext attributes = CloudEventHeaderUtils.fromMap(headers);
 		assertThat(attributes.getSpecVersion()).isEqualTo(SpecVersion.V1);
 		assertThat(attributes.getId()).isEqualTo("A234-1234-1234");
 		assertThat(attributes.getSource()).isEqualTo(URI.create("https://spring.io/"));

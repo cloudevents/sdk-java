@@ -31,17 +31,17 @@ import static org.springframework.messaging.MessageHeaders.CONTENT_TYPE;
  * @author Dave Syer
  *
  */
-class MapContextMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
+class SpringMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
 
 	private final Consumer<BiConsumer<String, Object>> forEachHeader;
 
-	public MapContextMessageReader(SpecVersion version, Consumer<BiConsumer<String, Object>> forEachHeader,
+	public SpringMessageReader(SpecVersion version, Consumer<BiConsumer<String, Object>> forEachHeader,
 			CloudEventData data) {
 		super(version, data);
 		this.forEachHeader = forEachHeader;
 	}
 
-	public MapContextMessageReader(SpecVersion version, Consumer<BiConsumer<String, Object>> forEachHeader) {
+	public SpringMessageReader(SpecVersion version, Consumer<BiConsumer<String, Object>> forEachHeader) {
 		this(version, forEachHeader, null);
 	}
 

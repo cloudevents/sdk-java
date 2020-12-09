@@ -33,18 +33,18 @@ import io.cloudevents.rw.CloudEventWriter;
  * @author Dave Syer
  *
  */
-class MapContextMessageWriter implements CloudEventWriter<Void>, MessageWriter<MapContextMessageWriter, Void> {
+class SpringMessageWriter implements CloudEventWriter<Void>, MessageWriter<SpringMessageWriter, Void> {
 
 	private final BiConsumer<String, String> putHeader;
 
 	private final Consumer<byte[]> putBody;
 
-	public MapContextMessageWriter(BiConsumer<String, String> putHeader) {
+	public SpringMessageWriter(BiConsumer<String, String> putHeader) {
 		this(putHeader, body -> {
 		});
 	}
 
-	public MapContextMessageWriter(BiConsumer<String, String> putHeader, Consumer<byte[]> putBody) {
+	public SpringMessageWriter(BiConsumer<String, String> putHeader, Consumer<byte[]> putBody) {
 		this.putHeader = putHeader;
 		this.putBody = putBody;
 	}
@@ -74,7 +74,7 @@ class MapContextMessageWriter implements CloudEventWriter<Void>, MessageWriter<M
 	}
 
 	@Override
-	public MapContextMessageWriter create(SpecVersion version) {
+	public SpringMessageWriter create(SpecVersion version) {
 		putHeader.accept(CloudEventsHeaders.SPEC_VERSION, version.toString());
 		return this;
 	}
