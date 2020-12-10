@@ -10,15 +10,18 @@ nav_order: 5
 This module is designed to be usable with various HTTP APIs.
 
 There are also more specialized HTTP bindings:
-* [`cloudevents-http-vertx`](http-vertx.md)
-* [`cloudevents-http-restful-ws`](http-jakarta-restful-ws.md)
-* [`cloudevents-spring`](spring.md)
 
-Since this module is generic it doesn't offer optimal performance for all HTTP implementations.
-For better performance consider implementing `MessageReader` and `MessageWriter` that are
-tailored for specific HTTP implementation. As a reference you can take aforementioned existing bindings.
+-   [`cloudevents-http-vertx`](http-vertx.md)
+-   [`cloudevents-http-restful-ws`](http-jakarta-restful-ws.md)
+-   [`cloudevents-spring`](spring.md)
 
-For Maven based projects, use the following to configure the CloudEvents Generic HTTP Transport:
+Since this module is generic it doesn't offer optimal performance for all HTTP
+implementations. For better performance consider implementing `MessageReader`
+and `MessageWriter` that are tailored for specific HTTP implementation. As a
+reference you can take aforementioned existing bindings.
+
+For Maven based projects, use the following to configure the CloudEvents Generic
+HTTP Transport:
 
 ```xml
 <dependency>
@@ -30,8 +33,9 @@ For Maven based projects, use the following to configure the CloudEvents Generic
 
 ## Sending and Receiving CloudEvents
 
-To send and receive CloudEvents we use `MessageWriter` and `MessageReader`, respectively.
-This module offers factory methods for creation of those in `HttpMessageFactory`.
+To send and receive CloudEvents we use `MessageWriter` and `MessageReader`,
+respectively. This module offers factory methods for creation of those in
+`HttpMessageFactory`.
 
 ```java
 public class HttpMessageFactory {
@@ -44,6 +48,6 @@ public class HttpMessageFactory {
 
 ## Examples
 
-* [Standard Java HttpServer](https://github.com/cloudevents/sdk-java/tree/master/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/BasicHttpServer.java)
-* [Http Client with HttpURLConnection](https://github.com/cloudevents/sdk-java/tree/master/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/HttpURLConnectionClient.java)
-* [Http Servlet with Jetty](https://github.com/cloudevents/sdk-java/tree/master/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/JettyServer.java)
+-   [Standard Java HttpServer](https://github.com/cloudevents/sdk-java/tree/master/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/BasicHttpServer.java)
+-   [Http Client with HttpURLConnection](https://github.com/cloudevents/sdk-java/tree/master/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/HttpURLConnectionClient.java)
+-   [Http Servlet with Jetty](https://github.com/cloudevents/sdk-java/tree/master/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/JettyServer.java)

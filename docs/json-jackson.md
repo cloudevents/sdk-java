@@ -7,8 +7,9 @@ nav_order: 4
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-json-jackson.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
 
-This module provides the JSON `EventFormat` implementation using Jackson and a `PojoCloudEventDataMapper` to
-convert `CloudEventData` to POJOs using the Jackson `ObjectMapper`.
+This module provides the JSON `EventFormat` implementation using Jackson and a
+`PojoCloudEventDataMapper` to convert `CloudEventData` to POJOs using the
+Jackson `ObjectMapper`.
 
 For Maven based projects, use the following dependency:
 
@@ -23,7 +24,8 @@ For Maven based projects, use the following dependency:
 
 ## Using the JSON Event Format
 
-You don't need to perform any operation to configure the module, more than adding the dependency to your project:
+You don't need to perform any operation to configure the module, more than
+adding the dependency to your project:
 
 ```java
 import io.cloudevents.core.format.EventFormatProvider;
@@ -41,11 +43,13 @@ CloudEvent event=CloudEventBuilder.v1()
     .serialize(event);
 ```
 
-The `EventFormatProvider` will resolve automatically the `JsonFormat` using the `ServiceLoader` APIs.
+The `EventFormatProvider` will resolve automatically the `JsonFormat` using the
+`ServiceLoader` APIs.
 
 ## Mapping `CloudEventData` to POJOs using Jackson `ObjectMapper`
 
-Using the Jackson `ObjectMapper`, you can easily extract a POJO starting from any `CloudEventData`:
+Using the Jackson `ObjectMapper`, you can easily extract a POJO starting from
+any `CloudEventData`:
 
 ```java
 import io.cloudevents.core.data.PojoCloudEventData;

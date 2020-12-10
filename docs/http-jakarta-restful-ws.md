@@ -7,7 +7,8 @@ nav_order: 5
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
 
-For Maven based projects, use the following to configure the CloudEvents Jakarta RESTful Web Services Binding:
+For Maven based projects, use the following to configure the CloudEvents Jakarta
+RESTful Web Services Binding:
 
 ```xml
 <dependency>
@@ -21,7 +22,8 @@ This integration is tested with Jersey, RestEasy & Spring Boot Jersey.
 
 ## Receiving CloudEvents
 
-You need to configure the `CloudEventsProvider` to enable marshalling/unmarshalling of CloudEvents.
+You need to configure the `CloudEventsProvider` to enable
+marshalling/unmarshalling of CloudEvents.
 
 Below is a sample on how to read and write CloudEvents:
 
@@ -70,7 +72,8 @@ public class EventReceiverResource {
 
 ## Sending CloudEvents
 
-You need to configure the `CloudEventsProvider` to enable marshalling/unmarshalling of CloudEvents.
+You need to configure the `CloudEventsProvider` to enable
+marshalling/unmarshalling of CloudEvents.
 
 Below is a sample on how to use the client to send a CloudEvent:
 
@@ -116,5 +119,5 @@ public class CloudEventSender {
 
 ## Examples
 
-* [Quarkus and Resteasy](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-quarkus)
-* [Jersey and Spring Boot](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-spring-boot)
+-   [Quarkus and Resteasy](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-quarkus)
+-   [Jersey and Spring Boot](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-spring-boot)

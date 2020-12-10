@@ -4,7 +4,7 @@
 title: Java SDK for CloudEvents
 remote_theme: pmarsceill/just-the-docs
 plugins:
-  - jemoji
+    - jemoji
 
 search_enabled: true
 
@@ -16,7 +16,7 @@ gh_edit_source: docs
 gh_edit_view_mode: "tree"
 
 aux_links:
-  "GitHub Repository":
-    - "https://github.com/cloudevents/sdk-java"
-  "CloudEvents home":
-    - "https://cloudevents.io/"
+    "GitHub Repository":
+        - "https://github.com/cloudevents/sdk-java"
+    "CloudEvents home":
+        - "https://cloudevents.io/"

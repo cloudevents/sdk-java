@@ -7,7 +7,8 @@ nav_order: 5
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-http-vertx.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
 
-For Maven based projects, use the following to configure the CloudEvents Vertx HTTP Transport:
+For Maven based projects, use the following to configure the CloudEvents Vertx
+HTTP Transport:
 
 ```xml
 <dependency>
@@ -19,7 +20,8 @@ For Maven based projects, use the following to configure the CloudEvents Vertx H
 
 ## Receiving CloudEvents
 
-Assuming you have in classpath [`cloudevents-json-jackson`](json-jackson.md), below is a sample on how to read and write CloudEvents:
+Assuming you have in classpath [`cloudevents-json-jackson`](json-jackson.md),
+below is a sample on how to read and write CloudEvents:
 
 ```java
 
@@ -97,4 +99,4 @@ public class CloudEventClientVerticle extends AbstractVerticle {
 
 ## Examples:
 
-* [Vert.x Client and Server](https://github.com/cloudevents/sdk-java/tree/master/examples/vertx)
+-   [Vert.x Client and Server](https://github.com/cloudevents/sdk-java/tree/master/examples/vertx)

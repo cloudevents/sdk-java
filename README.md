@@ -4,17 +4,20 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudevents/cloudevents-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudevents/cloudevents-parent)
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-core.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
 
-The Java SDK for CloudEvents is a collection of Java packages to
-adopt [CloudEvents](https://github.com/cloudevents/spec) in your Java application.
+The Java SDK for CloudEvents is a collection of Java packages to adopt
+[CloudEvents](https://github.com/cloudevents/spec) in your Java application.
 
 Using the Java SDK you can:
 
-* Access, create and manipulate `CloudEvent` inside your application.
-* Serialize and deserialize `CloudEvent` back and forth using the _CloudEvents Event Format_, like Json.
-* Read and write `CloudEvent` back and forth to HTTP, Kafka, AMQP using the _CloudEvents Protocol Binding_
-  implementations we provide for a wide range of well known Java frameworks/libraries.
+-   Access, create and manipulate `CloudEvent` inside your application.
+-   Serialize and deserialize `CloudEvent` back and forth using the _CloudEvents
+    Event Format_, like Json.
+-   Read and write `CloudEvent` back and forth to HTTP, Kafka, AMQP using the
+    _CloudEvents Protocol Binding_ implementations we provide for a wide range
+    of well known Java frameworks/libraries.
 
-To check out the complete documentation, look at the dedicated website https://cloudevents.github.io/sdk-java/.
+To check out the complete documentation, look at the dedicated website
+https://cloudevents.github.io/sdk-java/.
 
 ```java
 import io.cloudevents.CloudEvent;
@@ -52,7 +55,7 @@ Supported features of the specification:
 |         - [Vert.x](http/vertx)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 | - [Jakarta Restful WS](http/restful-ws) |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |          - [Basic](http/basic)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|          - [Spring](spring)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|           - [Spring](spring)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            JSON Event Format            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |    - [Jackson](formats/json-jackson)    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |     [Kafka Protocol Binding](kafka)     |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
@@ -66,15 +69,15 @@ Documentation is available at https://cloudevents.github.io/sdk-java/.
 
 Javadocs are available on [javadoc.io](https://www.javadoc.io):
 
-- [cloudevents-api](https://www.javadoc.io/doc/io.cloudevents/cloudevents-api)
-- [cloudevents-core](https://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
-- [cloudevents-json-jackson](https://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
-- [cloudevents-http-basic](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-basic)
-- [cloudevents-http-restful-ws](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
-- [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
-- [cloudevents-kafka](https://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)
-- [cloudevents-amqp](https://www.javadoc.io/doc/io.cloudevents/cloudevents-amqp)
-- [cloudevents-spring](https://www.javadoc.io/doc/io.cloudevents/cloudevents-spring)
+-   [cloudevents-api](https://www.javadoc.io/doc/io.cloudevents/cloudevents-api)
+-   [cloudevents-core](https://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
+-   [cloudevents-json-jackson](https://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
+-   [cloudevents-http-basic](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-basic)
+-   [cloudevents-http-restful-ws](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
+-   [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
+-   [cloudevents-kafka](https://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)
+-   [cloudevents-amqp](https://www.javadoc.io/doc/io.cloudevents/cloudevents-amqp)
+-   [cloudevents-spring](https://www.javadoc.io/doc/io.cloudevents/cloudevents-spring)
 
 You can check out the examples in the [examples](examples) directory.
 

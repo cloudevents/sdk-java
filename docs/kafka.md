@@ -9,8 +9,8 @@ nav_order: 5
 
 Implementation of Kafka Protocol Binding to send and receive CloudEvents.
 
-For Maven based projects, use the following to configure
-the [Kafka Protocol Binding](https://github.com/cloudevents/spec/blob/master/kafka-protocol-binding.md):
+For Maven based projects, use the following to configure the
+[Kafka Protocol Binding](https://github.com/cloudevents/spec/blob/master/kafka-protocol-binding.md):
 
 ```xml
 
@@ -23,7 +23,8 @@ the [Kafka Protocol Binding](https://github.com/cloudevents/spec/blob/master/kaf
 
 ### Producing CloudEvents
 
-To produce CloudEvents in Kafka, configure the KafkaProducer to use the provided `CloudEventSerializer`:
+To produce CloudEvents in Kafka, configure the KafkaProducer to use the provided
+`CloudEventSerializer`:
 
 ```java
 import java.util.Properties;
@@ -64,26 +65,28 @@ public class CloudEventProducer {
 
 You can configure the Encoding and EventFormat to use to emit the event.
 
-Check out
-the [`CloudEventSerializer`](https://github.com/cloudevents/sdk-java/tree/master/kafka/src/main/java/io/cloudevents/kafka/CloudEventSerializer.java)
+Check out the
+[`CloudEventSerializer`](https://github.com/cloudevents/sdk-java/tree/master/kafka/src/main/java/io/cloudevents/kafka/CloudEventSerializer.java)
 javadoc for more info.
 
 ### Partition key extension
 
-If you want your producer to use the `partitionkey` extension, you can use the PartitionKeyExtensionInterceptor.
+If you want your producer to use the `partitionkey` extension, you can use the
+PartitionKeyExtensionInterceptor.
 
 ```java
 producerProps.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,io.cloudevents.kafka.PartitionKeyExtensionInterceptor.class);
 ```
 
-When using in your producer, this interceptor will pick the `partitionkey` extension from the event and will set it as
-record key. Check out
-the [`PartitionKeyExtensionInterceptor`](https://github.com/cloudevents/sdk-java/tree/master/kafka/src/main/java/io/cloudevents/kafka/PartitionKeyExtensionInterceptor.java)
+When using in your producer, this interceptor will pick the `partitionkey`
+extension from the event and will set it as record key. Check out the
+[`PartitionKeyExtensionInterceptor`](https://github.com/cloudevents/sdk-java/tree/master/kafka/src/main/java/io/cloudevents/kafka/PartitionKeyExtensionInterceptor.java)
 javadoc for more info.
 
 ## Consuming CloudEvents
 
-To consume CloudEvents in Kafka, configure the KafkaConsumer to use the provided `CloudEventDeserializer`:
+To consume CloudEvents in Kafka, configure the KafkaConsumer to use the provided
+`CloudEventDeserializer`:
 
 ```java
 import java.time.Duration;
