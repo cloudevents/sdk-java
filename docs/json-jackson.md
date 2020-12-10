@@ -1,5 +1,6 @@
 ---
-title: CloudEvents Json Jackson nav_order: 4
+title: CloudEvents Json Jackson
+nav_order: 4
 ---
 
 # CloudEvents Json Jackson

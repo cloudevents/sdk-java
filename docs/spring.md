@@ -1,5 +1,6 @@
 ---
-title: CloudEvents Spring nav_order: 5
+title: CloudEvents Spring
+nav_order: 5
 ---
 
 # CloudEvents Spring

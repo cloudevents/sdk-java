@@ -1,5 +1,6 @@
 ---
-title: CloudEvents AMQP Proton nav_order: 5
+title: CloudEvents AMQP Proton
+nav_order: 5
 ---
 
 # CloudEvents AMQP Proton

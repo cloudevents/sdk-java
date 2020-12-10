@@ -1,5 +1,6 @@
 ---
-title: CloudEvents API nav_order: 2
+title: CloudEvents API
+nav_order: 2
 ---
 
 # CloudEvents API

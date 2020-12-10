@@ -1,5 +1,6 @@
 ---
-title: CloudEvents Core nav_order: 3
+title: CloudEvents Core
+nav_order: 3
 ---
 
 # CloudEvents Core

@@ -1,5 +1,6 @@
 ---
-title: CloudEvents Kafka nav_order: 5
+title: CloudEvents Kafka
+nav_order: 5
 ---
 
 # CloudEvents Kafka
