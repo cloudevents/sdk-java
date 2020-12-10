@@ -29,8 +29,7 @@ import java.util.Map;
 /**
  * Kafka {@link Deserializer} for {@link CloudEvent}.
  * <p>
- * To configure a {@link CloudEventDataMapper}, you can provide the instance through the configuration key
- * {@link CloudEventDeserializer#MAPPER_CONFIG}.
+ * To configure a {@link CloudEventDataMapper}, you can provide the instance through the configuration key {@link CloudEventDeserializer#MAPPER_CONFIG}.
  */
 public class CloudEventDeserializer implements Deserializer<CloudEvent> {
 
