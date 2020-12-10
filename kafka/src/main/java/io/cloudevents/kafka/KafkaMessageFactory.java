@@ -17,6 +17,7 @@
 
 package io.cloudevents.kafka;
 
+import io.cloudevents.SpecVersion;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
@@ -24,6 +25,7 @@ import io.cloudevents.core.message.impl.MessageUtils;
 import io.cloudevents.kafka.impl.KafkaBinaryMessageReaderImpl;
 import io.cloudevents.kafka.impl.KafkaHeaders;
 import io.cloudevents.kafka.impl.KafkaProducerMessageWriterImpl;
+import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -34,6 +36,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * This class provides a collection of methods to create {@link io.cloudevents.core.message.MessageReader}
  * and {@link io.cloudevents.core.message.MessageWriter} for Kafka Producer and Consumer.
+ * <p>
+ * These can be used as an alternative to {@link CloudEventDeserializer} and {@link CloudEventSerializer} to
+ * manually serialize/deserialize {@link io.cloudevents.CloudEvent} messages.
  */
 @ParametersAreNonnullByDefault
 public final class KafkaMessageFactory {
@@ -42,20 +47,21 @@ public final class KafkaMessageFactory {
     }
 
     /**
-     * Create a {@link io.cloudevents.core.message.MessageReader} to read {@link ConsumerRecord}
+     * Create a {@link io.cloudevents.core.message.MessageReader} to read {@link ConsumerRecord}.
      *
      * @param record the record to convert to {@link io.cloudevents.core.message.MessageReader}
      * @param <K>    the type of the record key
      * @return the new {@link io.cloudevents.core.message.MessageReader}
+     * @throws CloudEventRWException if something goes wrong while resolving the {@link SpecVersion} or if the message has unknown encoding
      */
-    public static <K> MessageReader createReader(ConsumerRecord<K, byte[]> record) throws IllegalArgumentException {
+    public static <K> MessageReader createReader(ConsumerRecord<K, byte[]> record) throws CloudEventRWException {
         return createReader(record.headers(), record.value());
     }
 
     /**
      * @see #createReader(ConsumerRecord)
      */
-    public static MessageReader createReader(Headers headers, byte[] payload) throws IllegalArgumentException {
+    public static MessageReader createReader(Headers headers, byte[] payload) throws CloudEventRWException {
         return MessageUtils.parseStructuredOrBinaryMessage(
             () -> KafkaHeaders.getParsedKafkaHeader(headers, KafkaHeaders.CONTENT_TYPE),
             format -> new GenericStructuredMessageReader(format, payload),
@@ -65,7 +71,7 @@ public final class KafkaMessageFactory {
     }
 
     /**
-     * Create a {@link io.cloudevents.core.message.MessageWriter} to write a {@link org.apache.kafka.clients.producer.ProducerRecord}
+     * Create a {@link io.cloudevents.core.message.MessageWriter} to write a {@link org.apache.kafka.clients.producer.ProducerRecord}.
      *
      * @param topic     the topic where to write the record
      * @param partition the partition where to write the record
