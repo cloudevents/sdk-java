@@ -16,21 +16,8 @@ Using the Java SDK you can:
     _CloudEvents Protocol Binding_ implementations we provide for a wide range
     of well known Java frameworks/libraries.
 
-To check out the complete documentation, look at the dedicated website
+To check out the complete documentation and how to get started, look at the dedicated website
 https://cloudevents.github.io/sdk-java/.
-
-```java
-import io.cloudevents.CloudEvent;
-import io.cloudevents.core.builder.CloudEventBuilder;
-import java.net.URI;
-
-final CloudEvent event = CloudEventBuilder.v1()
-    .withId("000")
-    .withType("example.demo")
-    .withSource(URI.create("http://example.com"))
-    .withData("text/plain", "Hello world!".getBytes())
-    .build();
-```
 
 ## Status
 
