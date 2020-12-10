@@ -15,8 +15,6 @@
  */
 package io.cloudevents.spring.messaging;
 
-import java.nio.charset.Charset;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventContext;
 import io.cloudevents.SpecVersion;
@@ -25,19 +23,19 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
-
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.MessageConverter;
 
+import java.nio.charset.Charset;
+
 /**
  * A {@link MessageConverter} that can translate to and from a {@link Message
  * Message&lt;byte[]>} or {@link Message Message&lt;String>} and a {@link CloudEvent}. The
- * {@link CloudEventContext} is canonicalized, with key names given a "ce-" prefix in the
+ * {@link CloudEventContext} is canonicalized, with key names given a {@code ce-} prefix in the
  * {@link MessageHeaders}.
- * 
- * @author Dave Syer
  *
+ * @author Dave Syer
  */
 public class CloudEventMessageConverter implements MessageConverter {
 
