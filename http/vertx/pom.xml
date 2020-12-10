@@ -31,7 +31,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <vertx.version>4.0.0.CR2</vertx.version>
+        <vertx.version>4.0.0</vertx.version>
         <module-name>io.cloudevents.http.vertx</module-name>
     </properties>
 
