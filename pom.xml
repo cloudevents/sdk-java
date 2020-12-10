@@ -164,6 +164,7 @@
                         <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
                         <link>https://kafka.apache.org/25/javadoc/</link>
                         <link>https://qpid.apache.org/releases/qpid-proton-j-0.33.7/api/</link>
+                        <link>https://fasterxml.github.io/jackson-databind/javadoc/2.10/</link>
                     </links>
                 </configuration>
                 <executions>
