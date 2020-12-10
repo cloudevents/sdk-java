@@ -50,21 +50,21 @@ public class CloudEventContextUtils {
     }
 
     /**
-     * Helper method for extracting {@link MessageHeaders} from a {@link CloudEvent}. The
+     * Helper method for extracting {@link MessageHeaders} from a {@link CloudEventContext}. The
      * result will contain headers canonicalized with a {@code ce-} prefix, analogous to the
      * "binary" message format in Cloud Events.
      *
-     * @param event the input {@link CloudEvent}
+     * @param context the input {@link CloudEventContext}
      * @return the response headers represented by the event
      * @throws CloudEventRWException if something goes wrong while converting the {@link CloudEventContext} to headers
      */
-    public static Map<String, Object> toMap(CloudEvent event) throws CloudEventRWException {
+    public static Map<String, Object> toMap(CloudEventContext context) throws CloudEventRWException {
         Map<String, Object> headers = new HashMap<>();
         // Probably this should be done in CloudEventContextReaderAdapter
-        headers.put(CE_PREFIX + "specversion", event.getSpecVersion().toString());
+        headers.put(CE_PREFIX + "specversion", context.getSpecVersion().toString());
         MessageBuilderMessageWriter writer = new MessageBuilderMessageWriter(headers);
-        CloudEventUtils.toContextReader(event).readContext(writer);
+        CloudEventUtils.toContextReader(context).readContext(writer);
         return writer.end().getHeaders();
-	}
+    }
 
 }
