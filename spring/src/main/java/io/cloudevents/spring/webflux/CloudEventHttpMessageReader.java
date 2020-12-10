@@ -15,16 +15,9 @@
  */
 package io.cloudevents.spring.webflux;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.spring.http.CloudEventHttpUtils;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
@@ -32,14 +25,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ReactiveHttpInputMessage;
 import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.util.StreamUtils;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A reactive {@link HttpMessageReader} for {@link CloudEvent CloudEvents}, converting
- * from an HTTP request to a cloud event. Supports the use of {@link CloudEvent} as an
+ * from an HTTP request to a CloudEvent. Supports the use of {@link CloudEvent} as an
  * input to a reactive endpoint.
- * 
- * @author Dave Syer
  *
+ * @author Dave Syer
  */
 public class CloudEventHttpMessageReader implements HttpMessageReader<CloudEvent> {
 

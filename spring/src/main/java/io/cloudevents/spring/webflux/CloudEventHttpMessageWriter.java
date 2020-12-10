@@ -40,11 +40,10 @@ import java.util.Map;
 
 /**
  * A reactive {@link HttpMessageWriter} for {@link CloudEvent CloudEvents}, converting
- * from a cloud event to an HTTP response. Supports the use of {@link CloudEvent} as an
+ * from a CloudEvent to an HTTP response. Supports the use of {@link CloudEvent} as an
  * output from a reactive endpoint.
  *
  * @author Dave Syer
- *
  */
 public class CloudEventHttpMessageWriter implements HttpMessageWriter<CloudEvent> {
 

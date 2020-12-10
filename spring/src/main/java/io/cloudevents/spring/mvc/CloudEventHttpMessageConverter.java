@@ -15,12 +15,9 @@
  */
 package io.cloudevents.spring.mvc;
 
-import java.io.IOException;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.spring.http.CloudEventHttpUtils;
-
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -30,13 +27,14 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.StreamUtils;
 
+import java.io.IOException;
+
 /**
  * An {@link HttpMessageConverter} for {@link CloudEvent CloudEvents}. Supports the use of
- * {@link CloudEvent} in a <code>&#64;RequestMapping</code> as either a method parameter
+ * {@link CloudEvent} in a {@link org.springframework.web.bind.annotation.RequestMapping} as either a method parameter
  * or a return value.
- * 
- * @author Dave Syer
  *
+ * @author Dave Syer
  */
 public class CloudEventHttpMessageConverter extends AbstractHttpMessageConverter<CloudEvent> {
 
