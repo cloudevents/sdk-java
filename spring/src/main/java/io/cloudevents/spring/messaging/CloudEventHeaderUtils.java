@@ -51,13 +51,13 @@ public class CloudEventHeaderUtils {
 	}
 
 	/**
-	 * Helper method for extracting {@link MessageHeaders} from a {@link CloudEvent}. The
-	 * result will contain headers canonicalized with a "ce-" prefix, analogous to the
-	 * "binary" message format in Cloud Events.
-	 * @param event the input {@link CloudEvent}
+	 * Helper method for extracting {@link MessageHeaders} from a
+	 * {@link CloudEventContext}. The result will contain headers canonicalized with a
+	 * "ce-" prefix, analogous to the "binary" message format in Cloud Events.
+	 * @param event the input {@link CloudEventContext}
 	 * @return the response headers represented by the event
 	 */
-	public static Map<String, Object> toMap(CloudEvent event) {
+	public static Map<String, Object> toMap(CloudEventContext event) {
 		Map<String, Object> headers = new HashMap<>();
 		// Probably this should be done in CloudEventContextReaderAdapter
 		headers.put(CE_PREFIX + "specversion", event.getSpecVersion().toString());
