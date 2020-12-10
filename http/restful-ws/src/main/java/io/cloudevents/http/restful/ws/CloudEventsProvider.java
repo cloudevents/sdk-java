@@ -24,7 +24,6 @@ import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.http.restful.ws.impl.RestfulWSClientMessageWriter;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageFactory;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageWriter;
-import io.cloudevents.http.restful.ws.impl.Utils;
 import io.cloudevents.rw.CloudEventWriter;
 
 import javax.ws.rs.Consumes;
@@ -47,7 +46,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * This provider implements {@link CloudEvent} encoding and decoding for Jax-Rs Resources and {@link javax.ws.rs.client.Client}
+ * This provider implements {@link CloudEvent} encoding and decoding for Jax-Rs Resources and with {@link javax.ws.rs.client.Client}.
  */
 @Provider
 @Consumes(MediaType.WILDCARD)
@@ -133,7 +132,7 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        if (Utils.isCloudEventEntity(requestContext.getEntity())) {
+        if (isCloudEventEntity(requestContext.getEntity())) {
             EventFormat format = EventFormatProvider.getInstance().resolveFormat(requestContext.getMediaType().toString());
 
             if (format != null) {
@@ -150,4 +149,9 @@ public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, Messa
             }
         }
     }
+
+    private static boolean isCloudEventEntity(Object obj) {
+        return obj != null && CloudEvent.class.isAssignableFrom(obj.getClass());
+    }
+
 }

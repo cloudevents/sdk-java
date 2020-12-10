@@ -160,6 +160,8 @@
                     <detectLinks/>
                     <links>
                         <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
+                        <link>https://vertx.io/docs/apidocs/</link>
+                        <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
                     </links>
                 </configuration>
                 <executions>

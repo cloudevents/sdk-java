@@ -30,8 +30,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StructuredEncoding {
     /**
-     * Specify the content type of the structured mode
-     * (used to resolve the {@link io.cloudevents.core.format.EventFormat} through the {@link io.cloudevents.core.provider.EventFormatProvider})
+     * Specify the content type of the structured mode.
+     * This values will be used to resolve the {@link io.cloudevents.core.format.EventFormat} through
+     * the {@link io.cloudevents.core.provider.EventFormatProvider}.
      */
     String value();
 }

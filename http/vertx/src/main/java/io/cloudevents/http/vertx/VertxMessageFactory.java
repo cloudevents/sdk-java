@@ -11,7 +11,10 @@ import io.cloudevents.http.vertx.impl.VertxWebClientRequestMessageWriterImpl;
 import io.cloudevents.lang.Nullable;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
-import io.vertx.core.*;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerRequest;
@@ -23,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * This class provides a collection of methods to create {@link io.cloudevents.core.message.MessageReader}
- * and {@link io.cloudevents.core.message.MessageWriter} for Vert.x HTTP Server and Web Client.
+ * and {@link io.cloudevents.core.message.MessageWriter} for Vert.x {@link io.vertx.core.http.HttpServer} and {@link io.vertx.ext.web.client.WebClient}.
  */
 @ParametersAreNonnullByDefault
 public final class VertxMessageFactory {
@@ -36,7 +39,8 @@ public final class VertxMessageFactory {
      *
      * @param headers Http headers
      * @param body    nullable buffer of the body
-     * @return a Message implementation with potentially an unknown encoding
+     * @return a {@link MessageReader} implementation
+     * @throws CloudEventRWException if the encoding is unknown or something went wrong while parsing the headers
      */
     public static MessageReader createReader(MultiMap headers, @Nullable Buffer body) throws CloudEventRWException {
         return MessageUtils.parseStructuredOrBinaryMessage(
@@ -55,28 +59,19 @@ public final class VertxMessageFactory {
     }
 
     /**
-     * Build a {@link MessageReader} starting from an {@link HttpServerRequest}
+     * Build a {@link MessageReader} starting from an {@link HttpServerRequest}.
      *
-     * @param request
-     * @return
+     * @param request the input request
+     * @return a succeeded {@link Future} with the {@link MessageReader},
+     * otherwise a failed {@link Future} if something went wrong while reading the body or while creating the {@link MessageReader}
      */
     public static Future<MessageReader> createReader(HttpServerRequest request) {
-        Promise<MessageReader> prom = Promise.promise();
-
-        request.exceptionHandler(prom::tryFail);
-        request.bodyHandler(b -> {
-            try {
-                prom.complete(createReader(request.headers(), b));
-            } catch (final Exception e) {
-                prom.fail(e);
-            }
-        });
-        return prom.future();
+        return request
+            .body()
+            .map(b -> createReader(request.headers(), b));
     }
 
     /**
-     * @param request
-     * @param handler
      * @see #createReader(HttpServerRequest)
      */
     public static void createReader(HttpServerRequest request, Handler<AsyncResult<MessageReader>> handler) {
@@ -84,12 +79,13 @@ public final class VertxMessageFactory {
     }
 
     /**
-     * Build a {@link MessageReader} starting from an {@link io.vertx.ext.web.client.HttpResponse}
+     * Build a {@link MessageReader} starting from an {@link HttpResponse}.
      *
-     * @param response
-     * @return
+     * @param response the input web client response
+     * @return a {@link MessageReader} implementation
+     * @throws CloudEventRWException if the encoding is unknown or something went wrong while parsing the headers
      */
-    public static MessageReader createReader(HttpResponse<Buffer> response) {
+    public static MessageReader createReader(HttpResponse<Buffer> response) throws CloudEventRWException {
         return createReader(response.headers(), response.body());
     }
 
