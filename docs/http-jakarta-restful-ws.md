@@ -64,7 +64,7 @@ public class EventReceiverResource {
     @POST
     @Path("postEventWithoutBody")
     public Response postEvent(CloudEvent inputEvent) {
-        //Handle the event
+        // Handle the event
         return Response.ok().build();
     }
 }
@@ -105,19 +105,18 @@ public class CloudEventSender {
     }
 
     public CloudEvent getEvent(WebTarget target) {
-        Response res = target
+        Response response = target
             .path("getEvent")
             .request()
             .buildGet()
             .invoke();
 
-        return res.readEntity(CloudEvent.class);
+        return response.readEntity(CloudEvent.class);
     }
-
 }
 ```
 
 ## Examples
 
--   [Quarkus and Resteasy](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-quarkus)
--   [Jersey and Spring Boot](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-spring-boot)
+- [Quarkus and Resteasy](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-quarkus)
+- [Jersey and Spring Boot](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-spring-boot)

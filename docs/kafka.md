@@ -42,7 +42,6 @@ public class CloudEventProducer {
         Properties props = new Properties();
 
         // Other config props
-
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CloudEventSerializer.class);
 
@@ -59,7 +58,6 @@ public class CloudEventProducer {
             producer.send(new ProducerRecord<>("your.topic", event));
         }
     }
-
 }
 ```
 
@@ -75,12 +73,15 @@ If you want your producer to use the `partitionkey` extension, you can use the
 PartitionKeyExtensionInterceptor.
 
 ```java
-producerProps.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,io.cloudevents.kafka.PartitionKeyExtensionInterceptor.class);
+producerProps.put(
+    ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
+    io.cloudevents.kafka.PartitionKeyExtensionInterceptor.class
+);
 ```
 
 When using in your producer, this interceptor will pick the `partitionkey`
-extension from the event and will set it as record key. Check out the
-[`PartitionKeyExtensionInterceptor`](https://github.com/cloudevents/sdk-java/tree/master/kafka/src/main/java/io/cloudevents/kafka/PartitionKeyExtensionInterceptor.java)
+extension from the event and will set it as record key, regardless of the input record key.
+Check out the [`PartitionKeyExtensionInterceptor`](https://github.com/cloudevents/sdk-java/tree/master/kafka/src/main/java/io/cloudevents/kafka/PartitionKeyExtensionInterceptor.java)
 javadoc for more info.
 
 ## Consuming CloudEvents
@@ -105,7 +106,6 @@ public class CloudEventConsumer {
         Properties props = new Properties();
 
         // Other config props
-
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, CloudEventDeserializer.class);
 
@@ -118,6 +118,5 @@ public class CloudEventConsumer {
             });
         }
     }
-
 }
 ```

@@ -36,25 +36,21 @@ public class CloudEventServerVerticle extends AbstractVerticle {
     vertx.createHttpServer()
       .requestHandler(req -> {
         VertxMessageFactory.createReader(req)
-          .onComplete(result -> {
-            // If decoding succeeded, we should write the event back
-            if (result.succeeded()) {
-              CloudEvent event = result.result().toEvent();
-              // Echo the message, as structured mode
-              VertxMessageFactory
-                .createWriter(req.response())
-                .writeStructured(event, "application/cloudevents+json");
-            }
-            req.response().setStatusCode(500).end();
-          });
+          .onSuccess(messageReader -> {
+            CloudEvent event = messageReader.toEvent();
+            // Echo the message, as structured mode
+            VertxMessageFactory
+              .createWriter(req.response())
+              .writeStructured(event, "application/cloudevents+json");
+          })
+          .onFailure(t -> req.response().setStatusCode(500).end());
       })
-      .listen(8080, serverResult -> {
-        if (serverResult.succeeded()) {
-          System.out.println("Server started on port " + serverResult.result().actualPort());
-        } else {
-          System.out.println("Error starting the server");
-          serverResult.cause().printStackTrace();
-        }
+      .listen(8080)
+      .onSuccess(server ->
+        System.out.println("Server started on port " + server.actualPort())
+      ).onFailure(t -> {
+        System.out.println("Error starting the server");
+        serverResult.cause().printStackTrace();
       });
   }
 }
@@ -87,9 +83,9 @@ public class CloudEventClientVerticle extends AbstractVerticle {
     VertxMessageFactory
         .createWriter(client.postAbs("http://localhost:8080"))
         .writeBinary(reqEvent)
-        .onSuccess(res -> {
-          CloudEvent resEvent = VertxMessageFactory
-              .createReader(res)
+        .onSuccess(response -> {
+          CloudEvent responseEvent = VertxMessageFactory
+              .createReader(response)
               .toEvent();
         })
         .onFailure(Throwable::printStackTrace);
@@ -99,4 +95,4 @@ public class CloudEventClientVerticle extends AbstractVerticle {
 
 ## Examples:
 
--   [Vert.x Client and Server](https://github.com/cloudevents/sdk-java/tree/master/examples/vertx)
+- [Vert.x Client and Server](https://github.com/cloudevents/sdk-java/tree/master/examples/vertx)

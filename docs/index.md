@@ -81,7 +81,7 @@ a different feature from the different sub specs of
     `CloudEventBuilder` to create `CloudEvent`s programmatically, `EventFormat`
     to implement
     [Event Formats](https://github.com/cloudevents/spec/blob/v1.0/spec.md#event-format),
-    `Message` /`MessageVisitor` to implement
+    `MessageReader` /`MessageWriter` to implement
     [Protocol bindings](https://github.com/cloudevents/spec/blob/v1.0/spec.md#protocol-binding)
 -   [`cloudevents-json-jackson`] Implementation of [JSON Event format] with
     [Jackson](https://github.com/FasterXML/jackson)

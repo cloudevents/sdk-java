@@ -14,7 +14,6 @@ Jackson `ObjectMapper`.
 For Maven based projects, use the following dependency:
 
 ```xml
-
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-json-jackson</artifactId>
@@ -28,16 +27,18 @@ You don't need to perform any operation to configure the module, more than
 adding the dependency to your project:
 
 ```java
+import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.jackson.JsonFormat;
 
-CloudEvent event=CloudEventBuilder.v1()
+CloudEvent event = CloudEventBuilder.v1()
     .withId("hello")
     .withType("example.vertx")
     .withSource(URI.create("http://localhost"))
     .build();
 
-    byte[]serialized=EventFormatProvider
+byte[]serialized = EventFormatProvider
     .getInstance()
     .resolveFormat(JsonFormat.CONTENT_TYPE)
     .serialize(event);
@@ -57,9 +58,10 @@ import io.cloudevents.jackson.PojoCloudEventDataMapper;
 
 import static io.cloudevents.core.CloudEventUtils.mapData;
 
-PojoCloudEventData<User> cloudEventData=mapData(
-    inputEvent,PojoCloudEventDataMapper.from(objectMapper,User.class)
-    );
+PojoCloudEventData<User> cloudEventData = mapData(
+    inputEvent,
+    PojoCloudEventDataMapper.from(objectMapper,User.class)
+);
 // check if cloudEventData is null
-    User user=cloudEventData.getValue();
+User user = cloudEventData.getValue();
 ```

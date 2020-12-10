@@ -13,7 +13,6 @@ This package includes implementations and utilities to create and process
 For Maven based projects, use the following dependency:
 
 ```xml
-
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-core</artifactId>
@@ -43,13 +42,13 @@ Now you can access the event context attributes and data:
 
 ```java
 // Get an event attribute
-String id=event.getId();
+String id = event.getId();
 
 // Get an event extension
-    Object someExtension=event.getExtension("extensiona")
+Object someExtension = event.getExtension("myextension");
 
 // Retrieve the event data
-    CloudEventData data=event.getData();
+CloudEventData data = event.getData();
 ```
 
 ### Creating and accessing to the event data
@@ -59,7 +58,7 @@ still enforcing the conversion to bytes. To convert to bytes:
 
 ```java
 // Convert the event data to bytes
-byte[]bytes=cloudEventData.toBytes();
+byte[]bytes = cloudEventData.toBytes();
 ```
 
 If you want to map the JSON event data to POJOs using Jackson, check out the
@@ -69,7 +68,7 @@ When building an event, you can wrap a POJO inside its payload using
 `PojoCloudEventData`, providing the function to convert it back to bytes:
 
 ```java
-CloudEventData pojoData=PojoCloudEventData.wrap(myPojo,myPojo::toBytes);
+CloudEventData pojoData = PojoCloudEventData.wrap(myPojo, myPojo::toBytes);
 ```
 
 ### Using Event Formats
