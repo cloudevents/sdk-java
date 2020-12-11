@@ -4,10 +4,20 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudevents/cloudevents-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudevents/cloudevents-parent)
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-core.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
 
-A Java API for the
-[CloudEvents specification](https://github.com/cloudevents/spec)
+The Java SDK for CloudEvents is a collection of Java packages to adopt
+[CloudEvents](https://github.com/cloudevents/spec) in your Java application.
 
-Look at https://cloudevents.github.io/sdk-java/ for more documentation.
+Using the Java SDK you can:
+
+-   Access, create and manipulate `CloudEvent` inside your application.
+-   Serialize and deserialize `CloudEvent` back and forth using the _CloudEvents
+    Event Format_, like Json.
+-   Read and write `CloudEvent` back and forth to HTTP, Kafka, AMQP using the
+    _CloudEvents Protocol Binding_ implementations we provide for a wide range
+    of well known Java frameworks/libraries.
+
+To check out the complete documentation and how to get started, look at the dedicated website
+https://cloudevents.github.io/sdk-java/.
 
 ## Status
 
@@ -32,6 +42,7 @@ Supported features of the specification:
 |         - [Vert.x](http/vertx)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 | - [Jakarta Restful WS](http/restful-ws) |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |          - [Basic](http/basic)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|           - [Spring](spring)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            JSON Event Format            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |    - [Jackson](formats/json-jackson)    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |     [Kafka Protocol Binding](kafka)     |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
@@ -39,21 +50,9 @@ Supported features of the specification:
 |          NATS Protocol Binding          |                          :x:                          |                          :x:                          |
 |                Web hook                 |                          :x:                          |                          :x:                          |
 
-## Motivation
-
-The [CloudEvents specification](https://github.com/cloudevents/spec) is a
-vendor-neutral specification for defining the format of event data that is being
-exchanged between different cloud systems. The specification basically defines
-an abstract envelope for any event data payload, without knowing specific
-implementation details of the actual underlying event. The current version of
-the spec is at `1.0` and it describes a simple event format, which was
-demonstrated at [KubeCon 2018](https://youtu.be/TZPPjAv12KU) using different
-_Serverless platforms_, such as
-[Apache Openwhisk](https://github.com/apache/incubator-openwhisk).
-
 ## Documentation
 
-Documentation is available at https://cloudevents.github.io/sdk-java/
+Documentation is available at https://cloudevents.github.io/sdk-java/.
 
 Javadocs are available on [javadoc.io](https://www.javadoc.io):
 
@@ -64,6 +63,8 @@ Javadocs are available on [javadoc.io](https://www.javadoc.io):
 -   [cloudevents-http-restful-ws](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
 -   [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
 -   [cloudevents-kafka](https://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)
+-   [cloudevents-amqp](https://www.javadoc.io/doc/io.cloudevents/cloudevents-amqp)
+-   [cloudevents-spring](https://www.javadoc.io/doc/io.cloudevents/cloudevents-spring)
 
 You can check out the examples in the [examples](examples) directory.
 
