@@ -100,26 +100,16 @@ a different feature from the different sub specs of
 You can look at the latest published artifacts on
 [Maven Central](https://search.maven.org/search?q=g:io.cloudevents).
 
-[json event format]:
-    https://github.com/cloudevents/spec/blob/v1.0/json-format.md
-[http protocol binding]:
-    https://github.com/cloudevents/spec/blob/v1.0/http-protocol-binding.md
-[kafka protocol binding]:
-    https://github.com/cloudevents/spec/blob/v1.0/kafka-protocol-binding.md
-[amqp protocol binding]:
-    https://github.com/cloudevents/spec/blob/v1.0/amqp-protocol-binding.md
+[JSON Event format]: https://github.com/cloudevents/spec/blob/v1.0/json-format.md
+[HTTP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/http-protocol-binding.md
+[Kafka Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/kafka-protocol-binding.md
+[AMQP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/amqp-protocol-binding.md
 [`cloudevents-api`]: https://github.com/cloudevents/sdk-java/tree/master/api
 [`cloudevents-core`]: https://github.com/cloudevents/sdk-java/tree/master/core
-[`cloudevents-json-jackson`]:
-    https://github.com/cloudevents/sdk-java/tree/master/formats/json-jackson
-[`cloudevents-http-vertx`]:
-    https://github.com/cloudevents/sdk-java/tree/master/http/vertx
-[`cloudevents-http-basic`]:
-    https://github.com/cloudevents/sdk-java/tree/master/http/basic
-[`cloudevents-http-restful-ws`]:
-    https://github.com/cloudevents/sdk-java/tree/master/http/restful-ws
+[`cloudevents-json-jackson`]: https://github.com/cloudevents/sdk-java/tree/master/formats/json-jackson
+[`cloudevents-http-vertx`]: https://github.com/cloudevents/sdk-java/tree/master/http/vertx
+[`cloudevents-http-basic`]: https://github.com/cloudevents/sdk-java/tree/master/http/basic
+[`cloudevents-http-restful-ws`]: https://github.com/cloudevents/sdk-java/tree/master/http/restful-ws
 [`cloudevents-kafka`]: https://github.com/cloudevents/sdk-java/tree/master/kafka
-[`cloudevents-amqp-proton`]:
-    https://github.com/cloudevents/sdk-java/tree/master/amqp
-[`cloudevents-spring`]:
-    https://github.com/cloudevents/sdk-java/tree/master/spring
+[`cloudevents-amqp-proton`]: https://github.com/cloudevents/sdk-java/tree/master/amqp
+[`cloudevents-spring`]: https://github.com/cloudevents/sdk-java/tree/master/spring
