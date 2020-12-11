@@ -29,6 +29,7 @@ import io.cloudevents.lang.Nullable;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
+import org.apache.qpid.proton.amqp.messaging.Section;
 import org.apache.qpid.proton.message.Message;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -46,45 +47,29 @@ public final class ProtonAmqpMessageFactory {
     /**
      * Creates a {@link MessageReader} to read a proton-based {@link Message}.
      * This reader is able to read both binary and structured encoded {@link io.cloudevents.CloudEvent}.
-     * <p>
-     * This implementation simply calls {@link #createReader(String, ApplicationProperties, byte[])}.
      *
      * @param message The proton {@link Message} to read from.
      * @return A {@link MessageReader} that can read the given proton {@link Message} to a {@link io.cloudevents.CloudEvent} representation.
      * @throws CloudEventRWException if something goes wrong while resolving the {@link SpecVersion} or if the message has unknown encoding
-     * @see #createReader(String, ApplicationProperties, byte[])
+     * @see #createReader(String, ApplicationProperties, Section)
      */
     public static MessageReader createReader(final Message message) throws CloudEventRWException {
-        final byte[] payload = AmqpConstants.getPayloadAsByteArray(message.getBody());
-        return createReader(message.getContentType(), message.getApplicationProperties(), payload);
-    }
-
-    /**
-     * Creates a {@link MessageReader} using the {@code content-type} property and payload of a proton-based {@link Message}.
-     * This reader is able to read both binary and structured encoded {@link io.cloudevents.CloudEvent}.
-     *
-     * @param contentType The {@code content-type} of the message payload.
-     * @param payload     The message payload in bytes.
-     * @return A {@link MessageReader} capable of representing a CloudEvent from
-     * a message {@code content-type} property and {@code application-data}.
-     * @see #createReader(String, ApplicationProperties, byte[])
-     */
-    public static MessageReader createReader(final String contentType, final byte[] payload) {
-        return createReader(contentType, null, payload);
+        return createReader(message.getContentType(), message.getApplicationProperties(), message.getBody());
     }
 
     /**
      * Creates a MessageReader to read using the {@code content-type} property, {@code application-properties} and data payload
      * of a proton-based {@link Message}. This reader is able to read both binary and structured encoded {@link io.cloudevents.CloudEvent}.
      *
-     * @param contentType  The {@code content-type} of the message payload.
-     * @param props        The {@code application-properties} section of the proton-message containing cloud event metadata (attributes and/or extensions).
-     * @param payload      The message payload in bytes or {@code null} if the message does not contain any payload.
+     * @param contentType The {@code content-type} of the message payload.
+     * @param props       The {@code application-properties} section of the proton-message containing cloud event metadata (attributes and/or extensions).
+     * @param body        The message body or {@code null} if the message does not contain any body.
      * @return A {@link MessageReader} capable of representing a {@link io.cloudevents.CloudEvent} from the {@code application-properties},
-     *                     {@code content-type} and payload of a proton message.
+     * {@code content-type} and payload of a proton message.
      * @throws CloudEventRWException if something goes wrong while resolving the {@link SpecVersion} or if the message has unknown encoding
      */
-    public static MessageReader createReader(final String contentType, final ApplicationProperties props, @Nullable final byte[] payload) throws CloudEventRWException {
+    public static MessageReader createReader(final String contentType, final ApplicationProperties props, @Nullable final Section body) throws CloudEventRWException {
+        final byte[] payload = AmqpConstants.getPayloadAsByteArray(body);
         return MessageUtils.parseStructuredOrBinaryMessage(
             () -> contentType,
             format -> new GenericStructuredMessageReader(format, payload),
