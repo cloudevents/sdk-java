@@ -17,18 +17,6 @@
 
 package io.cloudevents.amqp;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.amqp.impl.AmqpConstants;
@@ -39,6 +27,19 @@ import io.cloudevents.core.test.Data;
 import io.cloudevents.core.v03.CloudEventV03;
 import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.types.Time;
+import org.apache.qpid.proton.amqp.Binary;
+import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
+import org.apache.qpid.proton.amqp.messaging.Section;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests verifying the behavior of the {@code ProtonAmqpMessageFactory}.
@@ -53,7 +54,8 @@ public class ProtonAmqpMessageFactoryTest {
     @MethodSource("binaryTestArguments")
     public void readBinary(final Map<String, Object> props, final String contentType, final byte[] body,
             final CloudEvent event) {
-        final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, new ApplicationProperties(props), body);
+        final Section bodySection = body != null ? new org.apache.qpid.proton.amqp.messaging.Data(new Binary(body)) : null;
+        final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, new ApplicationProperties(props), bodySection);
         assertThat(amqpReader.getEncoding()).isEqualTo(Encoding.BINARY);
         assertThat(amqpReader.toEvent()).isEqualTo(event);
     }
@@ -64,7 +66,7 @@ public class ProtonAmqpMessageFactoryTest {
         final String contentType = CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8";
         final byte[] contentPayload = CSVFormat.INSTANCE.serialize(event);
 
-        final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, null, contentPayload);
+        final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, null, new org.apache.qpid.proton.amqp.messaging.Data(new Binary(contentPayload)));
         assertThat(amqpReader.getEncoding()).isEqualTo(Encoding.STRUCTURED);
         assertThat(amqpReader.toEvent()).isEqualTo(event);
     }
