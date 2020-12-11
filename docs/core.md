@@ -30,7 +30,7 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 
 import java.net.URI;
 
-final CloudEvent event=CloudEventBuilder.v1()
+final CloudEvent event = CloudEventBuilder.v1()
     .withId("000")
     .withType("example.demo")
     .withSource(URI.create("http://example.com"))
