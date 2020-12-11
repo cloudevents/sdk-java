@@ -17,7 +17,7 @@ For Maven based projects, use the following dependency:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-json-jackson</artifactId>
-    <version>2.0.0.RC1</version>
+    <version>2.0.0.RC2</version>
 </dependency>
 ```
 
