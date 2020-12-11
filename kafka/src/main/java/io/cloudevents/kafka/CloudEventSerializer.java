@@ -28,16 +28,23 @@ import org.apache.kafka.common.serialization.Serializer;
 import java.util.Map;
 
 /**
- * Serializer for {@link CloudEvent}.
+ * Kafka {@link Serializer} for {@link CloudEvent}.
  * <p>
- * To configure the encoding to serialize the event, you can use the {@link CloudEventSerializer#ENCODING_CONFIG} configuration key,
+ * To configure the encoding to use when serializing the event, you can use the {@link CloudEventSerializer#ENCODING_CONFIG} configuration key,
  * which accepts both a {@link String} or a variant of the enum {@link Encoding}. If you configure the Encoding as {@link Encoding#STRUCTURED},
  * you MUST configure the {@link EventFormat} to use with {@link CloudEventSerializer#EVENT_FORMAT_CONFIG}, specifying a {@link String}
  * corresponding to the content type of the event format or specifying an instance of {@link EventFormat}.
  */
 public class CloudEventSerializer implements Serializer<CloudEvent> {
 
+    /**
+     * The configuration key for the {@link Encoding} to use when serializing the event.
+     */
     public final static String ENCODING_CONFIG = "cloudevents.serializer.encoding";
+
+    /**
+     * The configuration key for the {@link EventFormat} to use when serializing the event in structured mode.
+     */
     public final static String EVENT_FORMAT_CONFIG = "cloudevents.serializer.event_format";
 
     private Encoding encoding = Encoding.BINARY;

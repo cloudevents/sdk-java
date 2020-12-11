@@ -25,7 +25,9 @@ import org.apache.kafka.common.serialization.Serializer;
 import java.util.Map;
 
 /**
- * Serializer for {@link MessageReader}. This {@link Serializer} can't be used as a key serializer.
+ * Kafka {@link Serializer} for {@link MessageReader}.
+ * <p>
+ * This {@link Serializer} can't be used as a key serializer.
  */
 public class CloudEventMessageSerializer implements Serializer<MessageReader> {
 

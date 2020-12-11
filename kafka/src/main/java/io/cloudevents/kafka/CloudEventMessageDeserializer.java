@@ -22,7 +22,7 @@ import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
 
 /**
- * Deserializer for {@link MessageReader}
+ * Kafka {@link Deserializer} for {@link MessageReader}.
  */
 public class CloudEventMessageDeserializer implements Deserializer<MessageReader> {
 
