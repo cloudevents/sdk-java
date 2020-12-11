@@ -33,15 +33,29 @@ import java.io.IOException;
 /**
  * Implementation of {@link EventFormat} for <a href="https://github.com/cloudevents/spec/blob/v1.0/json-format.md">JSON event format</a>
  * using Jackson. This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #CONTENT_TYPE}.
+ * <p>
+ * If you want to use the {@link CloudEvent} serializers/deserializers directly in your mapper, you can use {@link #getCloudEventJacksonModule()} or
+ * {@link #getCloudEventJacksonModule(boolean, boolean)} to get a {@link SimpleModule} to register in your {@link ObjectMapper} instance.
  */
 public final class JsonFormat implements EventFormat {
 
+    /**
+     * Content type associated with the JSON event format
+     */
     public static final String CONTENT_TYPE = "application/cloudevents+json";
 
     private final ObjectMapper mapper;
     private final boolean forceDataBase64Serialization;
     private final boolean forceStringSerialization;
 
+    /**
+     * Create a new instance of this class customizing the serialization configuration.
+     *
+     * @param forceDataBase64Serialization force json base64 encoding for data
+     * @param forceStringSerialization     force string serialization for non json data field
+     * @see #withForceJsonDataToBase64()
+     * @see #withForceNonJsonDataToString()
+     */
     public JsonFormat(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(getCloudEventJacksonModule(forceDataBase64Serialization, forceStringSerialization));
@@ -49,6 +63,9 @@ public final class JsonFormat implements EventFormat {
         this.forceStringSerialization = forceStringSerialization;
     }
 
+    /**
+     * Create a new instance of this class with default serialization configuration
+     */
     public JsonFormat() {
         this(false, false);
     }
@@ -106,15 +123,18 @@ public final class JsonFormat implements EventFormat {
     }
 
     /**
-     * @return a JacksonModule with CloudEvent serializer/deserializer with default values
+     * @return a {@link SimpleModule} with {@link CloudEvent} serializer/deserializer configured using default values.
      */
     public static SimpleModule getCloudEventJacksonModule() {
         return getCloudEventJacksonModule(false, false);
     }
 
     /**
+     * @param forceDataBase64Serialization force json base64 encoding for data
+     * @param forceStringSerialization force string serialization for non json data field
      * @return a JacksonModule with CloudEvent serializer/deserializer customizing the data serialization.
-     * Look at {@link #withForceJsonDataToBase64()} and {@link #withForceNonJsonDataToString()} for more details.
+     * @see #withForceJsonDataToBase64()
+     * @see #withForceNonJsonDataToString()
      */
     public static SimpleModule getCloudEventJacksonModule(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
         final SimpleModule ceModule = new SimpleModule("CloudEvent");
@@ -123,7 +143,7 @@ public final class JsonFormat implements EventFormat {
         return ceModule;
     }
 
-    protected static boolean dataIsJsonContentType(String contentType) {
+    static boolean dataIsJsonContentType(String contentType) {
         // If content type, spec states that we should assume is json
         return contentType == null || contentType.startsWith("application/json") || contentType.startsWith("text/json");
     }

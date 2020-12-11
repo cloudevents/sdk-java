@@ -37,7 +37,7 @@ import java.io.IOException;
 /**
  * Jackson {@link com.fasterxml.jackson.databind.JsonDeserializer} for {@link CloudEvent}
  */
-public class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
+class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
 
     protected CloudEventDeserializer() {
         super(CloudEvent.class);

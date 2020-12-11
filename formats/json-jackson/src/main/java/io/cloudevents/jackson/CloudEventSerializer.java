@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Jackson {@link com.fasterxml.jackson.databind.JsonSerializer} for {@link CloudEvent}
  */
-public class CloudEventSerializer extends StdSerializer<CloudEvent> {
+class CloudEventSerializer extends StdSerializer<CloudEvent> {
 
     private final boolean forceDataBase64Serialization;
     private final boolean forceStringSerialization;

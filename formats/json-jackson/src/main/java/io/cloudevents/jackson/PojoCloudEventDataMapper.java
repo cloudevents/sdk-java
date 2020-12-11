@@ -11,6 +11,11 @@ import io.cloudevents.rw.CloudEventRWException;
 
 import java.util.List;
 
+/**
+ * This class implements a {@link CloudEventDataMapper} that maps any input {@link CloudEventData} to the specified target type using the Jackson {@link ObjectMapper}.
+ *
+ * @param <T> the target type of the conversion
+ */
 public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoCloudEventData<T>> {
 
     private final ObjectMapper mapper;

@@ -23,12 +23,16 @@ import io.cloudevents.CloudEventData;
 import java.util.Objects;
 
 /**
- * This class is a wrapper for Jackson {@link JsonNode} implementing the {@link CloudEventData}
+ * This class is a wrapper for Jackson {@link JsonNode} implementing {@link CloudEventData}.
  */
 public class JsonCloudEventData implements CloudEventData {
 
     private final JsonNode node;
 
+    /**
+     * @param node the json node to wrap
+     * @deprecated You should use {@link #wrap(JsonNode)}
+     */
     public JsonCloudEventData(JsonNode node) {
         Objects.requireNonNull(node);
         this.node = node;
@@ -39,6 +43,9 @@ public class JsonCloudEventData implements CloudEventData {
         return node.toString().getBytes();
     }
 
+    /**
+     * @return the wrapped {@link JsonNode}
+     */
     public JsonNode getNode() {
         return node;
     }
@@ -62,4 +69,13 @@ public class JsonCloudEventData implements CloudEventData {
             "node=" + node +
             '}';
     }
+
+    /**
+     * @param node the json node to wrap
+     * @return json node wrapped in a {@link JsonCloudEventData}, which implements {@link CloudEventData}.
+     */
+    public static JsonCloudEventData wrap(JsonNode node) {
+        return new JsonCloudEventData(node);
+    }
+
 }
