@@ -32,9 +32,7 @@ respectively. This module offers factory methods for creation of those in
 public class ProtonAmqpMessageFactory {
     public static MessageReader createReader(final Message message);
 
-    public static MessageReader createReader(final String contentType, final byte[] payload);
-
-    public static MessageReader createReader(final String contentType, final ApplicationProperties props, final byte[] payload);
+    public static MessageReader createReader(final String contentType, final ApplicationProperties props, @Nullable final Section body);
 
     public static MessageWriter createWriter();
 }
