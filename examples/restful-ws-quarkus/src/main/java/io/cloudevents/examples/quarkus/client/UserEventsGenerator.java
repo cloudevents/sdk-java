@@ -1,24 +1,25 @@
 package io.cloudevents.examples.quarkus.client;
 
+import java.net.URI;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.ws.rs.core.MediaType;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.PojoCloudEventData;
 import io.cloudevents.examples.quarkus.model.User;
-import io.quarkus.runtime.StartupEvent;
-import io.smallrye.mutiny.Multi;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
-import java.time.Duration;
-import java.util.UUID;
+import io.quarkus.scheduler.Scheduled;
+import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped
 public class UserEventsGenerator {
@@ -31,16 +32,14 @@ public class UserEventsGenerator {
     @Inject
     @RestClient
     UserClient userClient;
+    
+    long userCount=0;
 
-    public void init(@Observes StartupEvent startupEvent) {
-        Multi.createFrom().ticks().every(Duration.ofSeconds(2))
-            .onItem()
-            .transform(this::createEvent)
-            .subscribe()
-            .with(event -> {
-                LOGGER.info("try to emit user: {}", event.getId());
-                userClient.emit(event);
-            });
+    @Scheduled(every="2s")
+    public void init() {
+        CloudEvent event = createEvent(userCount++);
+        LOGGER.info("try to emit user: {}", event.getId());
+        userClient.emit(event);
     }
 
     private CloudEvent createEvent(long id) {
