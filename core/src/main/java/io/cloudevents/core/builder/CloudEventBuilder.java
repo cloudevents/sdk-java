@@ -192,7 +192,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param extension materialized extension to set in the builder
      * @return self
      */
-    CloudEventBuilder withExtension(@Nonnull Extension extension);
+    CloudEventBuilder withExtension(@Nonnull CloudEventExtension extension);
 
     /**
      * Remove from the the builder the provided extension key, if any
@@ -208,7 +208,7 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
      * @param extension materialized extension to remove from the builder
      * @return self
      */
-    CloudEventBuilder withoutExtension(@Nonnull Extension extension);
+    CloudEventBuilder withoutExtension(@Nonnull CloudEventExtension extension);
 
     /**
      * Build the event

@@ -23,10 +23,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Set;
 
 /**
- * Materialized CloudEvent Extension interface to read/write the extension attributes key/values.
+ * Materialized CloudEvent extension interface to read/write the extension attributes key/values.
  */
 @ParametersAreNonnullByDefault
-public interface Extension {
+public interface CloudEventExtension {
 
     /**
      * Fill this materialized extension with values from a {@link CloudEventExtensions} implementation.
