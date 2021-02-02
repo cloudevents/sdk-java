@@ -18,7 +18,7 @@
 package io.cloudevents.core.extensions;
 
 import io.cloudevents.CloudEventExtensions;
-import io.cloudevents.Extension;
+import io.cloudevents.CloudEventExtension;
 import io.cloudevents.core.extensions.impl.ExtensionUtils;
 
 import java.util.*;
@@ -28,7 +28,7 @@ import java.util.*;
  *
  * @see <a href="https://github.com/cloudevents/spec/blob/master/extensions/distributed-tracing.md">https://github.com/cloudevents/spec/blob/master/extensions/distributed-tracing.md</a>
  */
-public final class DistributedTracingExtension implements Extension {
+public final class DistributedTracingExtension implements CloudEventExtension {
 
     /**
      * The key of the {@code traceparent} extension

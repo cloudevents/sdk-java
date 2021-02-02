@@ -18,7 +18,7 @@
 package io.cloudevents.core.extensions;
 
 import io.cloudevents.CloudEventExtensions;
-import io.cloudevents.Extension;
+import io.cloudevents.CloudEventExtension;
 import io.cloudevents.core.extensions.impl.ExtensionUtils;
 
 import java.net.URI;
@@ -31,7 +31,7 @@ import java.util.Set;
  *
  * @see <a href=https://github.com/cloudevents/spec/blob/v1.0/extensions/dataref.md>https://github.com/cloudevents/spec/blob/v1.0/extensions/dataref.md</a>
  */
-public final class DatarefExtension implements Extension {
+public final class DatarefExtension implements CloudEventExtension {
 
     /**
      * The key of the {@code dataref} extension

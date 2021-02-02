@@ -61,7 +61,5 @@ core module.
 
 ## Other interfaces
 
--   `Extension` represents a _materialized_ in-memory representation of a
-    CloudEvent extension
--   `SpecVersion` is an enum of CloudEvents' specification versions supported by
-    this SDK version.
+- `CloudEventExtension` represents a _materialized_ in-memory representation of a CloudEvent extension
+- `SpecVersion` is an enum of CloudEvents' specification versions supported by this SDK version.

@@ -20,7 +20,7 @@ package io.cloudevents.core.impl;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventContext;
 import io.cloudevents.CloudEventData;
-import io.cloudevents.Extension;
+import io.cloudevents.CloudEventExtension;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.rw.CloudEventRWException;
@@ -147,12 +147,12 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     @Override
-    public SELF withoutExtension(@Nonnull Extension extension) {
+    public SELF withoutExtension(@Nonnull CloudEventExtension extension) {
         extension.getKeys().forEach(this::withoutExtension);
         return self;
     }
 
-    public SELF withExtension(@Nonnull Extension extension) {
+    public SELF withExtension(@Nonnull CloudEventExtension extension) {
         for (String key : extension.getKeys()) {
             Object value = extension.getValue(key);
             if (value != null) {

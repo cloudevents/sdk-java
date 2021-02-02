@@ -18,7 +18,7 @@
 package io.cloudevents.core.provider;
 
 import io.cloudevents.CloudEventExtensions;
-import io.cloudevents.Extension;
+import io.cloudevents.CloudEventExtension;
 import io.cloudevents.core.extensions.DatarefExtension;
 import io.cloudevents.core.extensions.DistributedTracingExtension;
 import io.cloudevents.lang.Nullable;
@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 /**
  * Singleton to materialize CloudEvent extensions as POJOs.
  * <p>
- * You can materialize an {@link Extension} POJO with {@code ExtensionProvider.getInstance().parseExtension(DistributedTracingExtension.class, event)}.
+ * You can materialize an {@link CloudEventExtension} POJO with {@code ExtensionProvider.getInstance().parseExtension(DistributedTracingExtension.class, event)}.
  */
 @ParametersAreNonnullByDefault
 public final class ExtensionProvider {
@@ -59,10 +59,10 @@ public final class ExtensionProvider {
      * Register a new extension type.
      *
      * @param <T>            the type of the extension
-     * @param extensionClass the class implementing {@link Extension}
+     * @param extensionClass the class implementing {@link CloudEventExtension}
      * @param factory        the empty arguments factory
      */
-    public <T extends Extension> void registerExtension(Class<T> extensionClass, Supplier<T> factory) {
+    public <T extends CloudEventExtension> void registerExtension(Class<T> extensionClass, Supplier<T> factory) {
         this.extensionFactories.put(extensionClass, factory);
     }
 
@@ -70,16 +70,16 @@ public final class ExtensionProvider {
      * Parse an extension from the {@link CloudEventExtensions}, materializing the corresponding POJO.
      *
      * @param <T>             the type of the extension
-     * @param extensionClass  the class implementing {@link Extension}
+     * @param extensionClass  the class implementing {@link CloudEventExtension}
      * @param eventExtensions the event extensions to read
      * @return the parsed extension
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    public <T extends Extension> T parseExtension(Class<T> extensionClass, CloudEventExtensions eventExtensions) {
+    public <T extends CloudEventExtension> T parseExtension(Class<T> extensionClass, CloudEventExtensions eventExtensions) {
         Supplier<?> factory = extensionFactories.get(extensionClass);
         if (factory != null) {
-            Extension ext = (Extension) factory.get();
+            CloudEventExtension ext = (CloudEventExtension) factory.get();
             ext.readFrom(eventExtensions);
             return (T) ext;
         }
