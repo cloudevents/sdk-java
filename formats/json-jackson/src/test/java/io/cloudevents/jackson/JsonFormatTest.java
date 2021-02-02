@@ -19,11 +19,14 @@ package io.cloudevents.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.provider.EventFormatProvider;
+import io.cloudevents.rw.CloudEventRWException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,6 +41,7 @@ import java.util.stream.Stream;
 
 import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class JsonFormatTest {
 
@@ -107,6 +111,13 @@ class JsonFormatTest {
 
         CloudEvent output = getFormat().deserialize(serialized);
         assertThat(output).isEqualTo(normalizeToJsonValueIfNeeded(input));
+    }
+
+    @Test
+    void throwExpectedOnInvalidSpecversion() {
+        assertThatCode(() -> getFormat().deserialize(("{\"specversion\":\"9000.1\"}").getBytes(StandardCharsets.UTF_8)))
+            .hasCauseInstanceOf(MismatchedInputException.class)
+            .hasMessageContaining(CloudEventRWException.newInvalidSpecVersion("9000.1").getMessage());
     }
 
     public static Stream<Arguments> serializeTestArgumentsDefault() {
