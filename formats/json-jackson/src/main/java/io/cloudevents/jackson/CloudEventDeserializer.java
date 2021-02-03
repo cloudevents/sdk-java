@@ -197,7 +197,7 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
             if (e.getCause() instanceof IOException) {
                 throw (IOException) e.getCause();
             }
-            throw MismatchedInputException.wrapWithPath(e, null);
+            throw MismatchedInputException.from(p, CloudEvent.class, e.getMessage());
         }
     }
 }
