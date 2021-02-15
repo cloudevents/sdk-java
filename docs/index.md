@@ -37,12 +37,15 @@ Using the Java SDK you can:
 | - [Jakarta Restful WS](http-jakarta-restful-ws.md) |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |              - [Basic](http-basic.md)              |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |               - [Spring](spring.md)                |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|               - [http4k][http4k]<sup>†</sup>       |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                 JSON Event Format                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            - [Jackson](json-jackson.md)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |         [Kafka Protocol Binding](kafka.md)         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |               MQTT Protocol Binding                |                          :x:                          |                          :x:                          |
 |               NATS Protocol Binding                |                          :x:                          |                          :x:                          |
 |                      Web hook                      |                          :x:                          |                          :x:                          |
+
+<sub>† Source/artifacts hosted externally</sub>
 
 ## Get Started
 
@@ -113,3 +116,4 @@ You can look at the latest published artifacts on
 [`cloudevents-kafka`]: https://github.com/cloudevents/sdk-java/tree/master/kafka
 [`cloudevents-amqp-proton`]: https://github.com/cloudevents/sdk-java/tree/master/amqp
 [`cloudevents-spring`]: https://github.com/cloudevents/sdk-java/tree/master/spring
+[http4k]: https://www.http4k.org/guide/modules/cloud_events/
