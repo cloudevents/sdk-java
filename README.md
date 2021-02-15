@@ -43,12 +43,15 @@ Supported features of the specification:
 | - [Jakarta Restful WS](http/restful-ws) |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |          - [Basic](http/basic)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |           - [Spring](spring)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|           - [http4k][http4k]<sup>†</sup>           |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            JSON Event Format            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |    - [Jackson](formats/json-jackson)    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |     [Kafka Protocol Binding](kafka)     |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |          MQTT Protocol Binding          |                          :x:                          |                          :x:                          |
 |          NATS Protocol Binding          |                          :x:                          |                          :x:                          |
 |                Web hook                 |                          :x:                          |                          :x:                          |
+
+<sub>† Source/artifacts hosted externally</sub>
 
 ## Documentation
 
@@ -70,9 +73,9 @@ You can check out the examples in the [examples](examples) directory.
 
 ## Used By
 
-| [Occurrent](https://occurrent.org)                                                                                                                                                                                                              | [Knative Eventing](https://github.com/knative-sandbox/eventing-kafka-broker)                                                                                   |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <a href="https://occurrent.org"><img src="https://raw.githubusercontent.com/johanhaleby/occurrent/master/occurrent-logo-196x196.png" width="98" height="98" alt="Occurrent" title="Occurrent - Event Sourcing Utilities for the JVM"></img></a> | <a href="https://github.com/knative-sandbox/eventing-kafka-broker"><img src="https://cloudevents.io/img/logos/integrations/knative.png" height="98"></img></a> |
+| [Occurrent](https://occurrent.org) | [Knative Eventing](https://github.com/knative-sandbox/eventing-kafka-broker )| [http4k][http4k] |
+| ---------------------------------- | ---------------------------------------------------------------------------- | ---------------|
+| <a href="https://occurrent.org"><img src="https://raw.githubusercontent.com/johanhaleby/occurrent/master/occurrent-logo-196x196.png" width="98" height="98" alt="Occurrent" title="Occurrent - Event Sourcing Utilities for the JVM"></img></a> | <a href="https://github.com/knative-sandbox/eventing-kafka-broker"><img src="https://cloudevents.io/img/logos/integrations/knative.png" height="98"></img></a> | <a href="https://www.http4k.org/guide/modules/cloud_events/"><img src="https://http4k.org/img/favicon-310.png" height="98" alt="http4k" title="http4k"></img></a> | |
 
 ## Community
 
@@ -99,3 +102,5 @@ projects are
 for how PR reviews and approval, and our
 [Code of Conduct](https://github.com/cloudevents/spec/blob/master/community/GOVERNANCE.md#additional-information)
 information.
+
+[http4k]: https://www.http4k.org/guide/modules/cloud_events/
