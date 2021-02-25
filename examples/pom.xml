@@ -26,6 +26,7 @@
         <module>restful-ws-spring-boot</module>
         <module>amqp-proton</module>
         <module>spring-reactive</module>
+        <module>spring-rsocket</module>
     </modules>
 
 </project>

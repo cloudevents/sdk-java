@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloudevents-spring-reactive-example</artifactId>
+    <artifactId>cloudevents-spring-rsocket-example</artifactId>
 
     <properties>
         <spring-boot.version>2.4.3</spring-boot.version>
@@ -30,16 +30,11 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
+            <artifactId>spring-boot-starter-rsocket</artifactId>
         </dependency>
         <dependency>
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-spring</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-http-basic</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
