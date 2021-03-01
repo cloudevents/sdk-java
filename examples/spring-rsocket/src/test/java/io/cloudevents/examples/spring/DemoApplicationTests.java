@@ -47,7 +47,7 @@ public class DemoApplicationTests {
 						.withSource(URI.create("https://spring.io/foos")) //
 						.withType("io.spring.event.Foo") //
 						.withData(PojoCloudEventData.wrap(new Foo("Dave"),
-								foo -> mapper.writeValueAsBytes(foo)))
+								mapper::writeValueAsBytes))
 						.build())
 				.retrieveMono(CloudEvent.class).block();
 

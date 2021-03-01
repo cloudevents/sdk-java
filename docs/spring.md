@@ -8,7 +8,7 @@ nav_order: 5
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-spring.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-spring)
 
 This module provides the integration of `CloudEvent` with different Spring APIs,
-like MVC, WebFlux and Messaging
+like MVC, WebFlux, RSocket and Messaging
 
 For Maven based projects, use the following dependency:
 
@@ -43,3 +43,6 @@ Check out the samples:
 -   [spring-reactive](https://github.com/cloudevents/sdk-java/tree/master/examples/spring-reactive)
     shows how to receive and send CloudEvents through HTTP using Spring Boot and
     Webflux.
+
+-   [spring-rsocket](https://github.com/cloudevents/sdk-java/tree/master/examples/spring-rsocket)
+    shows how to receive and send CloudEvents through RSocket using Spring Boot.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2019 the original author or authors.
+ * Copyright 2021-Present The CloudEvents Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package io.cloudevents.spring.codec;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
@@ -35,13 +36,14 @@ import org.springframework.util.MimeTypeUtils;
 /**
  * Encoder for {@link CloudEvent CloudEvents}.
  *
- * @author Arjen Poutsma
- * @since 5.0
+ * @author Dave Syer
  */
 public class CloudEventDecoder extends AbstractDataBufferDecoder<CloudEvent> {
 
 	public CloudEventDecoder() {
-		super(MimeTypeUtils.ALL);
+		super(EventFormatProvider.getInstance().getContentTypes().stream()
+				.map(type -> MimeTypeUtils.parseMimeType(type))
+				.collect(Collectors.toList()).toArray(new MimeType[0]));
 	}
 
 	@Override
