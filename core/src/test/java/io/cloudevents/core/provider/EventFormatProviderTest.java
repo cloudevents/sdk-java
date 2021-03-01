@@ -36,4 +36,9 @@ public class EventFormatProviderTest {
             .isInstanceOf(CSVFormat.class);
     }
 
+    @Test
+    void listTypes() {
+        assertThat(EventFormatProvider.getInstance().getContentTypes()).hasSize(1);
+    }
+
 }
