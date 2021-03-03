@@ -17,7 +17,7 @@ For Maven based projects, use the following dependency:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
-    <version>2.0.0.RC2</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -61,7 +61,5 @@ core module.
 
 ## Other interfaces
 
--   `Extension` represents a _materialized_ in-memory representation of a
-    CloudEvent extension
--   `SpecVersion` is an enum of CloudEvents' specification versions supported by
-    this SDK version.
+- `CloudEventExtension` represents a _materialized_ in-memory representation of a CloudEvent extension
+- `SpecVersion` is an enum of CloudEvents' specification versions supported by this SDK version.
