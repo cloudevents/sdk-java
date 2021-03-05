@@ -39,7 +39,7 @@ public interface CloudEventExtension {
      * Get the attribute of extension named {@code key}.
      *
      * @param key the name of the extension attribute
-     * @return the extension value in one of the valid types String/Number/Boolean
+     * @return the extension value in one of the valid types String/Number/Boolean/URI/Timestamp/byte[]
      * @throws IllegalArgumentException if the key is unknown to this extension
      */
     @Nullable
