@@ -17,7 +17,10 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-public class ProtoEventWriter implements CloudEventWriter<io.cloudevents.CloudEvent> {
+/**
+ * A {@Link CloudEventWriter} that populates a protobuf structure
+ */
+class ProtoEventWriter implements CloudEventWriter<io.cloudevents.CloudEvent> {
 
     private final io.cloudevents.v1.proto.CloudEvent.Builder builder;
     private final SpecVersion specVersion;
@@ -53,7 +56,7 @@ public class ProtoEventWriter implements CloudEventWriter<io.cloudevents.CloudEv
 
             } else {
 
-                String contentType = ProtoUtils.getStringAttribute(builder, "datacontenttype");
+                String contentType = ProtoUtils.getAttributeAsString(builder, "datacontenttype");
 
                 if (isTextContent(contentType)) {
 
@@ -178,25 +181,45 @@ public class ProtoEventWriter implements CloudEventWriter<io.cloudevents.CloudEv
         return this;
     }
 
+    // @Override @TODO - this is an override in the future
+    public CloudEventContextWriter withContextAttribute(String name, byte[] value) throws CloudEventRWException
+    {
+
+        if (value != null) {
+
+            CloudEventAttributeValue.Builder ab = CloudEventAttributeValue.newBuilder();
+
+            ab.setCeBytes(ByteString.copyFrom(value));
+
+            builder.putAttributes(name, ab.build());
+        }
+
+        return this;
+    }
     // ---------------------------------------------------------------------
 
     CloudEventContextWriter withContextAttribute(String name, Object value) throws CloudEventRWException
     {
 
         if (value != null) {
+
             if (value instanceof String) {
                 withContextAttribute(name, (String) value);
-            } else if (value instanceof Number) {
-                withContextAttribute(name, (Number) value);
+            } else if (value instanceof Integer) {
+                withContextAttribute(name, (Integer) value);
             } else if (value instanceof OffsetDateTime) {
                 withContextAttribute(name, (OffsetDateTime) value);
             } else if (value instanceof Boolean) {
                 withContextAttribute(name, (Boolean) value);
             } else if (value instanceof URI) {
                 withContextAttribute(name, (URI) value);
-            } else {
+            } else if (value instanceof byte[]) {
+                withContextAttribute(name, (byte[]) value);
+            }
+            else{
                 withContextAttribute(name, value.toString());
             }
+
         }
 
         return this;
@@ -247,7 +270,7 @@ public class ProtoEventWriter implements CloudEventWriter<io.cloudevents.CloudEv
         /**
          * DUBIOUS
          */
-        
+
         final List<String> textTypes = Arrays.asList("application/json", "application/xml");
 
         // Sanity.

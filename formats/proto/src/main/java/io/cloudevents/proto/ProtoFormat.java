@@ -8,9 +8,6 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.format.EventSerializationException;
 import io.cloudevents.rw.CloudEventDataMapper;
 
-import java.util.Set;
-import java.util.stream.Stream;
-
 public final class ProtoFormat implements EventFormat {
 
     /**
@@ -20,7 +17,8 @@ public final class ProtoFormat implements EventFormat {
 
 
     @Override
-    public byte[] serialize(CloudEvent event) throws EventSerializationException {
+    public byte[] serialize(CloudEvent event) throws EventSerializationException
+    {
 
         ProtoCloudEvent protoEvent;
 
@@ -53,12 +51,14 @@ public final class ProtoFormat implements EventFormat {
     }
 
     @Override
-    public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper) throws EventDeserializationException {
+    public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper) throws EventDeserializationException
+    {
         return null;
     }
 
     @Override
-    public String serializedContentType() {
+    public String serializedContentType()
+    {
 
         return CONTENT_TYPE;
     }
@@ -68,10 +68,12 @@ public final class ProtoFormat implements EventFormat {
 
     /**
      * Creates a Protobuf representation of a CloudEvent
+     *
      * @param event The event to convert
      * @return A protobuf backed CloudEvent
      */
-    private ProtoCloudEvent convertEvent(CloudEvent event) {
+    private ProtoCloudEvent convertEvent(CloudEvent event)
+    {
 
         ProtoEventWriter writer = new ProtoEventWriter();
 

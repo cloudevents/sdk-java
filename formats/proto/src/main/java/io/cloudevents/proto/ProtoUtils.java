@@ -3,21 +3,34 @@ package io.cloudevents.proto;
 import io.cloudevents.v1.proto.CloudEvent;
 import io.cloudevents.v1.proto.CloudEventOrBuilder;
 
+import java.util.Base64;
+
 class ProtoUtils {
 
+    private ProtoUtils()
+    {
+    }
 
-    static String getStringAttribute(CloudEventOrBuilder ce, String key)
+    /**
+     * Obtain a {@link String} representation of a protobuf context attribute
+     *
+     * @param ce
+     * @param key
+     * @return
+     */
+    static String getAttributeAsString(CloudEventOrBuilder ce, String key)
     {
 
         String retVal;
 
         try {
 
-            CloudEvent.CloudEventAttributeValue attr;
+            final CloudEvent.CloudEventAttributeValue attr;
 
             attr = ce.getAttributesOrThrow(key);
 
             switch (attr.getAttrCase()) {
+
                 case CE_STRING:
                     retVal = attr.getCeString();
                     break;
@@ -40,6 +53,10 @@ class ProtoUtils {
 
                 case CE_URI_REF:
                     retVal = attr.getCeUriRef();
+                    break;
+
+                case CE_BYTES:
+                    retVal = Base64.getEncoder().encodeToString(attr.getCeBytes().toByteArray());
                     break;
 
                 default:

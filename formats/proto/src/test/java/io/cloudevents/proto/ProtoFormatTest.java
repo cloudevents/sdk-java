@@ -14,8 +14,8 @@ import java.io.*;
 import java.net.URL;
 import java.util.stream.Stream;
 
-import static io.cloudevents.core.test.Data.*;
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+import static io.cloudevents.core.test.Data.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProtoFormatTest {
@@ -24,7 +24,8 @@ class ProtoFormatTest {
 
 
     @Test
-    public void testRegistration() {
+    public void testRegistration()
+    {
 
         EventFormat act = EventFormatProvider.getInstance().resolveFormat(ProtoFormat.CONTENT_TYPE);
 
@@ -54,20 +55,21 @@ class ProtoFormatTest {
 
     /**
      * RoundTrip Test
-     *
+     * <p>
      * Steps:
-     *   (1) Load the raw proto representation.
-     *   (2) Deserialize into a CE using the ProtoFormat
-     *   (3) Serialize the CE into a buffer using the ProtoFormat
-     *   (4) re-hydrate the protobuf that was serialized in step (3)
-     *   (5) Ensure the proto from (1) equals the proto from (4)
+     * (1) Load the raw proto representation.
+     * (2) Deserialize into a CE using the ProtoFormat
+     * (3) Serialize the CE into a buffer using the ProtoFormat
+     * (4) re-hydrate the protobuf that was serialized in step (3)
+     * (5) Ensure the proto from (1) equals the proto from (4)
      *
      * @param filename
      * @throws IOException
      */
     @ParameterizedTest
     @MethodSource("roundTripTestArguments")
-    public void roundTripTest(String filename) throws IOException {
+    public void roundTripTest(String filename) throws IOException
+    {
 
         // Load the source (expected) raw proto wire represention.
         byte[] rawData = getProtoData(filename);
@@ -102,14 +104,15 @@ class ProtoFormatTest {
             Arguments.of(V1_MIN, "v1/min.proto.json"),
             Arguments.of(V1_WITH_JSON_DATA, "v1/json_data.proto.json"),
             Arguments.of(V1_WITH_TEXT_DATA, "v1/text_data.proto.json"),
-            Arguments.of(V1_WITH_JSON_DATA_WITH_EXT,"v1/json_data_with_ext.proto.json"),
+            Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/json_data_with_ext.proto.json"),
 
             Arguments.of(V03_MIN, "v03/min.proto.json")
 
         );
     }
 
-    public static Stream<String> roundTripTestArguments() {
+    public static Stream<String> roundTripTestArguments()
+    {
         return Stream.of(
             "v1/min.proto.json",
             "v1/json_data.proto.json",
@@ -155,7 +158,8 @@ class ProtoFormatTest {
 
     }
 
-    private InputStream getInputStream(String filename) {
+    private InputStream getInputStream(String filename)
+    {
 
         URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
         File dataFile = new File(file.getFile());
@@ -171,7 +175,8 @@ class ProtoFormatTest {
         return retVal;
     }
 
-    private byte[] getProtoData(String filename) {
+    private byte[] getProtoData(String filename)
+    {
 
         Message m = loadProto(filename);
         return m.toByteArray();

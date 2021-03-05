@@ -3,7 +3,6 @@
     "id": "1",
     "type": "mock.test",
     "source": "http://localhost/source",
-
     "attributes": {
         "dataschema": {
             "ceUri": "http://localhost/schema"
@@ -27,6 +26,5 @@
             "ceInteger": 10
         }
     },
-
     "textData": "{}"
 }

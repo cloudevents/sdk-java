@@ -10,9 +10,9 @@
         "subject": {
             "ceString": "sub"
         },
-        "datacontenttype" : {
-            "ceString" : "text/plain"
+        "datacontenttype": {
+            "ceString": "text/plain"
         }
     },
-    "textData" : "Hello World Lorena!"
+    "textData": "Hello World Lorena!"
 }
