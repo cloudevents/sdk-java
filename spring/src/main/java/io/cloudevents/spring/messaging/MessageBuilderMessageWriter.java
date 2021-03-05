@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2019 the original author or authors.
+ * Copyright 2020-Present The CloudEvents Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.springframework.messaging.support.MessageBuilder;
 /**
  * Internal utility class for copying <code>CloudEvent</code> context to a map (message
  * headers).
- * 
+ *
  * @author Dave Syer
  *
  */
