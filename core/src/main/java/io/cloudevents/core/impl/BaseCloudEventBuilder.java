@@ -23,6 +23,7 @@ import io.cloudevents.CloudEventData;
 import io.cloudevents.CloudEventExtension;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
+import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 
 import javax.annotation.Nonnull;
@@ -133,6 +134,15 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
 
     @Override
     public SELF withExtension(@Nonnull String key, @Nonnull OffsetDateTime value) {
+        if (!isValidExtensionName(key)) {
+            throw CloudEventRWException.newInvalidExtensionName(key);
+        }
+        this.extensions.put(key, value);
+        return self;
+    }
+
+    @Override
+    public CloudEventBuilder withExtension(@Nonnull String key, @Nonnull byte[] value) {
         if (!isValidExtensionName(key)) {
             throw CloudEventRWException.newInvalidExtensionName(key);
         }

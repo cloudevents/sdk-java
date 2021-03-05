@@ -22,6 +22,7 @@ import io.cloudevents.types.Time;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.Base64;
 
 /**
  * Interface to write the context attributes/extensions from a {@link io.cloudevents.rw.CloudEventContextReader} to a new representation.
@@ -73,7 +74,7 @@ public interface CloudEventContextWriter {
     }
 
     /**
-     * Set attribute with type {@link URI}.
+     * Set attribute with type {@link Number}.
      * This setter should not be invoked for specversion, because the writer should
      * already know the specversion or because it doesn't need it to correctly write the value.
      *
@@ -84,6 +85,21 @@ public interface CloudEventContextWriter {
      * @throws IllegalArgumentException if you're trying to set the specversion attribute.
      */
     default CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
+        return withContextAttribute(name, value.toString());
+    }
+
+    /**
+     * Set attribute with type {@link Integer}.
+     * This setter should not be invoked for specversion, because the writer should
+     * already know the specversion or because it doesn't need it to correctly write the value.
+     *
+     * @param name  name of the attribute
+     * @param value value of the attribute
+     * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
+     * @throws IllegalArgumentException if you're trying to set the specversion attribute.
+     */
+    default CloudEventContextWriter withContextAttribute(String name, Integer value) throws CloudEventRWException {
         return withContextAttribute(name, value.toString());
     }
 
@@ -102,4 +118,18 @@ public interface CloudEventContextWriter {
         return withContextAttribute(name, value.toString());
     }
 
+    /**
+     * Set attribute with a binary type.
+     * This setter should not be invoked for specversion, because the writer should
+     * already know the specversion or because it doesn't need it to correctly write the value.
+     *
+     * @param name  name of the attribute
+     * @param value value of the attribute
+     * @return self
+     * @throws CloudEventRWException if anything goes wrong while writing this extension.
+     * @throws IllegalArgumentException if you're trying to set the specversion attribute.
+     */
+    default CloudEventContextWriter withContextAttribute(String name, byte[] value) throws CloudEventRWException {
+        return withContextAttribute(name, Base64.getEncoder().encodeToString(value));
+    }
 }

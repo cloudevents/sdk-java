@@ -187,6 +187,15 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
     CloudEventBuilder withExtension(@Nonnull String key, @Nonnull OffsetDateTime value);
 
     /**
+     * Set an extension with provided key and binary value
+     *
+     * @param key   key of the extension attribute
+     * @param value value of the extension attribute
+     * @return self
+     */
+    CloudEventBuilder withExtension(@Nonnull String key, @Nonnull byte[] value);
+
+    /**
      * Add to the builder all the extension key/values of the provided extension
      *
      * @param extension materialized extension to set in the builder
