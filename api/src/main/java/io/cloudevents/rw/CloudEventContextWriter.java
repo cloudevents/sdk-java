@@ -89,21 +89,6 @@ public interface CloudEventContextWriter {
     }
 
     /**
-     * Set attribute with type {@link Integer}.
-     * This setter should not be invoked for specversion, because the writer should
-     * already know the specversion or because it doesn't need it to correctly write the value.
-     *
-     * @param name  name of the attribute
-     * @param value value of the attribute
-     * @return self
-     * @throws CloudEventRWException if anything goes wrong while writing this extension.
-     * @throws IllegalArgumentException if you're trying to set the specversion attribute.
-     */
-    default CloudEventContextWriter withContextAttribute(String name, Integer value) throws CloudEventRWException {
-        return withContextAttribute(name, value.toString());
-    }
-
-    /**
      * Set attribute with type {@link Boolean} attribute.
      * This setter should not be invoked for specversion, because the writer should
      * already know the specversion or because it doesn't need it to correctly write the value.
