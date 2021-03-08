@@ -40,6 +40,8 @@ Using the Java SDK you can:
 |               - [http4k][http4k]<sup>†</sup>       |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                 JSON Event Format                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            - [Jackson](json-jackson.md)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                Protobuf Event Format               |                          :x:                          |                  :heavy_check_mark:                   |
+|            - [Proto](protobuf.md)                  |                          :x:                          |                  :heavy_check_mark:                   |
 |         [Kafka Protocol Binding](kafka.md)         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |               MQTT Protocol Binding                |                          :x:                          |                          :x:                          |
 |               NATS Protocol Binding                |                          :x:                          |                          :x:                          |
@@ -88,6 +90,8 @@ a different feature from the different sub specs of
     [Protocol bindings](https://github.com/cloudevents/spec/blob/v1.0/spec.md#protocol-binding)
 -   [`cloudevents-json-jackson`] Implementation of [JSON Event format] with
     [Jackson](https://github.com/FasterXML/jackson)
+-   [`cloudevents-protobuf`] Implementation of [Protobuf Event format] using code generated
+    from the standard [protoc](https://github.com/protocolbuffers/protobuf) compiler.
 -   [`cloudevents-http-vertx`] Implementation of [HTTP Protocol Binding] with
     [Vert.x Core](https://vertx.io/)
 -   [`cloudevents-http-restful-ws`] Implementation of [HTTP Protocol Binding]
@@ -104,6 +108,7 @@ You can look at the latest published artifacts on
 [Maven Central](https://search.maven.org/search?q=g:io.cloudevents).
 
 [JSON Event format]: https://github.com/cloudevents/spec/blob/v1.0/json-format.md
+[Protobuf Event format]: https://github.com/cloudevents/spec/blob/v1.0.1/protobuf-format.md
 [HTTP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/http-protocol-binding.md
 [Kafka Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/kafka-protocol-binding.md
 [AMQP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/amqp-protocol-binding.md

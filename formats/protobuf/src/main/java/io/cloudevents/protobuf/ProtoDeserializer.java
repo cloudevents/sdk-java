@@ -79,9 +79,8 @@ public class ProtoDeserializer implements CloudEventReader {
                     writer.withContextAttribute(name, instant.atOffset(ZoneOffset.UTC));
                     break;
                 case ATTR_NOT_SET:
-                    // I'm not sure if an unset attribute is a valid usecase, but I am leaning towards no. If this was JSON,
-                    // I would assign "null" here, but I don't see a way of doing that in the Java SDK.
-                    throw CloudEventRWException.newInvalidAttributeValue(name, val, null);
+                    // In the case of an unset attribute, (where they built the object but didn't put anything in it),
+                    // treat it as omitted, i.e. do nothing.
             }
         }
 

@@ -97,13 +97,13 @@ public class ProtoSerializer {
          * attributes are set in a map. This field mapping allows us to identify where in the protobuf CloudEvent message a
          * required field should be placed.
          */
-        public final static Map<String, FieldDescriptor> attributeToFieldNumV1;
+        private final static Map<String, FieldDescriptor> attributeToFieldNumV1;
         /**
          * Contains a mapping of CloudEvent required attributes to protobuf field descriptors by
          * CloudEvent specification version. This mapping is intended to make supporting future versions
          * easy, by simply adding a new mapping in this class.
          */
-        public final static Map<SpecVersion, Map<String, FieldDescriptor>> versionToAttrs;
+        private final static Map<SpecVersion, Map<String, FieldDescriptor>> versionToAttrs;
         static {
             Map<String, FieldDescriptor> tmp = new HashMap<>();
             tmp.put(CloudEventV1.ID, getDescriptor().findFieldByNumber(ID_FIELD_NUMBER));
