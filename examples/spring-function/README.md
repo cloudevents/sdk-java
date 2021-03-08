@@ -29,10 +29,10 @@ It also accepts data in "structured" format:
 ```shell
 curl -v -H'Content-type: application/cloudevents+json' \
     -d '{"data": {"value": "Foo"},
-         "ce-id: 1,
-         "ce-source": "cloud-event-example"
-         "ce-type": "my.application.Foo"
-         "ce-specversion": "1.0"}' \
+         "id: 1,
+         "source": "cloud-event-example"
+         "type": "my.application.Foo"
+         "specversion": "1.0"}' \
     http://localhost:8080/event
 ```
 
