@@ -188,3 +188,6 @@ Check out the integration tests and samples:
 
 -   [spring-rsocket](https://github.com/cloudevents/sdk-java/tree/master/examples/spring-rsocket)
     shows how to receive and send CloudEvents through RSocket using Spring Boot.
+
+-   [spring-cloud-function](https://github.com/cloudevents/sdk-java/tree/master/examples/spring-function)
+    shows how to consume and process CloudEvents via Spring Cloud Function.
