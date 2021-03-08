@@ -27,6 +27,7 @@
         <module>amqp-proton</module>
         <module>spring-reactive</module>
         <module>spring-rsocket</module>
+        <module>spring-function</module>
     </modules>
 
 </project>
