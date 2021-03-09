@@ -36,10 +36,6 @@ public class ProtoDeserializer implements CloudEventReader {
         CloudEventWriterFactory<W, R> writerFactory,
         CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException {
         SpecVersion specVersion = SpecVersion.parse(this.protoCe.getSpecVersion());
-        if (specVersion != SpecVersion.V1) {
-            // The protospec is only defined for V1 so far.
-            throw CloudEventRWException.newInvalidSpecVersion(specVersion.toString());
-        }
 
         final CloudEventWriter<R> writer = writerFactory.create(specVersion);
 
@@ -63,6 +59,7 @@ public class ProtoDeserializer implements CloudEventReader {
                     writer.withContextAttribute(name, val.getCeString());
                     break;
                 case CE_BYTES:
+                    //@TODO - Upgrade once PR 353 is closed.
                     final byte[] rawBytes = val.getCeBytes().toByteArray();
                     final String base64String = Base64.getEncoder().encodeToString(rawBytes);
                     writer.withContextAttribute(name, base64String);

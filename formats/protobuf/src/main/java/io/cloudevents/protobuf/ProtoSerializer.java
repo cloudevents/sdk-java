@@ -112,7 +112,13 @@ public class ProtoSerializer {
             tmp.put(CloudEventV1.SPECVERSION, getDescriptor().findFieldByNumber(SPEC_VERSION_FIELD_NUMBER));
             attributeToFieldNumV1 = Collections.unmodifiableMap(tmp);
 
-            versionToAttrs = Collections.singletonMap(SpecVersion.V1, attributeToFieldNumV1);
+            // Spec Version v03 and V1 share the same required attribute list.
+            Map<SpecVersion, Map<String, FieldDescriptor>> tmpMap = new HashMap<>();
+
+            tmpMap.put(SpecVersion.V1, attributeToFieldNumV1);
+            tmpMap.put(SpecVersion.V03, attributeToFieldNumV1);
+
+            versionToAttrs = Collections.unmodifiableMap(tmpMap);
         }
 
         private final Builder protoBuilder;

@@ -88,6 +88,12 @@
             <artifactId>protobuf-java</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+
         <!-- Test deps -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -100,6 +106,13 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.truth.extensions</groupId>
+            <artifactId>truth-proto-extension</artifactId>
+            <version>1.1</version>
             <scope>test</scope>
         </dependency>
 
