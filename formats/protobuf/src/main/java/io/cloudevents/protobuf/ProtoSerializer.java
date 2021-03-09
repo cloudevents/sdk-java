@@ -33,7 +33,7 @@ import java.util.Objects;
 /**
  * Provides functionality for turning a {@link io.cloudevents.CloudEvent} to the protobuf representation {@link CloudEvent}.
  */
-public class ProtoSerializer {
+class ProtoSerializer {
 
     /**
      * Convert the Java SDK CloudEvent into a protobuf representation.
@@ -61,17 +61,30 @@ public class ProtoSerializer {
         final String contentType = ce.getDataContentType();
         final CloudEventData data = ce.getData();
         if (data != null) {
-            if (Objects.equals(contentType, PROTO_DATA_CONTENT_TYPE)) {
-                // This will throw if the data provided is not an Any. The protobuf CloudEvent spec requires proto data to be stored as
-                // an Any. I would be amenable to allowing people to also pass raw unwrapped protobufs, but it complicates the logic here.
-                // Perhpas that can be a follow up if there is a need.
-                Any dataAsAny = Any.parseFrom(data.toBytes());
-                builder.setProtoData(dataAsAny);
-            } else if (isTextType(contentType)) {
-                builder.setTextDataBytes(ByteString.copyFrom(data.toBytes()));
+
+            // If it's a proto message we can handle that directly.
+
+            if (data instanceof ProtoCloudEventData) {
+
+                final ProtoCloudEventData protoData = (ProtoCloudEventData) data;
+
+                if (protoData.getMessage() != null) {
+                    builder.setProtoData(Any.pack(protoData.getMessage()));
+                }
+
             } else {
-                ByteString byteString = ByteString.copyFrom(data.toBytes());
-                builder.setBinaryData(byteString);
+                if (Objects.equals(contentType, PROTO_DATA_CONTENT_TYPE)) {
+                    // This will throw if the data provided is not an Any. The protobuf CloudEvent spec requires proto data to be stored as
+                    // an Any. I would be amenable to allowing people to also pass raw unwrapped protobufs, but it complicates the logic here.
+                    // Perhpas that can be a follow up if there is a need.
+                    Any dataAsAny = Any.parseFrom(data.toBytes());
+                    builder.setProtoData(dataAsAny);
+                } else if (isTextType(contentType)) {
+                    builder.setTextDataBytes(ByteString.copyFrom(data.toBytes()));
+                } else {
+                    ByteString byteString = ByteString.copyFrom(data.toBytes());
+                    builder.setBinaryData(byteString);
+                }
             }
         }
 
@@ -84,7 +97,7 @@ public class ProtoSerializer {
         if (type == null) {
             return false;
         }
-        return type.startsWith("text/") || "application/json".equals(type);
+        return type.startsWith("text/") || "application/json".equals(type) || "application/xml".equals(type);
     }
 
     /**

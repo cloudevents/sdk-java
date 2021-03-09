@@ -1,5 +1,6 @@
 package io.cloudevents.protobuf;
 
+import com.google.protobuf.Message;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
@@ -21,7 +22,7 @@ import java.util.Map.Entry;
 /**
  * Implements a {@link CloudEventReader} that can deserialize a {@link CloudEvent} protobuf representation;
  */
-public class ProtoDeserializer implements CloudEventReader {
+class ProtoDeserializer implements CloudEventReader {
 
     private static final Base64.Encoder base64Encoder = Base64.getEncoder();
 
@@ -82,22 +83,49 @@ public class ProtoDeserializer implements CloudEventReader {
         }
 
         // Process the data
+        CloudEventData data = null;
         byte[] raw = null;
+
         switch (this.protoCe.getDataCase()) {
             case BINARY_DATA:
                 raw = this.protoCe.getBinaryData().toByteArray();
+                data = BytesCloudEventData.wrap(raw);
                 break;
             case TEXT_DATA:
                 raw = this.protoCe.getTextData().getBytes(StandardCharsets.UTF_8);
+                data = BytesCloudEventData.wrap(raw);
                 break;
             case PROTO_DATA:
-                raw = this.protoCe.getProtoData().toByteArray();
+                data = new ProtoAccessor(this.protoCe);
                 break;
             case DATA_NOT_SET:
-                // No data to write
-                return writer.end();
+                break;
         }
-        CloudEventData data = BytesCloudEventData.wrap(raw);
-        return writer.end(mapper.map(data));
+
+        if (data != null) {
+            return writer.end(mapper.map(data));
+        }else {
+            return writer.end();
+        }
+
+    }
+
+    private class ProtoAccessor implements ProtoCloudEventData {
+
+        private final CloudEvent protoEvent;
+
+        ProtoAccessor(CloudEvent proto){
+            this.protoEvent = proto;
+        }
+
+        @Override
+        public Message getMessage() {
+            return protoEvent.getProtoData();
+        }
+
+        @Override
+        public byte[] toBytes() {
+            return protoEvent.getProtoData().toByteArray();
+        }
     }
 }

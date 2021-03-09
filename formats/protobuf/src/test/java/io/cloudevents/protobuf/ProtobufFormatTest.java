@@ -26,8 +26,7 @@ class ProtobufFormatTest {
     @Test
     public void testRegistration()
     {
-
-        EventFormat act = EventFormatProvider.getInstance().resolveFormat(ProtobufFormat.PROTO_CONTENT_TYPE);
+        EventFormat act = EventFormatProvider.getInstance().resolveFormat("application/cloudevents+protobuf");
 
         assertNotNull(act);
         assertTrue(act instanceof ProtobufFormat);
@@ -105,6 +104,7 @@ class ProtobufFormatTest {
             Arguments.of(V1_WITH_JSON_DATA, "v1/json_data.proto.json"),
             Arguments.of(V1_WITH_TEXT_DATA, "v1/text_data.proto.json"),
             Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/json_data_with_ext.proto.json"),
+            Arguments.of(V1_WITH_XML_DATA, "v1/xml_data.proto.json"),
 
             Arguments.of(V03_MIN, "v03/min.proto.json")
 
@@ -117,7 +117,10 @@ class ProtobufFormatTest {
             "v1/min.proto.json",
             "v1/json_data.proto.json",
             "v1/text_data.proto.json",
-            "v1/json_data_with_ext.proto.json"
+            "v1/json_data_with_ext.proto.json",
+            "v1/xml_data.proto.json",
+
+            "v03/min.proto.json"
         );
     }
 
