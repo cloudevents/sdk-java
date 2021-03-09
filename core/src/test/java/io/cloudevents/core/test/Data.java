@@ -109,7 +109,7 @@ public class Data {
         .withTime(TIME)
         .build();
 
-    public static final CloudEvent V1_WITH_BINARY_ATTR = CloudEventBuilder.v1()
+    public static final CloudEvent V1_WITH_BINARY_EXT = CloudEventBuilder.v1()
         .withId(ID)
         .withType(TYPE)
         .withSource(SOURCE)
@@ -153,7 +153,7 @@ public class Data {
 
     public static Stream<CloudEvent> v1NonRoundTripEvents() {
         return Stream.of(
-            Data.V1_WITH_BINARY_ATTR
+            Data.V1_WITH_BINARY_EXT
         );
     }
 
