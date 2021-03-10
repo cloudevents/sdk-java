@@ -1,5 +1,6 @@
 package io.cloudevents.protobuf;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
 import io.cloudevents.core.format.EventFormat;
@@ -22,10 +23,8 @@ class ProtobufFormatTest {
 
     EventFormat format = new ProtobufFormat();
 
-
     @Test
-    public void testRegistration()
-    {
+    public void testRegistration() {
         EventFormat act = EventFormatProvider.getInstance().resolveFormat("application/cloudevents+protobuf");
 
         assertNotNull(act);
@@ -34,8 +33,7 @@ class ProtobufFormatTest {
 
     @ParameterizedTest
     @MethodSource("serializeTestArgumentsDefault")
-    public void serialize(io.cloudevents.CloudEvent input, String jsonFile) throws IOException
-    {
+    public void serialize(io.cloudevents.CloudEvent input, String jsonFile) throws IOException {
         // Serialize the event.
         byte[] raw = format.serialize(input);
 
@@ -67,8 +65,7 @@ class ProtobufFormatTest {
      */
     @ParameterizedTest
     @MethodSource("roundTripTestArguments")
-    public void roundTripTest(String filename) throws IOException
-    {
+    public void roundTripTest(String filename) throws IOException {
 
         // Load the source (expected) raw proto wire represention.
         byte[] rawData = getProtoData(filename);
@@ -96,29 +93,29 @@ class ProtobufFormatTest {
 
     }
 
-    public static Stream<Arguments> serializeTestArgumentsDefault()
-    {
+    public static Stream<Arguments> serializeTestArgumentsDefault() {
         return Stream.of(
-
             Arguments.of(V1_MIN, "v1/min.proto.json"),
             Arguments.of(V1_WITH_JSON_DATA, "v1/json_data.proto.json"),
             Arguments.of(V1_WITH_TEXT_DATA, "v1/text_data.proto.json"),
             Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/json_data_with_ext.proto.json"),
             Arguments.of(V1_WITH_XML_DATA, "v1/xml_data.proto.json"),
+            Arguments.of(V1_WITH_BINARY_EXT, "v1/binary_ext.proto.json"),
 
             Arguments.of(V03_MIN, "v03/min.proto.json")
 
         );
     }
 
-    public static Stream<String> roundTripTestArguments()
-    {
+    public static Stream<String> roundTripTestArguments() {
         return Stream.of(
+
             "v1/min.proto.json",
             "v1/json_data.proto.json",
             "v1/text_data.proto.json",
             "v1/json_data_with_ext.proto.json",
             "v1/xml_data.proto.json",
+            "v1/binary_ext.proto.json",
 
             "v03/min.proto.json"
         );
@@ -127,8 +124,7 @@ class ProtobufFormatTest {
 
     // ----------------------------------------------------------------
 
-    private static Message loadProto(String filename)
-    {
+    private static Message loadProto(String filename) {
         CloudEvent.Builder b = CloudEvent.newBuilder();
         Message retVal = null;
         try {
@@ -143,8 +139,7 @@ class ProtobufFormatTest {
     }
 
 
-    private static Reader getReader(String filename)
-    {
+    private static Reader getReader(String filename) {
 
         URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
         File dataFile = new File(file.getFile());
@@ -161,8 +156,7 @@ class ProtobufFormatTest {
 
     }
 
-    private InputStream getInputStream(String filename)
-    {
+    private InputStream getInputStream(String filename) {
 
         URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
         File dataFile = new File(file.getFile());
@@ -178,8 +172,7 @@ class ProtobufFormatTest {
         return retVal;
     }
 
-    private byte[] getProtoData(String filename)
-    {
+    private byte[] getProtoData(String filename) {
 
         Message m = loadProto(filename);
         return m.toByteArray();

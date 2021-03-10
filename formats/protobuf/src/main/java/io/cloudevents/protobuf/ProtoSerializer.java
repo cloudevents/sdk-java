@@ -1,12 +1,5 @@
 package io.cloudevents.protobuf;
 
-import static io.cloudevents.protobuf.ProtobufFormat.PROTO_DATA_CONTENT_TYPE;
-import static io.cloudevents.v1.proto.CloudEvent.ID_FIELD_NUMBER;
-import static io.cloudevents.v1.proto.CloudEvent.SOURCE_FIELD_NUMBER;
-import static io.cloudevents.v1.proto.CloudEvent.SPEC_VERSION_FIELD_NUMBER;
-import static io.cloudevents.v1.proto.CloudEvent.TYPE_FIELD_NUMBER;
-import static io.cloudevents.v1.proto.CloudEvent.getDescriptor;
-
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.FieldDescriptor;
@@ -15,13 +8,14 @@ import com.google.protobuf.Timestamp;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
+import io.cloudevents.core.v1.CloudEventBuilder;
 import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.v1.proto.CloudEvent;
-import io.cloudevents.v1.proto.CloudEvent.Builder;
-import io.cloudevents.v1.proto.CloudEvent.CloudEventAttributeValue;
+import io.cloudevents.v1.proto.CloudEvent.*;
+
 import java.net.URI;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -29,6 +23,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static io.cloudevents.protobuf.ProtobufFormat.PROTO_DATA_CONTENT_TYPE;
+import static io.cloudevents.v1.proto.CloudEvent.*;
 
 /**
  * Provides functionality for turning a {@link io.cloudevents.CloudEvent} to the protobuf representation {@link CloudEvent}.
@@ -134,7 +131,7 @@ class ProtoSerializer {
             versionToAttrs = Collections.unmodifiableMap(tmpMap);
         }
 
-        private final Builder protoBuilder;
+        private final CloudEvent.Builder protoBuilder;
         private final Map<String, FieldDescriptor> requiredAttributeNumberMap;
 
         /**
@@ -211,13 +208,14 @@ class ProtoSerializer {
         @Override
         public CloudEventContextWriter withContextAttribute(String name, Number value)
             throws CloudEventRWException {
-            if (!setRequiredField(name, value.intValue())) {
-                final CloudEventAttributeValue.Builder builder = CloudEventAttributeValue.newBuilder();
-                // Int values are only supported by the proto spec so far
-                builder.setCeInteger(value.intValue());
-                this.protoBuilder.putAttributes(name, builder.build());
+
+            // @TODO - Future Cleanup
+            if (value instanceof Integer) {
+                return withContextAttribute(name, (Integer) value);
+            } else {
+                return withContextAttribute(name, value.toString());
             }
-            return this;
+
         }
 
         @Override
@@ -226,6 +224,36 @@ class ProtoSerializer {
             if (!setRequiredField(name, value)) {
                 this.protoBuilder.putAttributes(name, CloudEventAttributeValue.newBuilder().setCeBoolean(value).build());
             }
+            return this;
+        }
+
+        @Override
+        public CloudEventContextWriter withContextAttribute(String name, byte[] value) throws CloudEventRWException {
+
+            if (!setRequiredField(name, value)) {
+
+                CloudEventAttributeValue.Builder builder = CloudEventAttributeValue.newBuilder()
+                    .setCeBytes(ByteString.copyFrom(value));
+                this.protoBuilder.putAttributes(name, builder.build());
+            }
+
+            return this;
+        }
+
+        //-- This should really be a method on CloudEventContextWriter as Integer is the only
+        //-- supported numeric attribute value type as-per specification.
+        //-- Will open an Issue on this.
+
+        public CloudEventContextWriter withContextAttribute(String name, Integer value) throws CloudEventRWException {
+
+            if (!setRequiredField(name, value)){
+
+                final CloudEventAttributeValue.Builder builder = CloudEventAttributeValue.newBuilder();
+
+                builder.setCeInteger(value.intValue());
+                this.protoBuilder.putAttributes(name, builder.build());
+            }
+
             return this;
         }
     }

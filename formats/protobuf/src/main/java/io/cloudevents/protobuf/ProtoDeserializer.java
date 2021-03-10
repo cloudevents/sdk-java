@@ -60,10 +60,7 @@ class ProtoDeserializer implements CloudEventReader {
                     writer.withContextAttribute(name, val.getCeString());
                     break;
                 case CE_BYTES:
-                    //@TODO - Upgrade once PR 353 is closed.
-                    final byte[] rawBytes = val.getCeBytes().toByteArray();
-                    final String base64String = Base64.getEncoder().encodeToString(rawBytes);
-                    writer.withContextAttribute(name, base64String);
+                    writer.withContextAttribute(name, val.getCeBytes().toByteArray());
                     break;
                 case CE_URI:
                     writer.withContextAttribute(name, URI.create(val.getCeUri()));
