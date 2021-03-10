@@ -41,6 +41,7 @@ public class Data {
     public static byte[] DATA_JSON_SERIALIZED = "{}".getBytes();
     public static byte[] DATA_XML_SERIALIZED = "<stuff></stuff>".getBytes();
     public static byte[] DATA_TEXT_SERIALIZED = "Hello World Lorena!".getBytes();
+    public static byte[] BINARY_VALUE = { (byte) 0xE0, (byte) 0xFF, (byte) 0x00, (byte) 0x44, (byte) 0xAA }; // Base64: 4P8ARKo=
 
     public static final CloudEvent V1_MIN = CloudEventBuilder.v1()
         .withId(ID)
@@ -108,6 +109,13 @@ public class Data {
         .withTime(TIME)
         .build();
 
+    public static final CloudEvent V1_WITH_BINARY_EXT = CloudEventBuilder.v1()
+        .withId(ID)
+        .withType(TYPE)
+        .withSource(SOURCE)
+        .withExtension("binary", BINARY_VALUE)
+        .build();
+
     public static final CloudEvent V03_MIN = CloudEventBuilder.v03(V1_MIN).build();
     public static final CloudEvent V03_WITH_JSON_DATA = CloudEventBuilder.v03(V1_WITH_JSON_DATA).build();
     public static final CloudEvent V03_WITH_JSON_DATA_WITH_EXT = CloudEventBuilder.v03(V1_WITH_JSON_DATA_WITH_EXT).build();
@@ -134,6 +142,18 @@ public class Data {
             Data.V1_WITH_JSON_DATA_WITH_EXT,
             Data.V1_WITH_XML_DATA,
             Data.V1_WITH_TEXT_DATA
+        );
+    }
+
+    /**
+     * Due to the nature of CE there are scenarios where an event might be serialized
+     * in such a fashion that it can not be deserialized while retaining the orginal
+     * type information, this varies from format-2-format
+     */
+
+    public static Stream<CloudEvent> v1NonRoundTripEvents() {
+        return Stream.of(
+            Data.V1_WITH_BINARY_EXT
         );
     }
 

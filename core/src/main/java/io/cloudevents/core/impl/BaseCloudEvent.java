@@ -77,6 +77,8 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader, Cl
                 writer.withContextAttribute(entry.getKey(), (URI) entry.getValue());
             } else if (entry.getValue() instanceof OffsetDateTime) {
                 writer.withContextAttribute(entry.getKey(), (OffsetDateTime) entry.getValue());
+            } else if (entry.getValue() instanceof byte[]) {
+                writer.withContextAttribute(entry.getKey(), (byte[]) entry.getValue());
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
