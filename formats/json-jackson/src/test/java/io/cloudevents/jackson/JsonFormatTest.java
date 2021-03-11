@@ -133,7 +133,8 @@ class JsonFormatTest {
             Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/json_data_with_ext.json"),
             Arguments.of(V1_WITH_XML_DATA, "v1/base64_xml_data.json"),
             Arguments.of(V1_WITH_TEXT_DATA, "v1/base64_text_data.json"),
-            Arguments.of(V1_WITH_BINARY_EXT, "v1/binary_attr.json")
+            Arguments.of(V1_WITH_BINARY_EXT, "v1/binary_attr.json"),
+            Arguments.of(V1_WITH_NUMERIC_EXT,"v1/numeric_ext.json")
         );
     }
 

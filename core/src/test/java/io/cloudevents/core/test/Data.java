@@ -21,6 +21,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.types.Time;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -114,6 +115,16 @@ public class Data {
         .withType(TYPE)
         .withSource(SOURCE)
         .withExtension("binary", BINARY_VALUE)
+        .build();
+
+    public static final CloudEvent V1_WITH_NUMERIC_EXT = CloudEventBuilder.v1()
+        .withId(ID)
+        .withType(TYPE)
+        .withSource(SOURCE)
+        .withExtension("integer", 42)
+        .withExtension("decimal", new BigDecimal("42.42"))
+        .withExtension("float", 4.2f)
+        .withExtension("long", new Long(4200))
         .build();
 
     public static final CloudEvent V03_MIN = CloudEventBuilder.v03(V1_MIN).build();
