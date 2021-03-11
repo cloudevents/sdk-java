@@ -1,0 +1,21 @@
+
+syntax = "proto3";
+
+package io.cloudevents.test.v1;
+option java_package = "io.cloudevents.test.v1.proto";
+
+message Decimal {
+
+    int64 unscaled = 1;
+    int32 scale  = 2;
+
+}
+
+message Quote {
+
+    string symbol = 1;
+    Decimal price = 2;
+    Decimal high = 3;
+    Decimal low = 4;
+    int64 volume = 5;
+}
