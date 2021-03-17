@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      https://www.apache.org/licenses/LICENSE-2.0
+ *	  https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,9 +31,9 @@ import java.nio.charset.Charset;
 
 /**
  * A {@link MessageConverter} that can translate to and from a {@link Message
- * Message&lt;byte[]>} or {@link Message Message&lt;String>} and a {@link CloudEvent}. The
- * {@link CloudEventContext} is canonicalized, with key names given a {@code ce-} prefix in the
- * {@link MessageHeaders}.
+ * Message&lt;byte[]>} or {@link Message Message&lt;String>} and a
+ * {@link CloudEvent}. The {@link CloudEventContext} is canonicalized, with key
+ * names given a {@code ce-} prefix in the {@link MessageHeaders}.
  *
  * @author Dave Syer
  */
@@ -67,7 +67,7 @@ public class CloudEventMessageConverter implements MessageConverter {
 
 	private String version(MessageHeaders message) {
 		if (message.containsKey(CloudEventsHeaders.SPEC_VERSION)) {
-			return message.get(CloudEventsHeaders.SPEC_VERSION).toString();
+			return stringValue(message.get(CloudEventsHeaders.SPEC_VERSION));
 		}
 		return null;
 	}
@@ -81,21 +81,24 @@ public class CloudEventMessageConverter implements MessageConverter {
 	}
 
 	private String contentType(MessageHeaders message) {
-		if (message.containsKey(MessageHeaders.CONTENT_TYPE)) {
-			return message.get(MessageHeaders.CONTENT_TYPE).toString();
-		}
-		if (message.containsKey(CloudEventsHeaders.CONTENT_TYPE)) {
-			return message.get(CloudEventsHeaders.CONTENT_TYPE).toString();
+		if (message.containsKey(MessageHeaders.CONTENT_TYPE) && !message.containsKey(CloudEventsHeaders.CONTENT_TYPE)) {
+			return stringValue(message.get(MessageHeaders.CONTENT_TYPE));
 		}
 		return null;
+	}
+
+	private String stringValue(Object value) {
+		if (value instanceof byte[]) {
+			return new String((byte[])value);
+		}
+		return value.toString();
 	}
 
 	private byte[] getBinaryData(Message<?> message) {
 		Object payload = message.getPayload();
 		if (payload instanceof byte[]) {
 			return (byte[]) payload;
-		}
-		else if (payload instanceof String) {
+		} else if (payload instanceof String) {
 			return ((String) payload).getBytes(Charset.defaultCharset());
 		}
 		return null;

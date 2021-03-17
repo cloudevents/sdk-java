@@ -12,6 +12,7 @@ release.properties
 *.iml
 .classpath
 .project
+.factorypath
 .settings/
 .vscode/
 .attach_pid*
