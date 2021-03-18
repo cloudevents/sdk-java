@@ -46,8 +46,8 @@ Supported features of the specification:
 |           - [http4k][http4k]<sup>†</sup>|                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            JSON Event Format            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |    - [Jackson](formats/json-jackson)    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|            Protobuf Event Format        |                          :x:                          |                  :heavy_check_mark:                   |
-|            - [Proto](formats/protobuf)  |                          :x:                          |                  :heavy_check_mark:                   |
+|            Protobuf Event Format        |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|            - [Proto](formats/protobuf)  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |     [Kafka Protocol Binding](kafka)     |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |          MQTT Protocol Binding          |                          :x:                          |                          :x:                          |
 |          NATS Protocol Binding          |                          :x:                          |                          :x:                          |

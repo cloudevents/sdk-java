@@ -40,8 +40,8 @@ Using the Java SDK you can:
 |               - [http4k][http4k]<sup>†</sup>       |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                 JSON Event Format                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            - [Jackson](json-jackson.md)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|                Protobuf Event Format               |                          :x:                          |                  :heavy_check_mark:                   |
-|            - [Proto](protobuf.md)                  |                          :x:                          |                  :heavy_check_mark:                   |
+|                Protobuf Event Format               |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|            - [Proto](protobuf.md)                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |         [Kafka Protocol Binding](kafka.md)         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |               MQTT Protocol Binding                |                          :x:                          |                          :x:                          |
 |               NATS Protocol Binding                |                          :x:                          |                          :x:                          |
