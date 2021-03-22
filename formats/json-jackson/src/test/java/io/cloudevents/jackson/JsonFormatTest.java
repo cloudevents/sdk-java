@@ -24,14 +24,17 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.rw.CloudEventRWException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -120,6 +123,29 @@ class JsonFormatTest {
             .hasMessageContaining(CloudEventRWException.newInvalidSpecVersion("9000.1").getMessage());
     }
 
+    @ParameterizedTest
+    @MethodSource("badJsonContent")
+    /**
+     * JSON content that should fail deserialization
+     * as it represents content that is not CE
+     * specification compliant.
+     */
+    void verifyDeserializeError(String inputFile){
+
+        byte[] input = loadFile(inputFile);
+        boolean exceptionThrown = false;
+
+        try {
+
+            CloudEvent ce = getFormat().deserialize(input);
+
+            Assertions.fail("Expected Exception did not occur");
+
+        } catch (EventDeserializationException ede){
+        }
+
+    }
+
     public static Stream<Arguments> serializeTestArgumentsDefault() {
         return Stream.of(
             Arguments.of(V03_MIN, "v03/min.json"),
@@ -198,6 +224,15 @@ class JsonFormatTest {
             "v1/json_data.json",
             "v1/base64_xml_data.json",
             "v1/base64_text_data.json"
+        );
+    }
+
+    public static Stream<String> badJsonContent() {
+        return Stream.of(
+            "v03/fail_numeric_decimal.json",
+            "v03/fail_numeric_long.json",
+            "v1/fail_numeric_decimal.json",
+            "v1/fail_numeric_long.json"
         );
     }
 

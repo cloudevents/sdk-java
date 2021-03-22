@@ -134,7 +134,17 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                             writer.withContextAttribute(extensionName, extensionValue.booleanValue());
                             break;
                         case NUMBER:
-                            writer.withContextAttribute(extensionName, extensionValue.numberValue());
+
+                            final Number numericValue = extensionValue.numberValue();
+
+                            // Only 'Int' values are supported by the specification
+
+                            if (numericValue instanceof Integer){
+                                writer.withContextAttribute(extensionName, (Integer) numericValue);
+                            } else{
+                                throw CloudEventRWException.newInvalidAttributeValue(extensionName,extensionValue, null);
+                            }
+
                             break;
                         case STRING:
                             writer.withContextAttribute(extensionName, extensionValue.textValue());
