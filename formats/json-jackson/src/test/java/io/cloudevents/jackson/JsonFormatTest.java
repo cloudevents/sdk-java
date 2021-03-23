@@ -43,8 +43,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static io.cloudevents.core.test.Data.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.*;
 
 class JsonFormatTest {
 
@@ -135,14 +134,7 @@ class JsonFormatTest {
         byte[] input = loadFile(inputFile);
         boolean exceptionThrown = false;
 
-        try {
-
-            CloudEvent ce = getFormat().deserialize(input);
-
-            Assertions.fail("Expected Exception did not occur");
-
-        } catch (EventDeserializationException ede){
-        }
+        assertThatExceptionOfType(EventDeserializationException.class).isThrownBy(() -> getFormat().deserialize(input));
 
     }
 

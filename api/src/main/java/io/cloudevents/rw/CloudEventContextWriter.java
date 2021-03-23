@@ -85,7 +85,7 @@ public interface CloudEventContextWriter {
      * @throws IllegalArgumentException if you're trying to set the specversion attribute.
      *
      * @deprecated CloudEvent specification only permits {@link Integer} type as a
-     * numeric val
+     * numeric value.
      */
     default CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
         return withContextAttribute(name, value.toString());

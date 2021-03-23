@@ -142,7 +142,7 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                             if (numericValue instanceof Integer){
                                 writer.withContextAttribute(extensionName, (Integer) numericValue);
                             } else{
-                                throw CloudEventRWException.newInvalidAttributeValue(extensionName,extensionValue, null);
+                                throw CloudEventRWException.newInvalidAttributeType(extensionName,numericValue);
                             }
 
                             break;
