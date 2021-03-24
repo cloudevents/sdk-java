@@ -132,7 +132,6 @@ class JsonFormatTest {
     void verifyDeserializeError(String inputFile){
 
         byte[] input = loadFile(inputFile);
-        boolean exceptionThrown = false;
 
         assertThatExceptionOfType(EventDeserializationException.class).isThrownBy(() -> getFormat().deserialize(input));
 
