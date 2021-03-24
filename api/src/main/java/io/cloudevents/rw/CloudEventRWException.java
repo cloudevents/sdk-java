@@ -137,6 +137,17 @@ public class CloudEventRWException extends RuntimeException {
         );
     }
 
+    public static CloudEventRWException newInvalidAttributeType(String attributeName,Object value){
+        return new CloudEventRWException(
+            CloudEventRWExceptionKind.INVALID_ATTRIBUTE_TYPE,
+            "Invalid attribute/extension type for \""
+                + attributeName
+                + "\": Type" + value.getClass().getCanonicalName()
+                + ". Value: " + value
+
+        );
+    }
+
     /**
      * @param attributeName the invalid attribute name
      * @param value         the value of the attribute
