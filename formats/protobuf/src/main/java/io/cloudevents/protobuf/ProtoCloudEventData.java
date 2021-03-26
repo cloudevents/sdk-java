@@ -15,4 +15,14 @@ public interface ProtoCloudEventData extends CloudEventData {
      */
     Message getMessage();
 
+    /**
+     * Convienience helper to wrap a Protobuff Message as
+     * CloudEventData.
+     *
+     * @param protoMessage
+     * @return
+     */
+    static CloudEventData wrap(Message protoMessage) {
+        return new ProtoDataWrapper(protoMessage);
+    }
 }

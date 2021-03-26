@@ -26,6 +26,20 @@ public class ProtoMessageDataTest {
     EventFormat protoFormat = new ProtobufFormat();
 
     @Test
+    public void verifyDataWrapper() {
+        Quote aQuote = makeQuote();
+
+        CloudEventData ced = ProtoCloudEventData.wrap(aQuote);
+
+        assertNotNull(ced);
+        assertNotNull(ced.toBytes());
+        assertTrue(ced instanceof ProtoCloudEventData);
+
+        ProtoCloudEventData pced = (ProtoCloudEventData) ced;
+        assertNotNull(pced.getMessage());
+    }
+
+    @Test
     public void verifyMessage() {
 
         // Create the busines event data
@@ -36,7 +50,7 @@ public class ProtoMessageDataTest {
             .withId("ID1")
             .withType("TEST.PROTO")
             .withSource(URI.create("http://localhost/source"))
-            .withData(new ProtoData(pyplQuote))
+            .withData(ProtoCloudEventData.wrap(pyplQuote))
             .build();
 
         // Serialize the CloudEvent
@@ -72,27 +86,6 @@ public class ProtoMessageDataTest {
         }
 
 
-    }
-
-    /**
-     * A DataHolder
-     */
-    private class ProtoData implements ProtoCloudEventData {
-
-        private final Message protoMessage;
-
-        ProtoData(Message msg){
-            this.protoMessage = msg;
-        }
-        @Override
-        public Message getMessage() {
-            return protoMessage;
-        }
-
-        @Override
-        public byte[] toBytes() {
-            return protoMessage.toByteArray();
-        }
     }
 
     // -----------------------------------------------

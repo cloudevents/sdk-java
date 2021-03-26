@@ -1,6 +1,5 @@
 package io.cloudevents.protobuf;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
 import io.cloudevents.core.format.EventFormat;
@@ -17,7 +16,8 @@ import java.util.stream.Stream;
 
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
 import static io.cloudevents.core.test.Data.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProtobufFormatTest {
 
@@ -109,7 +109,6 @@ class ProtobufFormatTest {
 
     public static Stream<String> roundTripTestArguments() {
         return Stream.of(
-
             "v1/min.proto.json",
             "v1/json_data.proto.json",
             "v1/text_data.proto.json",
@@ -121,58 +120,30 @@ class ProtobufFormatTest {
         );
     }
 
-
     // ----------------------------------------------------------------
 
-    private static Message loadProto(String filename) {
+    private static Message loadProto(String filename) throws IOException {
+
         CloudEvent.Builder b = CloudEvent.newBuilder();
-        Message retVal = null;
-        try {
-
-            JsonFormat.parser().ignoringUnknownFields().merge(getReader(filename), b);
-            retVal = b.build();
-
-        } catch (IOException e) {
-            fail(e);
-        }
-        return retVal;
+        JsonFormat.parser().ignoringUnknownFields().merge(getReader(filename), b);
+        return b.build();
     }
 
-
-    private static Reader getReader(String filename) {
+    private static Reader getReader(String filename) throws IOException {
 
         URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
         File dataFile = new File(file.getFile());
-        Reader reader = null;
-
-        try {
-            reader = new FileReader(dataFile);
-        } catch (FileNotFoundException fnf) {
-            fail("Failed ot load file : " + filename);
-        }
-
-        return reader;
-
-
+        return new FileReader(dataFile);
     }
 
-    private InputStream getInputStream(String filename) {
+    private InputStream getInputStream(String filename) throws IOException {
 
         URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
         File dataFile = new File(file.getFile());
-        InputStream retVal = null;
-
-        try {
-            retVal = new FileInputStream(dataFile);
-
-        } catch (FileNotFoundException fnf) {
-            fail("Failed ot load file : " + filename);
-        }
-
-        return retVal;
+        return new FileInputStream(dataFile);
     }
 
-    private byte[] getProtoData(String filename) {
+    private byte[] getProtoData(String filename) throws IOException {
 
         Message m = loadProto(filename);
         return m.toByteArray();

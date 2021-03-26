@@ -214,10 +214,7 @@ class ProtoSerializer {
             return this;
         }
 
-        //-- This should really be a method on CloudEventContextWriter as Integer is the only
-        //-- supported numeric attribute value type as-per specification.
-        //-- Will open an Issue on this.
-
+        @Override
         public CloudEventContextWriter withContextAttribute(String name, Integer value) throws CloudEventRWException {
 
             if (!setRequiredField(name, value)){
