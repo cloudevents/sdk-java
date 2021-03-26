@@ -8,11 +8,12 @@ import com.google.protobuf.Timestamp;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
-import io.cloudevents.core.v1.CloudEventBuilder;
 import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
+import io.cloudevents.rw.CloudEventRWException.CloudEventRWExceptionKind;
+import io.cloudevents.rw.CloudEventWriter;
 import io.cloudevents.v1.proto.CloudEvent;
 import io.cloudevents.v1.proto.CloudEvent.*;
 
@@ -50,42 +51,15 @@ class ProtoSerializer {
         builder.setSpecVersion(ce.getSpecVersion().toString());
 
         // Copy the attributes
-        ProtoContextWriter protoContextWriter = new ProtoContextWriter(builder, ce.getSpecVersion());
+        ProtoCloudEventWriter protoCloudEventWriter = new ProtoCloudEventWriter(builder, ce.getSpecVersion());
         final CloudEventContextReader cloudEventContextReader = CloudEventUtils.toContextReader(ce);
-        cloudEventContextReader.readContext(protoContextWriter);
-
-        // Copy the data
-        final String contentType = ce.getDataContentType();
+        cloudEventContextReader.readContext(protoCloudEventWriter);
         final CloudEventData data = ce.getData();
         if (data != null) {
-
-            // If it's a proto message we can handle that directly.
-
-            if (data instanceof ProtoCloudEventData) {
-
-                final ProtoCloudEventData protoData = (ProtoCloudEventData) data;
-
-                if (protoData.getMessage() != null) {
-                    builder.setProtoData(Any.pack(protoData.getMessage()));
-                }
-
-            } else {
-                if (Objects.equals(contentType, PROTO_DATA_CONTENT_TYPE)) {
-                    // This will throw if the data provided is not an Any. The protobuf CloudEvent spec requires proto data to be stored as
-                    // an Any. I would be amenable to allowing people to also pass raw unwrapped protobufs, but it complicates the logic here.
-                    // Perhpas that can be a follow up if there is a need.
-                    Any dataAsAny = Any.parseFrom(data.toBytes());
-                    builder.setProtoData(dataAsAny);
-                } else if (isTextType(contentType)) {
-                    builder.setTextDataBytes(ByteString.copyFrom(data.toBytes()));
-                } else {
-                    ByteString byteString = ByteString.copyFrom(data.toBytes());
-                    builder.setBinaryData(byteString);
-                }
-            }
+            return protoCloudEventWriter.end(data);
+        } else {
+            return protoCloudEventWriter.end();
         }
-
-        return builder.build();
     }
 
     // The proto spec says all text data should go into the text field. It is really difficult to figure out every case
@@ -100,7 +74,7 @@ class ProtoSerializer {
     /**
      * Defines a {@link CloudEventContextWriter} that will allow setting the attributes within a Protobuf object.
      */
-    public static class ProtoContextWriter implements CloudEventContextWriter {
+    public static class ProtoCloudEventWriter implements CloudEventWriter<CloudEvent> {
 
         /**
          * CloudEvent required attributes are stored as plain fields in the protobuf format, while optional
@@ -139,7 +113,7 @@ class ProtoSerializer {
          * @param protoBuilder The {@link CloudEvent.Builder} to set attributes on.
          * @param spec The spec to set attributes for.
          */
-        public ProtoContextWriter(CloudEvent.Builder protoBuilder, SpecVersion spec) {
+        public ProtoCloudEventWriter(CloudEvent.Builder protoBuilder, SpecVersion spec) {
             this.protoBuilder = protoBuilder;
             this.requiredAttributeNumberMap = versionToAttrs.get(spec);
             if (this.requiredAttributeNumberMap == null) {
@@ -255,6 +229,51 @@ class ProtoSerializer {
             }
 
             return this;
+        }
+
+        @Override
+        public CloudEvent end(CloudEventData data) throws CloudEventRWException {
+            if (data != null) {
+                // Grab the contentType field out of the builder, if present
+                String dataContentType = null;
+                final Map<String, CloudEventAttributeValue> attributesMap = protoBuilder.getAttributesMap();
+                final CloudEventAttributeValue attrVal = attributesMap.get(CloudEventV1.DATACONTENTTYPE);// This is the same for V1 and V03
+                if (attrVal != null && attrVal.hasCeString()) {
+                    dataContentType = attrVal.getCeString();
+                }
+
+                // If it's a proto message we can handle that directly.
+                if (data instanceof ProtoCloudEventData) {
+                    final ProtoCloudEventData protoData = (ProtoCloudEventData) data;
+                    if (protoData.getMessage() != null) {
+                        protoBuilder.setProtoData(Any.pack(protoData.getMessage()));
+                    }
+                } else {
+                    if (Objects.equals(dataContentType, PROTO_DATA_CONTENT_TYPE)) {
+                        // This will throw if the data provided is not an Any. The protobuf CloudEvent spec requires proto data to be stored as
+                        // an Any. I would be amenable to allowing people to also pass raw unwrapped protobufs, but it complicates the logic here.
+                        // Perhpas that can be a follow up if there is a need.
+                        Any dataAsAny = null;
+                        try {
+                            dataAsAny = Any.parseFrom(data.toBytes());
+                        } catch (InvalidProtocolBufferException e) {
+                            throw CloudEventRWException.newDataConversion(e, "byte[]", "com.google.protobuf.Any");
+                        }
+                        protoBuilder.setProtoData(dataAsAny);
+                    } else if (isTextType(dataContentType)) {
+                        protoBuilder.setTextDataBytes(ByteString.copyFrom(data.toBytes()));
+                    } else {
+                        ByteString byteString = ByteString.copyFrom(data.toBytes());
+                        protoBuilder.setBinaryData(byteString);
+                    }
+                }
+            }
+            return protoBuilder.build();
+        }
+
+        @Override
+        public CloudEvent end() throws CloudEventRWException {
+            return protoBuilder.build();
         }
     }
 
