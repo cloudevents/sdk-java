@@ -9,6 +9,10 @@ import io.cloudevents.CloudEventData;
  */
 public interface ProtoCloudEventData extends CloudEventData {
 
+    /**
+     * Gets the protobuf {@link Message} representation of this data.
+     * @return The data as a {@link Message}
+     */
     Message getMessage();
 
 }

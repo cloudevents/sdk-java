@@ -101,28 +101,28 @@ class ProtoDeserializer implements CloudEventReader {
 
         if (data != null) {
             return writer.end(mapper.map(data));
-        }else {
+        } else {
             return writer.end();
         }
 
     }
 
-    private class ProtoAccessor implements ProtoCloudEventData {
+    private static class ProtoAccessor implements ProtoCloudEventData {
 
-        private final CloudEvent protoEvent;
+        private final Message message;
 
         ProtoAccessor(CloudEvent proto){
-            this.protoEvent = proto;
+            this.message = proto.getProtoData();
         }
 
         @Override
         public Message getMessage() {
-            return protoEvent.getProtoData();
+            return message;
         }
 
         @Override
         public byte[] toBytes() {
-            return protoEvent.getProtoData().toByteArray();
+            return message.toByteArray();
         }
     }
 }
