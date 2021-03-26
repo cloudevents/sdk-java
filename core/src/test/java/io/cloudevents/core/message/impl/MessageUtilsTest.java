@@ -27,6 +27,25 @@ class MessageUtilsTest {
             .isEqualTo(CloudEventRWException.CloudEventRWExceptionKind.UNKNOWN_ENCODING);
     }
 
+
+    /**
+     * Verify an exception is thrown if an unsupported
+     * application/cloudevents content-type family is
+     * received.
+     */
+    @ParameterizedTest
+    @MethodSource
+    void testBadContentTypes(String contentType) {
+
+        CloudEventRWException exception = assertThrows(CloudEventRWException.class, () ->
+        {
+            parseStructuredOrBinaryMessage(() -> contentType, eventFormat -> null, () -> "1.0", specVersion -> null);
+        });
+
+        assertThat(exception.getKind()).isEqualTo(CloudEventRWException.CloudEventRWExceptionKind.UNKNOWN_ENCODING);
+
+    }
+
     @Test
     void testParseStructuredOrBinaryMessage_StructuredMode() {
         MessageUtils.parseStructuredOrBinaryMessage(() -> "application/cloudevents+csv;",
@@ -51,6 +70,13 @@ class MessageUtilsTest {
         return Stream.of(
             Arguments.of("0.3", V03),
             Arguments.of("1.0", V1)
+        );
+    }
+
+    private static Stream<Arguments> testBadContentTypes() {
+        return Stream.of(
+            Arguments.of("application/cloudevents"),
+            Arguments.of("application/cloudevents+morse")
         );
     }
 

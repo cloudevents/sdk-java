@@ -59,6 +59,15 @@ public class MessageUtils {
             EventFormat format = EventFormatProvider.getInstance().resolveFormat(ct);
             if (format != null) {
                 return structuredMessageFactory.apply(format);
+            } else {
+                /**
+                 * The format wasn't one we support, but if it's part of the
+                 * CloudEvent family it indicates it's a structured
+                 * representation that we can't interpret.
+                 */
+                if (ct.startsWith("application/cloudevents")) {
+                    throw newUnknownEncodingException();
+                }
             }
         }
 
