@@ -5,7 +5,8 @@ import org.antlr.v4.runtime.misc.Interval;
 public class EvaluationException extends RuntimeException {
 
     public enum Kind {
-        INVALID_CAST
+        INVALID_CAST,
+        MISSING_ATTRIBUTE,
     }
 
     private final Kind kind;
@@ -48,6 +49,16 @@ public class EvaluationException extends RuntimeException {
             expression,
             "Cannot cast " + from + " to " + to + ": " + cause.getMessage(),
             cause
+        );
+    }
+
+    public static EvaluationException missingAttribute(Interval interval, String expression, String key) {
+        return new EvaluationException(
+            Kind.MISSING_ATTRIBUTE,
+            interval,
+            expression,
+            "Missing attribute " + key + " in the input event. Perhaps you should check with 'EXISTS " + key + "' if the input contains the provided key?",
+            null
         );
     }
 }

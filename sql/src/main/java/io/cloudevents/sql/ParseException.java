@@ -1,11 +1,13 @@
 package io.cloudevents.sql;
 
+import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ParseException extends RuntimeException {
 
     public enum Kind {
+        RECOGNITION_ERROR,
         PARSE_VALUE
     }
 
@@ -14,7 +16,7 @@ public class ParseException extends RuntimeException {
     private final String expression;
 
     protected ParseException(Kind kind, Interval interval, String expression, String message, Throwable cause) {
-        super(String.format("%s at %s `%s`: %s", kind.name(), interval.toString(), expression, message), cause);
+        super(String.format("[%s at %d:%d `%s`] %s", kind.name(), interval.a, interval.b, expression, message), cause);
         this.kind = kind;
         this.interval = interval;
         this.expression = expression;
@@ -41,4 +43,15 @@ public class ParseException extends RuntimeException {
             cause
         );
     }
+
+    public static ParseException recognitionError(RecognitionException e, String msg) {
+        return new ParseException(
+            Kind.RECOGNITION_ERROR,
+            new Interval(e.getOffendingToken().getStartIndex(), e.getOffendingToken().getStopIndex()),
+            e.getOffendingToken().getText(),
+            "Cannot parse: " + msg,
+            e
+        );
+    }
+
 }

@@ -11,7 +11,7 @@ functionInvocation
     ;
 
 unaryOperation
-    : unaryLogicOperator expression #unarylogicExpression
+    : unaryLogicOperator expression #unaryLogicExpression
     | unaryNumericOperator expression # unaryNumericExpression
     ;
 

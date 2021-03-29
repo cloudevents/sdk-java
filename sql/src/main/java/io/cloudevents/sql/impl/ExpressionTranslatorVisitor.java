@@ -52,4 +52,24 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
     public ExpressionInternal visitExistsExpression(CESQLParserParser.ExistsExpressionContext ctx) {
         return new ExistsExpression(ctx.getSourceInterval(), ctx.getText(), ctx.identifier().getText());
     }
+
+    @Override
+    public ExpressionInternal visitUnaryLogicExpression(CESQLParserParser.UnaryLogicExpressionContext ctx) {
+        // Only 'not' is a valid unary logic expression
+        ExpressionInternal internal = visit(ctx.expression());
+        return new NotExpression(ctx.getSourceInterval(), ctx.getText(), internal);
+    }
+
+    @Override
+    public ExpressionInternal visitUnaryNumericExpression(CESQLParserParser.UnaryNumericExpressionContext ctx) {
+        // Only 'negate' is a valid unary logic expression
+        ExpressionInternal internal = visit(ctx.expression());
+        return new NegateExpression(ctx.getSourceInterval(), ctx.getText(), internal);
+    }
+
+
+    @Override
+    public ExpressionInternal visitIdentifier(CESQLParserParser.IdentifierContext ctx) {
+        return new AccessAttributeExpression(ctx.getSourceInterval(), ctx.getText(), ctx.getText());
+    }
 }

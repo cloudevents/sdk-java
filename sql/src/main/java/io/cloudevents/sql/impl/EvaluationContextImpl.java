@@ -10,13 +10,19 @@ import java.util.List;
 
 public class EvaluationContextImpl implements EvaluationContext {
 
+    private final Runtime runtime;
+
     private Interval expressionInterval;
     private String expressionText;
     private List<EvaluationException> evaluationExceptions;
 
+    public EvaluationContextImpl(Runtime runtime) {
+        this.runtime = runtime;
+    }
+
     @Override
     public Runtime getRuntime() {
-        return null;
+        return this.runtime;
     }
 
     @Override

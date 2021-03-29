@@ -4,17 +4,17 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationException;
 import org.antlr.v4.runtime.misc.Interval;
 
-public class ExistsExpression extends BaseExpression {
+public class NotExpression extends BaseExpression {
 
-    private final String key;
+    private final ExpressionInternal internal;
 
-    public ExistsExpression(Interval expressionInterval, String expressionText, String key) {
+    public NotExpression(Interval expressionInterval, String expressionText, ExpressionInternal internal) {
         super(expressionInterval, expressionText);
-        this.key = key;
+        this.internal = internal;
     }
 
     @Override
     public Object evaluate(EvaluationContextImpl ctx, CloudEvent event) throws EvaluationException {
-        return CloudEventUtils.hasContextAttribute(event, key);
+        return !castToBoolean(ctx, internal.evaluate(ctx, event));
     }
 }

@@ -44,6 +44,7 @@ public class TypeCastingProviderImpl implements TypeCastingProvider {
                         EvaluationException.invalidCastTarget(interval, expression, value.getClass(), target.valueClass())
                     );
                 }
+                return false;
         }
         // This should never happen
         throw new IllegalArgumentException("target type doesn't correspond to a known type");

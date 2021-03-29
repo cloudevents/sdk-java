@@ -1,13 +1,15 @@
 package io.cloudevents.sql.impl;
 
 import io.cloudevents.sql.Expression;
+import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Parser;
 import io.cloudevents.sql.generated.CESQLParserLexer;
 import io.cloudevents.sql.generated.CESQLParserParser;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParserImpl implements Parser {
 
@@ -35,8 +37,24 @@ public class ParserImpl implements Parser {
 
         CESQLParserParser parser = new CESQLParserParser(tokens);
 
+        List<ParseException> parseExceptionList = new ArrayList<>();
+        parser.removeErrorListeners();
+        parser.addErrorListener(new ConsoleErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
+                parseExceptionList.add(
+                    ParseException.recognitionError(e, msg)
+                );
+            }
+        });
+
         // Start parsing from cesql rule
         ParseTree tree = parser.cesql();
+
+        if (!parseExceptionList.isEmpty()) {
+            throw parseExceptionList.get(0);
+        }
 
         ExpressionInternal internal = new ExpressionTranslatorVisitor().visit(tree);
 

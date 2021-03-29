@@ -33,7 +33,12 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     public ResultAssert isNotFailed() {
         isNotNull();
-        assertThat(this.actual.isFailed()).isFalse();
+        assertThat(this.actual.isFailed())
+            .withFailMessage(
+                "Failed with causes: %s",
+                this.actual.causes()
+            )
+            .isFalse();
         return this;
     }
 
@@ -52,4 +57,25 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         return assertThat(this.actual.causes());
     }
 
+    public ResultAssert hasFailure(EvaluationException.Kind exceptionKind) {
+        causes()
+            .anySatisfy(ex ->
+                assertThat(ex.getKind())
+                    .isEqualTo(exceptionKind)
+            );
+
+        return this;
+    }
+
+    public ResultAssert hasFailure(EvaluationException.Kind exceptionKind, String expression) {
+        causes()
+            .anySatisfy(ex -> {
+                assertThat(ex.getKind())
+                    .isEqualTo(exceptionKind);
+                assertThat(ex.getExpression())
+                    .isEqualTo(expression);
+            });
+
+        return this;
+    }
 }
