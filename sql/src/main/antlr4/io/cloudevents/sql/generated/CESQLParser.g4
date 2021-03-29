@@ -49,7 +49,7 @@ functionIdentifier: FUNCTION_IDENTIFIER;
 // Literals
 
 booleanLiteral: (TRUE | FALSE);
-stringLiteral: STRING_LITERAL;
+stringLiteral: (DQUOTED_STRING_LITERAL | SQUOTED_STRING_LITERAL);
 integerLiteral: INTEGER_LITERAL;
 
 // Operators
