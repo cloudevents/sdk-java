@@ -3,7 +3,8 @@ package io.cloudevents.sql;
 public enum Type {
     INTEGER(Integer.class),
     STRING(String.class),
-    BOOLEAN(Boolean.class);
+    BOOLEAN(Boolean.class),
+    ANY(Object.class);
 
     private final Class<?> clazz;
 

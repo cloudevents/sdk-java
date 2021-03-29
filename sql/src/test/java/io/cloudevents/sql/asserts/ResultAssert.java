@@ -1,5 +1,6 @@
 package io.cloudevents.sql.asserts;
 
+import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.Result;
 import org.assertj.core.api.*;
 
@@ -12,21 +13,21 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         super(actual, ResultAssert.class);
     }
 
-    public AbstractBooleanAssert<?> asBoolean() {
+    public BooleanAssert asBoolean() {
         isNotNull();
-        return assertThat(this.actual.value())
+        return (BooleanAssert) assertThat(this.actual.value())
             .asInstanceOf(BOOLEAN);
     }
 
-    public AbstractIntegerAssert<?> asInteger() {
+    public IntegerAssert asInteger() {
         isNotNull();
-        return assertThat(this.actual.value())
+        return (IntegerAssert) assertThat(this.actual.value())
             .asInstanceOf(INTEGER);
     }
 
-    public AbstractStringAssert<?> asString() {
+    public StringAssert asString() {
         isNotNull();
-        return assertThat(this.actual.value())
+        return (StringAssert) assertThat(this.actual.value())
             .asInstanceOf(STRING);
     }
 
@@ -47,8 +48,8 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         return assertThat(this.actual);
     }
 
-    public AbstractThrowableAssert<?, ? extends Throwable> cause() {
-        return assertThat(this.actual.cause());
+    public IterableAssert<EvaluationException> causes() {
+        return assertThat(this.actual.causes());
     }
 
 }

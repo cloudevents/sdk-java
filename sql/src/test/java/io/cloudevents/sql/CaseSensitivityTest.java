@@ -10,7 +10,7 @@ public class CaseSensitivityTest {
 
     @Test
     void trueBooleanLiterals() {
-        EvaluationResult expected = new EvaluationResult(true);
+        EvaluationResult expected = new EvaluationResult(true, null);
 
         assertThat(
             Parser.parseDefault("TRUE").evaluate(Data.V1_MIN)
@@ -25,7 +25,7 @@ public class CaseSensitivityTest {
 
     @Test
     void falseBooleanLiterals() {
-        EvaluationResult expected = new EvaluationResult(false);
+        EvaluationResult expected = new EvaluationResult(false, null);
 
         assertThat(
             Parser.parseDefault("FALSE").evaluate(Data.V1_MIN)

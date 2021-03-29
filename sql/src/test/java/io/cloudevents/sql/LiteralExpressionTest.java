@@ -48,6 +48,18 @@ public class LiteralExpressionTest {
     }
 
     @Test
+    void stringLiteralWithCase() {
+        assertThat(Parser.parseDefault("'aBc'").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEqualTo("aBc");
+        assertThat(Parser.parseDefault("\"AbC\"").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEqualTo("AbC");
+    }
+
+    @Test
     void escapedStringLiteral() {
         assertThat(Parser.parseDefault("'a\"b\\'c'").evaluate(Data.V1_MIN))
             .isNotFailed()

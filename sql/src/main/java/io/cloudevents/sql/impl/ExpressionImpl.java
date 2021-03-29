@@ -14,6 +14,8 @@ public class ExpressionImpl implements Expression {
 
     @Override
     public Result evaluate(CloudEvent event) {
-        return new EvaluationResult(this.expressionInternal.evaluate(null, event)); //TODO
+        EvaluationContextImpl ctx = new EvaluationContextImpl();
+        Object value = this.expressionInternal.evaluate(ctx, event);
+        return new EvaluationResult(value, ctx.getEvaluationExceptions());
     }
 }

@@ -1,11 +1,12 @@
 package io.cloudevents.sql;
 
+import java.util.Collection;
+
 public interface Result {
 
     Object value();
 
     boolean isFailed();
 
-    // TODO this should be a list
-    EvaluationException cause();
+    Collection<EvaluationException> causes();
 }

@@ -3,20 +3,19 @@ package io.cloudevents.sql.impl;
 import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.Result;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class EvaluationResult implements Result {
 
     private final Object value;
-    private final EvaluationException exception;
+    private final List<EvaluationException> exceptions;
 
-    public EvaluationResult(Object value) {
-        this(value, null);
-    }
-
-    public EvaluationResult(Object value, EvaluationException exception) {
+    public EvaluationResult(Object value, List<EvaluationException> exceptions) {
         this.value = value;
-        this.exception = exception;
+        this.exceptions = exceptions == null ? Collections.emptyList() : Collections.unmodifiableList(exceptions);
     }
 
     /**
@@ -32,15 +31,15 @@ public class EvaluationResult implements Result {
      */
     @Override
     public boolean isFailed() {
-        return exception != null;
+        return !exceptions.isEmpty();
     }
 
     /**
-     * @return the cause of the failure, if {@link #isFailed()} returns {@code true}
+     * @return the causes of the failure, if {@link #isFailed()} returns {@code true}
      */
     @Override
-    public EvaluationException cause() {
-        return exception;
+    public Collection<EvaluationException> causes() {
+        return exceptions != null ? exceptions : Collections.emptyList();
     }
 
     @Override
@@ -48,12 +47,12 @@ public class EvaluationResult implements Result {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EvaluationResult that = (EvaluationResult) o;
-        return Objects.equals(value, that.value) && Objects.equals(exception, that.exception);
+        return Objects.equals(value, that.value) && Objects.equals(exceptions, that.exceptions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value, exception);
+        return Objects.hash(value, exceptions);
     }
 
     @Override
@@ -61,7 +60,7 @@ public class EvaluationResult implements Result {
         return "EvaluationResult{" +
             "  value=" + value +
             "\n" +
-            "  , exception=" + exception +
+            "  , exceptions=" + exceptions +
             "\n" +
             '}';
     }
