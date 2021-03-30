@@ -46,6 +46,11 @@ public class ExistsExpressionTest {
             .isNotFailed()
             .asBoolean()
             .isFalse();
+
+        assertThat(Parser.parseDefault("NOT EXISTS time").evaluate(event))
+            .isNotFailed()
+            .asBoolean()
+            .isTrue();
     }
 
     @Test
@@ -76,6 +81,11 @@ public class ExistsExpressionTest {
             .isNotFailed()
             .asBoolean()
             .isFalse();
+
+        assertThat(Parser.parseDefault("NOT EXISTS myext").evaluate(event))
+            .isNotFailed()
+            .asBoolean()
+            .isTrue();
     }
 
 }
