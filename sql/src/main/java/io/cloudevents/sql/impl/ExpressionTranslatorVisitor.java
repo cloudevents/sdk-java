@@ -67,7 +67,6 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
         return new NegateExpression(ctx.getSourceInterval(), ctx.getText(), internal);
     }
 
-
     @Override
     public ExpressionInternal visitIdentifier(CESQLParserParser.IdentifierContext ctx) {
         return new AccessAttributeExpression(ctx.getSourceInterval(), ctx.getText(), ctx.getText());

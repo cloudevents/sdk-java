@@ -5,6 +5,9 @@ import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationException;
 import org.antlr.v4.runtime.misc.Interval;
 
+import java.util.Base64;
+import java.util.Objects;
+
 public final class CloudEventUtils {
 
     private CloudEventUtils() {
@@ -27,9 +30,24 @@ public final class CloudEventUtils {
                 EvaluationException.missingAttribute(interval, expression, key)
             );
             value = "";
+        } else {
+            // Because the CESQL type system is smaller than the CE type system,
+            // we need to coherce some values to string
+            value = coherceTypes(value);
         }
 
         return value;
+    }
+
+    static Object coherceTypes(Object value) {
+        if (value instanceof Boolean || value instanceof String || value instanceof Integer) {
+            // No casting required
+            return value;
+        }
+        if (value instanceof byte[]) {
+            return Base64.getEncoder().encodeToString((byte[]) value);
+        }
+        return Objects.toString(value);
     }
 
 }
