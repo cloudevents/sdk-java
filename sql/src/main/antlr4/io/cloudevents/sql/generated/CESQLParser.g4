@@ -10,15 +10,12 @@ functionInvocation
     : functionIdentifier functionParameterList
     ;
 
-unaryOperation
-    : NOT expression #unaryLogicExpression
-    | MINUS expression # unaryNumericExpression
-    ;
-
 expression
     : functionInvocation #functionInvocationExpression
-    | unaryOperation #unaryExpression
-    // LIKE, EXISTS and IN takes precedence over all the other operators
+    // unary operators are the highest priority
+    | NOT expression #unaryLogicExpression
+    | MINUS expression # unaryNumericExpression
+    // LIKE, EXISTS and IN takes precedence over all the other binary operators
     | expression NOT? LIKE stringLiteral #likeExpression
     | EXISTS identifier #existsExpression
     | expression NOT? IN setExpression #inExpression
@@ -26,7 +23,7 @@ expression
     | expression (STAR | DIVIDE | MODULE) expression #binaryMultiplicativeExpression
     | expression (PLUS | MINUS) expression #binaryAdditiveExpression
     // Comparison operations
-    | expression (EQUAL | EXCLAMATION EQUAL | LESS_GREATER | GREATER_OR_EQUAL | LESS_OR_EQUAL | LESS | GREATER) expression #binaryComparisonExpression
+    | expression (EQUAL | NOT_EQUAL | LESS_GREATER | GREATER_OR_EQUAL | LESS_OR_EQUAL | LESS | GREATER) expression #binaryComparisonExpression
     // Logic operations
     |<assoc=right> expression (AND | OR | XOR) expression #binaryLogicExpression
     // Subexpressions and atoms

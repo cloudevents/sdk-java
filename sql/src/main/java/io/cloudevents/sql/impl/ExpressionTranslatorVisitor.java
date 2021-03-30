@@ -85,4 +85,82 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
         ExpressionInternal inExpression = new InExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, setExpressions);
         return (ctx.NOT() != null) ? new NotExpression(ctx.getSourceInterval(), ctx.getText(), inExpression) : inExpression;
     }
+
+    @Override
+    public ExpressionInternal visitBinaryMultiplicativeExpression(CESQLParserParser.BinaryMultiplicativeExpressionContext ctx) {
+        ExpressionInternal leftExpression = visit(ctx.expression(0));
+        ExpressionInternal rightExpression = visit(ctx.expression(1));
+
+        MathBinaryExpression.Operation op;
+        if (ctx.STAR() != null) {
+            op = MathBinaryExpression.Operation.MULTIPLICATION;
+        } else if (ctx.DIVIDE() != null) {
+            op = MathBinaryExpression.Operation.DIVISION;
+        } else {
+            op = MathBinaryExpression.Operation.MODULE;
+        }
+
+        return new MathBinaryExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, op);
+    }
+
+    @Override
+    public ExpressionInternal visitBinaryAdditiveExpression(CESQLParserParser.BinaryAdditiveExpressionContext ctx) {
+        ExpressionInternal leftExpression = visit(ctx.expression(0));
+        ExpressionInternal rightExpression = visit(ctx.expression(1));
+
+        MathBinaryExpression.Operation op;
+        if (ctx.PLUS() != null) {
+            op = MathBinaryExpression.Operation.SUM;
+        } else {
+            op = MathBinaryExpression.Operation.DIFFERENCE;
+        }
+
+        return new MathBinaryExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, op);
+    }
+
+    @Override
+    public ExpressionInternal visitBinaryComparisonExpression(CESQLParserParser.BinaryComparisonExpressionContext ctx) {
+        ExpressionInternal leftExpression = visit(ctx.expression(0));
+        ExpressionInternal rightExpression = visit(ctx.expression(1));
+
+        if (ctx.EQUAL() != null) {
+            // Equality operation is ambiguous, we have a specific implementation for it
+            return new EqualExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
+        }
+        if (ctx.NOT_EQUAL() != null || ctx.LESS_GREATER() != null) {
+            // Equality operation is ambiguous, we have a specific implementation for it
+            return new NotExpression(ctx.getSourceInterval(), ctx.getText(), new EqualExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression));
+        }
+
+        // From this onward, just operators defined on integers
+        IntegerComparisonBinaryExpression.Operation op;
+        if (ctx.LESS() != null) {
+            op = IntegerComparisonBinaryExpression.Operation.LESS;
+        } else if (ctx.LESS_OR_EQUAL() != null) {
+            op = IntegerComparisonBinaryExpression.Operation.LESS_OR_EQUAL;
+        } else if (ctx.GREATER() != null) {
+            op = IntegerComparisonBinaryExpression.Operation.GREATER;
+        } else {
+            op = IntegerComparisonBinaryExpression.Operation.GREATER_OR_EQUAL;
+        }
+
+        return new IntegerComparisonBinaryExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, op);
+    }
+
+    @Override
+    public ExpressionInternal visitBinaryLogicExpression(CESQLParserParser.BinaryLogicExpressionContext ctx) {
+        ExpressionInternal leftExpression = visit(ctx.expression(0));
+        ExpressionInternal rightExpression = visit(ctx.expression(1));
+
+        LogicalBinaryExpression.Operation op;
+        if (ctx.AND() != null) {
+            op = LogicalBinaryExpression.Operation.AND;
+        } else if (ctx.OR() != null) {
+            op = LogicalBinaryExpression.Operation.OR;
+        } else {
+            op = LogicalBinaryExpression.Operation.XOR;
+        }
+
+        return new LogicalBinaryExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, op);
+    }
 }
