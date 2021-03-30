@@ -7,7 +7,7 @@ cesql: expression EOF;
 
 // Structure of operations, function invocations and expression
 functionInvocation
-    : functionIdentifier LR_BRACKET functionParameterList RR_BRACKET
+    : functionIdentifier functionParameterList
     ;
 
 unaryOperation
@@ -54,16 +54,12 @@ integerLiteral: INTEGER_LITERAL;
 
 // Functions
 
-functionParameter
-    : expression
-    ;
-
 functionParameterList
-    : ( functionParameter ( COMMA functionParameter )* )?
+    : LR_BRACKET ( expression ( COMMA expression )* )? RR_BRACKET
     ;
 
 // Sets
 
 setExpression
-    : expression ( COMMA expression )* // Empty sets are not allowed
+    : LR_BRACKET expression ( COMMA expression )* RR_BRACKET // Empty sets are not allowed
     ;

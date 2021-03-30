@@ -5,6 +5,9 @@ import io.cloudevents.sql.Type;
 import io.cloudevents.sql.generated.CESQLParserBaseVisitor;
 import io.cloudevents.sql.generated.CESQLParserParser;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<ExpressionInternal> {
 
     @Override
@@ -70,5 +73,16 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
     @Override
     public ExpressionInternal visitIdentifier(CESQLParserParser.IdentifierContext ctx) {
         return new AccessAttributeExpression(ctx.getSourceInterval(), ctx.getText(), ctx.getText());
+    }
+
+    @Override
+    public ExpressionInternal visitInExpression(CESQLParserParser.InExpressionContext ctx) {
+        ExpressionInternal leftExpression = visit(ctx.expression());
+        List<ExpressionInternal> setExpressions = ctx.setExpression().expression().stream()
+            .map(this::visit)
+            .collect(Collectors.toList());
+
+        ExpressionInternal inExpression = new InExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, setExpressions);
+        return (ctx.NOT() != null) ? new NotExpression(ctx.getSourceInterval(), ctx.getText(), inExpression) : inExpression;
     }
 }
