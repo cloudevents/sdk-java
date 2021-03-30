@@ -1,5 +1,6 @@
 package io.cloudevents.sql.impl;
 
+import io.cloudevents.sql.LikeExpression;
 import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Type;
 import io.cloudevents.sql.generated.CESQLParserBaseVisitor;
@@ -162,5 +163,19 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
         }
 
         return new LogicalBinaryExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, op);
+    }
+
+    @Override
+    public ExpressionInternal visitLikeExpression(CESQLParserParser.LikeExpressionContext ctx) {
+        ExpressionInternal leftExpression = visit(ctx.expression());
+        ExpressionInternal likeExpression = new LikeExpression(
+            ctx.getSourceInterval(),
+            ctx.getText(),
+            leftExpression,
+            (ctx.stringLiteral().DQUOTED_STRING_LITERAL() != null) ?
+                LiteralUtils.parseDQuotedStringLiteral(ctx.stringLiteral().DQUOTED_STRING_LITERAL()) :
+                LiteralUtils.parseSQuotedStringLiteral(ctx.stringLiteral().SQUOTED_STRING_LITERAL())
+        );
+        return (ctx.NOT() != null) ? new NotExpression(ctx.getSourceInterval(), ctx.getText(), likeExpression) : likeExpression;
     }
 }

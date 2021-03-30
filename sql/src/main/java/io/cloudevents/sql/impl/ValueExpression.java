@@ -4,8 +4,6 @@ import io.cloudevents.CloudEvent;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.regex.Pattern;
-
 public class ValueExpression extends BaseExpression {
 
     private final Object value;
@@ -25,17 +23,11 @@ public class ValueExpression extends BaseExpression {
     }
 
     public static ValueExpression fromSQuotedStringLiteral(TerminalNode node) {
-        String val = node.getText();
-        val = val.substring(1, val.length() - 1);
-        val = val.replaceAll(Pattern.quote("\\'"), "'");
-        return new ValueExpression(node.getSourceInterval(), node.getText(), val);
+        return new ValueExpression(node.getSourceInterval(), node.getText(), LiteralUtils.parseSQuotedStringLiteral(node));
     }
 
     public static ValueExpression fromDQuotedStringLiteral(TerminalNode node) {
-        String val = node.getText();
-        val = val.substring(1, val.length() - 1);
-        val = val.replaceAll(Pattern.quote("\\\""), "\"");
-        return new ValueExpression(node.getSourceInterval(), node.getText(), val);
+        return new ValueExpression(node.getSourceInterval(), node.getText(), LiteralUtils.parseDQuotedStringLiteral(node));
     }
 
 }
