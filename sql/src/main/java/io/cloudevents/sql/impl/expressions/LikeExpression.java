@@ -1,8 +1,8 @@
-package io.cloudevents.sql;
+package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.sql.impl.BaseExpression;
-import io.cloudevents.sql.impl.EvaluationContextImpl;
+import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.impl.EvaluationExceptions;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
@@ -26,10 +26,11 @@ public class LikeExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationContextImpl ctx, CloudEvent event) {
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, EvaluationExceptions exceptions) {
         String value = castToString(
-            ctx,
-            internal.evaluate(ctx, event)
+            runtime,
+            exceptions,
+            internal.evaluate(runtime, event, exceptions)
         );
 
         return pattern.matcher(value).matches();

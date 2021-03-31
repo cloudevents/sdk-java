@@ -2,10 +2,10 @@ package io.cloudevents.sql;
 
 import io.cloudevents.CloudEvent;
 
-public interface Function {
+import java.util.List;
 
-    FunctionSignature getSignature();
+public interface Function extends FunctionSignature {
 
-    Object invoke(CloudEvent event) throws EvaluationException;
+    Object invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, List<Object> arguments);
 
 }

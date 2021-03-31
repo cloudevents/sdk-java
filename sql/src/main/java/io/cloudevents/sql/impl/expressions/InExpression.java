@@ -1,7 +1,9 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.sql.EvaluationException;
+import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.impl.EvaluationExceptions;
+import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.List;
@@ -22,10 +24,10 @@ public class InExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationContextImpl ctx, CloudEvent event) throws EvaluationException {
-        Object leftValue = leftExpression.evaluate(ctx, event);
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, EvaluationExceptions exceptions) {
+        Object leftValue = leftExpression.evaluate(runtime, event, exceptions);
         Set<Object> set = setExpressions.stream()
-            .map(expr -> expr.evaluate(ctx, event))
+            .map(expr -> expr.evaluate(runtime, event, exceptions))
             .collect(Collectors.toSet());
 
         return set.contains(leftValue);

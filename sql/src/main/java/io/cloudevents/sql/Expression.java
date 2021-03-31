@@ -1,7 +1,7 @@
 package io.cloudevents.sql;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.sql.impl.RuntimeImpl;
+import io.cloudevents.sql.impl.EvaluationRuntimeImpl;
 
 public interface Expression {
 
@@ -11,10 +11,10 @@ public interface Expression {
      * @param event the input event
      * @return the evaluation result
      */
-    Result evaluate(Runtime runtime, CloudEvent event);
+    Result evaluate(EvaluationRuntime evaluationRuntime, CloudEvent event);
 
     default Result evaluate(CloudEvent event) {
-        return evaluate(RuntimeImpl.getInstance(), event);
+        return evaluate(EvaluationRuntimeImpl.getInstance(), event);
     }
 
 }

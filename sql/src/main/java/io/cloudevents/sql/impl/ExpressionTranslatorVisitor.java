@@ -1,10 +1,10 @@
 package io.cloudevents.sql.impl;
 
-import io.cloudevents.sql.LikeExpression;
 import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Type;
 import io.cloudevents.sql.generated.CESQLParserBaseVisitor;
 import io.cloudevents.sql.generated.CESQLParserParser;
+import io.cloudevents.sql.impl.expressions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -177,5 +177,14 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
                 LiteralUtils.parseSQuotedStringLiteral(ctx.stringLiteral().SQUOTED_STRING_LITERAL())
         );
         return (ctx.NOT() != null) ? new NotExpression(ctx.getSourceInterval(), ctx.getText(), likeExpression) : likeExpression;
+    }
+
+    @Override
+    public ExpressionInternal visitFunctionInvocation(CESQLParserParser.FunctionInvocationContext ctx) {
+        List<ExpressionInternal> parameters = ctx.functionParameterList().expression().stream()
+            .map(this::visit)
+            .collect(Collectors.toList());
+
+        return new FunctionInvocationExpression(ctx.getSourceInterval(), ctx.getText(), ctx.functionIdentifier().getText(), parameters);
     }
 }

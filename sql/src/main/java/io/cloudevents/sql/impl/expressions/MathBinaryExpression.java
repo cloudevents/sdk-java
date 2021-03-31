@@ -1,12 +1,15 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.expressions;
 
+import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.impl.EvaluationExceptions;
+import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.function.BiFunction;
 
 public class MathBinaryExpression extends BaseBinaryExpression {
 
-    enum Operation {
+    public enum Operation {
         SUM(Integer::sum),
         DIFFERENCE((x, y) -> x - y),
         MULTIPLICATION((x, y) -> x * y),
@@ -26,16 +29,16 @@ public class MathBinaryExpression extends BaseBinaryExpression {
 
     private final Operation operation;
 
-    protected MathBinaryExpression(Interval expressionInterval, String expressionText, ExpressionInternal leftOperand, ExpressionInternal rightOperand, Operation operation) {
+    public MathBinaryExpression(Interval expressionInterval, String expressionText, ExpressionInternal leftOperand, ExpressionInternal rightOperand, Operation operation) {
         super(expressionInterval, expressionText, leftOperand, rightOperand);
         this.operation = operation;
     }
 
     @Override
-    Object evaluate(EvaluationContextImpl ctx, Object left, Object right) {
+    Object evaluate(EvaluationRuntime runtime, Object left, Object right, EvaluationExceptions exceptions) {
         return this.operation.evaluate(
-            castToInteger(ctx, left),
-            castToInteger(ctx, right)
+            castToInteger(runtime, exceptions, left),
+            castToInteger(runtime, exceptions, right)
         );
     }
 

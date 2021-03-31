@@ -4,9 +4,15 @@ import org.antlr.v4.runtime.misc.Interval;
 
 public class EvaluationException extends RuntimeException {
 
+    @FunctionalInterface
+    public interface EvaluationExceptionFactory {
+        EvaluationException create(Interval interval, String expression);
+    }
+
     public enum Kind {
         INVALID_CAST,
         MISSING_ATTRIBUTE,
+        FUNCTION_DISPATCH,
     }
 
     private final Kind kind;
@@ -32,8 +38,8 @@ public class EvaluationException extends RuntimeException {
         return expression;
     }
 
-    public static EvaluationException invalidCastTarget(Interval interval, String expression, Class<?> from, Class<?> to) {
-        return new EvaluationException(
+    public static EvaluationExceptionFactory invalidCastTarget(Class<?> from, Class<?> to) {
+        return (interval, expression) -> new EvaluationException(
             Kind.INVALID_CAST,
             interval,
             expression,
@@ -42,8 +48,8 @@ public class EvaluationException extends RuntimeException {
         );
     }
 
-    public static EvaluationException castException(Interval interval, String expression, Class<?> from, Class<?> to, Throwable cause) {
-        return new EvaluationException(
+    public static EvaluationExceptionFactory castError(Class<?> from, Class<?> to, Throwable cause) {
+        return (interval, expression) -> new EvaluationException(
             Kind.INVALID_CAST,
             interval,
             expression,
@@ -59,6 +65,16 @@ public class EvaluationException extends RuntimeException {
             expression,
             "Missing attribute " + key + " in the input event. Perhaps you should check with 'EXISTS " + key + "' if the input contains the provided key?",
             null
+        );
+    }
+
+    public static EvaluationException cannotDispatchFunction(Interval interval, String expression, String functionName, Throwable cause) {
+        return new EvaluationException(
+            Kind.FUNCTION_DISPATCH,
+            interval,
+            expression,
+            "Cannot dispatch function invocation to function " + functionName + ": " + cause.getMessage(),
+            cause
         );
     }
 }

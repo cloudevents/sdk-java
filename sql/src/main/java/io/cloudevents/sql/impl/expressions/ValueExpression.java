@@ -1,6 +1,9 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.impl.EvaluationExceptions;
+import io.cloudevents.sql.impl.LiteralUtils;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -14,7 +17,7 @@ public class ValueExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationContextImpl ctx, CloudEvent event) {
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, EvaluationExceptions exceptions) {
         return value;
     }
 

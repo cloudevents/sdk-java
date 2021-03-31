@@ -1,9 +1,9 @@
 package io.cloudevents.sql.impl;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Expression;
 import io.cloudevents.sql.Result;
-import io.cloudevents.sql.Runtime;
 
 public class ExpressionImpl implements Expression {
 
@@ -14,9 +14,9 @@ public class ExpressionImpl implements Expression {
     }
 
     @Override
-    public Result evaluate(Runtime runtime, CloudEvent event) {
-        EvaluationContextImpl ctx = new EvaluationContextImpl(runtime);
-        Object value = this.expressionInternal.evaluate(ctx, event);
-        return new EvaluationResult(value, ctx.getEvaluationExceptions());
+    public Result evaluate(EvaluationRuntime evaluationRuntime, CloudEvent event) {
+        EvaluationExceptions exceptions = new EvaluationExceptions();
+        Object value = this.expressionInternal.evaluate(evaluationRuntime, event, exceptions);
+        return new EvaluationResult(value, exceptions.getExceptions());
     }
 }

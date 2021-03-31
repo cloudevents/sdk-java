@@ -2,27 +2,18 @@ package io.cloudevents.sql.impl;
 
 import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationException;
-import io.cloudevents.sql.Runtime;
 import org.antlr.v4.runtime.misc.Interval;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EvaluationContextImpl implements EvaluationContext {
 
-    private final Runtime runtime;
+    private final Interval expressionInterval;
+    private final String expressionText;
+    private final EvaluationExceptions evaluationExceptions;
 
-    private Interval expressionInterval;
-    private String expressionText;
-    private List<EvaluationException> evaluationExceptions;
-
-    public EvaluationContextImpl(Runtime runtime) {
-        this.runtime = runtime;
-    }
-
-    @Override
-    public Runtime getRuntime() {
-        return this.runtime;
+    public EvaluationContextImpl(Interval expressionInterval, String expressionText, EvaluationExceptions evaluationExceptions) {
+        this.expressionInterval = expressionInterval;
+        this.expressionText = expressionText;
+        this.evaluationExceptions = evaluationExceptions;
     }
 
     @Override
@@ -37,23 +28,11 @@ public class EvaluationContextImpl implements EvaluationContext {
 
     @Override
     public void appendException(EvaluationException exception) {
-        if (this.evaluationExceptions == null) {
-            this.evaluationExceptions = new ArrayList<>();
-        }
-        this.evaluationExceptions.add(exception);
+        this.evaluationExceptions.appendException(exception);
     }
 
-    public EvaluationContextImpl setExpressionInterval(Interval expressionInterval) {
-        this.expressionInterval = expressionInterval;
-        return this;
-    }
-
-    public EvaluationContextImpl setExpressionText(String expressionText) {
-        this.expressionText = expressionText;
-        return this;
-    }
-
-    public List<EvaluationException> getEvaluationExceptions() {
-        return evaluationExceptions;
+    @Override
+    public void appendException(EvaluationException.EvaluationExceptionFactory exceptionFactory) {
+        this.evaluationExceptions.appendException(exceptionFactory.create(expressionInterval(), expressionText()));
     }
 }

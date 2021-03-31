@@ -30,4 +30,16 @@ public enum Type {
         return ANY;
     }
 
+    public static Type fromClass(Class<?> clazz) {
+        Objects.requireNonNull(clazz);
+        if (Integer.class.equals(clazz)) {
+            return INTEGER;
+        } else if (String.class.equals(clazz)) {
+            return STRING;
+        } else if (Boolean.class.equals(clazz)) {
+            return BOOLEAN;
+        }
+        return ANY;
+    }
+
 }
