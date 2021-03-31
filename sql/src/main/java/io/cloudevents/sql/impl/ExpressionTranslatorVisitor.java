@@ -174,7 +174,7 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
     }
 
     @Override
-    public ExpressionInternal visitFunctionInvocation(CESQLParserParser.FunctionInvocationContext ctx) {
+    public ExpressionInternal visitFunctionInvocationExpression(CESQLParserParser.FunctionInvocationExpressionContext ctx) {
         List<ExpressionInternal> parameters = ctx.functionParameterList().expression().stream()
             .map(this::visit)
             .collect(Collectors.toList());

@@ -59,19 +59,19 @@ public class CastingFunctionsTest {
     void stringFunction() {
         assertThat(Parser.parseDefault("STRING(TRUE)").evaluate(Data.V1_MIN))
             .isNotFailed()
-            .asInteger()
+            .asString()
             .isEqualTo("true");
         assertThat(Parser.parseDefault("STRING(FALSE)").evaluate(Data.V1_MIN))
             .isNotFailed()
-            .asInteger()
+            .asString()
             .isEqualTo("false");
         assertThat(Parser.parseDefault("STRING(1)").evaluate(Data.V1_MIN))
             .isNotFailed()
-            .asInteger()
+            .asString()
             .isEqualTo("1");
         assertThat(Parser.parseDefault("STRING(-1)").evaluate(Data.V1_MIN))
             .isNotFailed()
-            .asInteger()
+            .asString()
             .isEqualTo("-1");
         assertThat(Parser.parseDefault("STRING(\"ABC\")").evaluate(Data.V1_MIN))
             .isNotFailed()

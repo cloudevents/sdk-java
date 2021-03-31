@@ -102,13 +102,17 @@ public class StringBuiltinFunctionsTest {
             .asString()
             .isEqualTo("ab");
         assertThat(Parser.parseDefault("LEFT('abc', 10)").evaluate(Data.V1_MIN))
-            .hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION)
+            .isNotFailed()
             .asString()
             .isEqualTo("abc");
         assertThat(Parser.parseDefault("LEFT('', 0)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
             .isEqualTo("");
+        assertThat(Parser.parseDefault("LEFT('abc', -2)").evaluate(Data.V1_MIN))
+            .hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION)
+            .asString()
+            .isEqualTo("abc");
     }
 
     @Test
@@ -118,13 +122,17 @@ public class StringBuiltinFunctionsTest {
             .asString()
             .isEqualTo("bc");
         assertThat(Parser.parseDefault("RIGHT('abc', 10)").evaluate(Data.V1_MIN))
-            .hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION)
+            .isNotFailed()
             .asString()
             .isEqualTo("abc");
         assertThat(Parser.parseDefault("RIGHT('', 0)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
             .isEqualTo("");
+        assertThat(Parser.parseDefault("RIGHT('abc', -2)").evaluate(Data.V1_MIN))
+            .hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION)
+            .asString()
+            .isEqualTo("abc");
     }
 
     @Test
@@ -133,10 +141,14 @@ public class StringBuiltinFunctionsTest {
             .isNotFailed()
             .asString()
             .isEqualTo("bcde");
-        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 1)").evaluate(Data.V1_MIN))
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 2)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
             .isEqualTo("b");
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 1)").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEqualTo("");
         assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 10)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
