@@ -92,16 +92,13 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
         ExpressionInternal leftExpression = visit(ctx.expression(0));
         ExpressionInternal rightExpression = visit(ctx.expression(1));
 
-        MathBinaryExpression.Operation op;
         if (ctx.STAR() != null) {
-            op = MathBinaryExpression.Operation.MULTIPLICATION;
+            return new MultiplicationExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
         } else if (ctx.DIVIDE() != null) {
-            op = MathBinaryExpression.Operation.DIVISION;
+            return new DivisionExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
         } else {
-            op = MathBinaryExpression.Operation.MODULE;
+            return new ModuleExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
         }
-
-        return new MathBinaryExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, op);
     }
 
     @Override
@@ -109,14 +106,11 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
         ExpressionInternal leftExpression = visit(ctx.expression(0));
         ExpressionInternal rightExpression = visit(ctx.expression(1));
 
-        MathBinaryExpression.Operation op;
         if (ctx.PLUS() != null) {
-            op = MathBinaryExpression.Operation.SUM;
+            return new SumExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
         } else {
-            op = MathBinaryExpression.Operation.DIFFERENCE;
+            return new DifferenceExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
         }
-
-        return new MathBinaryExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, op);
     }
 
     @Override

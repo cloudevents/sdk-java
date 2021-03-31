@@ -36,7 +36,7 @@ public class NegateExpressionTest {
     @Test
     void invalidCast() {
         assertThat(Parser.parseDefault("-TRUE").evaluate(Data.V1_MIN))
-            .hasFailure(EvaluationException.Kind.INVALID_CAST)
+            .hasFailure(EvaluationException.ErrorKind.INVALID_CAST)
             .asInteger()
             .isEqualTo(0);
     }

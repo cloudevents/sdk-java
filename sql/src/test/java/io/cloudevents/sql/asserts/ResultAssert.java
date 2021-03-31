@@ -57,21 +57,21 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         return assertThat(this.actual.causes());
     }
 
-    public ResultAssert hasFailure(EvaluationException.Kind exceptionKind) {
+    public ResultAssert hasFailure(EvaluationException.ErrorKind exceptionErrorKind) {
         causes()
             .anySatisfy(ex ->
                 assertThat(ex.getKind())
-                    .isEqualTo(exceptionKind)
+                    .isEqualTo(exceptionErrorKind)
             );
 
         return this;
     }
 
-    public ResultAssert hasFailure(EvaluationException.Kind exceptionKind, String expression) {
+    public ResultAssert hasFailure(EvaluationException.ErrorKind exceptionErrorKind, String expression) {
         causes()
             .anySatisfy(ex -> {
                 assertThat(ex.getKind())
-                    .isEqualTo(exceptionKind);
+                    .isEqualTo(exceptionErrorKind);
                 assertThat(ex.getExpression())
                     .isEqualTo(expression);
             });

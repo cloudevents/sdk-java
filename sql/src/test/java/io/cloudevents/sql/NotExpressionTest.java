@@ -36,7 +36,7 @@ public class NotExpressionTest {
     @Test
     void invalidCast() {
         assertThat(Parser.parseDefault("NOT 10").evaluate(Data.V1_MIN))
-            .hasFailure(EvaluationException.Kind.INVALID_CAST)
+            .hasFailure(EvaluationException.ErrorKind.INVALID_CAST)
             .asBoolean()
             .isTrue();
     }

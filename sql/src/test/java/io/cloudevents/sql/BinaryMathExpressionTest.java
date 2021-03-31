@@ -29,11 +29,27 @@ public class BinaryMathExpressionTest {
     }
 
     @Test
+    void divisionByZeroReturnsInfinityAndFails() {
+        assertThat(Parser.parseDefault("5 / 0").evaluate(Data.V1_MIN))
+            .hasFailure(EvaluationException.ErrorKind.DIVISION_BY_ZERO)
+            .asInteger()
+            .isEqualTo(Integer.MAX_VALUE);
+    }
+
+    @Test
     void mod() {
         assertThat(Parser.parseDefault("5 % 2").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asInteger()
             .isEqualTo(1);
+    }
+
+    @Test
+    void modByZeroReturns0AndFails() {
+        assertThat(Parser.parseDefault("5 % 0").evaluate(Data.V1_MIN))
+            .hasFailure(EvaluationException.ErrorKind.DIVISION_BY_ZERO)
+            .asInteger()
+            .isEqualTo(0);
     }
 
     @Test
@@ -79,12 +95,12 @@ public class BinaryMathExpressionTest {
             .asInteger()
             .isEqualTo(8);
         assertThat(Parser.parseDefault("5 + TRUE").evaluate(Data.V1_MIN))
-            .hasFailure(EvaluationException.Kind.INVALID_CAST)
+            .hasFailure(EvaluationException.ErrorKind.INVALID_CAST)
             .asInteger()
             .isEqualTo(5);
 
         assertThat(Parser.parseDefault("'5avc4' + 10").evaluate(Data.V1_MIN))
-            .hasFailure(EvaluationException.Kind.INVALID_CAST)
+            .hasFailure(EvaluationException.ErrorKind.INVALID_CAST)
             .asInteger()
             .isEqualTo(10);
     }

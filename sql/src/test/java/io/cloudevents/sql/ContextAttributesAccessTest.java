@@ -43,7 +43,7 @@ public class ContextAttributesAccessTest {
             .build();
 
         assertThat(Parser.parseDefault("subject").evaluate(event))
-            .hasFailure(EvaluationException.Kind.MISSING_ATTRIBUTE)
+            .hasFailure(EvaluationException.ErrorKind.MISSING_ATTRIBUTE)
             .asString()
             .isEmpty();
     }
@@ -87,7 +87,7 @@ public class ContextAttributesAccessTest {
             .build();
 
         assertThat(Parser.parseDefault("myext").evaluate(event))
-            .hasFailure(EvaluationException.Kind.MISSING_ATTRIBUTE)
+            .hasFailure(EvaluationException.ErrorKind.MISSING_ATTRIBUTE)
             .asString()
             .isEmpty();
     }
