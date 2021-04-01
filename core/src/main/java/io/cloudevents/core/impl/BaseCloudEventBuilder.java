@@ -201,11 +201,11 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         if(name.length() > 20){
             return false;
         }
-        char[] chars = name.toCharArray();
-        for (char c : chars)
-            if (!isValidChar(c)) {
+        for(int i = 0; i < name.length(); i++) {
+            if (!isValidChar(name.charAt(i))) {
                 return false;
             }
+        }
         return true;
     }
 
