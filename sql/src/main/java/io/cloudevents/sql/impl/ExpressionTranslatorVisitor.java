@@ -147,16 +147,13 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
         ExpressionInternal leftExpression = visit(ctx.expression(0));
         ExpressionInternal rightExpression = visit(ctx.expression(1));
 
-        LogicalBinaryExpression.Operation op;
         if (ctx.AND() != null) {
-            op = LogicalBinaryExpression.Operation.AND;
+            return new AndExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
         } else if (ctx.OR() != null) {
-            op = LogicalBinaryExpression.Operation.OR;
+            return new OrExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
         } else {
-            op = LogicalBinaryExpression.Operation.XOR;
+            return new XorExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
         }
-
-        return new LogicalBinaryExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, op);
     }
 
     @Override

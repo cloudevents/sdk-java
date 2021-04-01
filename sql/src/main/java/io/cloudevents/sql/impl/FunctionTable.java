@@ -3,10 +3,8 @@ package io.cloudevents.sql.impl;
 import io.cloudevents.sql.Function;
 import io.cloudevents.sql.impl.functions.*;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FunctionTable {
@@ -27,7 +25,7 @@ public class FunctionTable {
                 new LeftFunction(),
                 new RightFunction(),
                 new SubstringFunction()
-            ).collect(Collectors.toList())
+            )
         );
     }
 
@@ -40,12 +38,16 @@ public class FunctionTable {
 
     private final Map<String, Functions> functions;
 
-    public FunctionTable(Collection<Function> functions) {
+    private FunctionTable(Stream<Function> functions) {
         this.functions = new HashMap<>();
         functions.forEach(this::addFunction);
     }
 
-    public Function resolve(String name, int args) throws IllegalStateException {
+    protected FunctionTable(FunctionTable functionTable) {
+        this(functionTable.getFunctions());
+    }
+
+    protected Function resolve(String name, int args) throws IllegalStateException {
         Functions fns = functions.get(name);
         if (fns == null) {
             return null;
@@ -54,12 +56,18 @@ public class FunctionTable {
         return fns.resolve(args);
     }
 
-    private void addFunction(Function function) throws IllegalArgumentException {
+    protected void addFunction(Function function) throws IllegalArgumentException {
         Functions fns = this.functions.computeIfAbsent(function.name(), v -> new Functions());
         fns.addFunction(function);
     }
 
-    private class Functions {
+    private Stream<Function> getFunctions() {
+        return functions.values()
+            .stream()
+            .flatMap(Functions::getFunctions);
+    }
+
+    private static class Functions {
         private final Map<Integer, Function> fixedArgsNumberFunctions;
         private Function variadicFunction;
 
@@ -107,6 +115,13 @@ public class FunctionTable {
                 "No functions with arity " + args + " found. Available functions: " +
                     fixedArgsNumberFunctions.values() + ((variadicFunction != null) ? " and variadic " + variadicFunction : "")
             );
+        }
+
+        private Stream<Function> getFunctions() {
+            if (variadicFunction == null) {
+                return fixedArgsNumberFunctions.values().stream();
+            }
+            return Stream.concat(fixedArgsNumberFunctions.values().stream(), Stream.of(variadicFunction));
         }
 
     }
