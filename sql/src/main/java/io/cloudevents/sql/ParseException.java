@@ -6,24 +6,24 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ParseException extends RuntimeException {
 
-    public enum Kind {
+    public enum ErrorKind {
         RECOGNITION_ERROR,
         PARSE_VALUE
     }
 
-    private final Kind kind;
+    private final ErrorKind errorKind;
     private final Interval interval;
     private final String expression;
 
-    protected ParseException(Kind kind, Interval interval, String expression, String message, Throwable cause) {
-        super(String.format("[%s at %d:%d `%s`] %s", kind.name(), interval.a, interval.b, expression, message), cause);
-        this.kind = kind;
+    protected ParseException(ErrorKind errorKind, Interval interval, String expression, String message, Throwable cause) {
+        super(String.format("[%s at %d:%d `%s`] %s", errorKind.name(), interval.a, interval.b, expression, message), cause);
+        this.errorKind = errorKind;
         this.interval = interval;
         this.expression = expression;
     }
 
-    public Kind getKind() {
-        return kind;
+    public ErrorKind getKind() {
+        return errorKind;
     }
 
     public Interval getInterval() {
@@ -36,7 +36,7 @@ public class ParseException extends RuntimeException {
 
     public static ParseException cannotParseValue(ParseTree node, Type target, Throwable cause) {
         return new ParseException(
-            Kind.PARSE_VALUE,
+            ErrorKind.PARSE_VALUE,
             node.getSourceInterval(),
             node.getText(),
             "Cannot parse to " + target.name() + ": " + cause.getMessage(),
@@ -46,7 +46,7 @@ public class ParseException extends RuntimeException {
 
     public static ParseException recognitionError(RecognitionException e, String msg) {
         return new ParseException(
-            Kind.RECOGNITION_ERROR,
+            ErrorKind.RECOGNITION_ERROR,
             new Interval(e.getOffendingToken().getStartIndex(), e.getOffendingToken().getStopIndex()),
             e.getOffendingToken().getText(),
             "Cannot parse: " + msg,

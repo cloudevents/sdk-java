@@ -11,8 +11,9 @@ public interface Parser {
      *
      * @param inputExpression input expression
      * @return the parsed expression
+     * @throws ParseException if the expression cannot be parsed
      */
-    static Expression parseDefault(String inputExpression) {
+    static Expression parseDefault(String inputExpression) throws ParseException {
         return ParserImpl.getInstance().parse(inputExpression);
     }
 

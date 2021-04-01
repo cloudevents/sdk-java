@@ -50,7 +50,9 @@ public class FunctionTable {
     protected Function resolve(String name, int args) throws IllegalStateException {
         Functions fns = functions.get(name);
         if (fns == null) {
-            return null;
+            throw new IllegalStateException(
+                "No function named '" + name + "' found. Available function names: " + functions.keySet()
+            );
         }
 
         return fns.resolve(args);
@@ -77,7 +79,14 @@ public class FunctionTable {
 
         public void addFunction(Function function) {
             if (function.isVariadic()) {
-                if (fixedArgsNumberFunctions.keySet().stream().max(Integer::compareTo).orElse(0) >= function.arity()) {
+                if (
+                    fixedArgsNumberFunctions
+                        .keySet()
+                        .stream()
+                        .max(Integer::compareTo)
+                        .map(maxArity -> maxArity >= function.arity())
+                        .orElse(false)
+                ) {
                     throw new IllegalArgumentException(
                         "You're trying to add a variadic function, but one function with the same name and arity greater or equal is already defined: " + function.name()
                     );

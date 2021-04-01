@@ -31,6 +31,17 @@ public class EvaluationRuntimeBuilderTest {
             .isNotFailed()
             .asBoolean()
             .isFalse();
+
+        assertThat(
+            Parser.parseDefault("MY_STRING_PREDICATE('abc', 'xyz')")
+                .evaluate(runtime, Data.V1_MIN)
+        )
+            .hasFailure(EvaluationException.ErrorKind.FUNCTION_DISPATCH);
+        assertThat(
+            Parser.parseDefault("MY_STRING_PR('abc', 'xyz')")
+                .evaluate(runtime, Data.V1_MIN)
+        )
+            .hasFailure(EvaluationException.ErrorKind.FUNCTION_DISPATCH);
     }
 
     @Test
@@ -109,7 +120,7 @@ public class EvaluationRuntimeBuilderTest {
     }
 
     @Test
-    void addVariadicFunctionFails() {
+    void cannotAddVariadicWithFixedArgsLowerThanMaxArgsOverload() {
         EvaluationRuntimeBuilder runtime = EvaluationRuntime.builder()
             .addFunction(new InfallibleOneArgumentFunction<>(
                 "MY_STRING_FN",
@@ -120,6 +131,16 @@ public class EvaluationRuntimeBuilderTest {
         assertThatThrownBy(() -> runtime.addFunction(
             new VariadicMockFunction("MY_STRING_FN", 0, Type.STRING)
         )).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> runtime.addFunction(
+            new VariadicMockFunction("MY_STRING_FN", 1, Type.STRING)
+        )).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void cannotAddTwoVariadicOverloads() {
+        EvaluationRuntimeBuilder runtime = EvaluationRuntime.builder()
+            .addFunction(new VariadicMockFunction("MY_STRING_FN", 0, Type.STRING));
+
         assertThatThrownBy(() -> runtime.addFunction(
             new VariadicMockFunction("MY_STRING_FN", 1, Type.STRING)
         )).isInstanceOf(IllegalArgumentException.class);
