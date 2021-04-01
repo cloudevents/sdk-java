@@ -23,7 +23,6 @@ import io.cloudevents.CloudEventData;
 import io.cloudevents.CloudEventExtension;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
-import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 
 import javax.annotation.Nonnull;
@@ -198,9 +197,6 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
      * @see <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
      */
     private static boolean isValidExtensionName(String name) {
-        if(name.length() > 20){
-            return false;
-        }
         char[] chars = name.toCharArray();
         for (char c : chars)
             if (!isValidChar(c)) {
