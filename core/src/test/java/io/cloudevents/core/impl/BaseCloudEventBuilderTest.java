@@ -1,14 +1,17 @@
 package io.cloudevents.core.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.extensions.DistributedTracingExtension;
 import io.cloudevents.core.test.Data;
+import org.junit.jupiter.api.Test;
 
 public class BaseCloudEventBuilderTest {
 
@@ -48,17 +51,23 @@ public class BaseCloudEventBuilderTest {
     }
 
     @Test
-    public void testLongExtensionName() {
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            CloudEvent cloudEvent = CloudEventBuilder.v1(Data.V1_WITH_JSON_DATA_WITH_EXT)
+    public void testLongExtensionNameV1() {
+        assertDoesNotThrow(() -> {
+            CloudEventBuilder.v1(Data.V1_WITH_JSON_DATA_WITH_EXT)
                 .withExtension("thisextensionnameistoolong", "")
                 .build();
         });
-        String expectedMessage = "Invalid extensions name: thisextensionnameistoolong";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
     }
+
+    @Test
+    public void testLongExtensionNameV03() {
+        assertDoesNotThrow(() -> {
+            CloudEventBuilder.v03(Data.V1_WITH_JSON_DATA_WITH_EXT)
+                .withExtension("thisextensionnameistoolong", "")
+                .build();
+        });
+    }
+
     @Test
     public void testInvalidExtensionName() {
         Exception exception = assertThrows(RuntimeException.class, () -> {
