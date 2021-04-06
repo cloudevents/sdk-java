@@ -29,15 +29,31 @@ public class StringBuiltinFunctionsTest {
 
     @Test
     void concatFunction() {
-        assertThat(Parser.parseDefault("CONCAT(',', 'a', 'b', 'c')").evaluate(Data.V1_MIN))
+        assertThat(Parser.parseDefault("CONCAT('a', 'b', 'c')").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
-            .isEqualTo("a,b,c");
-        assertThat(Parser.parseDefault("CONCAT(',')").evaluate(Data.V1_MIN))
+            .isEqualTo("abc");
+        assertThat(Parser.parseDefault("CONCAT()").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
             .isEmpty();
-        assertThat(Parser.parseDefault("CONCAT(',', 'a')").evaluate(Data.V1_MIN))
+        assertThat(Parser.parseDefault("CONCAT('a')").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEqualTo("a");
+    }
+
+    @Test
+    void concatWSFunction() {
+        assertThat(Parser.parseDefault("CONCAT_WS(',', 'a', 'b', 'c')").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEqualTo("a,b,c");
+        assertThat(Parser.parseDefault("CONCAT_WS(',')").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEmpty();
+        assertThat(Parser.parseDefault("CONCAT_WS(',', 'a')").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
             .isEqualTo("a");

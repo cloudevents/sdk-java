@@ -8,17 +8,18 @@ import io.cloudevents.sql.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConcatFunction extends BaseFunction {
+public class ConcatWSFunction extends BaseFunction {
 
-    public ConcatFunction() {
-        super("CONCAT");
+    public ConcatWSFunction() {
+        super("CONCAT_WS");
     }
 
     @Override
     public Object invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, List<Object> arguments) {
         return arguments.stream()
+            .skip(1)
             .map(o -> (String) o)
-            .collect(Collectors.joining());
+            .collect(Collectors.joining((String) arguments.get(0)));
     }
 
     @Override
@@ -28,7 +29,7 @@ public class ConcatFunction extends BaseFunction {
 
     @Override
     public int arity() {
-        return 0;
+        return 1;
     }
 
     @Override

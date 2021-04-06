@@ -19,6 +19,7 @@ public class FunctionTable {
                 new IsIntFunction(),
                 new InfallibleOneArgumentFunction<>("LENGTH", String.class, String::length),
                 new ConcatFunction(),
+                new ConcatWSFunction(),
                 new InfallibleOneArgumentFunction<>("LOWER", String.class, String::toLowerCase),
                 new InfallibleOneArgumentFunction<>("UPPER", String.class, String::toUpperCase),
                 new InfallibleOneArgumentFunction<>("TRIM", String.class, String::trim),
