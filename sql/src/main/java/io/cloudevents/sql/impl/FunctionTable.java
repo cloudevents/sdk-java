@@ -12,6 +12,7 @@ public class FunctionTable {
     private static class SingletonContainer {
         private final static FunctionTable INSTANCE = new FunctionTable(
             Stream.of(
+                new InfallibleOneArgumentFunction<>("ABS", Integer.class, Math::abs),
                 new IntFunction(),
                 new BoolFunction(),
                 new StringFunction(),
