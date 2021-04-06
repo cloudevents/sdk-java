@@ -26,7 +26,8 @@ public class FunctionTable {
                 new InfallibleOneArgumentFunction<>("TRIM", String.class, String::trim),
                 new LeftFunction(),
                 new RightFunction(),
-                new SubstringFunction()
+                new SubstringFunction(),
+                new SubstringWithLengthFunction()
             )
         );
     }

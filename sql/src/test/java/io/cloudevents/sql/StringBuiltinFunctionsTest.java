@@ -153,46 +153,61 @@ public class StringBuiltinFunctionsTest {
 
     @Test
     void substringFunction() {
-        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 5)").evaluate(Data.V1_MIN))
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
-            .isEqualTo("bcde");
-        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 2)").evaluate(Data.V1_MIN))
-            .isNotFailed()
-            .asString()
-            .isEqualTo("b");
-        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 1)").evaluate(Data.V1_MIN))
-            .isNotFailed()
-            .asString()
-            .isEqualTo("");
-        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 10)").evaluate(Data.V1_MIN))
+            .isEqualTo("abcdef");
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 2)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
             .isEqualTo("bcdef");
-        assertThat(Parser.parseDefault("SUBSTRING('abcdef', -1, 5)").evaluate(Data.V1_MIN))
+        assertThat(Parser.parseDefault("SUBSTRING('Quadratically', 5)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
-            .isEqualTo("abcde");
-        assertThat(Parser.parseDefault("SUBSTRING('abcdef', -1, 10)").evaluate(Data.V1_MIN))
+            .isEqualTo("ratically");
+        assertThat(Parser.parseDefault("SUBSTRING('Sakila', -3)").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEqualTo("ila");
+
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 1, 6)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
             .isEqualTo("abcdef");
-        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 0, 6)").evaluate(Data.V1_MIN))
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 2, 4)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
-            .isEqualTo("abcdef");
-        assertThat(Parser.parseDefault("SUBSTRING('', 0, 0)").evaluate(Data.V1_MIN))
+            .isEqualTo("bcde");
+        assertThat(Parser.parseDefault("SUBSTRING('Sakila', -5, 3)").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEqualTo("aki");
+
+        assertThat(Parser.parseDefault("SUBSTRING('Quadratically', 0)").evaluate(Data.V1_MIN))
             .isNotFailed()
             .asString()
             .isEmpty();
-        assertThat(Parser.parseDefault("SUBSTRING('abc', 0, -1)").evaluate(Data.V1_MIN))
+        assertThat(Parser.parseDefault("SUBSTRING('Quadratically', 0, 1)").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asString()
+            .isEmpty();
+
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 10)").evaluate(Data.V1_MIN))
             .hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION)
             .asString()
-            .isEqualTo("abc");
-        assertThat(Parser.parseDefault("SUBSTRING('abc', 3, 2)").evaluate(Data.V1_MIN))
+            .isEmpty();
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', -10)").evaluate(Data.V1_MIN))
             .hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION)
             .asString()
-            .isEqualTo("abc");
+            .isEmpty();
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', 10, 10)").evaluate(Data.V1_MIN))
+            .hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION)
+            .asString()
+            .isEmpty();
+        assertThat(Parser.parseDefault("SUBSTRING('abcdef', -10, 10)").evaluate(Data.V1_MIN))
+            .hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION)
+            .asString()
+            .isEmpty();
     }
 
 }
