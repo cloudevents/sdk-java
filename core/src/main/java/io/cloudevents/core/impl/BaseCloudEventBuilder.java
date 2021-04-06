@@ -197,11 +197,11 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
      * @see <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
      */
     private static boolean isValidExtensionName(String name) {
-        char[] chars = name.toCharArray();
-        for (char c : chars)
-            if (!isValidChar(c)) {
+        for(int i = 0; i < name.length(); i++) {
+            if (!isValidChar(name.charAt(i))) {
                 return false;
             }
+        }
         return true;
     }
 
