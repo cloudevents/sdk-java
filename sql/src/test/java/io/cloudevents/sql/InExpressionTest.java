@@ -73,4 +73,38 @@ public class InExpressionTest {
             .isFalse();
     }
 
+    @Test
+    void typeCoercion() {
+        assertThat(Parser.parseDefault("'true' IN (TRUE, 'false')").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asBoolean()
+            .isTrue();
+
+        assertThat(Parser.parseDefault("'true' IN ('TRUE', 'false')").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asBoolean()
+            .isFalse();
+
+        assertThat(Parser.parseDefault("TRUE IN ('true', 'false')").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asBoolean()
+            .isTrue();
+
+        // Note: STRING(TRUE) = 'true' lowercase!
+        assertThat(Parser.parseDefault("'TRUE' IN (TRUE, 'false')").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asBoolean()
+            .isFalse();
+
+        assertThat(Parser.parseDefault("1 IN ('1', '2')").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asBoolean()
+            .isTrue();
+
+        assertThat(Parser.parseDefault("'1' IN (1, 2)").evaluate(Data.V1_MIN))
+            .isNotFailed()
+            .asBoolean()
+            .isTrue();
+    }
+
 }
