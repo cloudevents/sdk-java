@@ -13,6 +13,12 @@ public interface Expression {
      */
     Result evaluate(EvaluationRuntime evaluationRuntime, CloudEvent event);
 
+    /**
+     * Evaluate the expression using the default runtime
+     *
+     * @param event the input event
+     * @return the evaluation result
+     */
     default Result evaluate(CloudEvent event) {
         return evaluate(EvaluationRuntimeImpl.getInstance(), event);
     }

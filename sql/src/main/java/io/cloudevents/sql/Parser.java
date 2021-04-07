@@ -4,10 +4,17 @@ import io.cloudevents.sql.impl.ParserImpl;
 
 public interface Parser {
 
-    Expression parse(String inputExpression);
+    /**
+     * Parse the expression
+     *
+     * @param inputExpression input expression
+     * @return the parsed expression
+     * @throws ParseException if the expression cannot be parsed
+     */
+    Expression parse(String inputExpression) throws ParseException;
 
     /**
-     * Parse with default parser instance
+     * Parse the expression with default parser instance
      *
      * @param inputExpression input expression
      * @return the parsed expression
