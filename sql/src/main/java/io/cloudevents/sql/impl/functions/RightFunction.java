@@ -17,7 +17,7 @@ public class RightFunction extends BaseTwoArgumentFunction<String, Integer> {
         }
         if (length < 0) {
             ctx.appendException(
-                EvaluationException.functionExecutionError("RIGHT", new IllegalArgumentException("The length of the RIGHT substring is lower than 0: " + length))
+                EvaluationException.functionExecutionError(name(), new IllegalArgumentException("The length of the RIGHT substring is lower than 0: " + length))
             );
             return s;
         }

@@ -17,7 +17,7 @@ public class LeftFunction extends BaseTwoArgumentFunction<String, Integer> {
         }
         if (length < 0) {
             ctx.appendException(
-                EvaluationException.functionExecutionError("LEFT", new IllegalArgumentException("The length of the LEFT substring is lower than 0: " + length))
+                EvaluationException.functionExecutionError(name(), new IllegalArgumentException("The length of the LEFT substring is lower than 0: " + length))
             );
             return s;
         }
