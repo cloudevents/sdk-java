@@ -11,7 +11,7 @@ Each test definition includes:
 
 * `name`: Name of the test case
 * `expression`: Expression to test.
-* `result`: Expected result (optional only if error is equal to `parse`). Can be a boolean, an integer or a string.
+* `result`: Expected result (optional). Can be a boolean, an integer or a string.
 * `error`: Expected error (optional). If absent, no error is expected.
 * `event`: Input event (optional). If present, this is a valid event serialized in JSON format. If absent, when testing
   the expression, any valid event can be passed.

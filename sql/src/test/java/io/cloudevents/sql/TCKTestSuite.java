@@ -67,9 +67,12 @@ public class TCKTestSuite {
 
         // Files to load
         Stream<String> tckFiles = Stream.of(
-            "binary_math_operators.yaml",
-            "binary_comparison_operators.yaml"
-        ).map(fileName -> "/tck/" + fileName);
+            "binary_math_operators",
+            "binary_logical_operators",
+            "binary_comparison_operators",
+            "case_sensitivity",
+            "casting_functions"
+        ).map(fileName -> "/tck/" + fileName + ".yaml");
 
         return DynamicTest.stream(
             tckFiles
@@ -118,9 +121,11 @@ public class TCKTestSuite {
 
         Result result = expression.evaluate(inputEvent);
 
-        assertThat(result)
-            .value()
-            .isEqualTo(testCase.result);
+        if (testCase.result != null) {
+            assertThat(result)
+                .value()
+                .isEqualTo(testCase.result);
+        }
 
         if (testCase.error == null) {
             assertThat(result)
