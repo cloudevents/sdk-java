@@ -33,7 +33,7 @@ public class BinaryMathExpressionTest {
         assertThat(Parser.parseDefault("5 / 0").evaluate(Data.V1_MIN))
             .hasFailure(EvaluationException.ErrorKind.DIVISION_BY_ZERO)
             .asInteger()
-            .isEqualTo(Integer.MAX_VALUE);
+            .isEqualTo(0);
     }
 
     @Test

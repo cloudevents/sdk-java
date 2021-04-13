@@ -18,7 +18,7 @@ public class DivisionExpression extends BaseIntegerBinaryExpression {
             exceptions.appendException(
                 EvaluationException.divisionByZero(expressionInterval(), expressionText(), left)
             );
-            return Integer.MAX_VALUE;
+            return 0;
         }
         return left / right;
     }
