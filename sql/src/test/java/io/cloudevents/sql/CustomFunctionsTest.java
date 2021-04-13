@@ -1,6 +1,7 @@
 package io.cloudevents.sql;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.sql.impl.EvaluationRuntimeBuilder;
 import io.cloudevents.sql.impl.functions.BaseFunction;
@@ -12,7 +13,7 @@ import java.util.List;
 import static io.cloudevents.sql.asserts.MyAssertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-public class EvaluationRuntimeBuilderTest {
+public class CustomFunctionsTest {
 
     @Test
     void addSimpleFunction() {
@@ -169,6 +170,33 @@ public class EvaluationRuntimeBuilderTest {
                 s -> s % 2 == 0
             )
         )).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void customFunctionSpecTest() {
+        EvaluationRuntime runtime = EvaluationRuntime.builder()
+            .addFunction(new InfallibleOneArgumentFunction<>(
+                "MY_STRING_PREDICATE",
+                String.class,
+                s -> s.length() % 2 == 0
+            ))
+            .build();
+
+        CloudEvent event = CloudEventBuilder.v1()
+            .withId(Data.ID)
+            .withSource(Data.SOURCE)
+            .withType(Data.TYPE)
+            .withExtension("sequence", "12")
+            .build();
+
+        assertThat(
+            Parser.parseDefault("MY_STRING_PREDICATE(sequence + 10)")
+                .evaluate(runtime, event)
+        )
+            .isNotFailed()
+            .asBoolean()
+            .isTrue();
+
     }
 
     private static class VariadicMockFunction extends BaseFunction {
