@@ -6,9 +6,12 @@ import io.cloudevents.sql.Parser;
 import io.cloudevents.sql.generated.CESQLParserLexer;
 import io.cloudevents.sql.generated.CESQLParserParser;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
 public class ParserImpl implements Parser {
@@ -39,13 +42,24 @@ public class ParserImpl implements Parser {
 
         List<ParseException> parseExceptionList = new ArrayList<>();
         parser.removeErrorListeners();
-        parser.addErrorListener(new ConsoleErrorListener() {
+        parser.addErrorListener(new ANTLRErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
                 parseExceptionList.add(
                     ParseException.recognitionError(e, msg)
                 );
+            }
+
+            @Override
+            public void reportAmbiguity(org.antlr.v4.runtime.Parser recognizer, DFA dfa, int startIndex, int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
+            }
+
+            @Override
+            public void reportAttemptingFullContext(org.antlr.v4.runtime.Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet conflictingAlts, ATNConfigSet configs) {
+            }
+
+            @Override
+            public void reportContextSensitivity(org.antlr.v4.runtime.Parser recognizer, DFA dfa, int startIndex, int stopIndex, int prediction, ATNConfigSet configs) {
             }
         });
 

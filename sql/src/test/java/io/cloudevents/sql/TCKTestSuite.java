@@ -71,7 +71,18 @@ public class TCKTestSuite {
             "binary_logical_operators",
             "binary_comparison_operators",
             "case_sensitivity",
-            "casting_functions"
+            "casting_functions",
+            "context_attributes_access",
+            "exists_expression",
+            "in_expression",
+            "like_expression",
+            "literals",
+            "negate_operator",
+            "not_operator",
+            "parse_errors",
+            "spec_examples",
+            "string_builtin_functions",
+            "sub_expression"
         ).map(fileName -> "/tck/" + fileName + ".yaml");
 
         return DynamicTest.stream(
@@ -97,6 +108,7 @@ public class TCKTestSuite {
         if (testCase.error == Error.PARSE) {
             assertThatCode(() -> parser.parse(testCase.expression))
                 .isInstanceOf(ParseException.class);
+            return;
         }
 
         CloudEvent inputEvent = (testCase.event == null) ? Data.V1_MIN : testCase.event;

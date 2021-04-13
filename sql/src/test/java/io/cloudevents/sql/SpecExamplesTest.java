@@ -146,6 +146,7 @@ public class SpecExamplesTest {
             .isTrue();
     }
 
+    //TODO don't remove this one!
     @Test
     void customFunction() {
         EvaluationRuntime runtime = EvaluationRuntime.builder()

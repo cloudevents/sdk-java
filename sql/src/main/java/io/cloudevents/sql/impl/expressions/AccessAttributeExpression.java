@@ -12,7 +12,7 @@ public class AccessAttributeExpression extends BaseExpression {
 
     public AccessAttributeExpression(Interval expressionInterval, String expressionText, String key) {
         super(expressionInterval, expressionText);
-        this.key = key;
+        this.key = key.toLowerCase();
     }
 
     @Override

@@ -12,7 +12,7 @@ public class ExistsExpression extends BaseExpression {
 
     public ExistsExpression(Interval expressionInterval, String expressionText, String key) {
         super(expressionInterval, expressionText);
-        this.key = key;
+        this.key = key.toLowerCase();
     }
 
     @Override

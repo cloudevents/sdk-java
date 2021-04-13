@@ -92,6 +92,8 @@ public class ContextAttributesAccessTest {
             .isEmpty();
     }
 
+
+    // TODO Don't remove this one!!!
     @Test
     void typeCohercion() {
         CloudEvent event = CloudEventBuilder.v1()
