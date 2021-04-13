@@ -50,7 +50,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     public ObjectAssert<Object> value() {
         isNotNull();
-        return assertThat(this.actual);
+        return assertThat(this.actual.value());
     }
 
     public IterableAssert<EvaluationException> causes() {
