@@ -67,8 +67,9 @@ public class TCKTestSuite {
 
         // Files to load
         Stream<String> tckFiles = Stream.of(
-            "/tck/binary_math_expression.yaml"
-        );
+            "binary_math_operators.yaml",
+            "binary_comparison_operators.yaml"
+        ).map(fileName -> "/tck/" + fileName);
 
         return DynamicTest.stream(
             tckFiles
