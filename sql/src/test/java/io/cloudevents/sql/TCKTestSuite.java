@@ -75,6 +75,7 @@ public class TCKTestSuite {
             "context_attributes_access",
             "exists_expression",
             "in_expression",
+            "integer_builtin_functions",
             "like_expression",
             "literals",
             "negate_operator",
