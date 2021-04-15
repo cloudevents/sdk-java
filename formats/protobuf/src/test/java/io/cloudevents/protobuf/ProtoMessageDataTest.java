@@ -23,22 +23,20 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
+import java.math.BigDecimal;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import io.cloudevents.test.v1.proto.Test.Quote;
 import io.cloudevents.test.v1.proto.Test.Decimal;
 
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.math.BigDecimal;
-import java.net.URI;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests to verify appropriate handling of protobuf message data.
  *
  */
 public class ProtoMessageDataTest {
-
     EventFormat protoFormat = new ProtobufFormat();
 
     @Test
@@ -46,18 +44,16 @@ public class ProtoMessageDataTest {
         Quote aQuote = makeQuote();
 
         CloudEventData ced = ProtoCloudEventData.wrap(aQuote);
-
-        assertNotNull(ced);
-        assertNotNull(ced.toBytes());
-        assertTrue(ced instanceof ProtoCloudEventData);
+        assertThat(ced).isNotNull();
+        assertThat(ced.toBytes()).isNotNull();
+        assertThat(ced).isInstanceOf(ProtoCloudEventData.class);
 
         ProtoCloudEventData pced = (ProtoCloudEventData) ced;
-        assertNotNull(pced.getMessage());
+        assertThat(pced.getMessage()).isNotNull();
     }
 
     @Test
-    public void verifyMessage() {
-
+    public void verifyMessage() throws InvalidProtocolBufferException {
         // Create the busines event data
         Quote pyplQuote = makeQuote();
 
@@ -73,8 +69,8 @@ public class ProtoMessageDataTest {
         byte[] raw = protoFormat.serialize(cloudEvent);
 
         // Sanity.
-        assertNotNull(raw);
-        assertTrue(raw.length > 0);
+        assertThat(raw).isNotNull();
+        assertThat(raw).hasSizeGreaterThan(0);
 
         // Now deserialize the event -----------------------------------------
         CloudEvent newCloudEvent = protoFormat.deserialize(raw);
@@ -83,33 +79,22 @@ public class ProtoMessageDataTest {
         CloudEventData eventData = newCloudEvent.getData();
 
         // Sanity
-        assertNotNull(eventData);
-        assertNotNull(eventData instanceof ProtoCloudEventData);
+        assertThat(eventData).isNotNull();
+        assertThat(eventData).isInstanceOf(ProtoCloudEventData.class);
 
         Message newMessage = ((ProtoCloudEventData) eventData).getMessage();
-        assertNotNull(newMessage);
-        assertTrue(newMessage instanceof Any);
+        assertThat(newMessage).isNotNull();
+        assertThat(newMessage).isInstanceOf(Any.class);
 
-        try {
-
-            // Hydrate the data - maybe there's a cleaner way to do this.
-            Quote newQuote = ((Any) newMessage).unpack(Quote.class);
-
-            assertThat(newQuote).ignoringRepeatedFieldOrder().isEqualTo(pyplQuote);
-
-        } catch (InvalidProtocolBufferException e) {
-            fail(e.getMessage());
-        }
-
-
+        // Hydrate the data - maybe there's a cleaner way to do this.
+        Quote newQuote = ((Any) newMessage).unpack(Quote.class);
+        assertThat(newQuote).ignoringRepeatedFieldOrder().isEqualTo(pyplQuote);
     }
 
     // -----------------------------------------------
 
     private Decimal makeDecimal(BigDecimal value) {
-
         Decimal.Builder builder = Decimal.newBuilder();
-
         builder.setUnscaled(value.unscaledValue().longValue());
         builder.setScale(value.scale());
 
@@ -117,9 +102,7 @@ public class ProtoMessageDataTest {
     }
 
     private Quote makeQuote() {
-
         Quote.Builder builder = Quote.newBuilder();
-
         builder.setSymbol("PYPL");
         builder.setPrice(makeDecimal(new BigDecimal("254.20")));
         builder.setVolume(7132000);

@@ -31,6 +31,7 @@ import io.cloudevents.v1.proto.CloudEvent.CloudEventAttributeValue;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.Map.Entry;
@@ -86,8 +87,7 @@ class ProtoDeserializer implements CloudEventReader {
                     break;
                 case CE_TIMESTAMP:
                     com.google.protobuf.Timestamp timestamp = val.getCeTimestamp();
-                    Instant instant = Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
-                    writer.withContextAttribute(name, instant.atOffset(ZoneOffset.UTC));
+                    writer.withContextAttribute(name, covertProtoTimestamp(timestamp));
                     break;
                 case ATTR_NOT_SET:
                     // In the case of an unset attribute, (where they built the object but didn't put anything in it),
@@ -121,6 +121,17 @@ class ProtoDeserializer implements CloudEventReader {
             return writer.end();
         }
 
+    }
+
+    /**
+     * Convert a {@link com.google.protobuf.Timestamp} to a {@link OffsetDateTime}. Note that protobuf timestamps are assumed
+     * to be in UTC time, so the resulting OffsetDateTime will also be.
+     * @param timestamp The timestamp to convert
+     * @return An OffsetDateTime representing the input protobuf timestamp
+     */
+    private OffsetDateTime covertProtoTimestamp(com.google.protobuf.Timestamp timestamp) {
+        Instant instant = Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
+        return instant.atOffset(ZoneOffset.UTC);
     }
 
     private static class ProtoAccessor implements ProtoCloudEventData {

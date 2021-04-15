@@ -18,9 +18,13 @@ package io.cloudevents.protobuf;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.v1.proto.CloudEvent;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -32,8 +36,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
 import static io.cloudevents.core.test.Data.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ProtobufFormatTest {
 
@@ -43,8 +46,26 @@ class ProtobufFormatTest {
     public void testRegistration() {
         EventFormat act = EventFormatProvider.getInstance().resolveFormat("application/cloudevents+protobuf");
 
-        assertNotNull(act);
-        assertTrue(act instanceof ProtobufFormat);
+        assertThat(act).isNotNull();
+        assertThat(act).isInstanceOf(ProtobufFormat.class);
+    }
+
+    @Test
+    public void testDateConversionsDifferentTimezones() {
+        ProtobufFormat format = new ProtobufFormat();
+        OffsetDateTime inputTime = OffsetDateTime.now(ZoneId.of("America/Los_Angeles"));
+        final io.cloudevents.CloudEvent input = CloudEventBuilder.v1()
+            .withId("foo")
+            .withType("test")
+            .withSource(URI.create("test"))
+            .withTime(inputTime)
+            .build();
+
+        io.cloudevents.CloudEvent output = format.deserialize(format.serialize(input));
+        final OffsetDateTime outputTime = output.getTime();
+        // assertj compares that the instants underneath the dates are equal, i.e. occurred
+        // at the same time on the timeline, regardless of offset.
+        assertThat(outputTime).isEqualTo(inputTime);
     }
 
     @ParameterizedTest
@@ -90,14 +111,14 @@ class ProtobufFormatTest {
         io.cloudevents.CloudEvent expEvent = format.deserialize(rawData);
 
         // Sanity
-        assertNotNull(expEvent);
+        assertThat(expEvent).isNotNull();
 
         // Serialise it back out.
         byte[] raw = format.serialize(expEvent);
 
         // Sanity
-        assertNotNull(raw);
-        assertTrue(raw.length > 0);
+        assertThat(raw).isNotNull();
+        assertThat(raw).hasSizeGreaterThan(0);
 
         // Now read it back
         CloudEvent newProto = CloudEvent.parseFrom(raw);
@@ -148,19 +169,12 @@ class ProtobufFormatTest {
     private static Reader getReader(String filename) throws IOException {
 
         URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
+        assertThat(file).isNotNull();
         File dataFile = new File(file.getFile());
         return new FileReader(dataFile);
     }
 
-    private InputStream getInputStream(String filename) throws IOException {
-
-        URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
-        File dataFile = new File(file.getFile());
-        return new FileInputStream(dataFile);
-    }
-
     private byte[] getProtoData(String filename) throws IOException {
-
         Message m = loadProto(filename);
         return m.toByteArray();
     }

@@ -199,7 +199,7 @@ class ProtoSerializer {
         public CloudEventContextWriter withContextAttribute(String name, Number value)
             throws CloudEventRWException {
 
-            // @TODO - Future Cleanup
+            // TODO - Future Cleanup
             if (value instanceof Integer) {
                 return withContextAttribute(name, (Integer) value);
             } else {
