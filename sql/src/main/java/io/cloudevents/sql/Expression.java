@@ -4,8 +4,6 @@ import io.cloudevents.CloudEvent;
 
 /**
  * This class represents a parsed expression, ready to be executed.
- *
- * <p>
  * <p>
  * You can execute the Expression in one of the two modes, depending on your use case:
  *
@@ -13,11 +11,9 @@ import io.cloudevents.CloudEvent;
  *    <li>Use {@link #evaluate(EvaluationRuntime, CloudEvent)} to evaluate the expression without interrupting on the first error. The returned {@link Result} will contain a non-null evaluation result and, eventually, one or more failures</li>
  *    <li>Use {@link #tryEvaluate(EvaluationRuntime, CloudEvent)} to evaluate the expression, failing as soon as an error happens. This function either returns the evaluation result, or throws an exception with the first evaluation error.</li>
  * </ul>
- * <p>
+ *
  * The former approach gives more flexibility and allows to implement proper error handling,
  * while the latter is generally faster, because as soon as a failure happens the execution is interrupted.
- *
- * <p>
  * <p>
  * The execution of an {@link Expression} is thread safe, in the sense that no state is shared with other {@link Expression} and it doesn't mutate the state of {@link EvaluationRuntime}.
  */
