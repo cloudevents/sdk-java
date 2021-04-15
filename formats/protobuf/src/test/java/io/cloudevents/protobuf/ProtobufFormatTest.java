@@ -22,6 +22,10 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.v1.proto.CloudEvent;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -30,7 +34,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.*;
 import java.net.URL;
 import java.util.stream.Stream;
 
@@ -103,7 +106,6 @@ class ProtobufFormatTest {
     @ParameterizedTest
     @MethodSource("roundTripTestArguments")
     public void roundTripTest(String filename) throws IOException {
-
         // Load the source (expected) raw proto wire represention.
         byte[] rawData = getProtoData(filename);
 
@@ -124,7 +126,6 @@ class ProtobufFormatTest {
         CloudEvent newProto = CloudEvent.parseFrom(raw);
 
         // Now hopefully these will match
-
         CloudEvent expectedProto = CloudEvent.parseFrom(rawData);
         assertThat(newProto).ignoringRepeatedFieldOrder().isEqualTo(expectedProto);
 
@@ -160,14 +161,12 @@ class ProtobufFormatTest {
     // ----------------------------------------------------------------
 
     private static Message loadProto(String filename) throws IOException {
-
         CloudEvent.Builder b = CloudEvent.newBuilder();
         JsonFormat.parser().ignoringUnknownFields().merge(getReader(filename), b);
         return b.build();
     }
 
     private static Reader getReader(String filename) throws IOException {
-
         URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
         assertThat(file).isNotNull();
         File dataFile = new File(file.getFile());

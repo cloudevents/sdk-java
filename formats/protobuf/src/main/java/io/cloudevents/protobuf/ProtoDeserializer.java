@@ -33,16 +33,12 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.Base64;
 import java.util.Map.Entry;
 
 /**
  * Implements a {@link CloudEventReader} that can deserialize a {@link CloudEvent} protobuf representation;
  */
 class ProtoDeserializer implements CloudEventReader {
-
-    private static final Base64.Encoder base64Encoder = Base64.getEncoder();
-
     private final CloudEvent protoCe;
 
     public ProtoDeserializer(CloudEvent protoCe) {

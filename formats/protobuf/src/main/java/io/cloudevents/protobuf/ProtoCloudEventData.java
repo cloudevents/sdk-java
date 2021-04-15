@@ -32,11 +32,11 @@ public interface ProtoCloudEventData extends CloudEventData {
     Message getMessage();
 
     /**
-     * Convienience helper to wrap a Protobuf Message as
+     * Convenience helper to wrap a Protobuf Message as
      * CloudEventData.
      *
-     * @param protoMessage
-     * @return
+     * @param protoMessage The message to wrap
+     * @return The wrapping CloudEventData
      */
     static CloudEventData wrap(Message protoMessage) {
         return new ProtoDataWrapper(protoMessage);

@@ -28,7 +28,6 @@ import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
-import io.cloudevents.rw.CloudEventRWException.CloudEventRWExceptionKind;
 import io.cloudevents.rw.CloudEventWriter;
 import io.cloudevents.v1.proto.CloudEvent;
 import io.cloudevents.v1.proto.CloudEvent.*;
