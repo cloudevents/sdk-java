@@ -56,12 +56,46 @@ public class TCKTestSuite {
         public CloudEvent event;
         public Map<String, Object> eventOverrides;
         public Error error;
+
+        public CloudEvent getTestInputEvent() {
+            CloudEvent inputEvent = (this.event == null) ? Data.V1_MIN : this.event;
+            if (this.eventOverrides != null) {
+                CloudEventBuilder builder = CloudEventBuilder.from(inputEvent);
+                this.eventOverrides.forEach((k, v) -> {
+                    if (v instanceof String) {
+                        builder.withContextAttribute(k, (String) v);
+                    } else if (v instanceof Boolean) {
+                        builder.withContextAttribute(k, (Boolean) v);
+                    } else if (v instanceof Number) {
+                        builder.withContextAttribute(k, ((Number) v).intValue());
+                    } else {
+                        throw new IllegalArgumentException("Unexpected event override attribute '" + k + "' type: " + v.getClass());
+                    }
+                });
+                inputEvent = builder.build();
+            }
+            return inputEvent;
+        }
+
+        public EvaluationException.ErrorKind getEvaluationExceptionErrorKind() {
+            switch (this.error) {
+                case CAST:
+                    return EvaluationException.ErrorKind.INVALID_CAST;
+                case MATH:
+                    return EvaluationException.ErrorKind.DIVISION_BY_ZERO;
+                case MISSING_FUNCTION:
+                    return EvaluationException.ErrorKind.FUNCTION_DISPATCH;
+                case MISSING_ATTRIBUTE:
+                    return EvaluationException.ErrorKind.MISSING_ATTRIBUTE;
+                case FUNCTION_EVALUATION:
+                    return EvaluationException.ErrorKind.FUNCTION_EXECUTION;
+            }
+            return null;
+        }
+
     }
 
-    @TestFactory
-    Stream<DynamicTest> tckTests() {
-        Parser parser = new ParserImpl();
-
+    public Stream<Map.Entry<String, TestCaseModel>> tckTestCases() {
         ObjectMapper mapper = new YAMLMapper();
         mapper.registerModule(JsonFormat.getCloudEventJacksonModule());
 
@@ -86,25 +120,43 @@ public class TCKTestSuite {
             "sub_expression"
         ).map(fileName -> "/tck/" + fileName + ".yaml");
 
+        return tckFiles
+            .map(fileName -> {
+                try {
+                    return mapper.readValue(this.getClass().getResource(fileName), TestSuiteModel.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            })
+            .filter(Objects::nonNull)
+            .flatMap(m -> m.tests.stream().map(tc -> new AbstractMap.SimpleImmutableEntry<>(m.name + ": " + tc.name, tc)));
+    }
+
+    @TestFactory
+    Stream<DynamicTest> evaluate() {
+        Parser parser = new ParserImpl();
+
         return DynamicTest.stream(
-            tckFiles
-                .map(fileName -> {
-                    try {
-                        return mapper.readValue(this.getClass().getResource(fileName), TestSuiteModel.class);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .flatMap(m -> m.tests.stream().map(tc -> new AbstractMap.SimpleImmutableEntry<>(m.name + ": " + tc.name, tc))),
+            tckTestCases(),
             Map.Entry::getKey,
-            tcEntry -> executeTestCase(parser, tcEntry.getValue())
+            tcEntry -> evaluateTestCase(parser, tcEntry.getValue())
+        );
+    }
+
+    @TestFactory
+    Stream<DynamicTest> tryEvaluate() {
+        Parser parser = new ParserImpl();
+
+        return DynamicTest.stream(
+            tckTestCases(),
+            Map.Entry::getKey,
+            tcEntry -> tryEvaluateTestCase(parser, tcEntry.getValue())
         );
 
     }
 
-    public void executeTestCase(Parser parser, TestCaseModel testCase) throws Exception {
+    public void evaluateTestCase(Parser parser, TestCaseModel testCase) throws Exception {
         // Assert parse errors
         if (testCase.error == Error.PARSE) {
             assertThatCode(() -> parser.parse(testCase.expression))
@@ -112,27 +164,10 @@ public class TCKTestSuite {
             return;
         }
 
-        CloudEvent inputEvent = (testCase.event == null) ? Data.V1_MIN : testCase.event;
-        if (testCase.eventOverrides != null) {
-            CloudEventBuilder builder = CloudEventBuilder.from(inputEvent);
-            testCase.eventOverrides.forEach((k, v) -> {
-                if (v instanceof String) {
-                    builder.withContextAttribute(k, (String) v);
-                } else if (v instanceof Boolean) {
-                    builder.withContextAttribute(k, (Boolean) v);
-                } else if (v instanceof Number) {
-                    builder.withContextAttribute(k, ((Number) v).intValue());
-                } else {
-                    throw new IllegalArgumentException("Unexpected event override attribute '" + k + "' type: " + v.getClass());
-                }
-            });
-            inputEvent = builder.build();
-        }
-
         Expression expression = parser.parse(testCase.expression);
         assertThat(expression).isNotNull();
 
-        Result result = expression.evaluate(inputEvent);
+        Result result = expression.evaluate(testCase.getTestInputEvent());
 
         if (testCase.result != null) {
             assertThat(result)
@@ -143,26 +178,33 @@ public class TCKTestSuite {
         if (testCase.error == null) {
             assertThat(result)
                 .isNotFailed();
+        } else {
+            assertThat(result)
+                .hasFailure(testCase.getEvaluationExceptionErrorKind());
+        }
+    }
+
+    public void tryEvaluateTestCase(Parser parser, TestCaseModel testCase) throws Exception {
+        // Assert parse errors
+        if (testCase.error == Error.PARSE) {
+            assertThatCode(() -> parser.parse(testCase.expression))
+                .isInstanceOf(ParseException.class);
             return;
         }
-        switch (testCase.error) {
-            case CAST:
-                assertThat(result).hasFailure(EvaluationException.ErrorKind.INVALID_CAST);
-                break;
-            case MATH:
-                assertThat(result).hasFailure(EvaluationException.ErrorKind.DIVISION_BY_ZERO);
-                break;
-            case MISSING_FUNCTION:
-                assertThat(result).hasFailure(EvaluationException.ErrorKind.FUNCTION_DISPATCH);
-                break;
-            case MISSING_ATTRIBUTE:
-                assertThat(result).hasFailure(EvaluationException.ErrorKind.MISSING_ATTRIBUTE);
-                break;
-            case FUNCTION_EVALUATION:
-                assertThat(result).hasFailure(EvaluationException.ErrorKind.FUNCTION_EXECUTION);
-                break;
-        }
 
+        Expression expression = parser.parse(testCase.expression);
+        assertThat(expression).isNotNull();
+
+        if (testCase.error != null) {
+            assertThatCode(() -> expression.tryEvaluate(testCase.getTestInputEvent()))
+                .isInstanceOf(EvaluationException.class)
+                .extracting(t -> ((EvaluationException) t).getKind())
+                .isEqualTo(testCase.getEvaluationExceptionErrorKind());
+        } else {
+            assertThat(
+                expression.tryEvaluate(testCase.getTestInputEvent())
+            ).isEqualTo(testCase.result);
+        }
     }
 
 }

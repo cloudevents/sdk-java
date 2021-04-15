@@ -1,7 +1,7 @@
 package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.EvaluationExceptions;
+import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
@@ -12,7 +12,7 @@ public class OrExpression extends BaseBinaryExpression {
     }
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, EvaluationExceptions exceptions) {
+    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         boolean x = castToBoolean(runtime, exceptions, left);
         if (x) {
             // Short circuit

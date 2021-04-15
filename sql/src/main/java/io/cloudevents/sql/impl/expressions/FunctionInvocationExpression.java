@@ -5,7 +5,7 @@ import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Function;
 import io.cloudevents.sql.impl.EvaluationContextImpl;
-import io.cloudevents.sql.impl.EvaluationExceptions;
+import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
@@ -24,12 +24,12 @@ public class FunctionInvocationExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, EvaluationExceptions exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower exceptions) {
         Function function;
         try {
             function = runtime.resolveFunction(functionName, arguments.size());
         } catch (Exception e) {
-            exceptions.appendException(
+            exceptions.throwException(
                 EvaluationException.cannotDispatchFunction(expressionInterval(), expressionText(), functionName, e)
             );
             return "";

@@ -1,7 +1,7 @@
 package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.EvaluationExceptions;
+import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
@@ -12,7 +12,7 @@ public class XorExpression extends BaseBinaryExpression {
     }
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, EvaluationExceptions exceptions) {
+    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         return Boolean.logicalXor(
             castToBoolean(runtime, exceptions, left),
             castToBoolean(runtime, exceptions, right)

@@ -3,7 +3,7 @@ package io.cloudevents.sql.impl.expressions;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Type;
 import io.cloudevents.sql.impl.EvaluationContextImpl;
-import io.cloudevents.sql.impl.EvaluationExceptions;
+import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
@@ -27,7 +27,7 @@ public abstract class BaseExpression implements ExpressionInternal {
         return this.expressionText;
     }
 
-    public Boolean castToBoolean(EvaluationRuntime runtime, EvaluationExceptions exceptions, Object value) {
+    public Boolean castToBoolean(EvaluationRuntime runtime, ExceptionThrower exceptions, Object value) {
         return (Boolean) runtime.cast(
             new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
             value,
@@ -35,7 +35,7 @@ public abstract class BaseExpression implements ExpressionInternal {
         );
     }
 
-    public Integer castToInteger(EvaluationRuntime runtime, EvaluationExceptions exceptions, Object value) {
+    public Integer castToInteger(EvaluationRuntime runtime, ExceptionThrower exceptions, Object value) {
         return (Integer) runtime.cast(
             new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
             value,
@@ -43,7 +43,7 @@ public abstract class BaseExpression implements ExpressionInternal {
         );
     }
 
-    public String castToString(EvaluationRuntime runtime, EvaluationExceptions exceptions, Object value) {
+    public String castToString(EvaluationRuntime runtime, ExceptionThrower exceptions, Object value) {
         return (String) runtime.cast(
             new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
             value,

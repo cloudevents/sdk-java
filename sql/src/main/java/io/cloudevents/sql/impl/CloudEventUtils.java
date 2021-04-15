@@ -16,7 +16,7 @@ public final class CloudEventUtils {
         return event.getAttributeNames().contains(key) || event.getExtensionNames().contains(key);
     }
 
-    public static Object accessContextAttribute(EvaluationExceptions exceptions, Interval interval, String expression, CloudEvent event, String key) {
+    public static Object accessContextAttribute(ExceptionThrower exceptions, Interval interval, String expression, CloudEvent event, String key) {
         // TODO do we have a better solution to access attributes here?
         Object value;
         try {
@@ -25,7 +25,7 @@ public final class CloudEventUtils {
             value = event.getExtension(key);
         }
         if (value == null) {
-            exceptions.appendException(
+            exceptions.throwException(
                 EvaluationException.missingAttribute(interval, expression, key)
             );
             value = "";

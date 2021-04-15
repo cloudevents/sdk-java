@@ -8,12 +8,12 @@ public class EvaluationContextImpl implements EvaluationContext {
 
     private final Interval expressionInterval;
     private final String expressionText;
-    private final EvaluationExceptions evaluationExceptions;
+    private final ExceptionThrower exceptionThrower;
 
-    public EvaluationContextImpl(Interval expressionInterval, String expressionText, EvaluationExceptions evaluationExceptions) {
+    public EvaluationContextImpl(Interval expressionInterval, String expressionText, ExceptionThrower exceptionThrower) {
         this.expressionInterval = expressionInterval;
         this.expressionText = expressionText;
-        this.evaluationExceptions = evaluationExceptions;
+        this.exceptionThrower = exceptionThrower;
     }
 
     @Override
@@ -28,11 +28,11 @@ public class EvaluationContextImpl implements EvaluationContext {
 
     @Override
     public void appendException(EvaluationException exception) {
-        this.evaluationExceptions.appendException(exception);
+        this.exceptionThrower.throwException(exception);
     }
 
     @Override
     public void appendException(EvaluationException.EvaluationExceptionFactory exceptionFactory) {
-        this.evaluationExceptions.appendException(exceptionFactory.create(expressionInterval(), expressionText()));
+        this.exceptionThrower.throwException(exceptionFactory.create(expressionInterval(), expressionText()));
     }
 }

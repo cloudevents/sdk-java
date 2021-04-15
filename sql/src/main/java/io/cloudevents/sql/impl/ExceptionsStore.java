@@ -5,21 +5,22 @@ import io.cloudevents.sql.EvaluationException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EvaluationExceptions {
+class ExceptionsStore implements ExceptionThrower {
 
     private List<EvaluationException> exceptions;
 
-    public EvaluationExceptions() {
+    ExceptionsStore() {
     }
 
-    public void appendException(EvaluationException exception) {
+    @Override
+    public void throwException(EvaluationException exception) {
         if (this.exceptions == null) {
             this.exceptions = new ArrayList<>();
         }
         this.exceptions.add(exception);
     }
 
-    public List<EvaluationException> getExceptions() {
+    List<EvaluationException> getExceptions() {
         return exceptions;
     }
 }
