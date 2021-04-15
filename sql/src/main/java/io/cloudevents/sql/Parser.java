@@ -5,7 +5,7 @@ import io.cloudevents.sql.impl.ParserImpl;
 public interface Parser {
 
     /**
-     * Parse the expression
+     * Parse the expression.
      *
      * @param inputExpression input expression
      * @return the parsed expression
@@ -14,7 +14,7 @@ public interface Parser {
     Expression parse(String inputExpression) throws ParseException;
 
     /**
-     * Parse the expression with default parser instance
+     * Parse the expression with default parser instance.
      *
      * @param inputExpression input expression
      * @return the parsed expression

@@ -1,7 +1,6 @@
 package io.cloudevents.sql;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.sql.impl.EvaluationRuntimeImpl;
 
 /**
  * This class represents a parsed expression, ready to be executed.
@@ -25,7 +24,7 @@ import io.cloudevents.sql.impl.EvaluationRuntimeImpl;
 public interface Expression {
 
     /**
-     * Evaluate the expression
+     * Evaluate the expression.
      *
      * @param evaluationRuntime the runtime instance to use to run the evaluation
      * @param event             the input event
@@ -34,7 +33,7 @@ public interface Expression {
     Result evaluate(EvaluationRuntime evaluationRuntime, CloudEvent event);
 
     /**
-     * Evaluate the expression, but throw an {@link EvaluationException} as soon as the evaluation fails
+     * Evaluate the expression, but throw an {@link EvaluationException} as soon as the evaluation fails.
      *
      * @param evaluationRuntime the runtime instance to use to run the evaluation
      * @param event             the input event
@@ -44,17 +43,17 @@ public interface Expression {
     Object tryEvaluate(EvaluationRuntime evaluationRuntime, CloudEvent event) throws EvaluationException;
 
     /**
-     * Like {@link #evaluate(EvaluationRuntime, CloudEvent)}, but using the default runtime instance
+     * Like {@link #evaluate(EvaluationRuntime, CloudEvent)}, but using the default runtime instance.
      */
     default Result evaluate(CloudEvent event) {
-        return evaluate(EvaluationRuntimeImpl.getInstance(), event);
+        return evaluate(EvaluationRuntime.getDefault(), event);
     }
 
     /**
-     * Like {@link #tryEvaluate(EvaluationRuntime, CloudEvent)}, but using the default runtime instance
+     * Like {@link #tryEvaluate(EvaluationRuntime, CloudEvent)}, but using the default runtime instance.
      */
     default Object tryEvaluate(CloudEvent event) throws EvaluationException {
-        return tryEvaluate(EvaluationRuntimeImpl.getInstance(), event);
+        return tryEvaluate(EvaluationRuntime.getDefault(), event);
     }
 
 }

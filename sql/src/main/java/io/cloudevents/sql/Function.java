@@ -10,7 +10,7 @@ import java.util.List;
 public interface Function extends FunctionSignature {
 
     /**
-     * Invoke the function logic
+     * Invoke the function logic.
      *
      * @param ctx               the evaluation context
      * @param evaluationRuntime the evaluation runtime

@@ -26,11 +26,11 @@ public class LikeExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
         String value = castToString(
             runtime,
-            exceptions,
-            internal.evaluate(runtime, event, exceptions)
+            thrower,
+            internal.evaluate(runtime, event, thrower)
         );
 
         return pattern.matcher(value).matches();

@@ -82,7 +82,7 @@ public class TCKTestSuite {
                 case CAST:
                     return EvaluationException.ErrorKind.INVALID_CAST;
                 case MATH:
-                    return EvaluationException.ErrorKind.DIVISION_BY_ZERO;
+                    return EvaluationException.ErrorKind.MATH;
                 case MISSING_FUNCTION:
                     return EvaluationException.ErrorKind.FUNCTION_DISPATCH;
                 case MISSING_ATTRIBUTE:

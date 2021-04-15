@@ -25,13 +25,13 @@ public class InExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower exceptions) {
-        Object leftValue = leftExpression.evaluate(runtime, event, exceptions);
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
+        Object leftValue = leftExpression.evaluate(runtime, event, thrower);
         return setExpressions.stream()
             .anyMatch(expr -> {
                 Object rightValue = runtime.cast(
-                    new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
-                    expr.evaluate(runtime, event, exceptions),
+                    new EvaluationContextImpl(expressionInterval(), expressionText(), thrower),
+                    expr.evaluate(runtime, event, thrower),
                     Type.fromValue(leftValue)
                 );
 

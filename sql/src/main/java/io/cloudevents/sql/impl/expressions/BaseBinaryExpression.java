@@ -20,9 +20,9 @@ public abstract class BaseBinaryExpression extends BaseExpression {
     abstract Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions);
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower exceptions) {
-        Object left = leftOperand.evaluate(runtime, event, exceptions);
-        Object right = rightOperand.evaluate(runtime, event, exceptions);
-        return evaluate(runtime, left, right, exceptions);
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
+        Object left = leftOperand.evaluate(runtime, event, thrower);
+        Object right = rightOperand.evaluate(runtime, event, thrower);
+        return evaluate(runtime, left, right, thrower);
     }
 }

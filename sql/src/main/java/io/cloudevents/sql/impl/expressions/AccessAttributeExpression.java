@@ -16,8 +16,8 @@ public class AccessAttributeExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower exceptions) {
-        return CloudEventUtils.accessContextAttribute(exceptions, expressionInterval(), expressionText(), event, key);
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
+        return CloudEventUtils.accessContextAttribute(thrower, expressionInterval(), expressionText(), event, key);
     }
 
 }

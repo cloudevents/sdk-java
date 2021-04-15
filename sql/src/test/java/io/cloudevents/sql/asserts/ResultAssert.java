@@ -72,7 +72,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
             .anySatisfy(ex -> {
                 assertThat(ex.getKind())
                     .isEqualTo(exceptionErrorKind);
-                assertThat(ex.getExpression())
+                assertThat(ex.getExpressionText())
                     .isEqualTo(expression);
             });
 

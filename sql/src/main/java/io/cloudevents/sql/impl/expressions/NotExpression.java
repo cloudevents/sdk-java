@@ -16,7 +16,7 @@ public class NotExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower exceptions) {
-        return !castToBoolean(runtime, exceptions, internal.evaluate(runtime, event, exceptions));
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
+        return !castToBoolean(runtime, thrower, internal.evaluate(runtime, event, thrower));
     }
 }

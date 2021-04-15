@@ -1,6 +1,7 @@
 package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Function;
@@ -24,12 +25,14 @@ public class FunctionInvocationExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
+        EvaluationContext context = new EvaluationContextImpl(expressionInterval(), expressionText(), thrower);
+
         Function function;
         try {
             function = runtime.resolveFunction(functionName, arguments.size());
         } catch (Exception e) {
-            exceptions.throwException(
+            thrower.throwException(
                 EvaluationException.cannotDispatchFunction(expressionInterval(), expressionText(), functionName, e)
             );
             return "";
@@ -38,14 +41,14 @@ public class FunctionInvocationExpression extends BaseExpression {
         List<Object> computedArguments = new ArrayList<>(arguments.size());
         for (int i = 0; i < arguments.size(); i++) {
             ExpressionInternal expr = arguments.get(i);
-            Object computed = expr.evaluate(runtime, event, exceptions);
+            Object computed = expr.evaluate(runtime, event, thrower);
             Object casted = runtime
-                .cast(new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions), computed, function.typeOfParameter(i));
+                .cast(context, computed, function.typeOfParameter(i));
             computedArguments.add(casted);
         }
 
         return function.invoke(
-            new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
+            context,
             runtime,
             event,
             computedArguments

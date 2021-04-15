@@ -10,6 +10,6 @@ public interface ExpressionInternal {
 
     String expressionText();
 
-    Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower exceptions);
+    Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower);
 
 }

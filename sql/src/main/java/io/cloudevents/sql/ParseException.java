@@ -4,6 +4,9 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+/**
+ * This exception represents an error occurred during parsing.
+ */
 public class ParseException extends RuntimeException {
 
     public enum ErrorKind {

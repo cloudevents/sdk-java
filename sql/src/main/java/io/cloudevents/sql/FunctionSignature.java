@@ -2,6 +2,7 @@ package io.cloudevents.sql;
 
 /**
  * Function is a CloudEvents Expression Language function definition.
+ * <p>
  * This class' methods are used to perform the function dispatch and to cast the arguments to the appropriate values.
  */
 public interface FunctionSignature {
