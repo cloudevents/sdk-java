@@ -274,4 +274,23 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
                 return this;
         }
     }
+
+    @Override
+    public CloudEventContextWriter withContextAttribute(String name, byte[] value)
+        throws CloudEventRWException {
+        requireValidAttributeWrite(name);
+        switch (name) {
+            case TIME:
+            case DATASCHEMA:
+            case ID:
+            case TYPE:
+            case DATACONTENTTYPE:
+            case SUBJECT:
+            case SOURCE:
+                throw CloudEventRWException.newInvalidAttributeType(name, byte[].class);
+            default:
+                withExtension(name, value);
+                return this;
+        }
+    }
 }

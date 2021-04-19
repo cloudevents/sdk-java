@@ -69,6 +69,7 @@
         <module>api</module>
         <module>core</module>
         <module>formats/json-jackson</module>
+        <module>formats/protobuf</module>
         <module>amqp</module>
         <module>http/basic</module>
         <module>http/vertx</module>

@@ -43,9 +43,11 @@ Supported features of the specification:
 | - [Jakarta Restful WS](http/restful-ws) |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |          - [Basic](http/basic)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |           - [Spring](spring)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|           - [http4k][http4k]<sup>†</sup>           |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|           - [http4k][http4k]<sup>†</sup>|                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            JSON Event Format            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |    - [Jackson](formats/json-jackson)    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|            Protobuf Event Format        |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|            - [Proto](formats/protobuf)  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |     [Kafka Protocol Binding](kafka)     |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |          MQTT Protocol Binding          |                          :x:                          |                          :x:                          |
 |          NATS Protocol Binding          |                          :x:                          |                          :x:                          |
@@ -62,6 +64,7 @@ Javadocs are available on [javadoc.io](https://www.javadoc.io):
 -   [cloudevents-api](https://www.javadoc.io/doc/io.cloudevents/cloudevents-api)
 -   [cloudevents-core](https://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
 -   [cloudevents-json-jackson](https://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
+-   [cloudevents-protobuf](https://www.javadoc.io/doc/io.cloudevents/cloudevents-protobuf)
 -   [cloudevents-http-basic](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-basic)
 -   [cloudevents-http-restful-ws](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
 -   [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
