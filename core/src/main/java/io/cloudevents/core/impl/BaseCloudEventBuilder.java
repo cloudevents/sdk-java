@@ -98,6 +98,24 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return this.self;
     }
 
+    @Override
+    public CloudEventBuilder withoutData() {
+        this.data = null;
+        return this.self;
+    }
+
+    @Override
+    public CloudEventBuilder withoutDataSchema() {
+        withDataSchema(null);
+        return this.self;
+    }
+
+    @Override
+    public CloudEventBuilder withoutDataContentType() {
+        withDataContentType(null);
+        return this.self;
+    }
+
     public SELF withExtension(@Nonnull String key, @Nonnull String value) {
         if (!isValidExtensionName(key)) {
             throw CloudEventRWException.newInvalidExtensionName(key);
@@ -189,6 +207,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     protected static IllegalStateException createMissingAttributeException(String attributeName) {
         return new IllegalStateException("Attribute '" + attributeName + "' cannot be null");
     }
+
     /**
      * Validates the extension name as defined in  CloudEvents spec.
      *
@@ -197,7 +216,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
      * @see <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
      */
     private static boolean isValidExtensionName(String name) {
-        for(int i = 0; i < name.length(); i++) {
+        for (int i = 0; i < name.length(); i++) {
             if (!isValidChar(name.charAt(i))) {
                 return false;
             }
