@@ -142,6 +142,28 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
     CloudEventBuilder withData(String dataContentType, URI dataSchema, CloudEventData data);
 
     /**
+     * Remove the {@code datacontenttype}, {@code dataschema} and {@code data} from the event
+     *
+     * @return self
+     */
+    CloudEventBuilder withoutData();
+
+    /**
+     * Remove the {@code dataschema} from the event
+     *
+     * @return self
+     */
+    CloudEventBuilder withoutDataSchema();
+
+
+    /**
+     * Remove the {@code datacontenttype} from the event
+     *
+     * @return self
+     */
+    CloudEventBuilder withoutDataContentType();
+
+    /**
      * Set an extension with provided key and string value
      *
      * @param key   key of the extension attribute
@@ -309,9 +331,9 @@ public interface CloudEventBuilder extends CloudEventWriter<CloudEvent> {
     static CloudEventBuilder fromContext(@Nonnull CloudEventContext context) {
         switch (context.getSpecVersion()) {
             case V1:
-            return new io.cloudevents.core.v1.CloudEventBuilder(context);
+                return new io.cloudevents.core.v1.CloudEventBuilder(context);
             case V03:
-            return new io.cloudevents.core.v03.CloudEventBuilder(context);
+                return new io.cloudevents.core.v03.CloudEventBuilder(context);
         }
         throw new IllegalStateException(
             "The provided spec version doesn't exist. Please make sure your io.cloudevents deps versions are aligned."

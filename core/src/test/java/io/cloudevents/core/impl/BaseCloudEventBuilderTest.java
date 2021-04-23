@@ -1,17 +1,16 @@
 package io.cloudevents.core.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.extensions.DistributedTracingExtension;
 import io.cloudevents.core.test.Data;
 import org.junit.jupiter.api.Test;
+
+import java.util.Objects;
+
+import static io.cloudevents.core.test.Data.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BaseCloudEventBuilderTest {
 
@@ -99,6 +98,45 @@ public class BaseCloudEventBuilderTest {
 
         // Does the extension have the right value
         assertEquals(Data.BINARY_VALUE, given.getExtension(EXT_NAME));
+
+    }
+
+    @Test
+    public void withoutDataRemovesDataAttributeFromCopiedCloudEvent() {
+        CloudEvent original = CloudEventBuilder.v1(Data.V1_WITH_JSON_DATA_WITH_EXT).build();
+        CloudEvent copy = CloudEventBuilder.v1(original).withoutData().build();
+
+        assertAll(
+            () -> assertThat(copy.getData()).isNull(),
+            () -> assertThat(copy.getDataContentType()).isEqualTo(DATACONTENTTYPE_JSON),
+            () -> assertThat(copy.getDataSchema()).isEqualTo(DATASCHEMA)
+        );
+
+    }
+
+    @Test
+    public void withoutDataContentTypeRemovesDataContentTypeAttributeFromCopiedCloudEvent() {
+        CloudEvent original = CloudEventBuilder.v1(Data.V1_WITH_JSON_DATA_WITH_EXT).build();
+        CloudEvent copy = CloudEventBuilder.v1(original).withoutDataContentType().build();
+
+        assertAll(
+            () -> assertThat(Objects.requireNonNull(copy.getData()).toBytes()).isEqualTo(DATA_JSON_SERIALIZED),
+            () -> assertThat(copy.getDataContentType()).isNull(),
+            () -> assertThat(copy.getDataSchema()).isEqualTo(DATASCHEMA)
+        );
+
+    }
+
+    @Test
+    public void withoutDataSchemaRemovesDataSchemaAttributeFromCopiedCloudEvent() {
+        CloudEvent original = CloudEventBuilder.v1(Data.V1_WITH_JSON_DATA_WITH_EXT).build();
+        CloudEvent copy = CloudEventBuilder.v1(original).withoutDataSchema().build();
+
+        assertAll(
+            () -> assertThat(Objects.requireNonNull(copy.getData()).toBytes()).isEqualTo(DATA_JSON_SERIALIZED),
+            () -> assertThat(copy.getDataContentType()).isEqualTo(DATACONTENTTYPE_JSON),
+            () -> assertThat(copy.getDataSchema()).isNull()
+        );
 
     }
 }
