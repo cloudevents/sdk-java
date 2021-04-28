@@ -236,12 +236,12 @@ public final class CloudEventV03 extends BaseCloudEvent {
             "id='" + id + '\'' +
             ", source=" + source +
             ", type='" + type + '\'' +
-            ", datacontenttype='" + datacontenttype + '\'' +
-            ", schemaurl=" + schemaurl +
-            ", subject='" + subject + '\'' +
-            ", time=" + time +
-            ", data=" + getData() +
-            ", extensions" + this.extensions +
+            ((datacontenttype != null) ? ", datacontenttype='" + datacontenttype + '\'' : "") +
+            ((schemaurl != null) ? ", schemaurl=" + schemaurl : "") +
+            ((subject != null) ? ", subject='" + subject + '\'' : "") +
+            ((time != null) ? ", time=" + time : "") +
+            ((getData() != null) ? ", data=" + getData() : "") +
+            ", extensions=" + this.extensions +
             '}';
     }
 }
