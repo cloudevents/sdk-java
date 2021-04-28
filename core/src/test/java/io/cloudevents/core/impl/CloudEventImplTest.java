@@ -91,4 +91,28 @@ public class CloudEventImplTest {
             );
     }
 
+    @Test
+    public void testToStringV1() {
+        CloudEvent event = CloudEventBuilder.v1()
+            .withId(ID)
+            .withType(TYPE)
+            .withSource(SOURCE)
+            .build();
+
+        assertThat(event.toString())
+            .doesNotContain("time");
+    }
+
+    @Test
+    public void testToStringV03() {
+        CloudEvent event = CloudEventBuilder.v03()
+            .withId(ID)
+            .withType(TYPE)
+            .withSource(SOURCE)
+            .build();
+
+        assertThat(event.toString())
+            .doesNotContain("time");
+    }
+
 }
