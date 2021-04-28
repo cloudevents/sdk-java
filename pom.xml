@@ -76,6 +76,7 @@
         <module>http/restful-ws</module>
         <module>kafka</module>
         <module>spring</module>
+        <module>sql</module>
     </modules>
 
     <properties>
