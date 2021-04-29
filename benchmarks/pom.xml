@@ -59,6 +59,11 @@
             <artifactId>cloudevents-kafka</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.cloudevents</groupId>
+            <artifactId>cloudevents-sql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
