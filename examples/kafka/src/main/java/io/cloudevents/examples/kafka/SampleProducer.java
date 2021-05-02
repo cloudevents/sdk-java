@@ -33,7 +33,7 @@ public class SampleProducer {
 
         // Configure the CloudEventSerializer to emit events as json structured events
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CloudEventSerializer.class);
-        props.put(CloudEventSerializer.ENCODING_CONFIG, Encoding.BINARY);
+        props.put(CloudEventSerializer.ENCODING_CONFIG, Encoding.STRUCTURED);
         props.put(CloudEventSerializer.EVENT_FORMAT_CONFIG, JsonFormat.CONTENT_TYPE);
 
         // Create the KafkaProducer
