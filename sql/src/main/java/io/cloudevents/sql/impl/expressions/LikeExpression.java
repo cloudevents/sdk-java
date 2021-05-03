@@ -17,12 +17,7 @@ public class LikeExpression extends BaseExpression {
         super(expressionInterval, expressionText);
         this.internal = internal;
         // Converting to regex is not the most performant impl, but it works
-        this.pattern = Pattern.compile("^" +
-            pattern.replaceAll("(?<!\\\\)\\%", ".*")
-                .replaceAll("(?<!\\\\)\\_", ".")
-                .replaceAll("\\\\\\%", "%")
-                .replaceAll("\\\\_", "_") + "$"
-        );
+        this.pattern = convertLikePatternToRegex(pattern);
     }
 
     @Override
@@ -34,5 +29,39 @@ public class LikeExpression extends BaseExpression {
         );
 
         return pattern.matcher(value).matches();
+    }
+
+    private Pattern convertLikePatternToRegex(String pattern) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("^\\Q");
+
+        for (int i = 0; i < pattern.length(); i++) {
+            if (pattern.charAt(i) == '\\' && i < pattern.length() - 1) {
+                if (pattern.charAt(i + 1) == '%') {
+                    // \% case
+                    builder.append('%');
+                    i++;
+                    continue;
+                } else if (pattern.charAt(i + 1) == '_') {
+                    // \_ case
+                    builder.append('_');
+                    i++;
+                    continue;
+                }
+            }
+            if (pattern.charAt(i) == '_') {
+                // replace with .
+                builder.append("\\E.\\Q");
+            } else if (pattern.charAt(i) == '%') {
+                // replace with .*
+                builder.append("\\E.*\\Q");
+            } else {
+                builder.append(pattern.charAt(i));
+            }
+        }
+
+        builder.append("\\E$");
+
+        return Pattern.compile(builder.toString());
     }
 }
