@@ -5,6 +5,7 @@ import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Expression;
 import io.cloudevents.sql.Result;
+import io.cloudevents.sql.impl.expressions.ExpressionInternal;
 
 public class ExpressionImpl implements Expression {
 
@@ -16,7 +17,7 @@ public class ExpressionImpl implements Expression {
 
     @Override
     public Result evaluate(EvaluationRuntime evaluationRuntime, CloudEvent event) {
-        ExceptionsStore exceptions = new ExceptionsStore();
+        ExceptionStore exceptions = new ExceptionStore();
         Object value = this.expressionInternal.evaluate(evaluationRuntime, event, exceptions);
         return new EvaluationResult(value, exceptions.getExceptions());
     }

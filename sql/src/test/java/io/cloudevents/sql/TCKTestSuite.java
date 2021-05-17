@@ -7,7 +7,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.jackson.JsonFormat;
-import io.cloudevents.sql.impl.ParserImpl;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
@@ -135,7 +134,7 @@ public class TCKTestSuite {
 
     @TestFactory
     Stream<DynamicTest> evaluate() {
-        Parser parser = new ParserImpl();
+        Parser parser = Parser.getDefault();
 
         return DynamicTest.stream(
             tckTestCases(),
@@ -146,7 +145,7 @@ public class TCKTestSuite {
 
     @TestFactory
     Stream<DynamicTest> tryEvaluate() {
-        Parser parser = new ParserImpl();
+        Parser parser = Parser.getDefault();
 
         return DynamicTest.stream(
             tckTestCases(),

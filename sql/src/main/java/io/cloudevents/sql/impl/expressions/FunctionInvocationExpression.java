@@ -7,7 +7,6 @@ import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Function;
 import io.cloudevents.sql.impl.EvaluationContextImpl;
 import io.cloudevents.sql.impl.ExceptionThrower;
-import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.ArrayList;
@@ -53,5 +52,10 @@ public class FunctionInvocationExpression extends BaseExpression {
             event,
             computedArguments
         );
+    }
+
+    @Override
+    public <T> T visit(ExpressionInternalVisitor<T> visitor) {
+        return visitor.visitFunctionInvocationExpression(this);
     }
 }

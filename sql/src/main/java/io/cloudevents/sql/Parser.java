@@ -24,4 +24,11 @@ public interface Parser {
         return ParserImpl.getInstance().parse(inputExpression);
     }
 
+    /**
+     * @return the default instance of the parser
+     */
+    static Parser getDefault() {
+        return ParserImpl.getInstance();
+    }
+
 }
