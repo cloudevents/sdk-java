@@ -11,7 +11,7 @@ public class XorExpression extends BaseBinaryExpression {
     }
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         return Boolean.logicalXor(
             castToBoolean(runtime, exceptions, left),
             castToBoolean(runtime, exceptions, right)

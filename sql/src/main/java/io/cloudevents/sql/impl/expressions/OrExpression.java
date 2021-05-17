@@ -11,7 +11,7 @@ public class OrExpression extends BaseBinaryExpression {
     }
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         boolean x = castToBoolean(runtime, exceptions, left);
         if (x) {
             // Short circuit

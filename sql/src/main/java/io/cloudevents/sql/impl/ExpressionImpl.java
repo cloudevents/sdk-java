@@ -26,4 +26,8 @@ public class ExpressionImpl implements Expression {
     public Object tryEvaluate(EvaluationRuntime evaluationRuntime, CloudEvent event) throws EvaluationException {
         return this.expressionInternal.evaluate(evaluationRuntime, event, FailFastExceptionThrower.getInstance());
     }
+
+    protected ExpressionInternal getExpressionInternal() {
+        return expressionInternal;
+    }
 }

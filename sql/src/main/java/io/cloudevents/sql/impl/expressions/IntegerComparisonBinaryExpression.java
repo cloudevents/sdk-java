@@ -33,7 +33,7 @@ public class IntegerComparisonBinaryExpression extends BaseBinaryExpression {
     }
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         return this.operation.evaluate(
             castToInteger(runtime, exceptions, left),
             castToInteger(runtime, exceptions, right)

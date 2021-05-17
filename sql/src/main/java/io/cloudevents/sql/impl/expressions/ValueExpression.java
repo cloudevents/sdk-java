@@ -26,7 +26,7 @@ public class ValueExpression extends BaseExpression {
         return visitor.visitValueExpression(this);
     }
 
-    protected Object getValue() {
+    public Object getValue() {
         return value;
     }
 

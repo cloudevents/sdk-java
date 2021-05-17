@@ -1,5 +1,6 @@
 package io.cloudevents.sql.impl;
 
+import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.Expression;
 import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Parser;
@@ -17,8 +18,10 @@ import java.util.List;
 
 public class ParserImpl implements Parser {
 
+    private final boolean constantFolding;
+
     private static class SingletonContainer {
-        private final static ParserImpl INSTANCE = new ParserImpl();
+        private final static ParserImpl INSTANCE = new ParserImpl(true);
     }
 
     /**
@@ -28,7 +31,9 @@ public class ParserImpl implements Parser {
         return ParserImpl.SingletonContainer.INSTANCE;
     }
 
-    public ParserImpl() {
+    // TODO this is super bad, remove it!
+    public ParserImpl(boolean constantFolding) {
+        this.constantFolding = constantFolding;
     }
 
     @Override
@@ -72,6 +77,14 @@ public class ParserImpl implements Parser {
         }
 
         ExpressionInternal internal = new ExpressionTranslatorVisitor().visit(tree);
+
+        if (this.constantFolding) {
+            try {
+                internal = internal.visit(new ConstantFoldingExpressionVisitor());
+            } catch (EvaluationException e) {
+                throw ParseException.cannotEvaluateConstantExpression(e);
+            }
+        }
 
         return new ExpressionImpl(internal);
     }

@@ -13,7 +13,7 @@ public abstract class BaseIntegerBinaryExpression extends BaseBinaryExpression {
     abstract Object evaluate(EvaluationRuntime runtime, int left, int right, ExceptionThrower exceptions);
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         return this.evaluate(
             runtime,
             castToInteger(runtime, exceptions, left).intValue(),

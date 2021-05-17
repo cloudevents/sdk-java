@@ -18,7 +18,7 @@ public class EqualExpression extends BaseBinaryExpression {
     // x = y: Integer x Integer -> Boolean
     // x = y: String x String -> Boolean
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         left = runtime.cast(
             new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
             left,
