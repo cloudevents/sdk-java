@@ -24,4 +24,8 @@ public class ExistsExpression extends BaseExpression {
     public <T> T visit(ExpressionInternalVisitor<T> visitor) {
         return visitor.visitExistsExpression(this);
     }
+
+    public String getKey() {
+        return key;
+    }
 }

@@ -1,5 +1,6 @@
 package io.cloudevents.sql.impl;
 
+import io.cloudevents.SpecVersion;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.impl.expressions.*;
 
@@ -8,11 +9,6 @@ public class ConstantFoldingExpressionVisitor implements ExpressionInternalVisit
     @Override
     public ExpressionInternal visitExpressionInternal(ExpressionInternal expressionInternal) {
         return expressionInternal;
-    }
-
-    @Override
-    public ExpressionInternal visitAccessAttributeExpression(AccessAttributeExpression accessAttributeExpression) {
-        return accessAttributeExpression;
     }
 
     @Override
@@ -41,22 +37,11 @@ public class ConstantFoldingExpressionVisitor implements ExpressionInternalVisit
 
     @Override
     public ExpressionInternal visitExistsExpression(ExistsExpression existsExpression) {
-        return ExpressionInternalVisitor.super.visitExistsExpression(existsExpression);
-    }
-
-    @Override
-    public ExpressionInternal visitFunctionInvocationExpression(FunctionInvocationExpression functionInvocationExpression) {
-        return ExpressionInternalVisitor.super.visitFunctionInvocationExpression(functionInvocationExpression);
-    }
-
-    @Override
-    public ExpressionInternal visitInExpression(InExpression inExpression) {
-        return ExpressionInternalVisitor.super.visitInExpression(inExpression);
-    }
-
-    @Override
-    public ExpressionInternal visitLikeExpression(LikeExpression likeExpression) {
-        return ExpressionInternalVisitor.super.visitLikeExpression(likeExpression);
+        if (SpecVersion.V1.getMandatoryAttributes().contains(existsExpression.getKey())) {
+            // If the attribute is a mandatory attribute of the spec, there's no need to check it
+            return new ValueExpression(existsExpression.expressionInterval(), existsExpression.expressionText(), true);
+        }
+        return existsExpression;
     }
 
     @Override
@@ -73,10 +58,5 @@ public class ConstantFoldingExpressionVisitor implements ExpressionInternalVisit
 
         baseUnaryExpression.setOperand(inner);
         return baseUnaryExpression;
-    }
-
-    @Override
-    public ExpressionInternal visitValueExpression(ValueExpression valueExpression) {
-        return valueExpression;
     }
 }
