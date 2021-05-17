@@ -20,9 +20,6 @@ public class ConstantFoldingExpressionVisitor implements ExpressionInternalVisit
         ExpressionInternal left = baseBinaryExpression.getLeftOperand().visit(this);
         ExpressionInternal right = baseBinaryExpression.getRightOperand().visit(this);
 
-        baseBinaryExpression.setLeftOperand(left);
-        baseBinaryExpression.setRightOperand(right);
-
         if (left instanceof ValueExpression && right instanceof ValueExpression) {
             // I can do constant folding!
             return new ValueExpression(
@@ -36,6 +33,9 @@ public class ConstantFoldingExpressionVisitor implements ExpressionInternalVisit
                 )
             );
         }
+
+        baseBinaryExpression.setLeftOperand(left);
+        baseBinaryExpression.setRightOperand(right);
         return baseBinaryExpression;
     }
 
@@ -61,7 +61,18 @@ public class ConstantFoldingExpressionVisitor implements ExpressionInternalVisit
 
     @Override
     public ExpressionInternal visitBaseUnaryExpression(BaseUnaryExpression baseUnaryExpression) {
-        return ExpressionInternalVisitor.super.visitBaseUnaryExpression(baseUnaryExpression);
+        ExpressionInternal inner = baseUnaryExpression.getOperand().visit(this);
+
+        if (inner instanceof ValueExpression) {
+            return new ValueExpression(
+                baseUnaryExpression.expressionInterval(),
+                baseUnaryExpression.expressionText(),
+                baseUnaryExpression.evaluate(EvaluationRuntime.getDefault(), ((ValueExpression) inner).getValue(), FailFastExceptionThrower.getInstance())
+            );
+        }
+
+        baseUnaryExpression.setOperand(inner);
+        return baseUnaryExpression;
     }
 
     @Override

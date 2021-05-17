@@ -11,7 +11,7 @@ public class NegateExpression extends BaseUnaryExpression {
     }
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object value, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object value, ExceptionThrower exceptions) {
         return -castToInteger(runtime, exceptions, value);
     }
 }

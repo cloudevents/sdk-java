@@ -11,7 +11,7 @@ public class NotExpression extends BaseUnaryExpression {
     }
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object value, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object value, ExceptionThrower exceptions) {
         return !castToBoolean(runtime, exceptions, value);
     }
 }

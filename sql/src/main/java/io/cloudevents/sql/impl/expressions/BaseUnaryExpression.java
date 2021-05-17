@@ -7,14 +7,14 @@ import org.antlr.v4.runtime.misc.Interval;
 
 public abstract class BaseUnaryExpression extends BaseExpression {
 
-    protected final ExpressionInternal internal;
+    protected ExpressionInternal internal;
 
     public BaseUnaryExpression(Interval expressionInterval, String expressionText, ExpressionInternal internal) {
         super(expressionInterval, expressionText);
         this.internal = internal;
     }
 
-    abstract Object evaluate(EvaluationRuntime runtime, Object value, ExceptionThrower exceptions);
+    public abstract Object evaluate(EvaluationRuntime runtime, Object value, ExceptionThrower exceptions);
 
     @Override
     public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
@@ -24,5 +24,14 @@ public abstract class BaseUnaryExpression extends BaseExpression {
     @Override
     public <T> T visit(ExpressionInternalVisitor<T> visitor) {
         return visitor.visitBaseUnaryExpression(this);
+    }
+
+    public ExpressionInternal getOperand() {
+        return internal;
+    }
+
+    public BaseUnaryExpression setOperand(ExpressionInternal internal) {
+        this.internal = internal;
+        return this;
     }
 }
