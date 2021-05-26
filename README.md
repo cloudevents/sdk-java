@@ -106,4 +106,4 @@ for how PR reviews and approval, and our
 [Code of Conduct](https://github.com/cloudevents/spec/blob/master/community/GOVERNANCE.md#additional-information)
 information.
 
-[http4k]: https://www.http4k.org/guide/modules/cloud_events/
+[http4k]: https://www.http4k.org/guide/reference/cloud_events/
