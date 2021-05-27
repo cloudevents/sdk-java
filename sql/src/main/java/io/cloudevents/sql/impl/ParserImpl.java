@@ -18,21 +18,20 @@ import java.util.List;
 
 public class ParserImpl implements Parser {
 
-    private final boolean constantFolding;
-
     private static class SingletonContainer {
         private final static ParserImpl INSTANCE = new ParserImpl(true);
     }
 
     /**
-     * @return instance of {@link ParserImpl}
+     * @return default instance of {@link ParserImpl}
      */
     public static Parser getInstance() {
         return ParserImpl.SingletonContainer.INSTANCE;
     }
 
-    // TODO this is super bad, remove it!
-    public ParserImpl(boolean constantFolding) {
+    private final boolean constantFolding;
+
+    ParserImpl(boolean constantFolding) {
         this.constantFolding = constantFolding;
     }
 

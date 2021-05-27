@@ -1,5 +1,6 @@
 package io.cloudevents.sql;
 
+import io.cloudevents.sql.impl.ParserBuilder;
 import io.cloudevents.sql.impl.ParserImpl;
 
 public interface Parser {
@@ -29,6 +30,13 @@ public interface Parser {
      */
     static Parser getDefault() {
         return ParserImpl.getInstance();
+    }
+
+    /**
+     * @return a new {@link ParserBuilder}, to create a customized parser instance
+     */
+    static ParserBuilder builder() {
+        return new ParserBuilder();
     }
 
 }
