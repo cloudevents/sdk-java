@@ -2,7 +2,6 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.impl.ExceptionThrower;
-import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
 public abstract class BaseIntegerBinaryExpression extends BaseBinaryExpression {
@@ -14,7 +13,7 @@ public abstract class BaseIntegerBinaryExpression extends BaseBinaryExpression {
     abstract Object evaluate(EvaluationRuntime runtime, int left, int right, ExceptionThrower exceptions);
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         return this.evaluate(
             runtime,
             castToInteger(runtime, exceptions, left).intValue(),

@@ -19,4 +19,13 @@ public class ExistsExpression extends BaseExpression {
     public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
         return CloudEventUtils.hasContextAttribute(event, key);
     }
+
+    @Override
+    public <T> T visit(ExpressionInternalVisitor<T> visitor) {
+        return visitor.visitExistsExpression(this);
+    }
+
+    public String getKey() {
+        return key;
+    }
 }

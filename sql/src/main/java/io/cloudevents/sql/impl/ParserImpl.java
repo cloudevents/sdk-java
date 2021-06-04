@@ -1,10 +1,12 @@
 package io.cloudevents.sql.impl;
 
+import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.Expression;
 import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Parser;
 import io.cloudevents.sql.generated.CESQLParserLexer;
 import io.cloudevents.sql.generated.CESQLParserParser;
+import io.cloudevents.sql.impl.expressions.ExpressionInternal;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -17,17 +19,20 @@ import java.util.List;
 public class ParserImpl implements Parser {
 
     private static class SingletonContainer {
-        private final static ParserImpl INSTANCE = new ParserImpl();
+        private final static ParserImpl INSTANCE = new ParserImpl(true);
     }
 
     /**
-     * @return instance of {@link ParserImpl}
+     * @return default instance of {@link ParserImpl}
      */
     public static Parser getInstance() {
         return ParserImpl.SingletonContainer.INSTANCE;
     }
 
-    public ParserImpl() {
+    private final boolean constantFolding;
+
+    ParserImpl(boolean constantFolding) {
+        this.constantFolding = constantFolding;
     }
 
     @Override
@@ -71,6 +76,14 @@ public class ParserImpl implements Parser {
         }
 
         ExpressionInternal internal = new ExpressionTranslatorVisitor().visit(tree);
+
+        if (this.constantFolding) {
+            try {
+                internal = internal.visit(new ConstantFoldingExpressionVisitor());
+            } catch (EvaluationException e) {
+                throw ParseException.cannotEvaluateConstantExpression(e);
+            }
+        }
 
         return new ExpressionImpl(internal);
     }

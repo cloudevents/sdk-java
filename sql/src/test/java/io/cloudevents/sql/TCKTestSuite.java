@@ -7,7 +7,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.jackson.JsonFormat;
-import io.cloudevents.sql.impl.ParserImpl;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
@@ -16,11 +15,10 @@ import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-import static io.cloudevents.sql.asserts.MyAssertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class TCKTestSuite {
 
@@ -134,77 +132,94 @@ public class TCKTestSuite {
     }
 
     @TestFactory
-    Stream<DynamicTest> evaluate() {
-        Parser parser = new ParserImpl();
+    Stream<DynamicTest> evaluateWithoutConstantFolding() {
+        Parser parser = Parser.builder().disableConstantFolding().build();
 
         return DynamicTest.stream(
             tckTestCases(),
             Map.Entry::getKey,
-            tcEntry -> evaluateTestCase(parser, tcEntry.getValue())
+            tcEntry -> evaluate(parser, tcEntry.getValue(), this::assertEqualToTestCaseExpectedValue, this::assertEqualToTestCaseExpectedFailure)
+        );
+    }
+
+    @TestFactory
+    Stream<DynamicTest> evaluate() {
+        Parser parser = Parser.getDefault();
+
+        return DynamicTest.stream(
+            tckTestCases(),
+            Map.Entry::getKey,
+            tcEntry -> evaluate(parser, tcEntry.getValue(), this::assertEqualToTestCaseExpectedValue, this::assertEqualToTestCaseExpectedFailureWithConstantFolding)
         );
     }
 
     @TestFactory
     Stream<DynamicTest> tryEvaluate() {
-        Parser parser = new ParserImpl();
+        Parser parser = Parser.getDefault();
 
         return DynamicTest.stream(
             tckTestCases(),
             Map.Entry::getKey,
-            tcEntry -> tryEvaluateTestCase(parser, tcEntry.getValue())
+            tcEntry -> tryEvaluate(parser, tcEntry.getValue(), this::assertEqualToTestCaseExpectedValue, this::assertEqualToTestCaseExpectedFailureWithConstantFolding)
         );
 
     }
 
-    public void evaluateTestCase(Parser parser, TestCaseModel testCase) throws Exception {
-        // Assert parse errors
-        if (testCase.error == Error.PARSE) {
-            assertThatCode(() -> parser.parse(testCase.expression))
-                .isInstanceOf(ParseException.class);
-            return;
+    private void evaluate(Parser parser, TestCaseModel testCase, BiConsumer<TestCaseModel, Object> valueAssertion, BiConsumer<TestCaseModel, Throwable> throwableAssertion) {
+        try {
+            Expression expression = parser.parse(testCase.expression);
+
+            Result result = expression.evaluate(testCase.getTestInputEvent());
+
+            valueAssertion.accept(testCase, result.value());
+            throwableAssertion.accept(testCase, result.causes().stream().findFirst().orElse(null));
+        } catch (ParseException parseException) {
+            throwableAssertion.accept(testCase, parseException);
         }
+    }
 
-        Expression expression = parser.parse(testCase.expression);
-        assertThat(expression).isNotNull();
+    private void tryEvaluate(Parser parser, TestCaseModel testCase, BiConsumer<TestCaseModel, Object> valueAssertion, BiConsumer<TestCaseModel, Throwable> throwableAssertion) {
+        try {
+            Expression expression = parser.parse(testCase.expression);
 
-        Result result = expression.evaluate(testCase.getTestInputEvent());
+            Object result = expression.tryEvaluate(testCase.getTestInputEvent());
+            valueAssertion.accept(testCase, result);
+            throwableAssertion.accept(testCase, null);
+        } catch (ParseException | EvaluationException parseException) {
+            throwableAssertion.accept(testCase, parseException);
+        }
+    }
 
+    private void assertEqualToTestCaseExpectedValue(TestCaseModel testCase, Object result) {
         if (testCase.result != null) {
             assertThat(result)
-                .value()
                 .isEqualTo(testCase.result);
+        }
+    }
+
+    private void assertEqualToTestCaseExpectedFailureWithConstantFolding(TestCaseModel testCase, Throwable throwable) {
+        if (throwable instanceof ParseException && throwable.getCause() instanceof EvaluationException) {
+            assertEqualToTestCaseExpectedFailure(testCase, throwable.getCause());
+        } else {
+            assertEqualToTestCaseExpectedFailure(testCase, throwable);
+        }
+    }
+
+    private void assertEqualToTestCaseExpectedFailure(TestCaseModel testCase, Throwable throwable) {
+        if (testCase.error == Error.PARSE) {
+            assertThat(throwable)
+                .isInstanceOf(ParseException.class);
+            return;
         }
 
         if (testCase.error == null) {
-            assertThat(result)
-                .isNotFailed();
+            assertThat(throwable)
+                .isNull();
         } else {
-            assertThat(result)
-                .hasFailure(testCase.getEvaluationExceptionErrorKind());
-        }
-    }
-
-    public void tryEvaluateTestCase(Parser parser, TestCaseModel testCase) throws Exception {
-        // Assert parse errors
-        if (testCase.error == Error.PARSE) {
-            assertThatCode(() -> parser.parse(testCase.expression))
-                .isInstanceOf(ParseException.class);
-            return;
-        }
-
-        Expression expression = parser.parse(testCase.expression);
-        assertThat(expression).isNotNull();
-
-        if (testCase.error != null) {
-            assertThatCode(() -> expression.tryEvaluate(testCase.getTestInputEvent()))
+            assertThat(throwable)
                 .isInstanceOf(EvaluationException.class)
                 .extracting(t -> ((EvaluationException) t).getKind())
                 .isEqualTo(testCase.getEvaluationExceptionErrorKind());
-        } else {
-            assertThat(
-                expression.tryEvaluate(testCase.getTestInputEvent())
-            ).isEqualTo(testCase.result);
         }
     }
-
 }

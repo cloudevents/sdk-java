@@ -10,8 +10,9 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class ParseException extends RuntimeException {
 
     public enum ErrorKind {
-        RECOGNITION_ERROR,
-        PARSE_VALUE
+        RECOGNITION,
+        PARSE_VALUE,
+        CONSTANT_EXPRESSION_EVALUATION,
     }
 
     private final ErrorKind errorKind;
@@ -49,11 +50,21 @@ public class ParseException extends RuntimeException {
 
     public static ParseException recognitionError(RecognitionException e, String msg) {
         return new ParseException(
-            ErrorKind.RECOGNITION_ERROR,
+            ErrorKind.RECOGNITION,
             new Interval(e.getOffendingToken().getStartIndex(), e.getOffendingToken().getStopIndex()),
             e.getOffendingToken().getText(),
             "Cannot parse: " + msg,
             e
+        );
+    }
+
+    public static ParseException cannotEvaluateConstantExpression(EvaluationException exception) {
+        return new ParseException(
+            ErrorKind.CONSTANT_EXPRESSION_EVALUATION,
+            exception.getExpressionInterval(),
+            exception.getExpressionText(),
+            "Cannot evaluate the constant expression: " + exception.getExpressionText(),
+            exception
         );
     }
 

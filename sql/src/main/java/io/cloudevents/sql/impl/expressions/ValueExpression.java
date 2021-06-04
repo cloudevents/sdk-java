@@ -21,6 +21,15 @@ public class ValueExpression extends BaseExpression {
         return value;
     }
 
+    @Override
+    public <T> T visit(ExpressionInternalVisitor<T> visitor) {
+        return visitor.visitValueExpression(this);
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
     public static ValueExpression fromIntegerLiteral(TerminalNode node) {
         return new ValueExpression(node.getSourceInterval(), node.getText(), Integer.parseInt(node.getText()));
     }

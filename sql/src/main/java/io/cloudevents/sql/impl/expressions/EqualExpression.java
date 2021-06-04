@@ -4,7 +4,6 @@ import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Type;
 import io.cloudevents.sql.impl.EvaluationContextImpl;
 import io.cloudevents.sql.impl.ExceptionThrower;
-import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.Objects;
@@ -19,7 +18,7 @@ public class EqualExpression extends BaseBinaryExpression {
     // x = y: Integer x Integer -> Boolean
     // x = y: String x String -> Boolean
     @Override
-    Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
+    public Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
         left = runtime.cast(
             new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
             left,

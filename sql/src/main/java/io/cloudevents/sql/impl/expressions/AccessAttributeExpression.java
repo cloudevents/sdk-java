@@ -20,4 +20,9 @@ public class AccessAttributeExpression extends BaseExpression {
         return CloudEventUtils.accessContextAttribute(thrower, expressionInterval(), expressionText(), event, key);
     }
 
+    @Override
+    public <T> T visit(ExpressionInternalVisitor<T> visitor) {
+        return visitor.visitAccessAttributeExpression(this);
+    }
+
 }
