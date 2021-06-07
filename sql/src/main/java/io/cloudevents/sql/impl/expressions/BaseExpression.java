@@ -2,8 +2,9 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Type;
-import io.cloudevents.sql.impl.EvaluationContextImpl;
 import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.impl.ExpressionInternal;
+import io.cloudevents.sql.impl.runtime.EvaluationContextImpl;
 import org.antlr.v4.runtime.misc.Interval;
 
 public abstract class BaseExpression implements ExpressionInternal {

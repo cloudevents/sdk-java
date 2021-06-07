@@ -3,9 +3,9 @@ package io.cloudevents.sql;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.test.Data;
-import io.cloudevents.sql.impl.EvaluationRuntimeBuilder;
 import io.cloudevents.sql.impl.functions.BaseFunction;
 import io.cloudevents.sql.impl.functions.InfallibleOneArgumentFunction;
+import io.cloudevents.sql.impl.runtime.EvaluationRuntimeBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

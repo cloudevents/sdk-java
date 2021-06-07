@@ -1,7 +1,8 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.runtime;
 
 import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationException;
+import io.cloudevents.sql.impl.ExceptionThrower;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class EvaluationContextImpl implements EvaluationContext {

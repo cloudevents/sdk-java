@@ -1,7 +1,7 @@
 package io.cloudevents.sql;
 
-import io.cloudevents.sql.impl.ParserBuilder;
-import io.cloudevents.sql.impl.ParserImpl;
+import io.cloudevents.sql.impl.parser.ParserBuilder;
+import io.cloudevents.sql.impl.parser.ParserImpl;
 
 public interface Parser {
 

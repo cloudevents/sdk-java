@@ -1,11 +1,11 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.runtime;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Expression;
 import io.cloudevents.sql.Result;
-import io.cloudevents.sql.impl.expressions.ExpressionInternal;
+import io.cloudevents.sql.impl.ExpressionInternal;
 
 public class ExpressionImpl implements Expression {
 
@@ -27,7 +27,7 @@ public class ExpressionImpl implements Expression {
         return this.expressionInternal.evaluate(evaluationRuntime, event, FailFastExceptionThrower.getInstance());
     }
 
-    protected ExpressionInternal getExpressionInternal() {
+    public ExpressionInternal getExpressionInternal() {
         return expressionInternal;
     }
 }

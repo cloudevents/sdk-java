@@ -1,7 +1,7 @@
 package io.cloudevents.sql;
 
-import io.cloudevents.sql.impl.EvaluationRuntimeBuilder;
-import io.cloudevents.sql.impl.EvaluationRuntimeImpl;
+import io.cloudevents.sql.impl.runtime.EvaluationRuntimeBuilder;
+import io.cloudevents.sql.impl.runtime.EvaluationRuntimeImpl;
 
 /**
  * The evaluation runtime takes care of the function resolution, casting and other core functionalities to execute an expression.

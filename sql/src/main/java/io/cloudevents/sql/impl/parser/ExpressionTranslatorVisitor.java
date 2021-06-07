@@ -1,9 +1,10 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.parser;
 
 import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Type;
 import io.cloudevents.sql.generated.CESQLParserBaseVisitor;
 import io.cloudevents.sql.generated.CESQLParserParser;
+import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.expressions.*;
 
 import java.util.List;

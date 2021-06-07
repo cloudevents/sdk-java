@@ -1,4 +1,4 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.runtime;
 
 import io.cloudevents.sql.Function;
 import io.cloudevents.sql.impl.functions.*;
