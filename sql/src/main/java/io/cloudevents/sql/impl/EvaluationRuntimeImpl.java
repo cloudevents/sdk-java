@@ -1,9 +1,6 @@
 package io.cloudevents.sql.impl;
 
-import io.cloudevents.sql.EvaluationContext;
-import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.Function;
-import io.cloudevents.sql.Type;
+import io.cloudevents.sql.*;
 
 public class EvaluationRuntimeImpl implements EvaluationRuntime {
 
@@ -34,6 +31,11 @@ public class EvaluationRuntimeImpl implements EvaluationRuntime {
     @Override
     public Object cast(EvaluationContext ctx, Object value, Type target) {
         return this.typeCastingProvider.cast(ctx, value, target);
+    }
+
+    @Override
+    public Object cast(Object value, Type target) throws EvaluationException {
+        return this.typeCastingProvider.cast(FailFastExceptionThrower.getInstance(), value, target);
     }
 
     @Override
