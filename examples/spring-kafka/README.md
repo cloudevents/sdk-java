@@ -12,7 +12,7 @@ mvn package
 mvn spring-boot:run
 ```
 
-You can try sending a request using any kafka client, or using the intergration tests in this project. You send to the "in" topic and it echos back a cloud event on the "out" topic. The listener is implemented like this (the request and response are modelled directly as a `CloudEvent`):
+You can try sending a request using any kafka client, or using the integration tests in this project. You send to the "in" topic and it echos back a cloud event on the "out" topic. The listener is implemented like this (the request and response are modelled directly as a `CloudEvent`):
 
 ```java
 @KafkaListener(id = "listener", topics = "in", clientIdPrefix = "demo")
