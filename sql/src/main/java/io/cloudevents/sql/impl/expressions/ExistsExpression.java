@@ -2,7 +2,6 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.CloudEventUtils;
 import io.cloudevents.sql.impl.ExceptionThrower;
 import org.antlr.v4.runtime.misc.Interval;
 
@@ -17,7 +16,7 @@ public class ExistsExpression extends BaseExpression {
 
     @Override
     public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
-        return CloudEventUtils.hasContextAttribute(event, key);
+        return hasContextAttribute(event, key);
     }
 
     @Override
@@ -28,4 +27,9 @@ public class ExistsExpression extends BaseExpression {
     public String getKey() {
         return key;
     }
+
+    private static boolean hasContextAttribute(CloudEvent event, String key) {
+        return event.getAttributeNames().contains(key) || event.getExtensionNames().contains(key);
+    }
+
 }
