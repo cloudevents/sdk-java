@@ -1,8 +1,14 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.parser;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.expressions.*;
+import io.cloudevents.sql.impl.ExpressionInternal;
+import io.cloudevents.sql.impl.ExpressionInternalVisitor;
+import io.cloudevents.sql.impl.expressions.BaseBinaryExpression;
+import io.cloudevents.sql.impl.expressions.BaseUnaryExpression;
+import io.cloudevents.sql.impl.expressions.ExistsExpression;
+import io.cloudevents.sql.impl.expressions.ValueExpression;
+import io.cloudevents.sql.impl.runtime.FailFastExceptionThrower;
 
 public class ConstantFoldingExpressionVisitor implements ExpressionInternalVisitor<ExpressionInternal> {
 

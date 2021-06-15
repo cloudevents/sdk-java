@@ -1,4 +1,6 @@
-package io.cloudevents.sql.impl.expressions;
+package io.cloudevents.sql.impl;
+
+import io.cloudevents.sql.impl.expressions.*;
 
 public interface ExpressionInternalVisitor<T> {
 

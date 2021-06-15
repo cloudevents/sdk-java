@@ -3,6 +3,7 @@ package io.cloudevents.sql.impl.expressions;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.impl.ExpressionInternalVisitor;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class ExistsExpression extends BaseExpression {

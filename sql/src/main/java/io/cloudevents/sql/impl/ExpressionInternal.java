@@ -1,8 +1,7 @@
-package io.cloudevents.sql.impl.expressions;
+package io.cloudevents.sql.impl;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionThrower;
 import org.antlr.v4.runtime.misc.Interval;
 
 public interface ExpressionInternal {

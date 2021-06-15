@@ -1,11 +1,12 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.parser;
 
 import io.cloudevents.sql.Expression;
 import io.cloudevents.sql.Parser;
+import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.expressions.BaseBinaryExpression;
 import io.cloudevents.sql.impl.expressions.ExistsExpression;
-import io.cloudevents.sql.impl.expressions.ExpressionInternal;
 import io.cloudevents.sql.impl.expressions.ValueExpression;
+import io.cloudevents.sql.impl.runtime.ExpressionImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

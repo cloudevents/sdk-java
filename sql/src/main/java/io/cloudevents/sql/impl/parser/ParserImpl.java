@@ -1,4 +1,4 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.parser;
 
 import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.Expression;
@@ -6,7 +6,8 @@ import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Parser;
 import io.cloudevents.sql.generated.CESQLParserLexer;
 import io.cloudevents.sql.generated.CESQLParserParser;
-import io.cloudevents.sql.impl.expressions.ExpressionInternal;
+import io.cloudevents.sql.impl.ExpressionInternal;
+import io.cloudevents.sql.impl.runtime.ExpressionImpl;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;

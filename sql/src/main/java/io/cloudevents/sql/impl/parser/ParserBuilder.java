@@ -1,4 +1,4 @@
-package io.cloudevents.sql.impl;
+package io.cloudevents.sql.impl.parser;
 
 import io.cloudevents.sql.Parser;
 

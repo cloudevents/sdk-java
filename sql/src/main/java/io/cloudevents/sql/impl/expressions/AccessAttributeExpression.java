@@ -5,6 +5,7 @@ import io.cloudevents.SpecVersion;
 import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.impl.ExpressionInternalVisitor;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.Base64;
