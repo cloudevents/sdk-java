@@ -1,8 +1,6 @@
 package io.cloudevents.sql;
 
-import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.Interval;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * This exception represents an error occurred during parsing.
@@ -10,8 +8,17 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class ParseException extends RuntimeException {
 
     public enum ErrorKind {
+        /**
+         * Error when parsing the expression string
+         */
         RECOGNITION,
+        /**
+         * Error when parsing a literal
+         */
         PARSE_VALUE,
+        /**
+         * Error when executing the constant parts of the expression
+         */
         CONSTANT_EXPRESSION_EVALUATION,
     }
 
@@ -19,7 +26,7 @@ public class ParseException extends RuntimeException {
     private final Interval interval;
     private final String expression;
 
-    protected ParseException(ErrorKind errorKind, Interval interval, String expression, String message, Throwable cause) {
+    public ParseException(ErrorKind errorKind, Interval interval, String expression, String message, Throwable cause) {
         super(String.format("[%s at %d:%d `%s`] %s", errorKind.name(), interval.a, interval.b, expression, message), cause);
         this.errorKind = errorKind;
         this.interval = interval;
@@ -36,36 +43,6 @@ public class ParseException extends RuntimeException {
 
     public String getExpression() {
         return expression;
-    }
-
-    public static ParseException cannotParseValue(ParseTree node, Type target, Throwable cause) {
-        return new ParseException(
-            ErrorKind.PARSE_VALUE,
-            node.getSourceInterval(),
-            node.getText(),
-            "Cannot parse to " + target.name() + ": " + cause.getMessage(),
-            cause
-        );
-    }
-
-    public static ParseException recognitionError(RecognitionException e, String msg) {
-        return new ParseException(
-            ErrorKind.RECOGNITION,
-            new Interval(e.getOffendingToken().getStartIndex(), e.getOffendingToken().getStopIndex()),
-            e.getOffendingToken().getText(),
-            "Cannot parse: " + msg,
-            e
-        );
-    }
-
-    public static ParseException cannotEvaluateConstantExpression(EvaluationException exception) {
-        return new ParseException(
-            ErrorKind.CONSTANT_EXPRESSION_EVALUATION,
-            exception.getExpressionInterval(),
-            exception.getExpressionText(),
-            "Cannot evaluate the constant expression: " + exception.getExpressionText(),
-            exception
-        );
     }
 
 }

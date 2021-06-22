@@ -1,9 +1,9 @@
 package io.cloudevents.sql.impl.parser;
 
-import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Type;
 import io.cloudevents.sql.generated.CESQLParserBaseVisitor;
 import io.cloudevents.sql.generated.CESQLParserParser;
+import io.cloudevents.sql.impl.ExceptionFactory;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.expressions.*;
 
@@ -31,7 +31,7 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
         try {
             return ValueExpression.fromIntegerLiteral(ctx.INTEGER_LITERAL());
         } catch (RuntimeException e) {
-            throw ParseException.cannotParseValue(ctx, Type.INTEGER, e);
+            throw ExceptionFactory.cannotParseValue(ctx, Type.INTEGER, e);
         }
     }
 
@@ -44,7 +44,7 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
                 return ValueExpression.fromSQuotedStringLiteral(ctx.SQUOTED_STRING_LITERAL());
             }
         } catch (RuntimeException e) {
-            throw ParseException.cannotParseValue(ctx, Type.STRING, e);
+            throw ExceptionFactory.cannotParseValue(ctx, Type.STRING, e);
         }
     }
 

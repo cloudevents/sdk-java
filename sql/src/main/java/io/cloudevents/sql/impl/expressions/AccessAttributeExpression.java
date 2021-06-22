@@ -2,8 +2,8 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.impl.ExceptionFactory;
 import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
 import org.antlr.v4.runtime.misc.Interval;
@@ -28,7 +28,7 @@ public class AccessAttributeExpression extends BaseExpression {
         Object value = this.getter.apply(event);
         if (value == null) {
             thrower.throwException(
-                EvaluationException.missingAttribute(this.expressionInterval(), this.expressionText(), key)
+                ExceptionFactory.missingAttribute(this.expressionInterval(), this.expressionText(), key)
             );
             return "";
         }

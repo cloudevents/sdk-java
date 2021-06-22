@@ -1,7 +1,7 @@
 package io.cloudevents.sql.impl.expressions;
 
-import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.impl.ExceptionFactory;
 import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import org.antlr.v4.runtime.misc.Interval;
@@ -16,7 +16,7 @@ public class ModuleExpression extends BaseIntegerBinaryExpression {
     Object evaluate(EvaluationRuntime runtime, int left, int right, ExceptionThrower exceptions) {
         if (right == 0) {
             exceptions.throwException(
-                EvaluationException.divisionByZero(expressionInterval(), expressionText(), left)
+                ExceptionFactory.divisionByZero(expressionInterval(), expressionText(), left)
             );
             return 0;
         }
