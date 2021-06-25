@@ -88,6 +88,9 @@ a different feature from the different sub specs of
     [Event Formats](https://github.com/cloudevents/spec/blob/v1.0/spec.md#event-format),
     `MessageReader` /`MessageWriter` to implement
     [Protocol bindings](https://github.com/cloudevents/spec/blob/v1.0/spec.md#protocol-binding)
+-   [`cloudevents-bom`] Module providing a
+    [bill of materials (BOM)](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms)
+    for easier integration of CloudEvents in other projects
 -   [`cloudevents-json-jackson`] Implementation of [JSON Event format] with
     [Jackson](https://github.com/FasterXML/jackson)
 -   [`cloudevents-protobuf`] Implementation of [Protobuf Event format] using code generated
@@ -113,8 +116,10 @@ You can look at the latest published artifacts on
 [Kafka Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/kafka-protocol-binding.md
 [AMQP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/amqp-protocol-binding.md
 [`cloudevents-api`]: https://github.com/cloudevents/sdk-java/tree/master/api
+[`cloudevents-bom`]: https://github.com/cloudevents/sdk-java/tree/master/bom
 [`cloudevents-core`]: https://github.com/cloudevents/sdk-java/tree/master/core
 [`cloudevents-json-jackson`]: https://github.com/cloudevents/sdk-java/tree/master/formats/json-jackson
+[`cloudevents-protobuf`]: https://github.com/cloudevents/sdk-java/tree/master/formats/protobuf
 [`cloudevents-http-vertx`]: https://github.com/cloudevents/sdk-java/tree/master/http/vertx
 [`cloudevents-http-basic`]: https://github.com/cloudevents/sdk-java/tree/master/http/basic
 [`cloudevents-http-restful-ws`]: https://github.com/cloudevents/sdk-java/tree/master/http/restful-ws
