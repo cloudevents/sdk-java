@@ -2,8 +2,8 @@ package io.cloudevents.sql.impl.functions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationContext;
-import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.impl.ExceptionFactory;
 
 public class LeftFunction extends BaseTwoArgumentFunction<String, Integer> {
     public LeftFunction() {
@@ -17,7 +17,7 @@ public class LeftFunction extends BaseTwoArgumentFunction<String, Integer> {
         }
         if (length < 0) {
             ctx.appendException(
-                EvaluationException.functionExecutionError(name(), new IllegalArgumentException("The length of the LEFT substring is lower than 0: " + length))
+                ExceptionFactory.functionExecutionError(name(), new IllegalArgumentException("The length of the LEFT substring is lower than 0: " + length))
             );
             return s;
         }

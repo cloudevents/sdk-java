@@ -6,6 +6,7 @@ import io.cloudevents.sql.ParseException;
 import io.cloudevents.sql.Parser;
 import io.cloudevents.sql.generated.CESQLParserLexer;
 import io.cloudevents.sql.generated.CESQLParserParser;
+import io.cloudevents.sql.impl.ExceptionFactory;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.runtime.ExpressionImpl;
 import org.antlr.v4.runtime.*;
@@ -52,7 +53,7 @@ public class ParserImpl implements Parser {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
                 parseExceptionList.add(
-                    ParseException.recognitionError(e, msg)
+                    ExceptionFactory.recognitionError(e, msg)
                 );
             }
 
@@ -82,7 +83,7 @@ public class ParserImpl implements Parser {
             try {
                 internal = internal.visit(new ConstantFoldingExpressionVisitor());
             } catch (EvaluationException e) {
-                throw ParseException.cannotEvaluateConstantExpression(e);
+                throw ExceptionFactory.cannotEvaluateConstantExpression(e);
             }
         }
 

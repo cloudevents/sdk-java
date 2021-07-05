@@ -2,9 +2,9 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationContext;
-import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Function;
+import io.cloudevents.sql.impl.ExceptionFactory;
 import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
@@ -34,7 +34,7 @@ public class FunctionInvocationExpression extends BaseExpression {
             function = runtime.resolveFunction(functionName, arguments.size());
         } catch (Exception e) {
             thrower.throwException(
-                EvaluationException.cannotDispatchFunction(expressionInterval(), expressionText(), functionName, e)
+                ExceptionFactory.cannotDispatchFunction(expressionInterval(), expressionText(), functionName, e)
             );
             return "";
         }

@@ -1,8 +1,8 @@
 package io.cloudevents.sql.impl.runtime;
 
 import io.cloudevents.sql.EvaluationContext;
-import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.Type;
+import io.cloudevents.sql.impl.ExceptionFactory;
 
 import java.util.Objects;
 
@@ -53,12 +53,12 @@ public class TypeCastingProvider {
                         return Integer.parseInt((String) value);
                     } catch (NumberFormatException e) {
                         ctx.appendException(
-                            EvaluationException.castError(String.class, Integer.class, e)
+                            ExceptionFactory.castError(String.class, Integer.class, e)
                         );
                     }
                 } else {
                     ctx.appendException(
-                        EvaluationException.invalidCastTarget(value.getClass(), target.valueClass())
+                        ExceptionFactory.invalidCastTarget(value.getClass(), target.valueClass())
                     );
                 }
                 return 0;
@@ -68,12 +68,12 @@ public class TypeCastingProvider {
                         return parseBool((String) value);
                     } catch (IllegalArgumentException e) {
                         ctx.appendException(
-                            EvaluationException.castError(String.class, Boolean.class, e)
+                            ExceptionFactory.castError(String.class, Boolean.class, e)
                         );
                     }
                 } else {
                     ctx.appendException(
-                        EvaluationException.invalidCastTarget(value.getClass(), target.valueClass())
+                        ExceptionFactory.invalidCastTarget(value.getClass(), target.valueClass())
                     );
                 }
                 return false;

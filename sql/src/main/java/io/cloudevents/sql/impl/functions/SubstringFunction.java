@@ -2,8 +2,8 @@ package io.cloudevents.sql.impl.functions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationContext;
-import io.cloudevents.sql.EvaluationException;
 import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.impl.ExceptionFactory;
 
 public class SubstringFunction extends BaseTwoArgumentFunction<String, Integer> {
     public SubstringFunction() {
@@ -15,7 +15,7 @@ public class SubstringFunction extends BaseTwoArgumentFunction<String, Integer> 
         try {
             return SubstringWithLengthFunction.substring(x, pos, null);
         } catch (Exception e) {
-            ctx.appendException(EvaluationException.functionExecutionError(
+            ctx.appendException(ExceptionFactory.functionExecutionError(
                 name(),
                 e
             ));
