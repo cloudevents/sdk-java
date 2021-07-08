@@ -36,7 +36,7 @@ curl -v -H'Content-type: application/cloudevents+json' \
     http://localhost:8080/event
 ```
 
-The `/event endpoint is implemented like this (the request and response are modelled directly as a `CloudEvent`):
+The `/event` endpoint is implemented like this (the request and response are modelled directly as a `CloudEvent`):
 
 ```java
 @PostMapping("/event")

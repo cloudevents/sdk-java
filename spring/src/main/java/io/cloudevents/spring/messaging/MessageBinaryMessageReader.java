@@ -15,15 +15,18 @@
  */
 package io.cloudevents.spring.messaging;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+
+import org.springframework.messaging.MessageHeaders;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 
 import static io.cloudevents.spring.messaging.CloudEventsHeaders.CE_PREFIX;
-import static org.springframework.messaging.MessageHeaders.CONTENT_TYPE;
+import static io.cloudevents.spring.messaging.CloudEventsHeaders.CONTENT_TYPE;
 
 /**
  * Utility for converting maps (message headers) to `CloudEvent` contexts.
@@ -33,11 +36,14 @@ import static org.springframework.messaging.MessageHeaders.CONTENT_TYPE;
  */
 class MessageBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
 
-	private final Map<String, Object> headers;
+	private final Map<String, Object> headers = new HashMap<>();
 
 	public MessageBinaryMessageReader(SpecVersion version, Map<String, Object> headers, byte[] payload) {
 		super(version, payload == null ? null : BytesCloudEventData.wrap(payload));
-		this.headers = headers;
+		this.headers.putAll(headers);
+        if (headers.containsKey(MessageHeaders.CONTENT_TYPE) && !headers.containsKey(CONTENT_TYPE)) {
+            this.headers.put(CONTENT_TYPE, headers.get(MessageHeaders.CONTENT_TYPE));
+        }
 	}
 
 	public MessageBinaryMessageReader(SpecVersion version, Map<String, Object> headers) {
@@ -67,6 +73,9 @@ class MessageBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<Stri
 
 	@Override
 	protected String toCloudEventsValue(Object value) {
+		if (value instanceof byte[]) {
+			return new String((byte[])value);
+		}
 		return value.toString();
 	}
 
