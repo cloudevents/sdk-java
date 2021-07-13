@@ -32,7 +32,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <avro.version>1.10.2</avro.version>
+        <avro.version>1.9.2</avro.version>
         <module-name>io.cloudevents.formats.avro</module-name>
     </properties>
 
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.10.2</version>
+            <version>${avro.version}</version>
         </dependency>
 
         <!-- Test deps -->
