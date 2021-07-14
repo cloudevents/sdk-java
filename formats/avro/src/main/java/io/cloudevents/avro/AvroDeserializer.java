@@ -17,16 +17,63 @@
 
 package io.cloudevents.avro;
 
+import java.util.Map;
+import java.net.URI;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.AvroCloudEvent;
 import io.cloudevents.AvroCloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.v1.CloudEventV1;
+import io.cloudevents.rw.CloudEventRWException;
+import io.cloudevents.rw.CloudEventReader;
+import io.cloudevents.rw.CloudEventDataMapper;
+import io.cloudevents.rw.CloudEventWriter;
+import io.cloudevents.rw.CloudEventWriterFactory;
 
-public class AvroDeserializer {
+public class AvroDeserializer implements CloudEventReader {
 
-    public static CloudEvent fromAvro(AvroCloudEvent avroCloudEvent) {
+    private final AvroCloudEvent avroCloudEvent;
 
+    public AvroDeserializer(AvroCloudEvent avroCloudEvent) {
+        this.avroCloudEvent = avroCloudEvent;
+    }
+
+    @Override
+    public <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory,
+                                                     CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException {
+
+        Map<CharSequence, Object> avroCloudEventAttrs = this.avroCloudEvent.getAttribute();
+        SpecVersion specVersion = SpecVersion.parse((String)avroCloudEventAttrs.get(CloudEventV1.SPECVERSION));
+        final CloudEventWriter<R> writer = writerFactory.create(specVersion);
+
+        for (Map.Entry<CharSequence, Object> entry: avroCloudEventAttrs.entrySet()) {
+            String key = entry.getKey().toString();
+
+            if (key.equals(CloudEventV1.TIME)) {
+                // OffsetDateTime
+                Long timeAsLong = (Long) entry.getValue();
+                Instant timeAsInstant = Instant.ofEpochMilli(timeAsLong);
+                OffsetDateTime value = OffsetDateTime.ofInstant(timeAsInstant, ZoneOffset.UTC);
+                writer.withContextAttribute(key, value);
+
+            } else if (key.equals(CloudEventV1.DATASCHEMA)) {
+                // URI
+                URI value = URI.create((String) entry.getValue());
+                writer.withContextAttribute(key, value);
+            } else {
+                // String
+                writer.withContextAttribute(key, (String) entry.getValue());
+            }
+        }
+
+        // TOOD: data
+        return writer.end();
     }
 
 }

@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
+import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.AvroCloudEvent;
 import io.cloudevents.AvroCloudEventData;
 
@@ -32,14 +33,17 @@ public class AvroSerializer {
 
         Map<CharSequence, Object> attrs = new HashMap<>();
 
-        attrs.put("type", e.getType());
-        attrs.put("specversion", e.getSpecVersion().toString());
-        attrs.put("id", e.getId());
-        attrs.put("source", e.getSource());
-        attrs.put("time", e.getTime());
-        attrs.put("dataschema", e.getDataSchema());
-        attrs.put("contenttype", AvroFormat.AVRO_CONTENT_TYPE);
-        attrs.put("datacontenttype", e.getDataContentType());
+        attrs.put(CloudEventV1.TYPE, e.getType());
+        attrs.put(CloudEventV1.SPECVERSION, e.getSpecVersion().toString());
+        attrs.put(CloudEventV1.ID, e.getId());
+        attrs.put(CloudEventV1.SOURCE, e.getSource());
+        // convert to long
+        attrs.put(CloudEventV1.TIME, e.getTime().toInstant().toEpochMilli());
+        // convert
+        attrs.put(CloudEventV1.DATASCHEMA, e.getDataSchema().toString());
+        attrs.put(CloudEventV1.SUBJECT, e.getSubject());
+
+        attrs.put(CloudEventV1.DATACONTENTTYPE, e.getDataContentType());
 
         avroCloudEvent.setAttribute(attrs);
 
