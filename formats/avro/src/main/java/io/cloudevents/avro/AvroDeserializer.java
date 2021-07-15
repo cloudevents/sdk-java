@@ -19,16 +19,12 @@ package io.cloudevents.avro;
 
 import java.util.Map;
 import java.net.URI;
-import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 
-import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.AvroCloudEvent;
-import io.cloudevents.AvroCloudEventData;
-import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventReader;
@@ -57,9 +53,7 @@ public class AvroDeserializer implements CloudEventReader {
 
             if (key.equals(CloudEventV1.TIME)) {
                 // OffsetDateTime
-                Long timeAsLong = (Long) entry.getValue();
-                Instant timeAsInstant = Instant.ofEpochMilli(timeAsLong);
-                OffsetDateTime value = OffsetDateTime.ofInstant(timeAsInstant, ZoneOffset.UTC);
+                OffsetDateTime value = OffsetDateTime.parse((String) entry.getValue());
                 writer.withContextAttribute(key, value);
 
             } else if (key.equals(CloudEventV1.DATASCHEMA)) {
@@ -72,8 +66,13 @@ public class AvroDeserializer implements CloudEventReader {
             }
         }
 
-        // TOOD: data
-        return writer.end();
+        byte[] data = (byte[]) this.avroCloudEvent.getData();
+
+        if (data != null) {
+            return writer.end(mapper.map(BytesCloudEventData.wrap(data)));
+        } else {
+            return writer.end();
+        }
     }
 
 }

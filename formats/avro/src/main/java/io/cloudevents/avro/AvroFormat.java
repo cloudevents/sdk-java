@@ -24,6 +24,7 @@ import java.io.IOException;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.AvroCloudEvent;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.format.EventSerializationException;
@@ -55,7 +56,7 @@ public class AvroFormat implements EventFormat {
          try {
              AvroCloudEvent avroCloudEvent = AvroCloudEvent.getDecoder().decode(input);
 
-             return AvroDeserializer.fromAvro(avroCloudEvent);
+             return new AvroDeserializer(avroCloudEvent).read(CloudEventBuilder::fromSpecVersion, mapper);
          } catch (IOException e) {
              throw new EventDeserializationException(e);
          }

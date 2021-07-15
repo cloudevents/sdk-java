@@ -37,8 +37,8 @@ public class AvroSerializer {
         attrs.put(CloudEventV1.SPECVERSION, e.getSpecVersion().toString());
         attrs.put(CloudEventV1.ID, e.getId());
         attrs.put(CloudEventV1.SOURCE, e.getSource());
-        // convert to long
-        attrs.put(CloudEventV1.TIME, e.getTime().toInstant().toEpochMilli());
+        // convert to string
+        attrs.put(CloudEventV1.TIME, e.getTime().toString());
         // convert
         attrs.put(CloudEventV1.DATASCHEMA, e.getDataSchema().toString());
         attrs.put(CloudEventV1.SUBJECT, e.getSubject());
