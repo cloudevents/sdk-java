@@ -1,0 +1,22 @@
+{
+    "properties": [
+        {
+            "defaultValue": true,
+            "name": "cloudevents.spring.rsocket.enabled",
+            "description": "Enables CloudEvents Spring RSocket integration.",
+            "type": "java.lang.Boolean"
+        },
+        {
+            "defaultValue": true,
+            "name": "cloudevents.spring.web.enabled",
+            "description": "Enables CloudEvents Spring Web integration.",
+            "type": "java.lang.Boolean"
+        },
+        {
+            "defaultValue": true,
+            "name": "cloudevents.spring.webflux.enabled",
+            "description": "Enables CloudEvents Spring WebFlux integration.",
+            "type": "java.lang.Boolean"
+        }
+    ]
+}

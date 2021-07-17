@@ -76,6 +76,11 @@
         <module>http/restful-ws</module>
         <module>kafka</module>
         <module>spring</module>
+        <module>spring-boot/autoconfigure</module>
+        <module>spring-boot/rsocket-starter</module>
+        <module>spring-boot/starter</module>
+        <module>spring-boot/web-starter</module>
+        <module>spring-boot/webflux-starter</module>
         <module>sql</module>
         <module>bom</module>
     </modules>
@@ -92,7 +97,21 @@
         <!-- Dependencies -->
         <assertj-core.version>3.16.1</assertj-core.version>
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
+        <spring-boot.version>2.5.9</spring-boot.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <distributionManagement>
         <site>
@@ -168,6 +187,7 @@
                         <link>https://qpid.apache.org/releases/qpid-proton-j-0.33.7/api/</link>
                         <link>https://fasterxml.github.io/jackson-databind/javadoc/2.10/</link>
                     </links>
+                    <skippedModules>cloudevents-spring-boot-starter</skippedModules>
                 </configuration>
                 <executions>
                     <execution>

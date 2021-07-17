@@ -29,17 +29,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-rsocket</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-spring</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-json-jackson</artifactId>
+            <artifactId>cloudevents-rsocket-spring-boot-starter</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -58,5 +49,5 @@
             </plugin>
         </plugins>
     </build>
-   
+
 </project>
