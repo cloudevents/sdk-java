@@ -19,6 +19,7 @@ package io.cloudevents.avro;
 
 import java.util.Map;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
 
 import io.cloudevents.CloudEventData;
@@ -43,32 +44,36 @@ class AvroDeserializer implements CloudEventReader {
     @Override
     public <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory,
                                                      CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException {
-
-        Map<CharSequence, Object> avroCloudEventAttrs = this.avroCloudEvent.getAttribute();
+        Map<String, Object> avroCloudEventAttrs = this.avroCloudEvent.getAttribute();
         SpecVersion specVersion = SpecVersion.parse((String)avroCloudEventAttrs.get(CloudEventV1.SPECVERSION));
         final CloudEventWriter<R> writer = writerFactory.create(specVersion);
 
-        for (Map.Entry<CharSequence, Object> entry: avroCloudEventAttrs.entrySet()) {
+        for (Map.Entry<String, Object> entry: avroCloudEventAttrs.entrySet()) {
             String key = entry.getKey().toString();
 
-            if (key.equals(CloudEventV1.TIME)) {
-                // OffsetDateTime
-                OffsetDateTime value = OffsetDateTime.parse((String) entry.getValue());
-                writer.withContextAttribute(key, value);
-
-            } else if (key.equals(CloudEventV1.DATASCHEMA)) {
-                // URI
-                URI value = URI.create((String) entry.getValue());
-                writer.withContextAttribute(key, value);
-            } else {
-                // String
-                writer.withContextAttribute(key, (String) entry.getValue());
+            switch(key) {
+                case CloudEventV1.SPECVERSION:
+                    continue;
+                case CloudEventV1.TIME: {
+                    // OffsetDateTime
+                    OffsetDateTime value = OffsetDateTime.parse((String) entry.getValue());
+                    writer.withContextAttribute(key, value);
+                };
+                case CloudEventV1.DATASCHEMA: {
+                    // URI
+                    URI value = URI.create((String) entry.getValue());
+                    writer.withContextAttribute(key, value);
+                };
+                default:
+                    writer.withContextAttribute(key, (String) entry.getValue());
             }
         }
 
-        byte[] data = (byte[]) this.avroCloudEvent.getData();
+        ByteBuffer buffer = (ByteBuffer) this.avroCloudEvent.getData();
 
-        if (data != null) {
+        if (buffer != null) {
+            byte[] data = new byte[buffer.remaining()];
+            buffer.get(data);
             return writer.end(mapper.map(BytesCloudEventData.wrap(data)));
         } else {
             return writer.end();

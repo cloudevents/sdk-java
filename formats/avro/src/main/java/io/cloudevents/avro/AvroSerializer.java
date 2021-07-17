@@ -17,6 +17,7 @@
 
 package io.cloudevents.avro;
 
+import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -30,18 +31,24 @@ class AvroSerializer {
     public static final AvroCloudEvent toAvro(CloudEvent e) {
         AvroCloudEvent avroCloudEvent = new AvroCloudEvent();
 
-        Map<CharSequence, Object> attrs = new HashMap<>();
+        Map<String, Object> attrs = new HashMap<>();
 
-        attrs.put(CloudEventV1.TYPE, e.getType());
         attrs.put(CloudEventV1.SPECVERSION, e.getSpecVersion().toString());
+        attrs.put(CloudEventV1.TYPE, e.getType());
         attrs.put(CloudEventV1.ID, e.getId());
         attrs.put(CloudEventV1.SOURCE, e.getSource());
-        // convert to string
-        attrs.put(CloudEventV1.TIME, e.getTime().toString());
-        // convert
-        attrs.put(CloudEventV1.DATASCHEMA, e.getDataSchema().toString());
-        attrs.put(CloudEventV1.SUBJECT, e.getSubject());
 
+        if (e.getTime() != null) {
+            // convert to string
+            attrs.put(CloudEventV1.TIME, e.getTime().toString());
+        }
+
+        if (e.getDataSchema() != null) {
+            // convert
+            attrs.put(CloudEventV1.DATASCHEMA, e.getDataSchema().toString());
+        }
+
+        attrs.put(CloudEventV1.SUBJECT, e.getSubject());
         attrs.put(CloudEventV1.DATACONTENTTYPE, e.getDataContentType());
 
         avroCloudEvent.setAttribute(attrs);
@@ -49,7 +56,7 @@ class AvroSerializer {
         // check datacontenttype
         CloudEventData cloudEventData = e.getData();
         if (cloudEventData != null) {
-            avroCloudEvent.setData(cloudEventData.toBytes());
+            avroCloudEvent.setData(ByteBuffer.wrap(cloudEventData.toBytes()));
         }
 
         return avroCloudEvent;

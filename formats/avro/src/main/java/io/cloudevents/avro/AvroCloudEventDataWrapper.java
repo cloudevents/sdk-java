@@ -35,7 +35,7 @@ public class AvroCloudEventDataWrapper implements CloudEventData {
     /**
      * Wraps a JSON object-like data structure.
      */
-    public AvroCloudEventDataWrapper(Map<CharSequence, Object> data) {
+    public AvroCloudEventDataWrapper(Map<String, Object> data) {
         avroCloudEventData = new AvroCloudEventData();
         avroCloudEventData.setValue(data);
     }
