@@ -32,7 +32,7 @@ import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventWriter;
 import io.cloudevents.rw.CloudEventWriterFactory;
 
-public class AvroDeserializer implements CloudEventReader {
+class AvroDeserializer implements CloudEventReader {
 
     private final AvroCloudEvent avroCloudEvent;
 

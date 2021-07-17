@@ -24,9 +24,8 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.AvroCloudEvent;
-import io.cloudevents.AvroCloudEventData;
 
-public class AvroSerializer {
+class AvroSerializer {
 
     public static final AvroCloudEvent toAvro(CloudEvent e) {
         AvroCloudEvent avroCloudEvent = new AvroCloudEvent();
