@@ -75,7 +75,7 @@ PartitionKeyExtensionInterceptor.
 ```java
 producerProps.put(
     ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
-    io.cloudevents.kafka.PartitionKeyExtensionInterceptor.class
+    io.cloudevents.kafka.PartitionKeyExtensionInterceptor.class.getName()
 );
 ```
 
