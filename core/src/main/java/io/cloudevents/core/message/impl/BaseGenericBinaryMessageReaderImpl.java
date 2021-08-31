@@ -56,6 +56,9 @@ public abstract class BaseGenericBinaryMessageReaderImpl<HK, HV> extends BaseBin
         // This implementation avoids to use visitAttributes and visitExtensions
         // in order to complete the visit in one loop
         this.forEachHeader((key, value) -> {
+            if (value == null) {
+                return;
+            }
             if (isContentTypeHeader(key)) {
                 visitor.withContextAttribute(CloudEventV1.DATACONTENTTYPE, toCloudEventsValue(value));
             } else if (isCloudEventsHeader(key)) {

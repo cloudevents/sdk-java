@@ -23,6 +23,7 @@ import io.cloudevents.core.mock.MyCloudEventData;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.rw.CloudEventDataMapper;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Headers;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -58,6 +59,26 @@ public class CloudEventDeserializerTest {
                 .withData("application/json", new MyCloudEventData(10))
                 .build()
         );
+    }
+
+    @Test
+    public void deserializerShouldWorkWithNullableManuallyDefinedHeaders() {
+        String topic = "test";
+        CloudEvent testCloudEvent = Data.V1_MIN;
+        CloudEventDeserializer cloudEventDeserializer = new CloudEventDeserializer();
+
+        // Serialize the event first
+        ProducerRecord<Void, byte[]> inRecord = KafkaMessageFactory
+            .createWriter(topic)
+            .writeBinary(testCloudEvent);
+
+        // add optional subject header with null value
+        Headers headers = inRecord.headers();
+        headers.add("ce_subject", null);
+        CloudEvent outEvent = cloudEventDeserializer.deserialize(topic, headers, inRecord.value());
+
+        assertThat(outEvent)
+            .isEqualTo(testCloudEvent);
     }
 
     private void testDeserialize(CloudEventDeserializer deserializer, CloudEvent input, CloudEvent expected) {
