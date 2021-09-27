@@ -115,6 +115,18 @@ public Mono<CloudEvent> event(@RequestBody Mono<CloudEvent> body) {
 }
 ```
 
+The `CodecCustomizer` also works on the client side, so you can use it anywhere that you use a `WebClient` (including in an MVC application). Here's a simple example of a Cloud Event HTTP client:
+
+```java
+WebClient client = ...; // Either WebClient.create() or @Autowired a WebClient.Builder
+CloudEvent event = ...; // Create a CloudEvent
+Mono<CloudEvent> response = client.post()
+  .uri("http://localhost:8080/events")
+  .bodyValue(event)
+  .retrieve()
+  .bodyToMono(CloudEvent.class);
+```
+
 ### Messaging
 
 Spring Messaging is applicable in a wide range of use cases including WebSockets, JMS, Apache Kafka, RabbitMQ and others. It is also a core part of the Spring Cloud Function and Spring Cloud Stream libraries, so those are natural tools to use to build applications that use Cloud Events. The core abstraction in Spring is the `Message` which carries headers and a payload, just like a `CloudEvent`. Since the mapping is quite direct it makes sense to have a set of converters for Spring applications, so you can consume and produce `CloudEvents`, by treating them as `Messages`. This project provides a converter that you can register in a Spring Messaging application:
