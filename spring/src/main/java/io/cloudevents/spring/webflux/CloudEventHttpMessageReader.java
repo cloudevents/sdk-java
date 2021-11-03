@@ -28,6 +28,7 @@ import org.springframework.util.StreamUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +63,8 @@ public class CloudEventHttpMessageReader implements HttpMessageReader<CloudEvent
 			Map<String, Object> hints) {
 		HttpHeaders headers = message.getHeaders();
 		Mono<byte[]> body = DataBufferUtils.join(message.getBody()).map(buffer -> {
-			try {
-				return StreamUtils.copyToByteArray(buffer.asInputStream(true));
+			try (InputStream inputStream = buffer.asInputStream(true)) {
+				return StreamUtils.copyToByteArray(inputStream);
 			}
 			catch (Exception e) {
 				throw new IllegalArgumentException(e);
