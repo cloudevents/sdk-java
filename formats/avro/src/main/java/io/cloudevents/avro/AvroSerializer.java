@@ -24,11 +24,11 @@ import java.util.HashMap;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
-import io.cloudevents.AvroCloudEvent;
+import io.cloudevents.avro.AvroCloudEvent;
 
 class AvroSerializer {
 
-    public static final AvroCloudEvent toAvro(CloudEvent e) {
+    static final AvroCloudEvent toAvro(CloudEvent e) {
         AvroCloudEvent avroCloudEvent = new AvroCloudEvent();
 
         Map<String, Object> attrs = new HashMap<>();

@@ -18,11 +18,11 @@ package io.cloudevents.avro;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
-import io.cloudevents.AvroCloudEventData;
+import io.cloudevents.avro.AvroCloudEventData;
 import io.cloudevents.CloudEventData;
+import io.cloudevents.core.format.EventDeserializationException;
 
 /**
  * Encode JSON style cloudevent data into Avro format.
@@ -30,7 +30,7 @@ import io.cloudevents.CloudEventData;
  */
 public class AvroCloudEventDataWrapper implements CloudEventData {
 
-    private AvroCloudEventData avroCloudEventData;
+    private final AvroCloudEventData avroCloudEventData;
 
     /**
      * Wraps a JSON object-like data structure.
@@ -42,13 +42,11 @@ public class AvroCloudEventDataWrapper implements CloudEventData {
 
     @Override
     public byte[] toBytes() {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        try {
+        try (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
             AvroCloudEventData.getEncoder().encode(this.avroCloudEventData, bytes);
-        } catch (IOException ignore) {
-            // ignored
+            return bytes.toByteArray();
+        } catch (IOException e) {
+            throw new EventDeserializationException(e);
         }
-
-        return bytes.toByteArray();
     }
 }

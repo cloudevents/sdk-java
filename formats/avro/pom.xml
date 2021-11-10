@@ -33,6 +33,7 @@
 
     <properties>
         <avro.version>1.9.2</avro.version>
+        <build.helper.version>3.2.0</build.helper.version>
         <module-name>io.cloudevents.formats.avro</module-name>
     </properties>
 
@@ -41,7 +42,7 @@
             <plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
-                <version>1.10.2</version>
+                <version>${avro.version}</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -59,7 +60,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>${build.helper.version}</version>
                 <executions>
                     <execution>
                         <id>add-source</id>

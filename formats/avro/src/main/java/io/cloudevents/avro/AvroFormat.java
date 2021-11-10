@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
-import io.cloudevents.AvroCloudEvent;
+import io.cloudevents.avro.AvroCloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
@@ -37,23 +37,19 @@ public class AvroFormat implements EventFormat {
     @Override
     public byte[] serialize(CloudEvent event) throws EventSerializationException {
         AvroCloudEvent avroCloudEvent = AvroSerializer.toAvro(event);
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-        try {
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             AvroCloudEvent.getEncoder().encode(avroCloudEvent, output);
+            return output.toByteArray();
         } catch (IOException e) {
             throw new EventSerializationException(e);
         }
-
-        return output.toByteArray();
     }
 
     @Override
     public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper)
         throws EventDeserializationException {
-        ByteArrayInputStream input = new ByteArrayInputStream(bytes);
-
-         try {
+        try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
              AvroCloudEvent avroCloudEvent = AvroCloudEvent.getDecoder().decode(input);
 
              return new AvroDeserializer(avroCloudEvent).read(CloudEventBuilder::fromSpecVersion, mapper);

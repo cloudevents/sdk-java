@@ -24,7 +24,7 @@ import java.time.OffsetDateTime;
 
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
-import io.cloudevents.AvroCloudEvent;
+import io.cloudevents.avro.AvroCloudEvent;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import io.cloudevents.rw.CloudEventRWException;
