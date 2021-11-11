@@ -19,6 +19,7 @@ package io.cloudevents.avro;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import io.cloudevents.avro.AvroCloudEventData;
 import io.cloudevents.CloudEventData;
@@ -37,7 +38,7 @@ public class AvroCloudEventDataWrapper implements CloudEventData {
      */
     public AvroCloudEventDataWrapper(Map<String, Object> data) {
         avroCloudEventData = new AvroCloudEventData();
-        avroCloudEventData.setValue(data);
+        avroCloudEventData.setValue(Objects.requireNonNull(data));
     }
 
     @Override

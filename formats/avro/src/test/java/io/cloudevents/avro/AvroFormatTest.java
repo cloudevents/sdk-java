@@ -17,6 +17,7 @@
 package io.cloudevents.avro;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.net.URI;
 
 import io.cloudevents.CloudEvent;
@@ -29,7 +30,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AvroFormatTest {
 
-    Map<String, Object> testData = Map.of("name", "Ning", "age", 22.0);
+    public static Map<String, Object> testData = new HashMap<>();
+
+    static {
+        testData.put("name", "Ning");
+        testData.put("age", 22.0);
+    }
 
     @Test
     public void testSerde() {
@@ -47,6 +53,35 @@ public class AvroFormatTest {
             .build();
         assertThat(cloudEvent).isNotNull();
         assertThat(cloudEvent.getSpecVersion()).isEqualTo(SpecVersion.V1);
+
+        byte[] bytes = avroFormat.serialize(cloudEvent);
+
+        assertThat(bytes).isNotNull();
+        assertThat(bytes).hasSizeGreaterThan(0);
+
+        CloudEvent cloudEvent2 = avroFormat.deserialize(bytes);
+
+        assertThat(cloudEvent2).isNotNull();
+        assertThat(cloudEvent2.getId()).isEqualTo("1");
+        assertThat(cloudEvent2.getType()).isEqualTo("testdata");
+    }
+
+    @Test
+    public void testV03Serde() {
+        EventFormat avroFormat = new AvroFormat();
+        CloudEventData cloudEventData = new AvroCloudEventDataWrapper(testData);
+
+        assertThat(cloudEventData).isNotNull();
+        assertThat(cloudEventData.toBytes()).isNotNull();
+
+        CloudEvent cloudEvent = CloudEventBuilder.v03()
+            .withId("1")
+            .withType("testdata")
+            .withSource(URI.create("http://localhost/test"))
+            .withData("application/avro", cloudEventData)
+            .build();
+        assertThat(cloudEvent).isNotNull();
+        assertThat(cloudEvent.getSpecVersion()).isEqualTo(SpecVersion.V03);
 
         byte[] bytes = avroFormat.serialize(cloudEvent);
 
