@@ -4,22 +4,20 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.function.Function;
 
-import io.cloudevents.CloudEvent;
-import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.spring.messaging.CloudEventMessageConverter;
-import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
-import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.CodecConfigurer;
-import org.springframework.web.bind.annotation.RestController;
+
+import io.cloudevents.CloudEvent;
+import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.spring.messaging.CloudEventMessageConverter;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 
 @SpringBootApplication
-@RestController
 public class DemoApplication {
 
 	public static void main(String[] args) throws Exception {
