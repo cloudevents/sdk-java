@@ -32,7 +32,12 @@ public interface CloudEventReader {
     /**
      * Like {@link #read(CloudEventWriterFactory, CloudEventDataMapper)}, but with the identity {@link CloudEventDataMapper}.
      *
+     * @param <W> The type of the {@link CloudEventWriter} created by writerFactory
+     * @param <R> The return value of the {@link CloudEventWriter} created by writerFactory
+     * @param writerFactory a factory that generates a visitor starting from the SpecVersion of the event
      * @see #read(CloudEventWriterFactory, CloudEventDataMapper)
+     * @return the value returned by {@link CloudEventWriter#end()} or {@link CloudEventWriter#end(CloudEventData)}
+     * @throws CloudEventRWException if something went wrong during the read.
      */
     default <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory) throws CloudEventRWException {
         return read(writerFactory, CloudEventDataMapper.identity());
