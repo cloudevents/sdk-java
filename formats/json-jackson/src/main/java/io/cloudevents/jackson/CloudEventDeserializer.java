@@ -126,7 +126,13 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
 
                 // Now let's process the extensions
                 node.fields().forEachRemaining(entry -> {
-                    String extensionName = entry.getKey();
+                    String extensionName = entry.getKey().toLowerCase();
+
+                    // ignore not valid extension name
+                    if (!this.isValidExtensionName(extensionName)) {
+                        return;
+                    }
+
                     JsonNode extensionValue = entry.getValue();
 
                     switch (extensionValue.getNodeType()) {
@@ -192,6 +198,27 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                 );
             }
         }
+
+        /**
+         * Validates the extension name as defined in  CloudEvents spec.
+         *
+         * @param name the extension name
+         * @return true if extension name is valid, false otherwise
+         * @see <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
+         */
+        private boolean isValidExtensionName(String name) {
+            for (int i = 0; i < name.length(); i++) {
+                if (!isValidChar(name.charAt(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private boolean isValidChar(char c) {
+            return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
+        }
+
     }
 
     @Override
