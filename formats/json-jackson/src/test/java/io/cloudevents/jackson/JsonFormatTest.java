@@ -27,14 +27,12 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.rw.CloudEventRWException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -86,6 +84,22 @@ class JsonFormatTest {
     @MethodSource("deserializeTestArguments")
     void deserialize(String inputFile, CloudEvent output) {
         CloudEvent deserialized = getFormat().deserialize(loadFile(inputFile));
+        assertThat(deserialized)
+            .isEqualTo(output);
+    }
+
+    @ParameterizedTest
+    @MethodSource("deserializeTestArgumentsUpperCaseExtensionName")
+    void deserializeWithUpperCaseExtensionName(String inputFile, CloudEvent output) {
+        CloudEvent deserialized = getFormat().withForceExtensionNameLowerCaseDeserialization().deserialize(loadFile(inputFile));
+        assertThat(deserialized)
+            .isEqualTo(output);
+    }
+
+    @ParameterizedTest
+    @MethodSource("deserializeTestArgumentsInvalidExtensionName")
+    void deserializeWithInvalidExtensionName(String inputFile, CloudEvent output) {
+        CloudEvent deserialized = getFormat().withForceIgnoreInvalidExtensionNameDeserialization().deserialize(loadFile(inputFile));
         assertThat(deserialized)
             .isEqualTo(output);
     }
@@ -201,6 +215,20 @@ class JsonFormatTest {
             Arguments.of("v1/base64_xml_data.json", V1_WITH_XML_DATA),
             Arguments.of("v1/text_data.json", V1_WITH_TEXT_DATA),
             Arguments.of("v1/base64_text_data.json", V1_WITH_TEXT_DATA)
+        );
+    }
+
+    public static Stream<Arguments> deserializeTestArgumentsUpperCaseExtensionName() {
+        return Stream.of(
+            Arguments.of("v03/json_data_with_ext_upper_case.json", normalizeToJsonValueIfNeeded(V03_WITH_JSON_DATA_WITH_EXT)),
+            Arguments.of("v1/json_data_with_ext_upper_case.json", normalizeToJsonValueIfNeeded(V1_WITH_JSON_DATA_WITH_EXT))
+        );
+    }
+
+    public static Stream<Arguments> deserializeTestArgumentsInvalidExtensionName() {
+        return Stream.of(
+            Arguments.of("v03/json_data_with_ext_invalid.json", normalizeToJsonValueIfNeeded(V03_WITH_JSON_DATA_WITH_EXT)),
+            Arguments.of("v1/json_data_with_ext_invalid.json", normalizeToJsonValueIfNeeded(V1_WITH_JSON_DATA_WITH_EXT))
         );
     }
 

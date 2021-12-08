@@ -38,19 +38,35 @@ import java.io.IOException;
  * Jackson {@link com.fasterxml.jackson.databind.JsonDeserializer} for {@link CloudEvent}
  */
 class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
+    private final boolean forceExtensionNameLowerCaseDeserialization;
+    private final boolean forceIgnoreInvalidExtensionNameDeserialization;
 
-    protected CloudEventDeserializer() {
+    protected CloudEventDeserializer(
+        boolean forceExtensionNameLowerCaseDeserialization,
+        boolean forceIgnoreInvalidExtensionNameDeserialization
+    ) {
         super(CloudEvent.class);
+        this.forceExtensionNameLowerCaseDeserialization = forceExtensionNameLowerCaseDeserialization;
+        this.forceIgnoreInvalidExtensionNameDeserialization = forceIgnoreInvalidExtensionNameDeserialization;
     }
 
     private static class JsonMessage implements CloudEventReader {
 
         private final JsonParser p;
         private final ObjectNode node;
+        private final boolean forceExtensionNameLowerCaseDeserialization;
+        private final boolean forceIgnoreInvalidExtensionNameDeserialization;
 
-        public JsonMessage(JsonParser p, ObjectNode node) {
+        public JsonMessage(
+            JsonParser p,
+            ObjectNode node,
+            boolean forceExtensionNameLowerCaseDeserialization,
+            boolean forceIgnoreInvalidExtensionNameDeserialization
+        ) {
             this.p = p;
             this.node = node;
+            this.forceExtensionNameLowerCaseDeserialization = forceExtensionNameLowerCaseDeserialization;
+            this.forceIgnoreInvalidExtensionNameDeserialization = forceIgnoreInvalidExtensionNameDeserialization;
         }
 
         @Override
@@ -126,10 +142,12 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
 
                 // Now let's process the extensions
                 node.fields().forEachRemaining(entry -> {
-                    String extensionName = entry.getKey().toLowerCase();
+                    String extensionName = entry.getKey();
+                    if (this.forceExtensionNameLowerCaseDeserialization) {
+                        extensionName = extensionName.toLowerCase();
+                    }
 
-                    // ignore not valid extension name
-                    if (!this.isValidExtensionName(extensionName)) {
+                    if (this.shouldSkipExtensionName(extensionName)) {
                         return;
                     }
 
@@ -199,6 +217,11 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
             }
         }
 
+        // ignore not valid extension name
+        private boolean shouldSkipExtensionName(String extensionName) {
+            return this.forceIgnoreInvalidExtensionNameDeserialization && !this.isValidExtensionName(extensionName);
+        }
+
         /**
          * Validates the extension name as defined in  CloudEvents spec.
          *
@@ -228,7 +251,8 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         ObjectNode node = ctxt.readValue(p, ObjectNode.class);
 
         try {
-            return new JsonMessage(p, node).read(CloudEventBuilder::fromSpecVersion);
+            return new JsonMessage(p, node, this.forceExtensionNameLowerCaseDeserialization, this.forceIgnoreInvalidExtensionNameDeserialization)
+                .read(CloudEventBuilder::fromSpecVersion);
         } catch (RuntimeException e) {
             // Yeah this is bad but it's needed to support checked exceptions...
             if (e.getCause() instanceof IOException) {
