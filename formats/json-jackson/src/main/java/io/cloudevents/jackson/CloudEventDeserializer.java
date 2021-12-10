@@ -38,19 +38,39 @@ import java.io.IOException;
  * Jackson {@link com.fasterxml.jackson.databind.JsonDeserializer} for {@link CloudEvent}
  */
 class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
+    private final boolean forceExtensionNameLowerCaseDeserialization;
+    private final boolean forceIgnoreInvalidExtensionNameDeserialization;
 
     protected CloudEventDeserializer() {
+        this(false, false);
+    }
+
+    protected CloudEventDeserializer(
+        boolean forceExtensionNameLowerCaseDeserialization,
+        boolean forceIgnoreInvalidExtensionNameDeserialization
+    ) {
         super(CloudEvent.class);
+        this.forceExtensionNameLowerCaseDeserialization = forceExtensionNameLowerCaseDeserialization;
+        this.forceIgnoreInvalidExtensionNameDeserialization = forceIgnoreInvalidExtensionNameDeserialization;
     }
 
     private static class JsonMessage implements CloudEventReader {
 
         private final JsonParser p;
         private final ObjectNode node;
+        private final boolean forceExtensionNameLowerCaseDeserialization;
+        private final boolean forceIgnoreInvalidExtensionNameDeserialization;
 
-        public JsonMessage(JsonParser p, ObjectNode node) {
+        public JsonMessage(
+            JsonParser p,
+            ObjectNode node,
+            boolean forceExtensionNameLowerCaseDeserialization,
+            boolean forceIgnoreInvalidExtensionNameDeserialization
+        ) {
             this.p = p;
             this.node = node;
+            this.forceExtensionNameLowerCaseDeserialization = forceExtensionNameLowerCaseDeserialization;
+            this.forceIgnoreInvalidExtensionNameDeserialization = forceIgnoreInvalidExtensionNameDeserialization;
         }
 
         @Override
@@ -127,6 +147,14 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                 // Now let's process the extensions
                 node.fields().forEachRemaining(entry -> {
                     String extensionName = entry.getKey();
+                    if (this.forceExtensionNameLowerCaseDeserialization) {
+                        extensionName = extensionName.toLowerCase();
+                    }
+
+                    if (this.shouldSkipExtensionName(extensionName)) {
+                        return;
+                    }
+
                     JsonNode extensionValue = entry.getValue();
 
                     switch (extensionValue.getNodeType()) {
@@ -192,6 +220,32 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                 );
             }
         }
+
+        // ignore not valid extension name
+        private boolean shouldSkipExtensionName(String extensionName) {
+            return this.forceIgnoreInvalidExtensionNameDeserialization && !this.isValidExtensionName(extensionName);
+        }
+
+        /**
+         * Validates the extension name as defined in  CloudEvents spec.
+         *
+         * @param name the extension name
+         * @return true if extension name is valid, false otherwise
+         * @see <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
+         */
+        private boolean isValidExtensionName(String name) {
+            for (int i = 0; i < name.length(); i++) {
+                if (!isValidChar(name.charAt(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private boolean isValidChar(char c) {
+            return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
+        }
+
     }
 
     @Override
@@ -201,7 +255,8 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         ObjectNode node = ctxt.readValue(p, ObjectNode.class);
 
         try {
-            return new JsonMessage(p, node).read(CloudEventBuilder::fromSpecVersion);
+            return new JsonMessage(p, node, this.forceExtensionNameLowerCaseDeserialization, this.forceIgnoreInvalidExtensionNameDeserialization)
+                .read(CloudEventBuilder::fromSpecVersion);
         } catch (RuntimeException e) {
             // Yeah this is bad but it's needed to support checked exceptions...
             if (e.getCause() instanceof IOException) {

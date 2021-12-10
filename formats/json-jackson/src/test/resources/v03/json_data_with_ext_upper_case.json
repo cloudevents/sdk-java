@@ -1,0 +1,14 @@
+{
+    "specversion": "0.3",
+    "id": "1",
+    "type": "mock.test",
+    "source": "http://localhost/source",
+    "schemaurl": "http://localhost/schema",
+    "datacontenttype": "application/json",
+    "data": {},
+    "subject": "sub",
+    "time": "2018-04-26T14:48:09+02:00",
+    "aString": "aaa",
+    "aBoolean": true,
+    "aNumber": 10
+}

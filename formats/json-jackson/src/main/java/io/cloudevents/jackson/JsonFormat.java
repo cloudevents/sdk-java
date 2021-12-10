@@ -45,8 +45,7 @@ public final class JsonFormat implements EventFormat {
     public static final String CONTENT_TYPE = "application/cloudevents+json";
 
     private final ObjectMapper mapper;
-    private final boolean forceDataBase64Serialization;
-    private final boolean forceStringSerialization;
+    private final JsonFormatOptions options;
 
     /**
      * Create a new instance of this class customizing the serialization configuration.
@@ -57,31 +56,86 @@ public final class JsonFormat implements EventFormat {
      * @see #withForceNonJsonDataToString()
      */
     public JsonFormat(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
+        this(
+            JsonFormatOptions.builder()
+                .forceDataBase64Serialization(forceDataBase64Serialization)
+                .forceStringSerialization(forceStringSerialization)
+                .build()
+        );
+    }
+
+    /**
+     * Create a new instance of this class customizing the serialization configuration.
+     *
+     * @param options json serialization / deserialization options
+     */
+    public JsonFormat(JsonFormatOptions options) {
         this.mapper = new ObjectMapper();
-        this.mapper.registerModule(getCloudEventJacksonModule(forceDataBase64Serialization, forceStringSerialization));
-        this.forceDataBase64Serialization = forceDataBase64Serialization;
-        this.forceStringSerialization = forceStringSerialization;
+        this.mapper.registerModule(getCloudEventJacksonModule(options));
+        this.options = options;
     }
 
     /**
      * Create a new instance of this class with default serialization configuration
      */
     public JsonFormat() {
-        this(false, false);
+        this(new JsonFormatOptions());
     }
 
     /**
      * @return a copy of this JsonFormat that serialize events with json data with Base64 encoding
      */
     public JsonFormat withForceJsonDataToBase64() {
-        return new JsonFormat(true, this.forceStringSerialization);
+        return new JsonFormat(
+            JsonFormatOptions.builder()
+                .forceDataBase64Serialization(true)
+                .forceStringSerialization(this.options.isForceStringSerialization())
+                .forceExtensionNameLowerCaseDeserialization(this.options.isForceExtensionNameLowerCaseDeserialization())
+                .forceIgnoreInvalidExtensionNameDeserialization(this.options.isForceIgnoreInvalidExtensionNameDeserialization())
+                .build()
+        );
     }
 
     /**
      * @return a copy of this JsonFormat that serialize events with non-json data as string
      */
     public JsonFormat withForceNonJsonDataToString() {
-        return new JsonFormat(this.forceDataBase64Serialization, true);
+        return new JsonFormat(
+            JsonFormatOptions.builder()
+                .forceDataBase64Serialization(this.options.isForceDataBase64Serialization())
+                .forceStringSerialization(true)
+                .forceExtensionNameLowerCaseDeserialization(this.options.isForceExtensionNameLowerCaseDeserialization())
+                .forceIgnoreInvalidExtensionNameDeserialization(this.options.isForceIgnoreInvalidExtensionNameDeserialization())
+                .build()
+        );
+    }
+
+    /**
+     * @return a copy of this JsonFormat that deserialize events with converting extension name lower case.
+     */
+    public JsonFormat withForceExtensionNameLowerCaseDeserialization() {
+        return new JsonFormat(
+            JsonFormatOptions.builder()
+                .forceDataBase64Serialization(this.options.isForceDataBase64Serialization())
+                .forceStringSerialization(this.options.isForceStringSerialization())
+                .forceExtensionNameLowerCaseDeserialization(true)
+                .forceIgnoreInvalidExtensionNameDeserialization(this.options.isForceIgnoreInvalidExtensionNameDeserialization())
+                .build()
+        );
+    }
+
+    /**
+     * @return a copy of this JsonFormat that deserialize events with ignoring invalid extension name
+     */
+    public JsonFormat withForceIgnoreInvalidExtensionNameDeserialization() {
+        return new JsonFormat(
+            JsonFormatOptions.builder()
+                .forceDataBase64Serialization(this.options.isForceDataBase64Serialization())
+                .forceStringSerialization(this.options.isForceStringSerialization())
+                .forceExtensionNameLowerCaseDeserialization(this.options.isForceExtensionNameLowerCaseDeserialization())
+                .forceIgnoreInvalidExtensionNameDeserialization(true)
+                .build()
+        );
     }
 
     @Override
@@ -137,9 +191,24 @@ public final class JsonFormat implements EventFormat {
      * @see #withForceNonJsonDataToString()
      */
     public static SimpleModule getCloudEventJacksonModule(boolean forceDataBase64Serialization, boolean forceStringSerialization) {
+        return getCloudEventJacksonModule(
+            JsonFormatOptions.builder()
+                .forceDataBase64Serialization(forceDataBase64Serialization)
+                .forceStringSerialization(forceStringSerialization)
+                .build()
+        );
+    }
+
+    /**
+     * @param options json serialization / deserialization options
+     * @return a JacksonModule with CloudEvent serializer/deserializer customizing the data serialization.
+     */
+    public static SimpleModule getCloudEventJacksonModule(JsonFormatOptions options) {
         final SimpleModule ceModule = new SimpleModule("CloudEvent");
-        ceModule.addSerializer(CloudEvent.class, new CloudEventSerializer(forceDataBase64Serialization, forceStringSerialization));
-        ceModule.addDeserializer(CloudEvent.class, new CloudEventDeserializer());
+        ceModule.addSerializer(CloudEvent.class, new CloudEventSerializer(
+            options.isForceDataBase64Serialization(), options.isForceStringSerialization()));
+        ceModule.addDeserializer(CloudEvent.class, new CloudEventDeserializer(
+            options.isForceExtensionNameLowerCaseDeserialization(), options.isForceIgnoreInvalidExtensionNameDeserialization()));
         return ceModule;
     }
 
