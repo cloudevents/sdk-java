@@ -41,6 +41,10 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
     private final boolean forceExtensionNameLowerCaseDeserialization;
     private final boolean forceIgnoreInvalidExtensionNameDeserialization;
 
+    protected CloudEventDeserializer() {
+        this(false, false);
+    }
+
     protected CloudEventDeserializer(
         boolean forceExtensionNameLowerCaseDeserialization,
         boolean forceIgnoreInvalidExtensionNameDeserialization
