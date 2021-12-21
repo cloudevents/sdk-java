@@ -27,14 +27,12 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.rw.CloudEventRWException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -47,7 +45,7 @@ import static org.assertj.core.api.Assertions.*;
 
 class JsonFormatTest {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @ParameterizedTest
     @MethodSource("serializeTestArgumentsDefault")
@@ -184,6 +182,7 @@ class JsonFormatTest {
     public static Stream<Arguments> deserializeTestArguments() {
         return Stream.of(
             Arguments.of("v03/min.json", V03_MIN),
+            Arguments.of("v03/min_subject_null.json", V03_MIN),
             Arguments.of("v03/json_data.json", normalizeToJsonValueIfNeeded(V03_WITH_JSON_DATA)),
             Arguments.of("v03/json_data_with_ext.json", normalizeToJsonValueIfNeeded(V03_WITH_JSON_DATA_WITH_EXT)),
             Arguments.of("v03/base64_json_data.json", V03_WITH_JSON_DATA),
@@ -193,6 +192,7 @@ class JsonFormatTest {
             Arguments.of("v03/text_data.json", V03_WITH_TEXT_DATA),
             Arguments.of("v03/base64_text_data.json", V03_WITH_TEXT_DATA),
             Arguments.of("v1/min.json", V1_MIN),
+            Arguments.of("v1/min_subject_null.json", V1_MIN),
             Arguments.of("v1/json_data.json", normalizeToJsonValueIfNeeded(V1_WITH_JSON_DATA)),
             Arguments.of("v1/json_data_with_ext.json", normalizeToJsonValueIfNeeded(V1_WITH_JSON_DATA_WITH_EXT)),
             Arguments.of("v1/base64_json_data.json", V1_WITH_JSON_DATA),
