@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
@@ -175,12 +176,12 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         private String getOptionalStringNode(ObjectNode objNode, JsonParser p, String attributeName) throws JsonProcessingException {
-            JsonNode unparsedSpecVersion = objNode.remove(attributeName);
-            if (unparsedSpecVersion == null) {
+            JsonNode unparsedAttribute = objNode.remove(attributeName);
+            if (unparsedAttribute == null || unparsedAttribute instanceof NullNode) {
                 return null;
             }
-            assertNodeType(unparsedSpecVersion, JsonNodeType.STRING, attributeName, null);
-            return unparsedSpecVersion.asText();
+            assertNodeType(unparsedAttribute, JsonNodeType.STRING, attributeName, null);
+            return unparsedAttribute.asText();
         }
 
         private void assertNodeType(JsonNode node, JsonNodeType type, String attributeName, String desc) throws JsonProcessingException {
