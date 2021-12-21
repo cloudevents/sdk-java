@@ -176,12 +176,12 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         }
 
         private String getOptionalStringNode(ObjectNode objNode, JsonParser p, String attributeName) throws JsonProcessingException {
-            JsonNode unparsedSpecVersion = objNode.remove(attributeName);
-            if (unparsedSpecVersion == null || unparsedSpecVersion instanceof NullNode) {
+            JsonNode unparsedAttribute = objNode.remove(attributeName);
+            if (unparsedAttribute == null || unparsedAttribute instanceof NullNode) {
                 return null;
             }
-            assertNodeType(unparsedSpecVersion, JsonNodeType.STRING, attributeName, null);
-            return unparsedSpecVersion.asText();
+            assertNodeType(unparsedAttribute, JsonNodeType.STRING, attributeName, null);
+            return unparsedAttribute.asText();
         }
 
         private void assertNodeType(JsonNode node, JsonNodeType type, String attributeName, String desc) throws JsonProcessingException {
