@@ -18,7 +18,7 @@ binding for CloudEvents:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-amqp-proton</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 </dependency>
 ```
 
