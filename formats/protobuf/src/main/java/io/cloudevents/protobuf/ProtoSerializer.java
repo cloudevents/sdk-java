@@ -77,15 +77,6 @@ class ProtoSerializer {
         }
     }
 
-    // The proto spec says all text data should go into the text field. It is really difficult to figure out every case
-    // of text data based on the media type though, so I am just going to check for some common cases.
-    private static boolean isTextType(String type) {
-        if (type == null) {
-            return false;
-        }
-        return type.startsWith("text/") || "application/json".equals(type) || "application/xml".equals(type);
-    }
-
     /**
      * Defines a {@link CloudEventContextWriter} that will allow setting the attributes within a Protobuf object.
      */
@@ -272,9 +263,16 @@ class ProtoSerializer {
                             throw CloudEventRWException.newDataConversion(e, "byte[]", "com.google.protobuf.Any");
                         }
                         protoBuilder.setProtoData(dataAsAny);
-                    } else if (isTextType(dataContentType)) {
+                    } else if (ProtoSupport.isTextContent(dataContentType)) {
+                        /**
+                         * The protobuf format specification states that textual data must
+                         * be carried in the 'text_data' field.
+                         */
                         protoBuilder.setTextDataBytes(ByteString.copyFrom(data.toBytes()));
                     } else {
+                        /**
+                         * All other content is assumed to be binary.
+                         */
                         ByteString byteString = ByteString.copyFrom(data.toBytes());
                         protoBuilder.setBinaryData(byteString);
                     }
