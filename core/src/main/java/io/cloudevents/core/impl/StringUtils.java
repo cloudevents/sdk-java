@@ -21,6 +21,10 @@ import javax.annotation.Nonnull;
 
 final public class StringUtils {
 
+    private StringUtils() {
+        // Prevent construction.
+    }
+
     public static boolean startsWithIgnoreCase(@Nonnull final String s, @Nonnull final String prefix) {
         return s.regionMatches(true /* ignoreCase */, 0, prefix, 0, prefix.length());
     }
