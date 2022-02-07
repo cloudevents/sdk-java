@@ -19,6 +19,7 @@ package io.cloudevents.http.restful.ws.impl;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
+import io.cloudevents.core.impl.StringUtils;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -46,7 +47,7 @@ public final class BinaryRestfulWSMessageReaderImpl extends BaseGenericBinaryMes
 
     @Override
     protected boolean isCloudEventsHeader(String key) {
-        return key.length() > 3 && key.substring(0, CE_PREFIX.length()).toLowerCase().startsWith(CE_PREFIX);
+        return key.length() > CE_PREFIX.length() && StringUtils.startsWithIgnoreCase(key, CE_PREFIX);
     }
 
     @Override

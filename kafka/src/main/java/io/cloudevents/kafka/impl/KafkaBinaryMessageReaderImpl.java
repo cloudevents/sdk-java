@@ -44,7 +44,7 @@ public class KafkaBinaryMessageReaderImpl extends BaseGenericBinaryMessageReader
 
     @Override
     protected boolean isCloudEventsHeader(String key) {
-        return key.length() > 3 && key.substring(0, KafkaHeaders.CE_PREFIX.length()).startsWith(KafkaHeaders.CE_PREFIX);
+        return key.length() > KafkaHeaders.CE_PREFIX.length() && key.startsWith(KafkaHeaders.CE_PREFIX);
     }
 
     @Override

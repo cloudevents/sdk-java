@@ -19,6 +19,7 @@ package io.cloudevents.http.vertx.impl;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
+import io.cloudevents.core.impl.StringUtils;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
@@ -45,7 +46,7 @@ public class BinaryVertxMessageReaderImpl extends BaseGenericBinaryMessageReader
 
     @Override
     protected boolean isCloudEventsHeader(String key) {
-        return key.length() > 3 && key.substring(0, CloudEventsHeaders.CE_PREFIX.length()).toLowerCase().startsWith(CloudEventsHeaders.CE_PREFIX);
+        return key.length() > CloudEventsHeaders.CE_PREFIX.length() && StringUtils.startsWithIgnoreCase(key, CloudEventsHeaders.CE_PREFIX);
     }
 
     @Override

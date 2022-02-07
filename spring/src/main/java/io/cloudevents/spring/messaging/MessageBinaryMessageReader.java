@@ -20,6 +20,7 @@ import java.util.function.BiConsumer;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
+import io.cloudevents.core.impl.StringUtils;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 
 import static io.cloudevents.spring.messaging.CloudEventsHeaders.CE_PREFIX;
@@ -51,8 +52,7 @@ class MessageBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<Stri
 
 	@Override
 	protected boolean isCloudEventsHeader(String key) {
-		return key != null && key.length() > 3
-				&& key.substring(0, CE_PREFIX.length()).toLowerCase().startsWith(CE_PREFIX);
+		return key != null && key.length() > CE_PREFIX.length() && StringUtils.startsWithIgnoreCase(key, CE_PREFIX);
 	}
 
 	@Override
