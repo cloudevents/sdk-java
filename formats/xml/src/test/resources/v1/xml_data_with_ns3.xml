@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<event xmlns="http://cloudevents.io/xmlformat/V1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+       xmlns:geo="http://someauthority.example/"
+       specversion="1.0">
+    <id>1</id>
+    <source>http://localhost/source</source>
+    <type>mock.test</type>
+    <datacontenttype>application/xml</datacontenttype>
+    <data xsi:type="xs:any">
+        <!--
+           NS defined in document root
+           For completeness only, SDKs are unlikely to emit
+           content in this format, but it is semantically correct.
+        -->
+        <geo:Location>
+            <geo:Latitude>51.509865</geo:Latitude>
+            <geo:Longitude>-0.118092</geo:Longitude>
+        </geo:Location>
+    </data>
+    <subject>sub</subject>
+    <time>2018-04-26T14:48:09+02:00</time>
+</event>

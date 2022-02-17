@@ -124,7 +124,18 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return self;
     }
 
+    // @TODO - I think this method should be removed/deprecated
+    // **Number** Is NOT a valid CE Context atrribute type.
+
     public SELF withExtension(@Nonnull String key, @Nonnull Number value) {
+        if (!isValidExtensionName(key)) {
+            throw CloudEventRWException.newInvalidExtensionName(key);
+        }
+        this.extensions.put(key, value);
+        return self;
+    }
+
+    public SELF withExtension(@Nonnull String key, @Nonnull Integer value) {
         if (!isValidExtensionName(key)) {
             throw CloudEventRWException.newInvalidExtensionName(key);
         }

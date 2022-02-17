@@ -70,6 +70,7 @@
         <module>core</module>
         <module>formats/json-jackson</module>
         <module>formats/protobuf</module>
+        <module>formats/xml</module>
         <module>amqp</module>
         <module>http/basic</module>
         <module>http/vertx</module>
