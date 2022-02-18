@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<event xmlns="http://cloudevents.io/xmlformat/V1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+       specversion="1.0">
+    <id>1</id>
+    <source>http://localhost/source</source>
+    <type>mock.test</type>
+    <myinteger xsi:type="xs:int">42</myinteger>
+    <mystring xsi:type="xs:string">Greetings</mystring>
+    <myboolean xsi:type="xs:boolean">false</myboolean>
+</event>

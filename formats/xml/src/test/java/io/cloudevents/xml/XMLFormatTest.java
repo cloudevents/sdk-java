@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018-Present The CloudEvents Authors
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package io.cloudevents.xml;
 
 import io.cloudevents.CloudEvent;
@@ -14,10 +31,8 @@ import org.xmlunit.diff.*;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.stream.Stream;
 
 import static io.cloudevents.core.test.Data.*;
@@ -31,6 +46,25 @@ public class XMLFormatTest {
     public void testRegistration() {
         assertThat(format.serializedContentType()).isNotNull();
         assertThat(format.serializedContentType()).isEqualTo("application/cloudevents+xml");
+    }
+
+    @Test
+    public void verifyExtensions() throws IOException
+    {
+        byte[] raw = TestUtils.getData("v1/with_extensions.xml");
+
+        CloudEvent ce = format.deserialize(raw);
+        assertThat(ce).isNotNull();
+
+        assertExtension(ce, "myinteger", new Integer(42));
+        assertExtension(ce, "mystring", "Greetings");
+        assertExtension(ce, "myboolean", Boolean.FALSE);
+    }
+
+    private void assertExtension(CloudEvent ce, String name, Object expected) {
+        assertThat(ce.getExtension(name)).isNotNull();
+        assertThat(ce.getExtension(name)).isInstanceOf(expected.getClass());
+        assertThat(ce.getExtension(name)).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -106,7 +140,7 @@ public class XMLFormatTest {
     public void deserialize(String xmlFile) throws IOException {
 
         // Get the test data
-        byte[] data = getData(xmlFile);
+        byte[] data = TestUtils.getData(xmlFile);
 
         assertThat(data).isNotNull();
         assertThat(data).isNotEmpty();
@@ -128,7 +162,7 @@ public class XMLFormatTest {
      */
     public void roundTrip(String fileName) throws IOException {
 
-        byte[] inputData = getData(fileName);
+        byte[] inputData = TestUtils.getData(fileName);
 
         // (1) DeSerialize
         CloudEvent ce = format.deserialize(inputData);
@@ -181,31 +215,13 @@ public class XMLFormatTest {
 
     //-------------------------------------------------------
 
-    private static File getFile(String filename) throws IOException {
-        URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
-        assertThat(file).isNotNull();
-        File dataFile = new File(file.getFile());
-        assertThat(dataFile).isNotNull();
-        return dataFile;
-    }
-
-    private static Reader getReader(String filename) throws IOException {
-        File dataFile = getFile(filename);
-        return new FileReader(dataFile);
-    }
-
-    private static byte[] getData(String filename) throws IOException {
-        File f = getFile(filename);
-        return Files.readAllBytes(f.toPath());
-    }
-
     private StreamSource getStreamSource(byte[] data) {
         ByteArrayInputStream bais = new ByteArrayInputStream(data);
         return new StreamSource(bais);
     }
 
     private Source getTestSource(String filename) throws IOException {
-        return Input.fromFile(getFile(filename)).build();
+        return Input.fromFile(TestUtils.getFile(filename)).build();
     }
 
     private void dumpXml(byte[] data) {
