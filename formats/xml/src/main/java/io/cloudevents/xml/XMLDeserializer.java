@@ -145,6 +145,8 @@ public class XMLDeserializer implements CloudEventReader {
     private CloudEventData processData(Element data) throws CloudEventRWException {
         CloudEventData retVal = null;
 
+
+
         final String attrType = extractAttributeType(data);
 
         switch (attrType) {
@@ -157,12 +159,19 @@ public class XMLDeserializer implements CloudEventReader {
                 break;
             case "xs:any":
                 try {
+
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     Document newDoc = dbf.newDocumentBuilder().newDocument();
 
                     Element eventData = findFirstElement(data);
+                    String eventDataNS = eventData.getNamespaceURI();
 
-                    Element newRoot = newDoc.createElementNS(eventData.getNamespaceURI(), eventData.getLocalName());
+                    // Ensure the Data isn't in our namespace
+                    if (CE_NAMESPACE.equals(eventDataNS)){
+                        throw CloudEventRWException.newInvalidDataType("data namespace: "+data.getNamespaceURI(), "Anything but " + CE_NAMESPACE);
+                    }
+
+                    Element newRoot = newDoc.createElementNS(eventDataNS, eventData.getLocalName());
                     newDoc.appendChild(newRoot);
 
                     // Copy the children...

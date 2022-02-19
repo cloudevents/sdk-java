@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- Just badly formed XML document -->
+<!-- type and tripe -->
+
+<event xmlns="http://cloudevents.io/notarealnamespace/V1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+       specversion="1.0">
+    <id>1</id>
+    <source>http://localhost/source</source>
+    <type>mock.test</tripe>
+</event>

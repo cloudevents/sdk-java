@@ -19,6 +19,7 @@ package io.cloudevents.xml;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.rw.CloudEventRWException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,6 +38,7 @@ import java.util.stream.Stream;
 
 import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class XMLFormatTest {
 
