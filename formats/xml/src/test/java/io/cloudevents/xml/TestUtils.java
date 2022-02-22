@@ -11,6 +11,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtils {
 
+    /**
+     * Get a File forn item in the resource path.
+     * @param filename
+     * @return
+     * @throws IOException
+     */
     static File getFile(String filename) throws IOException {
         URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
         assertThat(file).isNotNull();
@@ -24,8 +30,12 @@ public class TestUtils {
         return new FileReader(dataFile);
     }
 
+    static byte[] getData(File dataFile) throws IOException {
+        return Files.readAllBytes(dataFile.toPath());
+    }
+
     static byte[] getData(String filename) throws IOException {
         File f = getFile(filename);
-        return Files.readAllBytes(f.toPath());
+        return getData(f);
     }
 }

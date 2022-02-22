@@ -7,7 +7,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -19,22 +23,30 @@ public class BadInputDataTest {
     private final EventFormat format = new XMLFormat();
 
     @ParameterizedTest
-    @MethodSource("badExampleFiles")
-    public void verifyRejection(String fileName) throws IOException {
+    @MethodSource("badDataTestFiles")
+    public void verifyRejection(File testFile) throws IOException {
 
-        byte[] data = TestUtils.getData(fileName);
+        byte[] data = TestUtils.getData(testFile);
 
         assertThatExceptionOfType(CloudEventRWException.class).isThrownBy(() -> {format.deserialize(data);});
     }
 
-    public static Stream<Arguments> badExampleFiles() {
-        return Stream.of(
-            Arguments.of("bad/bad_ns.xml"),
-            Arguments.of("bad/bad_no_ns.xml"),
-            Arguments.of("bad/bad_missing_data_ns.xml"),
-            Arguments.of("bad/bad_malformed.xml"),
-            Arguments.of("bad/bad_data_ns.xml"),
-            Arguments.of("bad/bad_data_content.xml")
-        );
+    /**
+     * Obtain a list of all the "bad exmaple" resource files
+     * @return
+     * @throws IOException
+     */
+    public static Stream<Arguments>  badDataTestFiles() throws IOException {
+
+        File fileDir = TestUtils.getFile("bad");
+
+        File[] fileList = fileDir.listFiles();
+        List<Arguments> argList = new ArrayList<>();
+
+        for (File f : fileList) {
+            argList.add(Arguments.of(f));
+        }
+
+        return argList.stream();
     }
 }

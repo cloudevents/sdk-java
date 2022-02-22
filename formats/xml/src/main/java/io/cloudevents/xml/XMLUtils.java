@@ -19,6 +19,9 @@ package io.cloudevents.xml;
 
 import io.cloudevents.rw.CloudEventRWException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -70,5 +73,31 @@ class XMLUtils {
 
         // And we're done
         return os.toByteArray();
+    }
+
+    /**
+     * Get the number of child elements of an {@link Element}
+     * @param e The Element to introspect.
+     * @return The count of child elements
+     */
+    static int countOfChildElements(Element e) {
+
+        if (e == null) {
+            return 0;
+        }
+
+        int retVal = 0;
+
+        NodeList nodeLIst = e.getChildNodes();
+
+        for (int i=0;i< nodeLIst.getLength(); i++){
+            final Node n = nodeLIst.item(i);
+
+            if (n.getNodeType() == Node.ELEMENT_NODE){
+                retVal++;
+            }
+        }
+
+        return retVal;
     }
 }

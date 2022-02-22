@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<event xmlns="http://cloudevents.io/xmlformat/V1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+       specversion="1.0">
+    <id>1</id>
+    <source>http://localhost/source</source>
+    <type>mock.test</type>
+    <MyExtension>hello</MyExtension>
+</event>

@@ -74,42 +74,41 @@ public class XMLDeserializer implements CloudEventReader {
                 Element e = (Element) node;
 
                 // Sanity
-                if (isValidAttribute(e)) {
+                ensureValidContextAttribute(e);
 
-                    // Grab all the useful markers.
-                    final String attrName = e.getLocalName();
-                    final String attrType = extractAttributeType(e);
-                    final String attrValue = e.getTextContent();
+                // Grab all the useful markers.
+                final String attrName = e.getLocalName();
+                final String attrType = extractAttributeType(e);
+                final String attrValue = e.getTextContent();
 
-                    // Check if this is a Required or Optional attribute
-                    if (specVersion.getAllAttributes().contains(attrName)) {
-                        writer.withContextAttribute(attrName, attrValue);
+                // Check if this is a Required or Optional attribute
+                if (specVersion.getAllAttributes().contains(attrName)) {
+                    writer.withContextAttribute(attrName, attrValue);
+                } else {
+                    if ("data".equals(attrName)) {
+                        // Just remember the data node for now..
+                        dataElement = e;
                     } else {
-                        if ("data".equals(attrName)) {
-                            // Just remember the data node for now..
-                            dataElement = e;
-                        } else {
-                            // Handle the extension attributes
-                            switch (attrType) {
-                                case "xs:string":
-                                    writer.withContextAttribute(attrName, attrValue);
-                                    break;
-                                case "xs:int":
-                                    writer.withContextAttribute(attrName, Integer.valueOf(attrValue));
-                                    break;
-                                case "xs:dateTime":
-                                    writer.withContextAttribute(attrName, Time.parseTime(attrValue));
-                                    break;
-                                case "xs:boolean":
-                                    writer.withContextAttribute(attrName, Boolean.valueOf(attrValue));
-                                    break;
-                                case "xs:anyURI":
-                                    writer.withContextAttribute(attrName, URI.create(attrValue));
-                                    break;
-                                case "xs:base64Binary":
-                                    writer.withContextAttribute(attrName, Base64.getDecoder().decode(attrValue));
-                                    break;
-                            }
+                        // Handle the extension attributes
+                        switch (attrType) {
+                            case "xs:string":
+                                writer.withContextAttribute(attrName, attrValue);
+                                break;
+                            case "xs:int":
+                                writer.withContextAttribute(attrName, Integer.valueOf(attrValue));
+                                break;
+                            case "xs:dateTime":
+                                writer.withContextAttribute(attrName, Time.parseTime(attrValue));
+                                break;
+                            case "xs:boolean":
+                                writer.withContextAttribute(attrName, Boolean.valueOf(attrValue));
+                                break;
+                            case "xs:anyURI":
+                                writer.withContextAttribute(attrName, URI.create(attrValue));
+                                break;
+                            case "xs:base64Binary":
+                                writer.withContextAttribute(attrName, Base64.getDecoder().decode(attrValue));
+                                break;
                         }
                     }
                 }
@@ -145,8 +144,6 @@ public class XMLDeserializer implements CloudEventReader {
     private CloudEventData processData(Element data) throws CloudEventRWException {
         CloudEventData retVal = null;
 
-
-
         final String attrType = extractAttributeType(data);
 
         switch (attrType) {
@@ -159,19 +156,15 @@ public class XMLDeserializer implements CloudEventReader {
                 break;
             case "xs:any":
                 try {
+                    // Ensure it's acceptable before we move forward.
+                    ensureValidDataElement(data);
 
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     Document newDoc = dbf.newDocumentBuilder().newDocument();
 
                     Element eventData = findFirstElement(data);
-                    String eventDataNS = eventData.getNamespaceURI();
 
-                    // Ensure the Data isn't in our namespace
-                    if (CE_NAMESPACE.equals(eventDataNS)){
-                        throw CloudEventRWException.newInvalidDataType("data namespace: "+data.getNamespaceURI(), "Anything but " + CE_NAMESPACE);
-                    }
-
-                    Element newRoot = newDoc.createElementNS(eventDataNS, eventData.getLocalName());
+                    Element newRoot = newDoc.createElementNS(eventData.getNamespaceURI(), eventData.getLocalName());
                     newDoc.appendChild(newRoot);
 
                     // Copy the children...
@@ -194,6 +187,7 @@ public class XMLDeserializer implements CloudEventReader {
                 }
                 break;
             default:
+                // I don't believe this is reachable
                 break;
         }
 
@@ -212,13 +206,44 @@ public class XMLDeserializer implements CloudEventReader {
         }
     }
 
-    private boolean isValidAttribute(Node n) {
+    private void ensureValidDataElement(Element dataEl) throws CloudEventRWException {
 
-        if (!CE_NAMESPACE.equals(n.getNamespaceURI())) {
-            return false;
+        // It must have a single child
+        final int childCount = XMLUtils.countOfChildElements(dataEl);
+        if (childCount != 1) {
+            throw CloudEventRWException.newInvalidDataType("data has " + childCount + " children", "1 expected");
         }
 
-        return allLowerCase(n.getLocalName());
+        // The child MUST NOT be in our namespace
+        String childNS = dataEl.getFirstChild().getNamespaceURI();
+        if (CE_NAMESPACE.equals(childNS)) {
+            throw CloudEventRWException.newInvalidDataType(dataEl.getFirstChild().getLocalName(), "MUST not be in namespace: " + CE_NAMESPACE);
+        }
+
+    }
+
+    private void ensureValidContextAttribute(Element el) throws CloudEventRWException {
+
+        final String localName = el.getLocalName();
+
+        // It must be in our namespace
+        if (!CE_NAMESPACE.equals(el.getNamespaceURI())) {
+            final String allowedTxt = el.getLocalName() + " Expected namespace: " + CE_NAMESPACE;
+            throw CloudEventRWException.newInvalidDataType(el.getNamespaceURI(), allowedTxt);
+        }
+
+        // It must be all lowercase
+        if (!allLowerCase(localName)) {
+            throw CloudEventRWException.newInvalidDataType(localName, " context atttribute names MUST be lowercase");
+        }
+
+        // A bit kludgy, not relevent for 'data' - will refactor
+        if (!"data".equals(localName)) {
+            // It must not have any children
+            if (XMLUtils.countOfChildElements(el) != 0) {
+                throw CloudEventRWException.newInvalidDataType(el.getLocalName(), "Unexpected child element(s)");
+            }
+        }
 
     }
 
