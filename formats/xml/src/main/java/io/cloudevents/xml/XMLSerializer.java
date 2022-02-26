@@ -67,8 +67,6 @@ class XMLSerializer {
 
     private static class XMLCloudEventWriter implements CloudEventWriter<Document> {
 
-        static final String XSI_TYPE = "xsi:type";
-        static final String CLOUDEVENT_NAMESPACE = "http://cloudevents.io/xmlformat/V1";
         static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
         static final String XS_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
         static final String CE_ROOT_ELEMENT = "event";
@@ -93,7 +91,7 @@ class XMLSerializer {
             }
 
             // Start the Document
-            root = xmlDocument.createElementNS(CLOUDEVENT_NAMESPACE, CE_ROOT_ELEMENT);
+            root = xmlDocument.createElementNS(XMLConstants.CE_NAMESPACE, CE_ROOT_ELEMENT);
             root.setAttribute("xmlns:xs", XS_NAMESPACE);
             root.setAttribute("xmlns:xsi", XSI_NAMESPACE);
             root.setAttribute("specversion", specVersion.toString());
@@ -115,8 +113,9 @@ class XMLSerializer {
             // don't need to communicate the type information.
 
             if (!specVersion.getAllAttributes().contains(name)) {
-                e.setAttribute(XSI_TYPE, xsiType);
+                e.setAttribute(XMLConstants.XSI_TYPE, xsiType);
             }
+
             e.setTextContent(value);
 
             root.appendChild(e);
@@ -162,7 +161,7 @@ class XMLSerializer {
 
             // Create the wrapper
             Element e = xmlDocument.createElement("data");
-            e.setAttribute(XSI_TYPE, "xs:any");
+            e.setAttribute(XMLConstants.XSI_TYPE, XMLConstants.CE_DATA_ATTR_XML);
             root.appendChild(e);
 
             // Get the Root Element
@@ -184,21 +183,21 @@ class XMLSerializer {
         @Override
         public CloudEventContextWriter withContextAttribute(String name, String value) throws CloudEventRWException {
 
-            addElement(name, "xs:string", value);
+            addElement(name, XMLConstants.CE_ATTR_STRING, value);
             return this;
         }
 
         @Override
         public CloudEventContextWriter withContextAttribute(String name, URI value) throws CloudEventRWException {
 
-            addElement(name, "xs:anyURI", value.toString());
+            addElement(name, XMLConstants.CE_ATTR_URI, value.toString());
             return this;
         }
 
         @Override
         public CloudEventContextWriter withContextAttribute(String name, OffsetDateTime value) throws CloudEventRWException {
 
-            addElement(name, "xs:dateTime", Time.writeTime(value));
+            addElement(name, XMLConstants.CE_ATTR_TIMESTAMP, Time.writeTime(value));
             return this;
         }
 
@@ -215,21 +214,21 @@ class XMLSerializer {
         @Override
         public CloudEventContextWriter withContextAttribute(String name, Integer value) throws CloudEventRWException {
 
-            addElement(name, "xs:int", value.toString());
+            addElement(name, XMLConstants.CE_ATTR_INTEGER, value.toString());
             return this;
         }
 
         @Override
         public CloudEventContextWriter withContextAttribute(String name, Boolean value) throws CloudEventRWException {
 
-            addElement(name, "xs:boolean", value.toString());
+            addElement(name, XMLConstants.CE_ATTR_BOOLEAN, value.toString());
             return this;
         }
 
         @Override
         public CloudEventContextWriter withContextAttribute(String name, byte[] value) throws CloudEventRWException {
 
-            addElement(name, "xs:base64Binary", Base64.getEncoder().encodeToString(value));
+            addElement(name, XMLConstants.CE_ATTR_BINARY, Base64.getEncoder().encodeToString(value));
             return this;
         }
 
@@ -242,11 +241,11 @@ class XMLSerializer {
                 writeXmlData(data.toBytes());
             } else if (isTextContent(dataContentType)) {
                 // Handle Textual Content
-                addElement("data", "xs:string", new String(data.toBytes()));
+                addElement("data", XMLConstants.CE_DATA_ATTR_TEXT, new String(data.toBytes()));
             } else {
                 // Handle Binary Content
                 final String encodedValue = Base64.getEncoder().encodeToString(data.toBytes());
-                addElement ("data", "xs:base64Binary",encodedValue);
+                addElement("data", XMLConstants.CE_DATA_ATTR_BINARY, encodedValue);
             }
             return end();
         }

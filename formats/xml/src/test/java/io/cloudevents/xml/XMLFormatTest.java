@@ -19,7 +19,6 @@ package io.cloudevents.xml;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.rw.CloudEventRWException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,14 +30,14 @@ import org.xmlunit.diff.*;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class XMLFormatTest {
 
@@ -51,8 +50,7 @@ public class XMLFormatTest {
     }
 
     @Test
-    public void verifyExtensions() throws IOException
-    {
+    public void verifyExtensions() throws IOException {
         byte[] raw = TestUtils.getData("v1/with_extensions.xml");
 
         CloudEvent ce = format.deserialize(raw);
@@ -105,7 +103,7 @@ public class XMLFormatTest {
                 .checkForSimilar()
                 .build();
 
-            if (diff.hasDifferences()){
+            if (diff.hasDifferences()) {
 
                 // Dump what was actually generated.
                 dumpXml(raw);
@@ -187,10 +185,10 @@ public class XMLFormatTest {
             .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
             .build();
 
-        if (diff.hasDifferences()){
+        if (diff.hasDifferences()) {
             dumpXml(outputData);
 
-            if (diff.hasDifferences()){
+            if (diff.hasDifferences()) {
                 for (Difference d : diff.getDifferences()) {
                     System.out.println(d);
                 }

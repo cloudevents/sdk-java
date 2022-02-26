@@ -6,5 +6,5 @@
     <id>1</id>
     <source>http://localhost/source</source>
     <type>mock.test</type>
-    <binary xsi:type="xs:base64Binary">4P8ARKo=</binary>
+    <binary xsi:type="ce:binary">4P8ARKo=</binary>
 </event>

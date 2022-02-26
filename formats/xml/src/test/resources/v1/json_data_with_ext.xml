@@ -11,7 +11,7 @@
     <id>1</id>
     <source>http://localhost/source</source>
     <type>mock.test</type>
-    <astring xsi:type="xs:string">aaa</astring>
-    <aboolean xsi:type="xs:boolean">true</aboolean>
-    <anumber xsi:type="xs:int">10</anumber>
+    <astring xsi:type="ce:string">aaa</astring>
+    <aboolean xsi:type="ce:boolean">true</aboolean>
+    <anumber xsi:type="ce:integer">10</anumber>
 </event>

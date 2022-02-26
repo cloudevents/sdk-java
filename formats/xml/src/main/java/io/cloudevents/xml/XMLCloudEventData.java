@@ -21,7 +21,7 @@ import io.cloudevents.CloudEventData;
 import org.w3c.dom.Document;
 
 /**
- * A variant of {@link CloudEventData} support direct access
+ * A variant of {@link CloudEventData} that supports direct access
  * to data as an XML Document.
  */
 public interface XMLCloudEventData extends CloudEventData {
@@ -36,6 +36,7 @@ public interface XMLCloudEventData extends CloudEventData {
 
     /**
      * Wraps an XML {@link Document}
+     *
      * @param xmlDoc {@link Document}
      * @return {@link XMLCloudEventData}
      */

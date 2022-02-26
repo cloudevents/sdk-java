@@ -77,6 +77,7 @@ class XMLUtils {
 
     /**
      * Get the number of child elements of an {@link Element}
+     *
      * @param e The Element to introspect.
      * @return The count of child elements
      */
@@ -90,10 +91,10 @@ class XMLUtils {
 
         NodeList nodeLIst = e.getChildNodes();
 
-        for (int i=0;i< nodeLIst.getLength(); i++){
+        for (int i = 0; i < nodeLIst.getLength(); i++) {
             final Node n = nodeLIst.item(i);
 
-            if (n.getNodeType() == Node.ELEMENT_NODE){
+            if (n.getNodeType() == Node.ELEMENT_NODE) {
                 retVal++;
             }
         }

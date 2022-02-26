@@ -22,6 +22,10 @@ import org.w3c.dom.Document;
 
 import javax.xml.transform.TransformerException;
 
+/**
+ * Local Implementation of {@link XMLCloudEventData} that
+ * wraps an {@link Document}
+ */
 class XMLDataWrapper implements XMLCloudEventData {
 
     private final Document xmlDoc;

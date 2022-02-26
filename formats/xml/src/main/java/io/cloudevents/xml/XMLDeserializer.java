@@ -55,7 +55,7 @@ public class XMLDeserializer implements CloudEventReader {
         String specVer = root.getAttribute("specversion");
 
         if (specVer == null) {
-            // Error
+            throw CloudEventRWException.newInvalidSpecVersion("null - Missing XML attribute");
         }
 
         final SpecVersion specVersion = SpecVersion.parse(specVer);
@@ -91,22 +91,25 @@ public class XMLDeserializer implements CloudEventReader {
                     } else {
                         // Handle the extension attributes
                         switch (attrType) {
-                            case "xs:string":
+                            case XMLConstants.CE_ATTR_STRING:
                                 writer.withContextAttribute(attrName, attrValue);
                                 break;
-                            case "xs:int":
+                            case XMLConstants.CE_ATTR_INTEGER:
                                 writer.withContextAttribute(attrName, Integer.valueOf(attrValue));
                                 break;
-                            case "xs:dateTime":
+                            case XMLConstants.CE_ATTR_TIMESTAMP:
                                 writer.withContextAttribute(attrName, Time.parseTime(attrValue));
                                 break;
-                            case "xs:boolean":
+                            case XMLConstants.CE_ATTR_BOOLEAN:
                                 writer.withContextAttribute(attrName, Boolean.valueOf(attrValue));
                                 break;
-                            case "xs:anyURI":
+                            case XMLConstants.CE_ATTR_URI:
                                 writer.withContextAttribute(attrName, URI.create(attrValue));
                                 break;
-                            case "xs:base64Binary":
+                            case XMLConstants.CE_ATTR_URI_REF:
+                                writer.withContextAttribute(attrName, URI.create(attrValue));
+                                break;
+                            case XMLConstants.CE_ATTR_BINARY:
                                 writer.withContextAttribute(attrName, Base64.getDecoder().decode(attrValue));
                                 break;
                         }
@@ -147,14 +150,14 @@ public class XMLDeserializer implements CloudEventReader {
         final String attrType = extractAttributeType(data);
 
         switch (attrType) {
-            case "xs:string":
+            case XMLConstants.CE_DATA_ATTR_TEXT:
                 retVal = new TextCloudEventData(data.getTextContent());
                 break;
-            case "xs:base64Binary":
+            case XMLConstants.CE_DATA_ATTR_BINARY:
                 String eData = data.getTextContent();
                 retVal = BytesCloudEventData.wrap(Base64.getDecoder().decode(eData));
                 break;
-            case "xs:any":
+            case XMLConstants.CE_DATA_ATTR_XML:
                 try {
                     // Ensure it's acceptable before we move forward.
                     ensureValidDataElement(data);
@@ -198,7 +201,6 @@ public class XMLDeserializer implements CloudEventReader {
 
         if (!"event".equals(e.getLocalName())) {
             throw CloudEventRWException.newInvalidDataType(e.getLocalName(), "event");
-
         }
 
         if (!CE_NAMESPACE.equalsIgnoreCase(e.getNamespaceURI())) {

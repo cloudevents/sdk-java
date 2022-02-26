@@ -6,7 +6,7 @@
     <id>1</id>
     <source>http://localhost/source</source>
     <type>mock.test</type>
-    <myinteger xsi:type="xs:int">42</myinteger>
-    <mystring xsi:type="xs:string">Greetings</mystring>
-    <myboolean xsi:type="xs:boolean">false</myboolean>
+    <myinteger xsi:type="ce:integer">42</myinteger>
+    <mystring xsi:type="ce:string">Greetings</mystring>
+    <myboolean xsi:type="ce:boolean">false</myboolean>
 </event>
