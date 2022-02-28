@@ -67,10 +67,6 @@ class XMLSerializer {
 
     private static class XMLCloudEventWriter implements CloudEventWriter<Document> {
 
-        static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
-        static final String XS_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
-        static final String CE_ROOT_ELEMENT = "event";
-
         private final Document xmlDocument;
         private final Element root;
         private final SpecVersion specVersion;
@@ -91,9 +87,9 @@ class XMLSerializer {
             }
 
             // Start the Document
-            root = xmlDocument.createElementNS(XMLConstants.CE_NAMESPACE, CE_ROOT_ELEMENT);
-            root.setAttribute("xmlns:xs", XS_NAMESPACE);
-            root.setAttribute("xmlns:xsi", XSI_NAMESPACE);
+            root = xmlDocument.createElementNS(XMLConstants.CE_NAMESPACE, XMLConstants.XML_ROOT_ELEMENT);
+            root.setAttribute("xmlns:xs", XMLConstants.XS_NAMESPACE);
+            root.setAttribute("xmlns:xsi", XMLConstants.XSI_NAMESPACE);
             root.setAttribute("specversion", specVersion.toString());
             xmlDocument.appendChild(root);
         }

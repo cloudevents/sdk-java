@@ -28,11 +28,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.net.URI;
 import java.util.Base64;
 
-public class XMLDeserializer implements CloudEventReader {
+class XMLDeserializer implements CloudEventReader {
 
-    static final String CE_NAMESPACE = "http://cloudevents.io/xmlformat/V1";
-    static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
-    static final String XS_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
     private final Document xmlDocument;
 
     XMLDeserializer(Document doc) {
@@ -83,9 +80,10 @@ public class XMLDeserializer implements CloudEventReader {
 
                 // Check if this is a Required or Optional attribute
                 if (specVersion.getAllAttributes().contains(attrName)) {
+                    // Yep .. Just write it out.
                     writer.withContextAttribute(attrName, attrValue);
                 } else {
-                    if ("data".equals(attrName)) {
+                    if (XMLConstants.XML_DATA_ELEMENT.equals(attrName)) {
                         // Just remember the data node for now..
                         dataElement = e;
                     } else {
@@ -130,6 +128,12 @@ public class XMLDeserializer implements CloudEventReader {
 
     // Private Methods --------------------------------------------------------
 
+    /**
+     * Geyt the first child {@link Element} of an {@link Element}
+     *
+     * @param e
+     * @return The first child, or NULL if there isn't one.
+     */
     private Element findFirstElement(Element e) {
 
         NodeList nodeList = e.getChildNodes();
@@ -144,10 +148,23 @@ public class XMLDeserializer implements CloudEventReader {
         return null;
     }
 
+    /**
+     * Process the business event data of the XNML Formatted
+     * event.
+     * <p>
+     * This may result in an XML specific data wrapper being returned
+     * depending on payload.
+     *
+     * @param data
+     * @return {@link CloudEventData} The data wrapper.
+     * @throws CloudEventRWException
+     */
     private CloudEventData processData(Element data) throws CloudEventRWException {
         CloudEventData retVal = null;
 
         final String attrType = extractAttributeType(data);
+
+        // Process based on the defined `xsi:type` of the data element.
 
         switch (attrType) {
             case XMLConstants.CE_DATA_ATTR_TEXT:
@@ -197,17 +214,32 @@ public class XMLDeserializer implements CloudEventReader {
         return retVal;
     }
 
+    /**
+     * Ensure that the root elemement of the received XML document is valid
+     * in our context.
+     *
+     * @param e The root {@link Element}
+     * @throws CloudEventRWException
+     */
     private void checkValidRootElement(Element e) throws CloudEventRWException {
 
-        if (!"event".equals(e.getLocalName())) {
-            throw CloudEventRWException.newInvalidDataType(e.getLocalName(), "event");
+        // It must be the name we expect.
+        if (!XMLConstants.XML_ROOT_ELEMENT.equals(e.getLocalName())) {
+            throw CloudEventRWException.newInvalidDataType(e.getLocalName(), XMLConstants.XML_ROOT_ELEMENT);
         }
 
-        if (!CE_NAMESPACE.equalsIgnoreCase(e.getNamespaceURI())) {
-            throw CloudEventRWException.newInvalidDataType(e.getNamespaceURI(), "Namespace: " + CE_NAMESPACE);
+        // It must be in the CE namespace.
+        if (!XMLConstants.CE_NAMESPACE.equalsIgnoreCase(e.getNamespaceURI())) {
+            throw CloudEventRWException.newInvalidDataType(e.getNamespaceURI(), "Namespace: " + XMLConstants.CE_NAMESPACE);
         }
     }
 
+    /**
+     * Ensure the XML `data` element is well formed.
+     *
+     * @param dataEl
+     * @throws CloudEventRWException
+     */
     private void ensureValidDataElement(Element dataEl) throws CloudEventRWException {
 
         // It must have a single child
@@ -216,21 +248,27 @@ public class XMLDeserializer implements CloudEventReader {
             throw CloudEventRWException.newInvalidDataType("data has " + childCount + " children", "1 expected");
         }
 
-        // The child MUST NOT be in our namespace
-        String childNS = dataEl.getFirstChild().getNamespaceURI();
-        if (CE_NAMESPACE.equals(childNS)) {
-            throw CloudEventRWException.newInvalidDataType(dataEl.getFirstChild().getLocalName(), "MUST not be in namespace: " + CE_NAMESPACE);
-        }
+        // And there must be a valid type descriminator
+        final String xsiType = dataEl.getAttribute(XMLConstants.XSI_TYPE);
 
+        if (xsiType == null) {
+            throw CloudEventRWException.newInvalidDataType("NULL", "xsi:type oneOf [xs:base64Binary, xs:string, xs:any]");
+        }
     }
 
+    /**
+     * Ensure a CludEvent context attribute representation is as expected.
+     *
+     * @param el
+     * @throws CloudEventRWException
+     */
     private void ensureValidContextAttribute(Element el) throws CloudEventRWException {
 
         final String localName = el.getLocalName();
 
         // It must be in our namespace
-        if (!CE_NAMESPACE.equals(el.getNamespaceURI())) {
-            final String allowedTxt = el.getLocalName() + " Expected namespace: " + CE_NAMESPACE;
+        if (!XMLConstants.CE_NAMESPACE.equals(el.getNamespaceURI())) {
+            final String allowedTxt = el.getLocalName() + " Expected namespace: " + XMLConstants.CE_NAMESPACE;
             throw CloudEventRWException.newInvalidDataType(el.getNamespaceURI(), allowedTxt);
         }
 
@@ -239,8 +277,8 @@ public class XMLDeserializer implements CloudEventReader {
             throw CloudEventRWException.newInvalidDataType(localName, " context atttribute names MUST be lowercase");
         }
 
-        // A bit kludgy, not relevent for 'data' - will refactor
-        if (!"data".equals(localName)) {
+        // A bit kludgy, not relevent for 'data' - should refactor
+        if (!XMLConstants.XML_DATA_ELEMENT.equals(localName)) {
             // It must not have any children
             if (XMLUtils.countOfChildElements(el) != 0) {
                 throw CloudEventRWException.newInvalidDataType(el.getLocalName(), "Unexpected child element(s)");
@@ -251,7 +289,7 @@ public class XMLDeserializer implements CloudEventReader {
 
     private String extractAttributeType(Element e) {
 
-        Attr a = e.getAttributeNodeNS(XSI_NAMESPACE, "type");
+        final Attr a = e.getAttributeNodeNS(XMLConstants.XSI_NAMESPACE, "type");
 
         if (a != null) {
             return a.getValue();

@@ -21,8 +21,10 @@ import java.util.Collection;
 
 final class XMLConstants {
 
-    // Our Namepace
+    // Namespaces
     static final String CE_NAMESPACE = "http://cloudevents.io/xmlformat/V1";
+    static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
+    static final String XS_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 
     // CE Attribute Type Designators
     static final String CE_ATTR_STRING = "ce:string";
@@ -40,6 +42,10 @@ final class XMLConstants {
 
     // General XML Constants
     static final String XSI_TYPE = "xsi:type";
+
+    // Special Element names
+    static final String XML_DATA_ELEMENT = "data";
+    static final String XML_ROOT_ELEMENT = "event";
 
     // Bundle these into a collection (probably could be made more efficient)
     static final Collection<String> CE_ATTR_LIST = new ArrayList<String>() {{

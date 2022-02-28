@@ -36,10 +36,9 @@ import javax.xml.transform.TransformerException;
 public class XMLFormat implements EventFormat {
 
     /**
-     * The content type for transports sending cloudevents in the protocol buffer format.
+     * The content type for transports sending cloudevents in XML format.
      */
     public static final String XML_CONTENT_TYPE = "application/cloudevents+xml";
-
 
     @Override
     public byte[] serialize(CloudEvent event) throws EventSerializationException {
