@@ -25,7 +25,7 @@ import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestUtils {
+class TestUtils {
 
     /**
      * Get a File forn item in the resource path.

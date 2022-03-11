@@ -43,6 +43,13 @@ class XMLUtils {
     private XMLUtils() {
     }
 
+    /**
+     * Parse a byte stream into an XML {@link Document}
+     *
+     * @param data
+     * @return {@link Document}
+     * @throws CloudEventRWException
+     */
     static Document parseIntoDocument(byte[] data) throws CloudEventRWException {
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -57,6 +64,13 @@ class XMLUtils {
 
     }
 
+    /**
+     * Obtain a byte array representation of a {@link Document}
+     *
+     * @param doc {@link Document}
+     * @return byte[]
+     * @throws TransformerException
+     */
     static byte[] documentToBytes(Document doc) throws TransformerException {
 
         // Build our transformer

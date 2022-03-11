@@ -129,7 +129,7 @@ class XMLDeserializer implements CloudEventReader {
     // Private Methods --------------------------------------------------------
 
     /**
-     * Geyt the first child {@link Element} of an {@link Element}
+     * Get the first child {@link Element} of an {@link Element}
      *
      * @param e
      * @return The first child, or NULL if there isn't one.
@@ -149,7 +149,7 @@ class XMLDeserializer implements CloudEventReader {
     }
 
     /**
-     * Process the business event data of the XNML Formatted
+     * Process the business event data of the XML Formatted
      * event.
      * <p>
      * This may result in an XML specific data wrapper being returned
@@ -257,7 +257,7 @@ class XMLDeserializer implements CloudEventReader {
     }
 
     /**
-     * Ensure a CludEvent context attribute representation is as expected.
+     * Ensure a CloudEvent context attribute representation is as expected.
      *
      * @param el
      * @throws CloudEventRWException

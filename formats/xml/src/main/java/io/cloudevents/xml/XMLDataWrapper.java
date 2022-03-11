@@ -24,7 +24,7 @@ import javax.xml.transform.TransformerException;
 
 /**
  * Local Implementation of {@link XMLCloudEventData} that
- * wraps an {@link Document}
+ * wraps an XML {@link Document}
  */
 class XMLDataWrapper implements XMLCloudEventData {
 

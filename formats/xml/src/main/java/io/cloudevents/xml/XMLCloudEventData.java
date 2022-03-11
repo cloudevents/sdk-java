@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
 
 /**
  * A variant of {@link CloudEventData} that supports direct access
- * to data as an XML Document.
+ * to data as an XML {@link Document}.
  */
 public interface XMLCloudEventData extends CloudEventData {
 

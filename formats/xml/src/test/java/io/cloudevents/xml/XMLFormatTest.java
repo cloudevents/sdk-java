@@ -158,7 +158,7 @@ public class XMLFormatTest {
      * Round-trip test starting with an XML Formated event
      * 1. Deserialize an XML Formated Event into a CE
      * 2. Serialize the CE back into XML
-     * 3. Compare the orginal (expected) and new XML document
+     * 3. Compare the original (expected) and new XML document
      */
     public void roundTrip(String fileName) throws IOException {
 
