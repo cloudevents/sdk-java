@@ -29,7 +29,7 @@ It also accepts data in "structured" format:
 ```shell
 curl -v -H'Content-type: application/cloudevents+json' \
     -d '{"data": {"value": "Foo"},
-         "id: 1,
+         "id": "1",
          "source": "cloud-event-example"
          "type": "my.application.Foo"
          "specversion": "1.0"}' \
