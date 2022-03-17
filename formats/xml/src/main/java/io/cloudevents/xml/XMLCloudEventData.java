@@ -38,7 +38,7 @@ public interface XMLCloudEventData extends CloudEventData {
      * Wraps an XML {@link Document}
      *
      * @param xmlDoc {@link Document}
-     * @return {@link XMLCloudEventData}
+     * @return The wrapping {@link XMLCloudEventData}
      */
     static CloudEventData wrap(Document xmlDoc) {
         return new XMLDataWrapper(xmlDoc);
