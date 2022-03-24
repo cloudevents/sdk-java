@@ -31,6 +31,7 @@ import java.util.Base64;
 class XMLDeserializer implements CloudEventReader {
 
     private final Document xmlDocument;
+    private final OccuranceTracker ceAtrributeTracker = new OccuranceTracker();
 
     XMLDeserializer(Document doc) {
         this.xmlDocument = doc;
@@ -248,7 +249,7 @@ class XMLDeserializer implements CloudEventReader {
             throw CloudEventRWException.newInvalidDataType("data has " + childCount + " children", "1 expected");
         }
 
-        // And there must be a valid type descriminator
+        // And there must be a valid type discriminator
         final String xsiType = dataEl.getAttribute(XMLConstants.XSI_TYPE);
 
         if (xsiType == null) {
@@ -285,6 +286,12 @@ class XMLDeserializer implements CloudEventReader {
             }
         }
 
+        // Finally, ensure we only see each CE Attribute once...
+        try {
+            ceAtrributeTracker.trackOccurance(localName);
+        } catch (IllegalStateException e){
+            throw CloudEventRWException.newOther(e);
+        }
     }
 
     private String extractAttributeType(Element e) {
