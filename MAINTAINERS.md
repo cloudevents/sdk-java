@@ -1,3 +1,9 @@
+# Maintainers
+
+Currently, active maintainers who may be found in the CNCF Slack.
+
+- [Pierangelo Di Pilato](https://github.com/pierDipi)
+
 # Maintainer's Guide
 
 ## Release Process
