@@ -1,1 +1,1 @@
-io.cloudevents.protobuf.XMLFormat
+io.cloudevents.xml.XMLFormat

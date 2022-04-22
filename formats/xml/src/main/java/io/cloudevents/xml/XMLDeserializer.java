@@ -85,7 +85,7 @@ class XMLDeserializer implements CloudEventReader {
                     writer.withContextAttribute(attrName, attrValue);
                 } else {
                     if (XMLConstants.XML_DATA_ELEMENT.equals(attrName)) {
-                        // Just remember the data node for now..
+                        // Just remember the data node for now.
                         dataElement = e;
                     } else {
                         // Handle the extension attributes
@@ -135,7 +135,7 @@ class XMLDeserializer implements CloudEventReader {
      * @param e
      * @return The first child, or NULL if there isn't one.
      */
-    private Element findFirstElement(Element e) {
+    private static Element findFirstElement(Element e) {
 
         NodeList nodeList = e.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {

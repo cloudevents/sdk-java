@@ -38,7 +38,7 @@ CloudEvent event = CloudEventBuilder.v1()
     .withSource(URI.create("http://localhost"))
     .build();
 
-byte[]serialized = EventFormatProvider
+byte[] serialized = EventFormatProvider
     .getInstance()
     .resolveFormat(XMLFormat.CONTENT_TYPE)
     .serialize(event);
@@ -70,6 +70,7 @@ CloudEvent event = CloudEventBuilder.v1()
     .withSource(URI.create("http://localhost"))
     .withData(myData)
     .build();
+```
 
 
 

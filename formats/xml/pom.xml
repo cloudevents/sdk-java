@@ -16,8 +16,8 @@
   ~
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -30,6 +30,10 @@
     <artifactId>cloudevents-xml</artifactId>
     <name>CloudEvents - XML Format</name>
     <packaging>jar</packaging>
+
+    <properties>
+        <xmlunit.version>2.9.0</xmlunit.version>
+    </properties>
 
     <dependencies>
 
@@ -66,7 +70,7 @@
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-core</artifactId>
-            <version>2.9.0</version>
+            <version>${xmlunit.version}</version>
             <scope>test</scope>
         </dependency>
 
