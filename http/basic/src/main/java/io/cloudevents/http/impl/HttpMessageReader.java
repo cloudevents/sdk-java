@@ -19,6 +19,7 @@ package io.cloudevents.http.impl;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
+import io.cloudevents.core.impl.StringUtils;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
 
 import java.util.function.BiConsumer;
@@ -47,7 +48,7 @@ public class HttpMessageReader extends BaseGenericBinaryMessageReaderImpl<String
 
     @Override
     protected boolean isCloudEventsHeader(String key) {
-        return key != null && key.length() > 3 && key.substring(0, CE_PREFIX.length()).toLowerCase().startsWith(CE_PREFIX);
+        return key != null && key.length() > CE_PREFIX.length() && StringUtils.startsWithIgnoreCase(key, CE_PREFIX);
     }
 
     @Override
