@@ -3,6 +3,7 @@ package io.cloudevents.examples.quarkus.resources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.examples.quarkus.model.User;
+import io.cloudevents.jackson.JsonFormat;
 import io.cloudevents.jackson.PojoCloudEventDataMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/users")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@Consumes({MediaType.APPLICATION_JSON, JsonFormat.CONTENT_TYPE})
+@Produces({MediaType.APPLICATION_JSON})
 public class UserResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);

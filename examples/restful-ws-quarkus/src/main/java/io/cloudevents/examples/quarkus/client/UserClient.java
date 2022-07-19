@@ -12,6 +12,8 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 @RegisterRestClient
 public interface UserClient {
 
+    // This will emit binary encoded events.
+    // To use structured JSON encoding use @Produces(JsonFormat.CONTENT_TYPE).
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     void emit(CloudEvent event);
