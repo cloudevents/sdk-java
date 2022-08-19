@@ -74,10 +74,12 @@
         <module>http/basic</module>
         <module>http/vertx</module>
         <module>http/restful-ws</module>
+        <module>http/restful-ws-jakarta</module>
         <module>kafka</module>
         <module>spring</module>
         <module>sql</module>
         <module>bom</module>
+        <module>http/restful-ws-jakarta-integration-tests</module>
     </modules>
 
     <properties>

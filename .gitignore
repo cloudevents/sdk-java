@@ -45,3 +45,4 @@ _site/
 
 # MacOS
 *.DS_Store
+/http/restful-ws-jakarta/src/main/java/

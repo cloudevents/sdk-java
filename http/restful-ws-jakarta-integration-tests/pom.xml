@@ -6,29 +6,22 @@
         <artifactId>cloudevents-parent</artifactId>
         <groupId>io.cloudevents</groupId>
         <version>2.4.0-SNAPSHOT</version>
+        <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloudevents-examples</artifactId>
-    <name>Cloudevents - Examples</name>
+    <artifactId>restful-ws-jakarta-integration-tests</artifactId>
     <packaging>pom</packaging>
 
     <properties>
-        <!-- No need to generate javadocs for examples -->
+        <!-- No need to generate javadocs for these IT tests -->
         <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
     <modules>
-        <module>kafka</module>
-        <module>restful-ws-quarkus</module>
-        <module>restful-ws-microprofile-ee9</module>
-        <module>vertx</module>
-        <module>basic-http</module>
-        <module>restful-ws-spring-boot</module>
-        <module>amqp-proton</module>
-        <module>spring-reactive</module>
-        <module>spring-rsocket</module>
-        <module>spring-function</module>
+        <module>restful-ws-jakarta-common</module>
+        <module>restful-ws-microprofile</module>
+        <module>restful-ws-resteasy</module>
     </modules>
 
 </project>

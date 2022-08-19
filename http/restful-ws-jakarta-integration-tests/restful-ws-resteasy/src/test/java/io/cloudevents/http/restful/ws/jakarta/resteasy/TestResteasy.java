@@ -16,7 +16,7 @@
  *
  */
 
-package io.cloudevents.http.restful.ws.resteasy;
+package io.cloudevents.http.restful.ws.jakarta.resteasy;
 
 import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
@@ -29,8 +29,8 @@ import org.jboss.resteasy.test.TestPortProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
 
 public class TestResteasy extends BaseTest {
 
