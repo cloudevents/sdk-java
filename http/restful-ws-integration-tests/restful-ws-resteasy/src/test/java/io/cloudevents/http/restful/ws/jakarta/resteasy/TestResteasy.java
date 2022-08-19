@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2018-Present The CloudEvents Authors
  * <p>
@@ -15,27 +16,26 @@
  *
  */
 
-package io.cloudevents.http.restful.ws.jersey;
+package io.cloudevents.http.restful.ws.jakarta.resteasy;
 
-import com.github.hanleyt.JerseyExtension;
 import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.http.restful.ws.BaseTest;
 import io.cloudevents.http.restful.ws.CloudEventsProvider;
 import io.cloudevents.http.restful.ws.TestResource;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.jboss.resteasy.plugins.server.vertx.VertxContainer;
+import org.jboss.resteasy.plugins.server.vertx.VertxResteasyDeployment;
+import org.jboss.resteasy.test.TestPortProvider;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
 
-public class TestJersey extends BaseTest {
+public class TestResteasy extends BaseTest {
 
-    private WebTarget target;
+    private static VertxResteasyDeployment resteasyDeployment;
+    private static WebTarget target;
 
     @Override
     protected WebTarget getWebTarget() {
@@ -43,26 +43,20 @@ public class TestJersey extends BaseTest {
     }
 
     @BeforeAll
-    public static void beforeAll() {
+    public static void beforeClass() throws Exception {
         EventFormatProvider.getInstance().registerFormat(CSVFormat.INSTANCE);
+
+        String base = TestPortProvider.generateBaseUrl();
+        TestResteasy.resteasyDeployment = VertxContainer.start(base);
+        TestResteasy.resteasyDeployment.getProviderFactory().register(CloudEventsProvider.class);
+        TestResteasy.resteasyDeployment.getRegistry().addPerRequestResource(TestResource.class);
+
+        TestResteasy.target = ClientBuilder.newClient().register(CloudEventsProvider.class).target(base);
     }
 
-    @BeforeEach
-    void beforeEach(WebTarget target) {
-        this.target = target;
-    }
-
-    @RegisterExtension
-    JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
-
-    private Application configureJersey() {
-        return new ResourceConfig(TestResource.class)
-            .register(CloudEventsProvider.class);
-    }
-
-    private ClientConfig configureJerseyClient(ExtensionContext extensionContext, ClientConfig clientConfig) {
-        return clientConfig
-            .register(CloudEventsProvider.class);
+    @AfterAll
+    public static void after() throws Exception {
+        TestResteasy.resteasyDeployment.stop();
     }
 
 }
