@@ -47,7 +47,7 @@ public final class JsonFormat implements EventFormat {
     /**
      * Suppoted Content type
      */
-    private static final Pattern PATTERN_CONTENT_TYPE = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?json$");
+    private static final Pattern JSON_CONTENT_TYPE = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?json$");
     private final ObjectMapper mapper;
     private final JsonFormatOptions options;
 
@@ -218,6 +218,6 @@ public final class JsonFormat implements EventFormat {
 
     static boolean dataIsJsonContentType(String contentType) {
         // If content type, spec states that we should assume is json
-        return contentType == null || PATTERN_CONTENT_TYPE.matcher(contentType).matches();
+        return contentType == null || JSON_CONTENT_TYPE.matcher(contentType).matches();
     }
 }

@@ -20,12 +20,9 @@ package io.cloudevents.jackson;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.core.impl.StringUtils;
 import io.cloudevents.core.mock.MyCloudEventData;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.core.test.Data;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -65,7 +62,7 @@ public class JsonCloudEventDataTest {
         return Stream.of(
             Arguments.of("application/json"),
             Arguments.of("text/json"),
-            Arguments.of("application/fubar+json")
+            Arguments.of("application/foobar+json")
         );
     }
 }
