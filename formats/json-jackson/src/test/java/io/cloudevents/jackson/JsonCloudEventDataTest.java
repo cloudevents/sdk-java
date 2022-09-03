@@ -52,6 +52,8 @@ public class JsonCloudEventDataTest {
                 return new MyCloudEventData(((JsonCloudEventData) data).getNode().asInt());
             });
 
+        assertThat(deserialized.getDataContentType())
+            .isEqualTo(contentType);
         assertThat(deserialized.getData())
             .isInstanceOf(MyCloudEventData.class);
         assertThat(((MyCloudEventData) deserialized.getData()).getValue())

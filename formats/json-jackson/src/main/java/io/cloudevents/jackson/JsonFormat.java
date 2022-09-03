@@ -45,7 +45,7 @@ public final class JsonFormat implements EventFormat {
      */
     public static final String CONTENT_TYPE = "application/cloudevents+json";
     /**
-     * Suppoted Content type
+     * JSON Data Content Type Discriminator
      */
     private static final Pattern JSON_CONTENT_TYPE_PATTERN = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?json$");
     private final ObjectMapper mapper;
