@@ -29,6 +29,7 @@ import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventRWException;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Implementation of {@link EventFormat} for <a href="https://github.com/cloudevents/spec/blob/v1.0/json-format.md">JSON event format</a>
@@ -43,7 +44,10 @@ public final class JsonFormat implements EventFormat {
      * Content type associated with the JSON event format
      */
     public static final String CONTENT_TYPE = "application/cloudevents+json";
-
+    /**
+     * JSON Data Content Type Discriminator
+     */
+    private static final Pattern JSON_CONTENT_TYPE_PATTERN = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?json$");
     private final ObjectMapper mapper;
     private final JsonFormatOptions options;
 
@@ -214,6 +218,6 @@ public final class JsonFormat implements EventFormat {
 
     static boolean dataIsJsonContentType(String contentType) {
         // If content type, spec states that we should assume is json
-        return contentType == null || contentType.startsWith("application/json") || contentType.startsWith("text/json");
+        return contentType == null || JSON_CONTENT_TYPE_PATTERN.matcher(contentType).matches();
     }
 }
