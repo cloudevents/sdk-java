@@ -110,6 +110,6 @@ CloudEvent extensions can be materialized in their respective POJOs using the
 import io.cloudevents.core.extensions.DistributedTracingExtension;
 import io.cloudevents.core.provider.ExtensionProvider;
 
-DistributedTracingExtension dte = ExtensionsParser.getInstance()
+DistributedTracingExtension dte = ExtensionProvider.getInstance()
     .parseExtension(DistributedTracingExtension.class, event);
 ```
