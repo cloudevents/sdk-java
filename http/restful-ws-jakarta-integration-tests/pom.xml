@@ -22,6 +22,7 @@
         <module>restful-ws-jakarta-common</module>
         <module>restful-ws-microprofile</module>
         <module>restful-ws-resteasy</module>
+        <module>restful-ws-jakarta-jersey</module>
     </modules>
 
 </project>
