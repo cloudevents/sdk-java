@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cloudevents-examples</artifactId>
+        <groupId>io.cloudevents</groupId>
+        <version>2.5.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>cloudevents-nats-example</artifactId>
+
+    <properties>
+        <nats.version>2.15.6</nats.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.cloudevents</groupId>
+            <artifactId>cloudevents-nats</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudevents</groupId>
+            <artifactId>cloudevents-json-jackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.nats</groupId>
+            <artifactId>jnats</artifactId>
+            <version>${nats.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
