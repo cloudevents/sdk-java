@@ -32,6 +32,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <jersey.version>3.0.8</jersey.version>
         <jakarta-ee.version>3.0.0</jakarta-ee.version>
     </properties>
 
