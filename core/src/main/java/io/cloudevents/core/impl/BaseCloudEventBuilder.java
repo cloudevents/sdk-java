@@ -213,7 +213,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
      *
      * @param name the extension name
      * @return true if extension name is valid, false otherwise
-     * @see <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
+     * @see <a href="https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md#naming-conventions">attribute-naming-conventions</a>
      */
     private static boolean isValidExtensionName(String name) {
         for (int i = 0; i < name.length(); i++) {
