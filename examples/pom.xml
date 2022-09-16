@@ -21,7 +21,7 @@
     <modules>
         <module>kafka</module>
         <module>restful-ws-quarkus</module>
-        <module>restful-ws-microprofile-ee9</module>
+        <module>restful-ws-microprofile-liberty</module>
         <module>vertx</module>
         <module>basic-http</module>
         <module>restful-ws-spring-boot</module>

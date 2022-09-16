@@ -4,7 +4,7 @@ This project uses Microprofile 5.0 with OpenLiberty
 
 If you would like to know more about Microprofile go to https://microprofile.io
 
-This Example uses Jakarta EE9 features as such the top level namespace of the `ws-api` packages has changed from `javax` to `jakarta` and uses the `cloudevents-http-restful-ws-ee9` artifact.
+This Example uses Jakarta EE9 features as such the top level namespace of the `ws-api` packages has changed from `javax` to `jakarta` and uses the `cloudevents-http-restful-ws-jakarta` artifact.
 
 ## Build and Execution
 
