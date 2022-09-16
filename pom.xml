@@ -79,7 +79,6 @@
         <module>spring</module>
         <module>sql</module>
         <module>bom</module>
-        <module>http/restful-ws-jakarta-integration-tests</module>
     </modules>
 
     <properties>
@@ -211,6 +210,7 @@
             <modules>
                 <module>benchmarks</module>
                 <module>http/restful-ws-integration-tests</module>
+                <module>http/restful-ws-jakarta-integration-tests</module>
                 <module>examples</module>
             </modules>
         </profile>

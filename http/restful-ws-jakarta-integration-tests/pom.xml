@@ -10,7 +10,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>restful-ws-jakarta-integration-tests</artifactId>
+    <artifactId>cloudevents-http-restful-ws-jakarta-integration-tests</artifactId>
+    <name>CloudEvents - JAX-RS Jakarta EE9+ Web Http Binding Integration Tests</name>
     <packaging>pom</packaging>
 
     <properties>
@@ -20,9 +21,9 @@
 
     <modules>
         <module>restful-ws-jakarta-common</module>
-        <module>restful-ws-microprofile</module>
         <module>restful-ws-resteasy</module>
         <module>restful-ws-jersey</module>
+        <module>restful-ws-liberty</module>
     </modules>
 
 </project>

@@ -20,7 +20,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>restful-ws-jakarta-integration-tests</artifactId>
+        <artifactId>cloudevents-http-restful-ws-jakarta-integration-tests</artifactId>
         <groupId>io.cloudevents</groupId>
         <version>2.4.0-SNAPSHOT</version>
         <relativePath>../</relativePath>
@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-http-restful-ws-jakarta-integration-tests-jersey</artifactId>
-    <name>CloudEvents - JAX-RS Integration Tests - Jersey</name>
+    <name>CloudEvents - JAX-RS Jakarta EE9+ Integration Tests - Jersey</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -48,21 +48,25 @@
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
             <version>${jakarta-ee.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-jetty</artifactId>
             <version>${jersey.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
             <version>${jersey.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

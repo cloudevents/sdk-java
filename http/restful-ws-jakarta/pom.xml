@@ -25,8 +25,8 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>cloudevents-http-restful-ws-ee9</artifactId>
-    <name>CloudEvents - Jakarta EE9 RESTful Web Services Http Binding</name>
+    <artifactId>cloudevents-http-restful-ws-jakarta</artifactId>
+    <name>CloudEvents - Jakarta EE 9+ - Jakarta RESTful Web Services Http Binding</name>
     <packaging>jar</packaging>
 
     <pluginRepositories>
@@ -43,8 +43,8 @@
     <properties>
         <jakarta-ee.version>3.0.0</jakarta-ee.version>
         <jersey.version>3.0.8</jersey.version>
-        <vertx.version>3.9.0</vertx.version>
-        <resteasy.version>4.5.3.Final</resteasy.version>
+        <vertx.version>4.4.3</vertx.version>
+        <resteasy.version>6.0.3.Final</resteasy.version>
         <module-name>io.cloudevents.http.restfulws</module-name>
     </properties>
 
@@ -79,9 +79,10 @@
                                         <replaceregex pattern="javax." replace="jakarta." />
                                     </filterchain>
                                 </copy>
-                                <!--<replace dir="src/main/java/io/cloudevents/http/restful/ws" token="javax" value="jakarta">
-                                    <include name=" **/*.java" />
-                                </replace>-->
+                                <move todir="src/main/resources/META-INF/services">
+                                    <fileset dir="src/main/resources/META-INF/services" />
+                                    <mapper type="regexp" from="(.*)javax.(.*)" to="\1jakarta.\2"/>
+                                </move>
                             </target>
                         </configuration>
                         <goals>

@@ -1,5 +1,7 @@
 /*
- * Ported from https://github.com/hanleyt/jersey-junit as no version support Jesery versions >=3.0.0
+ * Ported from https://github.com/hanleyt/jersey-junit as no version supports Jesery versions >=3.0.0
+ *
+ * Only update is the replacement of the ws-rs package namespace from javax. to jakarta.
  */
 
 package com.github.hanleyt;
