@@ -23,7 +23,7 @@ public class SampleHTTPServer {
 
                 // We need to read the event from the HTTP request we get, so create a MessageReader.
                 VertxMessageFactory.createReader(request)
-                    // Covert the MessageReader to a CloudEvent.
+                    // Convert the MessageReader to a CloudEvent.
                     .map(MessageReader::toEvent)
                     .onSuccess(event -> {
                         // Print out the event.
