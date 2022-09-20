@@ -62,7 +62,8 @@ receive CloudEvents, check out the dedicated pages:
 
 -   [AMQP using Proton](amqp-proton.md)
 -   [HTTP using Vert.x](http-vertx.md)
--   [HTTP using Jakarta Restful WS](http-jakarta-restful-ws.md)
+-   [HTTP using Jakarta EE 8 - Jakarta Restful WS](http-jakarta-restful-ws.md)
+-   [HTTP using Jakarta EE 9+ - Jakarta Restful WS](http-jakarta-restful-ws-jakarta.md)
 -   [HTTP using Spring](spring.md)
 -   [HTTP using Jackson](json-jackson.md)
 -   [Kafka](kafka.md)
@@ -98,7 +99,9 @@ a different feature from the different sub specs of
 -   [`cloudevents-http-vertx`] Implementation of [HTTP Protocol Binding] with
     [Vert.x Core](https://vertx.io/)
 -   [`cloudevents-http-restful-ws`] Implementation of [HTTP Protocol Binding]
-    for [Jakarta Restful WS](https://jakarta.ee/specifications/restful-ws/)
+    for [Jakarta EE 8 Restful WS](https://jakarta.ee/specifications/restful-ws/2.1/)
+-   [`cloudevents-http-restful-ws-jakarta`] Implementation of  [HTTP Protocol Binding]
+      for [Jakarta EE 9+ Restful WS](https://jakarta.ee/specifications/restful-ws/)
 -   [`cloudevents-http-basic`] Generic implementation of [HTTP Protocol
     Binding], primarily intended for integrators
 -   [`cloudevents-kafka`] Implementation of [Kafka Protocol Binding]
@@ -123,6 +126,7 @@ You can look at the latest published artifacts on
 [`cloudevents-http-vertx`]: https://github.com/cloudevents/sdk-java/tree/master/http/vertx
 [`cloudevents-http-basic`]: https://github.com/cloudevents/sdk-java/tree/master/http/basic
 [`cloudevents-http-restful-ws`]: https://github.com/cloudevents/sdk-java/tree/master/http/restful-ws
+[`cloudevents-http-restful-ws-jakarta`]: https://github.com/cloudevents/sdk-java/tree/master/http/restful-ws-jakarta
 [`cloudevents-kafka`]: https://github.com/cloudevents/sdk-java/tree/master/kafka
 [`cloudevents-amqp-proton`]: https://github.com/cloudevents/sdk-java/tree/master/amqp
 [`cloudevents-spring`]: https://github.com/cloudevents/sdk-java/tree/master/spring
