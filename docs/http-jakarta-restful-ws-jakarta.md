@@ -18,7 +18,7 @@ RESTful Web Services Binding for Jakarta EE 9+:
 </dependency>
 ```
 
-This integration is tested with Jersey, RestEasy & Microprofile Liberty.
+This integration is tested with Jersey (Requires JDK11 or higher), RestEasy & Microprofile Liberty.
 
 #### * Before using this package ensure your web framework  does support the `jakarta.*` namespace.
 
