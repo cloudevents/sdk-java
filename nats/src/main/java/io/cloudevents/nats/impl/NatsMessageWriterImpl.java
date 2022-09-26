@@ -41,7 +41,6 @@ public class NatsMessageWriterImpl implements MessageWriter<CloudEventWriter<Mes
 
     @Override
     public Message end(CloudEventData data) throws CloudEventRWException {
-        headers.put(NatsHeaders.SPEC_VERSION, SpecVersion.V1.toString());
         return builder
             .headers(headers)
             .data(data.toBytes()).build();
@@ -54,6 +53,7 @@ public class NatsMessageWriterImpl implements MessageWriter<CloudEventWriter<Mes
 
     @Override
     public CloudEventWriter<Message> create(SpecVersion version) throws CloudEventRWException {
+        headers.put(NatsHeaders.SPEC_VERSION, version.toString());
         return this;
     }
 

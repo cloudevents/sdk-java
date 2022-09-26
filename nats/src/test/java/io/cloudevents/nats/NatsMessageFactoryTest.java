@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,6 +23,7 @@ public class NatsMessageFactoryTest {
             .withData("application/json", "\"test-data\"".getBytes(StandardCharsets.UTF_8))
             .withSource(URI.create(NatsHeadersTest.fullUrl))
             .withId("event-id")
+            .withTime(OffsetDateTime.now())
             .withType(NatsHeadersTest.emojiRaw).build();
     }
 

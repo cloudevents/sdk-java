@@ -81,19 +81,15 @@ public class NatsHeaders {
             }
 
             caw.write(i);
-            if (Character.isHighSurrogate(c)) {
-                collecting.unicodeByte2Check = true;
-            } else {
-                collecting.unicodeByte2Check = false;
-            }
+            collecting.unicodeByte2Check = Character.isHighSurrogate(c);
             return "";
         }).collect(Collectors.joining()) + encode(caw);
     }
 
     private static String encode(CharArrayWriter caw) {
-        StringBuilder out = new StringBuilder();
+        if (caw.size() == 0) return "";
 
-        caw.flush();
+        StringBuilder out = new StringBuilder();
 
         for (byte b : new String(caw.toCharArray()).getBytes(StandardCharsets.UTF_8)) {
             /*
