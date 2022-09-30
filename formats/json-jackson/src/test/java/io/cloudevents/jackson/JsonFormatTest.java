@@ -48,6 +48,22 @@ class JsonFormatTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @ParameterizedTest
+    @MethodSource("jsonContentTypes")
+    void isJsonContentType(String contentType) {
+        boolean json = JsonFormat.dataIsJsonContentType(contentType);
+
+        assertThat(json).isTrue();
+    }
+
+    @ParameterizedTest
+    @MethodSource("wrongJsonContentTypes")
+    void isNotJsonContentType(String contentType) {
+        boolean json = JsonFormat.dataIsJsonContentType(contentType);
+
+        assertThat(json).isFalse();
+    }
+
+    @ParameterizedTest
     @MethodSource("serializeTestArgumentsDefault")
     void serialize(CloudEvent input, String outputFile) throws IOException {
         JsonNode jsonOutput = mapper.readValue(loadFile(outputFile), JsonNode.class);
@@ -149,6 +165,39 @@ class JsonFormatTest {
 
         assertThatExceptionOfType(EventDeserializationException.class).isThrownBy(() -> getFormat().deserialize(input));
 
+    }
+
+    static Stream<Arguments> jsonContentTypes() {
+        return Stream.of(
+            Arguments.of("application/json"),
+            Arguments.of("application/json;charset=utf-8"),
+            Arguments.of("application/json;\tcharset = \"utf-8\""),
+            Arguments.of("application/cloudevents+json;charset=UTF-8"),
+            Arguments.of("text/json"),
+            Arguments.of("text/json;charset=utf-8"),
+            Arguments.of("text/cloudevents+json;charset=UTF-8"),
+            Arguments.of("text/json;\twhatever"),
+            Arguments.of("text/json; boundary=something"),
+            Arguments.of("text/json;foo=\"bar\""),
+            Arguments.of("text/json; charset = \"us-ascii\""),
+            Arguments.of("text/json; \t"),
+            Arguments.of("text/json;"),
+            //https://www.rfc-editor.org/rfc/rfc2045#section-5.1
+            // any us-ascii char can be part of parameters (except CTRLs and tspecials)
+            Arguments.of("text/json; char-set = $!#$%&'*+.^_`|"),
+            Arguments.of((Object) null)
+        );
+    }
+
+    static Stream<Arguments> wrongJsonContentTypes() {
+        return Stream.of(
+            Arguments.of("applications/json"),
+            Arguments.of("application/jsom"),
+            Arguments.of("application/jsonwrong"),
+            Arguments.of("text/json "),
+            Arguments.of("text/json ;"),
+            Arguments.of("test/json")
+        );
     }
 
     public static Stream<Arguments> serializeTestArgumentsDefault() {
