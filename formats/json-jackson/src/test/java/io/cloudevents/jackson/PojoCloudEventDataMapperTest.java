@@ -46,7 +46,7 @@ public class PojoCloudEventDataMapperTest {
     public void testWithJson(PojoCloudEventDataMapper<MyPojo> mapper) {
 
         CloudEvent event = CloudEventBuilder.v1(Data.V1_MIN)
-            .withData("application/json", new JsonCloudEventData(myPojoJson))
+            .withData("application/json", JsonCloudEventData.wrap(myPojoJson))
             .build();
 
         PojoCloudEventData<MyPojo> mappedData = CloudEventUtils.mapData(

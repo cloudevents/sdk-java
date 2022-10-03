@@ -37,7 +37,7 @@ public class JsonCloudEventDataTest {
     @MethodSource("textContentArguments")
     public void testMapper(String contentType) {
         CloudEvent event = CloudEventBuilder.v1(Data.V1_MIN)
-            .withData(contentType, new JsonCloudEventData(JsonNodeFactory.instance.numberNode(10)))
+            .withData(contentType, JsonCloudEventData.wrap(JsonNodeFactory.instance.numberNode(10)))
             .build();
 
         byte[] serialized = EventFormatProvider.getInstance().resolveFormat(JsonFormat.CONTENT_TYPE)
