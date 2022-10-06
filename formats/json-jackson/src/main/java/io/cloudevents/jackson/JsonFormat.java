@@ -47,7 +47,7 @@ public final class JsonFormat implements EventFormat {
     /**
      * JSON Data Content Type Discriminator
      */
-    private static final Pattern JSON_CONTENT_TYPE_PATTERN = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?json$");
+    private static final Pattern JSON_CONTENT_TYPE_PATTERN = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?json(;.*)*$");
     private final ObjectMapper mapper;
     private final JsonFormatOptions options;
 
