@@ -330,7 +330,7 @@ class JsonFormatTest {
                 builder = CloudEventBuilder.v03(event);
             }
             return builder
-                .withData(new JsonCloudEventData(JsonNodeFactory.instance.objectNode()))
+                .withData(JsonCloudEventData.wrap(JsonNodeFactory.instance.objectNode()))
                 .build();
         } else {
             return event;

@@ -118,7 +118,7 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                                 if (JsonFormat.dataIsJsonContentType(contentType)) {
                                     // This solution is quite bad, but i see no alternatives now.
                                     // Hopefully in future we can improve it
-                                    data = new JsonCloudEventData(node.remove("data"));
+                                    data = JsonCloudEventData.wrap(node.remove("data"));
                                 } else {
                                     JsonNode dataNode = node.remove("data");
                                     assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
@@ -136,7 +136,7 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                             if (JsonFormat.dataIsJsonContentType(contentType)) {
                                 // This solution is quite bad, but i see no alternatives now.
                                 // Hopefully in future we can improve it
-                                data = new JsonCloudEventData(node.remove("data"));
+                                data = JsonCloudEventData.wrap(node.remove("data"));
                             } else {
                                 JsonNode dataNode = node.remove("data");
                                 assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
