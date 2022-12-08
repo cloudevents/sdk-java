@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +29,7 @@ public class PojoCloudEventDataMapperTest {
     public void testWithBytes(PojoCloudEventDataMapper<MyPojo> mapper) {
 
         CloudEvent event = CloudEventBuilder.v1(Data.V1_MIN)
-            .withData("application/json", myPojoSerialized.getBytes())
+            .withData("application/json", myPojoSerialized.getBytes(StandardCharsets.UTF_8))
             .build();
 
         PojoCloudEventData<MyPojo> mappedData = CloudEventUtils.mapData(

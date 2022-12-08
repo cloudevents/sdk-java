@@ -15,6 +15,7 @@ import org.apache.qpid.proton.message.Message;
 
 import java.io.PrintWriter;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A example vertx-based AMQP client that interacts with a remote AMQP server to send and receive CloudEvent messages.
@@ -71,7 +72,7 @@ public class AmqpClient {
                 .withSource(URI.create("http://127.0.0.1/amqp-client"))
                 .withType("com.example.sampletype1")
                 .withTime(Time.parseTime("2020-11-06T21:47:12.037467+00:00"))
-                    .withData(payload.toString().getBytes())
+                    .withData(payload.toString().getBytes(StandardCharsets.UTF_8))
                     .build();
 
             final Message message = ProtonAmqpMessageFactory.createWriter().writeBinary(event);

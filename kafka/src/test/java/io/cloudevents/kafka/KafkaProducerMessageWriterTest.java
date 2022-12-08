@@ -30,6 +30,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static io.cloudevents.core.test.Data.*;
@@ -63,7 +64,7 @@ public class KafkaProducerMessageWriterTest {
         assertThat(producerRecord.key())
             .isEqualTo(key);
         assertThat(producerRecord.headers())
-            .containsExactly(new RecordHeader(KafkaHeaders.CONTENT_TYPE, expectedContentType.getBytes()));
+            .containsExactly(new RecordHeader(KafkaHeaders.CONTENT_TYPE, expectedContentType.getBytes(StandardCharsets.UTF_8)));
         assertThat(producerRecord.value())
             .isEqualTo(expectedBuffer);
     }

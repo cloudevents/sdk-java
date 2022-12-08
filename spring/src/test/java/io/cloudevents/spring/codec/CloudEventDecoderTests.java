@@ -16,6 +16,7 @@
 package io.cloudevents.spring.codec;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
@@ -57,7 +58,7 @@ class CloudEventDecoderTests {
 		CloudEvent attributes = CloudEventBuilder.v1().withId("A234-1234-1234")
 				.withSource(URI.create("https://spring.io/"))
 				.withType("org.springframework")
-				.withData("{\"name\":\"hello\"}".getBytes()).build();
+				.withData("{\"name\":\"hello\"}".getBytes(StandardCharsets.UTF_8)).build();
 		Flux<DataBuffer> value = encoder.encode(attributes,
 				DefaultDataBufferFactory.sharedInstance,
 				ResolvableType.forClass(CloudEvent.class),

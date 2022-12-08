@@ -1,7 +1,7 @@
 package io.cloudevents.core.mock;
 
 import io.cloudevents.CloudEventData;
-
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class MyCloudEventData implements CloudEventData {
@@ -14,7 +14,7 @@ public class MyCloudEventData implements CloudEventData {
 
     @Override
     public byte[] toBytes() {
-        return Integer.toString(value).getBytes();
+        return Integer.toString(value).getBytes(StandardCharsets.UTF_8);
     }
 
     public int getValue() {

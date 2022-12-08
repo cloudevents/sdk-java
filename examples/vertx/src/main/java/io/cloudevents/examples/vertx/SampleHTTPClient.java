@@ -12,6 +12,7 @@ import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class SampleHTTPClient {
@@ -41,7 +42,7 @@ public class SampleHTTPClient {
             // Create the event starting from the template
             final CloudEvent event = eventTemplate.newBuilder()
                 .withId(UUID.randomUUID().toString())
-                .withData("text/plain", data.getBytes())
+                .withData("text/plain", data.getBytes(StandardCharsets.UTF_8))
                 .build();
 
             Future<HttpResponse<Buffer>> responseFuture;

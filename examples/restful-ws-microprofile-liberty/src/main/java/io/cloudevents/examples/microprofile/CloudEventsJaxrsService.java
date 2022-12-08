@@ -20,7 +20,7 @@ public class CloudEventsJaxrsService {
     public CloudEvent retrieveEvent(){
         System.out.println("Received request for an event");
         return CloudEventBuilder.v1()
-                .withData("{\"message\":\"Welcome to this Cloudevents + Microprofile example\"}".getBytes())
+                .withData("{\"message\":\"Welcome to this Cloudevents + Microprofile example\"}".getBytes(StandardCharsets.UTF_8))
                 .withDataContentType("application/json")
                 .withId("hello")
                 .withType("example.http")
@@ -45,7 +45,7 @@ public class CloudEventsJaxrsService {
     @Consumes(MediaType.APPLICATION_JSON)
     public CloudEvent echo(CloudEvent event){
         return CloudEventBuilder.v1()
-                .withData("application/json", ("{\"echo\": \"" + new String(event.getData().toBytes(),StandardCharsets.UTF_8) + "\"}").getBytes())
+                .withData("application/json", ("{\"echo\": \"" + new String(event.getData().toBytes(),StandardCharsets.UTF_8) + "\"}").getBytes(StandardCharsets.UTF_8))
                 .withId("echo")
                 .withType("echo.http")
                 .withSource(URI.create("http://localhost"))

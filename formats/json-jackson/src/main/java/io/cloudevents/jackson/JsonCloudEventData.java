@@ -20,6 +20,7 @@ package io.cloudevents.jackson;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.cloudevents.CloudEventData;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
@@ -40,7 +41,7 @@ public class JsonCloudEventData implements CloudEventData {
 
     @Override
     public byte[] toBytes() {
-        return node.toString().getBytes();
+        return node.toString().getBytes(StandardCharsets.UTF_8);
     }
 
     /**

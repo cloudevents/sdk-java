@@ -34,7 +34,7 @@ final CloudEvent event = CloudEventBuilder.v1()
     .withId("000")
     .withType("example.demo")
     .withSource(URI.create("http://example.com"))
-    .withData("text/plain","Hello world!".getBytes())
+    .withData("text/plain","Hello world!".getBytes("UTF-8"))
     .build();
 ```
 

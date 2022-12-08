@@ -17,6 +17,8 @@
 
 package io.cloudevents.kafka;
 
+import java.nio.charset.StandardCharsets;
+
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 
@@ -31,7 +33,7 @@ public class KafkaUtils {
     }
 
     static RecordHeader header(String key, String value) {
-        return new RecordHeader(key, value.getBytes());
+        return new RecordHeader(key, value.getBytes(StandardCharsets.UTF_8));
     }
 
 }

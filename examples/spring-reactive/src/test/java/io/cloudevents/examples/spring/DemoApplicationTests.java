@@ -1,6 +1,7 @@
 package io.cloudevents.examples.spring;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class DemoApplicationTests {
                 .bodyValue(CloudEventBuilder.v1() //
                         .withId("12345") //
                         .withType("io.spring.event") //
-                        .withSource(URI.create("https://spring.io/events")).withData("{\"value\":\"Dave\"}".getBytes()) //
+                        .withSource(URI.create("https://spring.io/events")).withData("{\"value\":\"Dave\"}".getBytes(StandardCharsets.UTF_8)) //
                         .build()) //
                 .exchange() //
                 .expectStatus().isOk() //
@@ -102,7 +103,7 @@ public class DemoApplicationTests {
                         .withId("12345") //
                         .withType("io.spring.event") //
                         .withSource(URI.create("https://spring.io/events")) //
-                        .withData("{\"value\":\"Dave\"}".getBytes()) //
+                        .withData("{\"value\":\"Dave\"}".getBytes(StandardCharsets.UTF_8)) //
                         .build()) //
                 .exchange() //
                 .expectStatus().isOk() //

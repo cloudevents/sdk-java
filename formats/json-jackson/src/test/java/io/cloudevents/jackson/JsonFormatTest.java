@@ -315,7 +315,7 @@ class JsonFormatTest {
             return String.join(
                 "",
                 Files.readAllLines(Paths.get(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(input)).toURI()), StandardCharsets.UTF_8)
-            ).getBytes();
+            ).getBytes(StandardCharsets.UTF_8);
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }

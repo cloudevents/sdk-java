@@ -2,6 +2,7 @@ package io.cloudevents.examples.amqp.vertx;
 
 import java.io.PrintWriter;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,7 +82,7 @@ public class AmqpServer {
                         .withType("com.example.sampletype1")
                         .withSource(URI.create("http://127.0.0.1/amqp-server"))
                         .withTime(OffsetDateTime.now())
-                        .withData("{\"temp\": 5}".getBytes())
+                        .withData("{\"temp\": 5}".getBytes(StandardCharsets.UTF_8))
                         .build();
 
                 final Message message = writer.writeBinary(event);
