@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.cloudevents.springboot.autoconfigure.http.CloudEventsHttpAutoConfiguration,\
+io.cloudevents.springboot.autoconfigure.http.codec.CloudEventsCodecAutoConfiguration,\
+io.cloudevents.springboot.autoconfigure.rsocket.CloudEventsStrategyAutoConfiguration

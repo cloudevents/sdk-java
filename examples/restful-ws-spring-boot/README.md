@@ -11,7 +11,7 @@ mvn spring-boot:run
 You can try sending a request using `curl`:
 
 ```shell
-curl -X POST -v -d '{"username": "slinkydeveloper", "firstName": "Francesco", "lastName": "Guardiani", "age": 23}' \                                                                                                                       ~
+curl -X POST -v -d '{"username": "slinkydeveloper", "firstName": "Francesco", "lastName": "Guardiani", "age": 23}' \
     -H'Content-type: application/json' \
     -H'Ce-id: 1' \
     -H'Ce-source: cloud-event-example' \
