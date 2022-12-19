@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      https://www.apache.org/licenses/LICENSE-2.0
+ *	  https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -84,6 +84,25 @@ class CloudEventMessageConverterTests {
 	}
 
 	@Test
+	void cloudEventWithContentType() {
+		// Sometimes you get a message that already has headers, but was originally a structured
+		// CloudEvent in the incoming transport, and we need to be able to extract the event
+		// safely.
+		Message<?> message = MessageBuilder.withPayload("{}").setHeader("ce-specversion", "1.0")
+				.setHeader("ce-id", "12345").setHeader("ce-source", "https://spring.io/events")
+				.setHeader("ce-type", "io.spring.event")
+				.setHeader("ce-datacontenttype", "application/json")
+				.setHeader(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json").build();
+		CloudEvent event = (CloudEvent) converter.fromMessage(message, CloudEvent.class);
+		assertThat(event).isNotNull();
+		assertThat(event.getSpecVersion()).isEqualTo(SpecVersion.V1);
+		assertThat(event.getId()).isEqualTo("12345");
+		assertThat(event.getDataContentType()).isEqualTo("application/json");
+		assertThat(event.getSource()).isEqualTo(URI.create("https://spring.io/events"));
+		assertThat(event.getType()).isEqualTo("io.spring.event");
+	}
+
+	@Test
 	void structuredCloudEvent() {
 		byte[] payload = JSON.getBytes();
 		Message<?> message = MessageBuilder.withPayload(payload)
@@ -92,11 +111,26 @@ class CloudEventMessageConverterTests {
 		assertThat(event).isNotNull();
 		assertThat(event.getSpecVersion()).isEqualTo(SpecVersion.V1);
 		assertThat(event.getId()).isEqualTo("12345");
+		assertThat(event.getDataContentType()).isEqualTo("application/json");
 		assertThat(event.getSource()).isEqualTo(URI.create("https://spring.io/events"));
 		assertThat(event.getType()).isEqualTo("io.spring.event");
 	}
 
 	@Test
+	void structuredCloudEventBinaryHeader() {
+		byte[] payload = JSON.getBytes();
+		Message<?> message = MessageBuilder.withPayload(payload)
+				.setHeader(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json".getBytes()).build();
+		CloudEvent event = (CloudEvent) converter.fromMessage(message, CloudEvent.class);
+		assertThat(event).isNotNull();
+		assertThat(event.getSpecVersion()).isEqualTo(SpecVersion.V1);
+		assertThat(event.getId()).isEqualTo("12345");
+		assertThat(event.getDataContentType()).isEqualTo("application/json");
+		assertThat(event.getSource()).isEqualTo(URI.create("https://spring.io/events"));
+		assertThat(event.getType()).isEqualTo("io.spring.event");
+	}
+
+    @Test
 	void structuredCloudEventStringPayload() {
 		Message<?> message = MessageBuilder.withPayload(JSON)
 				.setHeader(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json").build();

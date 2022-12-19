@@ -169,6 +169,7 @@
                         <link>https://qpid.apache.org/releases/qpid-proton-j-0.33.7/api/</link>
                         <link>https://fasterxml.github.io/jackson-databind/javadoc/2.10/</link>
                     </links>
+                    <source>8</source>
                 </configuration>
                 <executions>
                     <execution>

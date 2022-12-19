@@ -32,7 +32,7 @@ public class CloudEventContextUtilsTests {
 	@Test
 	public void testWithPrefix() {
         Map<String, Object> headers = new HashMap<>();
-        headers.put("ce-scpecversion", "1.0");
+        headers.put("ce-specversion", "1.0");
         headers.put("ce-id", "A234-1234-1234");
         headers.put("ce-source", "https://spring.io/");
         headers.put("ce-type", "org.springframework");
@@ -48,7 +48,7 @@ public class CloudEventContextUtilsTests {
 	@Test
 	public void testExtensionsWithPrefix() {
         Map<String, Object> headers = new HashMap<>();
-        headers.put("ce-scpecversion", "1.0");
+        headers.put("ce-specversion", "1.0");
         headers.put("ce-id", "A234-1234-1234");
         headers.put("ce-source", "https://spring.io/");
         headers.put("ce-type", "org.springframework");
