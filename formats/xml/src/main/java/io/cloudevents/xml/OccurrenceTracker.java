@@ -21,22 +21,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Tracks the occurances of a key to ensure only a single
+ * Tracks the occurrences of a key to ensure only a single
  * instance is allowed.
  *
  * Used to ensure that each CloudEvent context attribute
  * only occurs once in each CloudEvent element instance.
  *
  */
-class OccuranceTracker {
+class OccurrenceTracker {
 
-    private Set<String> keySet;
+    private final Set<String> keySet;
 
-    OccuranceTracker() {
+    OccurrenceTracker() {
         keySet = new HashSet<>();
     }
 
-    void trackOccurance(String name) throws  IllegalStateException {
+    void trackOccurrence(String name) throws  IllegalStateException {
 
         if (! keySet.add(name)){
             throw new IllegalStateException(name + ": Occurs more than once");

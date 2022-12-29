@@ -20,23 +20,23 @@ package io.cloudevents.xml;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class OccuranceTrackerTest {
+public class OccurrenceTrackerTest {
 
-    private final OccuranceTracker tracker = new OccuranceTracker();
+    private final OccurrenceTracker tracker = new OccurrenceTracker();
 
     @Test
     public void verifyTracking() {
 
         // These should all work...
         Assertions.assertDoesNotThrow(() -> {
-            tracker.trackOccurance("CE1");
-            tracker.trackOccurance("CE2");
-            tracker.trackOccurance("ce1");
+            tracker.trackOccurrence("CE1");
+            tracker.trackOccurrence("CE2");
+            tracker.trackOccurrence("ce1");
         });
 
         // This should fail
         Assertions.assertThrows(IllegalStateException.class, () -> {
-            tracker.trackOccurance("CE2");
+            tracker.trackOccurrence("CE2");
         });
 
     }

@@ -31,7 +31,7 @@ import java.util.Base64;
 class XMLDeserializer implements CloudEventReader {
 
     private final Document xmlDocument;
-    private final OccuranceTracker ceAtrributeTracker = new OccuranceTracker();
+    private final OccurrenceTracker ceAttributeTracker = new OccurrenceTracker();
 
     XMLDeserializer(Document doc) {
         this.xmlDocument = doc;
@@ -130,7 +130,7 @@ class XMLDeserializer implements CloudEventReader {
     // Private Methods --------------------------------------------------------
 
     /**
-     * Get the first child {@link Element} of an {@link Element}
+     * Get the first child Element of an Element
      *
      * @param e
      * @return The first child, or NULL if there isn't one.
@@ -216,10 +216,10 @@ class XMLDeserializer implements CloudEventReader {
     }
 
     /**
-     * Ensure that the root elemement of the received XML document is valid
+     * Ensure that the root element of the received XML document is valid
      * in our context.
      *
-     * @param e The root {@link Element}
+     * @param e The root Element
      * @throws CloudEventRWException
      */
     private void checkValidRootElement(Element e) throws CloudEventRWException {
@@ -236,7 +236,7 @@ class XMLDeserializer implements CloudEventReader {
     }
 
     /**
-     * Ensure the XML `data` element is well formed.
+     * Ensure the XML `data` element is well-formed.
      *
      * @param dataEl
      * @throws CloudEventRWException
@@ -278,7 +278,7 @@ class XMLDeserializer implements CloudEventReader {
             throw CloudEventRWException.newInvalidDataType(localName, " context atttribute names MUST be lowercase");
         }
 
-        // A bit kludgy, not relevent for 'data' - should refactor
+        // A bit of a kludge, not relevant for 'data' - should refactor
         if (!XMLConstants.XML_DATA_ELEMENT.equals(localName)) {
             // It must not have any children
             if (XMLUtils.countOfChildElements(el) != 0) {
@@ -288,7 +288,7 @@ class XMLDeserializer implements CloudEventReader {
 
         // Finally, ensure we only see each CE Attribute once...
         try {
-            ceAtrributeTracker.trackOccurance(localName);
+            ceAttributeTracker.trackOccurrence(localName);
         } catch (IllegalStateException e){
             throw CloudEventRWException.newOther(e);
         }

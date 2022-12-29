@@ -47,7 +47,7 @@ class XMLUtils {
      * Parse a byte stream into an XML {@link Document}
      *
      * @param data
-     * @return {@link Document}
+     * @return Document
      * @throws CloudEventRWException
      */
     static Document parseIntoDocument(byte[] data) throws CloudEventRWException {
@@ -65,7 +65,7 @@ class XMLUtils {
     }
 
     /**
-     * Obtain a byte array representation of a {@link Document}
+     * Obtain a byte array representation of an {@link Document}
      *
      * @param doc {@link Document}
      * @return byte[]
@@ -92,7 +92,7 @@ class XMLUtils {
     /**
      * Get the number of child elements of an {@link Element}
      *
-     * @param e The Element to introspect.
+     * @param e The {@link Element} to introspect.
      * @return The count of child elements
      */
     static int countOfChildElements(Element e) {

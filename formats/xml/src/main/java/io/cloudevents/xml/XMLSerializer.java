@@ -41,14 +41,14 @@ import java.util.Base64;
 class XMLSerializer {
 
     /**
-     * Convert the CloudEvent to an XML DOM representation.
+     * Convert a CloudEvent to an XML {@link Document}.
      *
      * @param ce
      * @return
      */
     static Document toDocument(CloudEvent ce) {
 
-        // Setup the writer
+        // Set up the writer
         XMLCloudEventWriter eventWriter = new XMLCloudEventWriter(ce.getSpecVersion());
 
         // Process the Context Attributes
