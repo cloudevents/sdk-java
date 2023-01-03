@@ -1,5 +1,5 @@
 ---
-title: CloudEvents Protocol Buffers
+title: CloudEvents XML Format
 nav_order: 4
 ---
 
@@ -7,9 +7,10 @@ nav_order: 4
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-xml.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-xml)
 
-This module provides and `EventFormat` implementation that adhere's
-to the CloudEvent XML Format specification. This format also supports
-specialized handling for XML CloudEvent `data`.
+This module provides and `EventFormat` implementation that adheres
+to the CloudEvent XML Format specification.
+
+This format also supports specialized handling for XML CloudEvent `data`.
 
 For Maven based projects, use the following dependency:
 
