@@ -16,19 +16,24 @@
  */
 package io.cloudevents.xml;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class XMLUtilsTest {
 
     @Test
-    public void voidTestChildCount() throws ParserConfigurationException {
+    public void testChildCount() throws ParserConfigurationException {
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         Document doc = dbf.newDocumentBuilder().newDocument();
@@ -52,4 +57,70 @@ public class XMLUtilsTest {
         assertThat(XMLUtils.countOfChildElements(root)).isEqualTo(2);
 
     }
+
+    @ParameterizedTest
+    @MethodSource("xmlTestContentTypes")
+    public void testXmlContentType(String contentType, boolean expected) {
+
+        Assertions.assertEquals(expected, XMLUtils.isXmlContent(contentType), contentType);
+    }
+
+    @ParameterizedTest
+    @MethodSource("textTestContentTypes")
+    public void testTextContentType(String contentType, boolean expected) {
+
+        Assertions.assertEquals(expected, XMLUtils.isTextContent(contentType), contentType);
+
+    }
+
+    static Stream<Arguments> xmlTestContentTypes() {
+
+        return Stream.of(
+
+            // Good Examples
+            Arguments.of("application/xml", true),
+            Arguments.of("application/xml;charset=utf-8", true),
+            Arguments.of("application/xml;\tcharset = \"utf-8\"", true),
+            Arguments.of("application/cloudevents+xml;charset=UTF-8", true),
+            Arguments.of("application/cloudevents+xml", true),
+            Arguments.of("text/xml", true),
+            Arguments.of("text/xml;charset=utf-8", true),
+            Arguments.of("text/cloudevents+xml;charset=UTF-8", true),
+            Arguments.of("text/xml;\twhatever", true),
+            Arguments.of("text/xml; boundary=something", true),
+            Arguments.of("text/xml;foo=\"bar\"", true),
+            Arguments.of("text/xml; charset = \"us-ascii\"", true),
+            Arguments.of("text/xml; \t", true),
+            Arguments.of("text/xml;", true),
+
+            // Bad Examples
+
+            Arguments.of("applications/xml", false),
+            Arguments.of("application/xmll", false),
+            Arguments.of("application/fobar", false),
+            Arguments.of("text/json ", false),
+            Arguments.of("text/json ;", false),
+            Arguments.of("test/xml", false),
+            Arguments.of("application/json", false)
+
+        );
+    }
+
+    static Stream<Arguments> textTestContentTypes() {
+
+        return Stream.of(
+
+            // Text Content
+            Arguments.of("text/foo", true),
+            Arguments.of("text/plain", true),
+            Arguments.of("application/xml", true),
+            Arguments.of("application/json", true),
+            Arguments.of("application/foo+json", true),
+
+            // Not Text Content
+            Arguments.of("image/png", false)
+
+        );
+    }
+
 }

@@ -24,7 +24,7 @@ import java.util.Set;
  * Tracks the occurrences of a key to ensure only a single
  * instance is allowed.
  *
- * Used to ensure that each CloudEvent context attribute
+ * Used to help ensure that each CloudEvent context attribute
  * only occurs once in each CloudEvent element instance.
  *
  */
@@ -33,14 +33,18 @@ class OccurrenceTracker {
     private final Set<String> keySet;
 
     OccurrenceTracker() {
-        keySet = new HashSet<>();
+        keySet = new HashSet<>(10);
     }
 
-    void trackOccurrence(String name) throws  IllegalStateException {
+    /**
+     * Record an occurrence of attribute name.
+     * @param name The name  to track.
+     * @return boolean true => accepted, false => duplicate name.
+     */
+    boolean trackOccurrence(String name) {
 
-        if (! keySet.add(name)){
-            throw new IllegalStateException(name + ": Occurs more than once");
-        }
+        return keySet.add(name);
+
     }
 
 }

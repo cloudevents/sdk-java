@@ -122,37 +122,6 @@ class XMLSerializer {
             }
         }
 
-        /**
-         * Need refactoring..
-         *
-         * @param contentType
-         * @return
-         */
-        private boolean isTextContent(String contentType) {
-
-            if (contentType == null) {
-                return false;
-            }
-
-            return contentType.startsWith("text/")
-                || "application/json".equals(contentType)
-                || "application/xml".equals(contentType)
-                || contentType.endsWith("+json")
-                || contentType.endsWith("+xml")
-                ;
-        }
-
-        private boolean isXMLContent(String contentType) {
-            if (contentType == null) {
-                return false;
-            }
-
-            return "application/xml".equals(contentType)
-                || "text/xml".equals(contentType)
-                || contentType.endsWith("+xml")
-                ;
-        }
-
         private void writeXmlData(Document dataDoc) {
 
             // Create the wrapper
@@ -233,9 +202,9 @@ class XMLSerializer {
 
             if (data instanceof XMLCloudEventData) {
                 writeXmlData(((XMLCloudEventData) data).getDocument());
-            } else if (isXMLContent(dataContentType)) {
+            } else if (XMLUtils.isXmlContent(dataContentType)) {
                 writeXmlData(data.toBytes());
-            } else if (isTextContent(dataContentType)) {
+            } else if (XMLUtils.isTextContent(dataContentType)) {
                 // Handle Textual Content
                 addElement("data", XMLConstants.CE_DATA_ATTR_TEXT, new String(data.toBytes()));
             } else {

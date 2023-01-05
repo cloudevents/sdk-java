@@ -28,16 +28,12 @@ public class OccurrenceTrackerTest {
     public void verifyTracking() {
 
         // These should all work...
-        Assertions.assertDoesNotThrow(() -> {
-            tracker.trackOccurrence("CE1");
-            tracker.trackOccurrence("CE2");
-            tracker.trackOccurrence("ce1");
-        });
+        Assertions.assertTrue(tracker.trackOccurrence("CE1"));
+        Assertions.assertTrue(tracker.trackOccurrence("CE2"));
+        Assertions.assertTrue(tracker.trackOccurrence("ce1"));
 
         // This should fail
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            tracker.trackOccurrence("CE2");
-        });
+        Assertions.assertFalse(tracker.trackOccurrence("CE2"));
 
     }
 

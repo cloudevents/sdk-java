@@ -36,8 +36,14 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class XMLUtils {
+
+    private static final Pattern XML_PATTERN = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?xml(;.*)*$");
+    private static final Pattern TEXT_PATTERN = Pattern.compile("^application\\/([a-zA-Z]+\\+)?(xml|json)(;.*)*$");
+
 
     // Prevent Construction
     private XMLUtils() {
@@ -101,6 +107,7 @@ class XMLUtils {
             return 0;
         }
 
+
         int retVal = 0;
 
         NodeList nodeLIst = e.getChildNodes();
@@ -114,5 +121,43 @@ class XMLUtils {
         }
 
         return retVal;
+    }
+
+    /**
+     * Determine if the given content-type string indicates XML content.
+     * @param contentType
+     * @return
+     */
+    static boolean isXmlContent(String contentType){
+
+        if (contentType == null){
+            return false;
+        }
+
+        final Matcher m = XML_PATTERN.matcher(contentType);
+
+        return m.matches();
+
+    }
+
+    /**
+     * Detemrine if the given content-type indicates textual content.
+     * @param contentType
+     * @return
+     */
+    static boolean isTextContent(String contentType) {
+
+        if (contentType == null) {
+            return false;
+        }
+
+        if (contentType.startsWith("text/")) {
+            return true;
+        }
+
+        final Matcher m = TEXT_PATTERN.matcher(contentType);
+
+        return m.matches();
+
     }
 }

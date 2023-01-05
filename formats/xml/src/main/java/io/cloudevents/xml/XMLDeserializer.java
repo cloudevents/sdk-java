@@ -287,10 +287,8 @@ class XMLDeserializer implements CloudEventReader {
         }
 
         // Finally, ensure we only see each CE Attribute once...
-        try {
-            ceAttributeTracker.trackOccurrence(localName);
-        } catch (IllegalStateException e){
-            throw CloudEventRWException.newOther(e);
+        if ( ! ceAttributeTracker.trackOccurrence(localName)) {
+            throw CloudEventRWException.newOther(localName + ": Attribute appeared more than once");
         }
     }
 
