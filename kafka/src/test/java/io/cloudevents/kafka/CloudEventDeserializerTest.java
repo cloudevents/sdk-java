@@ -26,6 +26,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Headers;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +54,7 @@ public class CloudEventDeserializerTest {
         testDeserialize(
             deserializer,
             CloudEventBuilder.v1(Data.V1_MIN)
-                .withData("application/json", "10".getBytes())
+                .withData("application/json", "10".getBytes(StandardCharsets.UTF_8))
                 .build(),
             CloudEventBuilder.v1(Data.V1_MIN)
                 .withData("application/json", new MyCloudEventData(10))

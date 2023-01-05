@@ -27,7 +27,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.MessageConverter;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A {@link MessageConverter} that can translate to and from a {@link Message
@@ -96,7 +96,7 @@ public class CloudEventMessageConverter implements MessageConverter {
 			return (byte[]) payload;
 		}
 		else if (payload instanceof String) {
-			return ((String) payload).getBytes(Charset.defaultCharset());
+			return ((String) payload).getBytes(StandardCharsets.UTF_8);
 		}
 		return null;
 	}

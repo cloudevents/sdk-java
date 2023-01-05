@@ -55,7 +55,7 @@ public class CSVFormat implements EventFormat {
             event.getData() != null
                 ? new String(Base64.getEncoder().encode(event.getData().toBytes()), StandardCharsets.UTF_8)
                 : "null"
-        ).getBytes();
+        ).getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CSVFormat implements EventFormat {
         URI dataschema = splitted[5].equals("null") ? null : URI.create(splitted[5]);
         String subject = splitted[6].equals("null") ? null : splitted[6];
         OffsetDateTime time = splitted[7].equals("null") ? null : Time.parseTime(splitted[7]);
-        byte[] data = splitted[8].equals("null") ? null : Base64.getDecoder().decode(splitted[8].getBytes());
+        byte[] data = splitted[8].equals("null") ? null : Base64.getDecoder().decode(splitted[8].getBytes(StandardCharsets.UTF_8));
 
         CloudEventBuilder builder = CloudEventBuilder.fromSpecVersion(sv)
             .withId(id)

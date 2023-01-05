@@ -22,6 +22,9 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
+
+import java.nio.charset.StandardCharsets;
+
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeader;
 
@@ -40,7 +43,7 @@ abstract class BaseKafkaMessageWriterImpl<R> implements MessageWriter<CloudEvent
         if (headerName == null) {
             headerName = KafkaHeaders.CE_PREFIX + name;
         }
-        headers.add(new RecordHeader(headerName, value.getBytes()));
+        headers.add(new RecordHeader(headerName, value.getBytes(StandardCharsets.UTF_8)));
         return this;
     }
 
@@ -52,7 +55,7 @@ abstract class BaseKafkaMessageWriterImpl<R> implements MessageWriter<CloudEvent
 
     @Override
     public R setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
-        this.headers.add(new RecordHeader(KafkaHeaders.CONTENT_TYPE, format.serializedContentType().getBytes()));
+        this.headers.add(new RecordHeader(KafkaHeaders.CONTENT_TYPE, format.serializedContentType().getBytes(StandardCharsets.UTF_8)));
         this.value = value;
         return this.end();
     }

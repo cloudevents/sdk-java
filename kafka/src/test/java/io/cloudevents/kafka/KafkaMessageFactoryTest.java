@@ -29,6 +29,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static io.cloudevents.core.test.Data.*;
@@ -55,7 +56,7 @@ public class KafkaMessageFactoryTest {
         byte[] serializedEvent = CSVFormat.INSTANCE.serialize(event);
 
         MessageReader message = KafkaMessageFactory.createReader(
-            new RecordHeaders().add("content-type", (CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8").getBytes()),
+            new RecordHeaders().add("content-type", (CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8").getBytes(StandardCharsets.UTF_8)),
             serializedEvent
         );
 

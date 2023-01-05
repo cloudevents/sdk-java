@@ -23,6 +23,7 @@ import io.cloudevents.types.Time;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -39,9 +40,9 @@ public class Data {
     public static final String SUBJECT = "sub";
     public static final OffsetDateTime TIME = Time.parseTime("2018-04-26T14:48:09+02:00");
 
-    public static byte[] DATA_JSON_SERIALIZED = "{}".getBytes();
-    public static byte[] DATA_XML_SERIALIZED = "<stuff></stuff>".getBytes();
-    public static byte[] DATA_TEXT_SERIALIZED = "Hello World Lorena!".getBytes();
+    public static byte[] DATA_JSON_SERIALIZED = "{}".getBytes(StandardCharsets.UTF_8);
+    public static byte[] DATA_XML_SERIALIZED = "<stuff></stuff>".getBytes(StandardCharsets.UTF_8);
+    public static byte[] DATA_TEXT_SERIALIZED = "Hello World Lorena!".getBytes(StandardCharsets.UTF_8);
     public static byte[] BINARY_VALUE = { (byte) 0xE0, (byte) 0xFF, (byte) 0x00, (byte) 0x44, (byte) 0xAA }; // Base64: 4P8ARKo=
 
     public static final CloudEvent V1_MIN = CloudEventBuilder.v1()

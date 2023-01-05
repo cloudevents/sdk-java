@@ -33,6 +33,7 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.rw.*;
 
+import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 
 /**
@@ -122,7 +123,7 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                                 } else {
                                     JsonNode dataNode = node.remove("data");
                                     assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
-                                    data = BytesCloudEventData.wrap(dataNode.asText().getBytes());
+                                    data = BytesCloudEventData.wrap(dataNode.asText().getBytes(StandardCharsets.UTF_8));
                                 }
                             }
                         }
@@ -140,7 +141,7 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
                             } else {
                                 JsonNode dataNode = node.remove("data");
                                 assertNodeType(dataNode, JsonNodeType.STRING, "data", "Because content type is not a json, only a string is accepted as data");
-                                data = BytesCloudEventData.wrap(dataNode.asText().getBytes());
+                                data = BytesCloudEventData.wrap(dataNode.asText().getBytes(StandardCharsets.UTF_8));
                             }
                         }
                 }

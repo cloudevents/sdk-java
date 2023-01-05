@@ -12,6 +12,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public class SampleProducer {
                 // Create the event starting from the template
                 CloudEvent event = eventTemplate.newBuilder()
                     .withId(id)
-                    .withData("text/plain", data.getBytes())
+                    .withData("text/plain", data.getBytes(StandardCharsets.UTF_8))
                     .build();
 
                 // Send the record

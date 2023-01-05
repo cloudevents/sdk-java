@@ -16,6 +16,7 @@
 package io.cloudevents.spring.messaging;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ class CloudEventMessageConverterTests {
 
 	@Test
 	void structuredCloudEvent() {
-		byte[] payload = JSON.getBytes();
+		byte[] payload = JSON.getBytes(StandardCharsets.UTF_8);
 		Message<?> message = MessageBuilder.withPayload(payload)
 				.setHeader(MessageHeaders.CONTENT_TYPE, "application/cloudevents+json").build();
 		CloudEvent event = (CloudEvent) converter.fromMessage(message, CloudEvent.class);
@@ -112,14 +113,14 @@ class CloudEventMessageConverterTests {
 	void fromCloudEvent() {
 		CloudEvent attributes = CloudEventBuilder.v1().withId("A234-1234-1234")
 				.withSource(URI.create("https://spring.io/")).withType("org.springframework")
-				.withData("hello".getBytes()).build();
+				.withData("hello".getBytes(StandardCharsets.UTF_8)).build();
 		Message<?> message = converter.toMessage(attributes, new MessageHeaders(Collections.emptyMap()));
 		Map<String, ?> headers = message.getHeaders();
 		assertThat(headers.get("ce-id")).isEqualTo("A234-1234-1234");
 		assertThat(headers.get("ce-specversion")).isEqualTo("1.0");
 		assertThat(headers.get("ce-source")).isEqualTo("https://spring.io/");
 		assertThat(headers.get("ce-type")).isEqualTo("org.springframework");
-		assertThat("hello".getBytes().equals(message.getPayload()));
+		assertThat("hello".getBytes(StandardCharsets.UTF_8).equals(message.getPayload()));
 	}
 
 	@Test
