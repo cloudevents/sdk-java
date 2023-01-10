@@ -32,7 +32,7 @@ public class SampleHTTPClient {
 
         // Create an event template to set basic CloudEvent attributes.
         CloudEventBuilder eventTemplate = CloudEventBuilder.v1()
-            .withSource(URI.create("https://github.com/cloudevents/sdk-java/tree/master/examples/vertx"))
+            .withSource(URI.create("https://github.com/cloudevents/sdk-java/tree/main/examples/vertx"))
             .withType("vertx.example");
 
         // Send NUM_EVENTS events.

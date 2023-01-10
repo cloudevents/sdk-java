@@ -43,5 +43,5 @@ public class ProtonAmqpMessageFactory {
 The example uses the `vertx-proton` integration to send/receive CloudEvent
 messages over AMQP:
 
--   [Vertx AmqpServer](https://github.com/cloudevents/sdk-java/tree/master/examples/amqp-proton/src/main/java/io/cloudevents/examples/amqp/vertx/AmqpServer.java)
--   [Vertx AmqpClient](https://github.com/cloudevents/sdk-java/tree/master/examples/amqp-proton/src/main/java/io/cloudevents/examples/amqp/vertx/AmqpClient.java)
+-   [Vertx AmqpServer](https://github.com/cloudevents/sdk-java/tree/main/examples/amqp-proton/src/main/java/io/cloudevents/examples/amqp/vertx/AmqpServer.java)
+-   [Vertx AmqpClient](https://github.com/cloudevents/sdk-java/tree/main/examples/amqp-proton/src/main/java/io/cloudevents/examples/amqp/vertx/AmqpClient.java)

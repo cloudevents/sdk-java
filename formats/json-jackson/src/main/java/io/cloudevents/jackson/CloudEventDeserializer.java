@@ -233,7 +233,7 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
          *
          * @param name the extension name
          * @return true if extension name is valid, false otherwise
-         * @see <a href="https://github.com/cloudevents/spec/blob/master/spec.md#attribute-naming-convention">attribute-naming-convention</a>
+         * @see <a href="https://github.com/cloudevents/spec/blob/main/spec.md#attribute-naming-convention">attribute-naming-convention</a>
          */
         private boolean isValidExtensionName(String name) {
             for (int i = 0; i < name.length(); i++) {

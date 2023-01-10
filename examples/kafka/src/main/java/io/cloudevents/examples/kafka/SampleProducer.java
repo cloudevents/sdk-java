@@ -43,7 +43,7 @@ public class SampleProducer {
 
         // Create an event template to set basic CloudEvent attributes
         CloudEventBuilder eventTemplate = CloudEventBuilder.v1()
-            .withSource(URI.create("https://github.com/cloudevents/sdk-java/tree/master/examples/kafka"))
+            .withSource(URI.create("https://github.com/cloudevents/sdk-java/tree/main/examples/kafka"))
             .withType("producer.example");
 
         for (int i = 0; i < MESSAGE_COUNT; i++) {
