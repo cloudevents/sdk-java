@@ -216,4 +216,15 @@ public class CloudEventRWException extends RuntimeException {
             cause
         );
     }
+
+    /**
+     *  An exception for use where none of the other variants are
+     *  appropriate.
+     *
+     * @param msg A description error message.
+     * @return a new {@link CloudEventRWException}
+     */
+    public static CloudEventRWException newOther(String msg){
+        return new CloudEventRWException(CloudEventRWExceptionKind.OTHER, msg);
+    }
 }

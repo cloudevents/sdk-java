@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<event xmlns="http://cloudevents.io/xmlformat/V1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+       specversion="1.0">
+    <dataschema>http://localhost/schema</dataschema>
+    <datacontenttype>application/json</datacontenttype>
+    <data xsi:type="xs:string">{}</data>
+    <subject>sub</subject>
+    <time>2018-04-26T14:48:09+02:00</time>
+    <id>1</id>
+    <source>http://localhost/source</source>
+    <type>mock.test</type>
+    <astring xsi:type="ce:string">aaa</astring>
+    <aboolean xsi:type="ce:boolean">true</aboolean>
+    <anumber xsi:type="ce:integer">10</anumber>
+</event>

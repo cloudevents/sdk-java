@@ -42,6 +42,8 @@ Using the Java SDK you can:
 |            - [Jackson](json-jackson.md)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                Protobuf Event Format               |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |            - [Proto](protobuf.md)                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                XML Event Format                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|            - [XML](xml.md)                         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |         [Kafka Protocol Binding](kafka.md)         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |               MQTT Protocol Binding                |                          :x:                          |                          :x:                          |
 |               NATS Protocol Binding                |                          :x:                          |                          :x:                          |
@@ -96,6 +98,7 @@ a different feature from the different sub specs of
     [Jackson](https://github.com/FasterXML/jackson)
 -   [`cloudevents-protobuf`] Implementation of [Protobuf Event format] using code generated
     from the standard [protoc](https://github.com/protocolbuffers/protobuf) compiler.
+-   [`cloudevents-xml`] Implementation of the XML Event Format.
 -   [`cloudevents-http-vertx`] Implementation of [HTTP Protocol Binding] with
     [Vert.x Core](https://vertx.io/)
 -   [`cloudevents-http-restful-ws`] Implementation of [HTTP Protocol Binding]
@@ -123,6 +126,7 @@ You can look at the latest published artifacts on
 [`cloudevents-core`]: https://github.com/cloudevents/sdk-java/tree/master/core
 [`cloudevents-json-jackson`]: https://github.com/cloudevents/sdk-java/tree/master/formats/json-jackson
 [`cloudevents-protobuf`]: https://github.com/cloudevents/sdk-java/tree/master/formats/protobuf
+[`cloudevents-xml`]: https://github.com/cloudevents/sdk-java/tree/master/formats/xml
 [`cloudevents-http-vertx`]: https://github.com/cloudevents/sdk-java/tree/master/http/vertx
 [`cloudevents-http-basic`]: https://github.com/cloudevents/sdk-java/tree/master/http/basic
 [`cloudevents-http-restful-ws`]: https://github.com/cloudevents/sdk-java/tree/master/http/restful-ws
