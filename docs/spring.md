@@ -194,12 +194,12 @@ public Mono<CloudEvent> event(@RequestBody Mono<CloudEvent> body) {
 
 Check out the integration tests and samples:
 
--   [spring-reactive](https://github.com/cloudevents/sdk-java/tree/master/examples/spring-reactive)
+-   [spring-reactive](https://github.com/cloudevents/sdk-java/tree/main/examples/spring-reactive)
     shows how to receive and send CloudEvents through HTTP using Spring Boot and
     Webflux.
 
--   [spring-rsocket](https://github.com/cloudevents/sdk-java/tree/master/examples/spring-rsocket)
+-   [spring-rsocket](https://github.com/cloudevents/sdk-java/tree/main/examples/spring-rsocket)
     shows how to receive and send CloudEvents through RSocket using Spring Boot.
 
--   [spring-cloud-function](https://github.com/cloudevents/sdk-java/tree/master/examples/spring-function)
+-   [spring-cloud-function](https://github.com/cloudevents/sdk-java/tree/main/examples/spring-function)
     shows how to consume and process CloudEvents via Spring Cloud Function.

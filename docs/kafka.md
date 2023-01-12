@@ -10,7 +10,7 @@ nav_order: 5
 Implementation of Kafka Protocol Binding to send and receive CloudEvents.
 
 For Maven based projects, use the following to configure the
-[Kafka Protocol Binding](https://github.com/cloudevents/spec/blob/master/kafka-protocol-binding.md):
+[Kafka Protocol Binding](https://github.com/cloudevents/spec/blob/main/kafka-protocol-binding.md):
 
 ```xml
 
@@ -64,7 +64,7 @@ public class CloudEventProducer {
 You can configure the Encoding and EventFormat to use to emit the event.
 
 Check out the
-[`CloudEventSerializer`](https://github.com/cloudevents/sdk-java/tree/master/kafka/src/main/java/io/cloudevents/kafka/CloudEventSerializer.java)
+[`CloudEventSerializer`](https://github.com/cloudevents/sdk-java/tree/main/kafka/src/main/java/io/cloudevents/kafka/CloudEventSerializer.java)
 javadoc for more info.
 
 ### Partition key extension
@@ -81,7 +81,7 @@ producerProps.put(
 
 When using in your producer, this interceptor will pick the `partitionkey`
 extension from the event and will set it as record key, regardless of the input record key.
-Check out the [`PartitionKeyExtensionInterceptor`](https://github.com/cloudevents/sdk-java/tree/master/kafka/src/main/java/io/cloudevents/kafka/PartitionKeyExtensionInterceptor.java)
+Check out the [`PartitionKeyExtensionInterceptor`](https://github.com/cloudevents/sdk-java/tree/main/kafka/src/main/java/io/cloudevents/kafka/PartitionKeyExtensionInterceptor.java)
 javadoc for more info.
 
 ## Consuming CloudEvents

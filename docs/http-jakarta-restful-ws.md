@@ -118,5 +118,5 @@ public class CloudEventSender {
 
 ## Examples
 
-- [Quarkus and Resteasy](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-quarkus)
-- [Jersey and Spring Boot](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-spring-boot)
+- [Quarkus and Resteasy](https://github.com/cloudevents/sdk-java/tree/main/examples/restful-ws-quarkus)
+- [Jersey and Spring Boot](https://github.com/cloudevents/sdk-java/tree/main/examples/restful-ws-spring-boot)

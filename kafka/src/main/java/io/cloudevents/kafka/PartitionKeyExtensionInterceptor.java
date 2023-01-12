@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * This {@link ProducerInterceptor} implements the partitioning extension,
- * as described in the <a href="https://github.com/cloudevents/spec/blob/master/kafka-protocol-binding.md#31-key-mapping">CloudEvents Kafka specification</a>.
+ * as described in the <a href="https://github.com/cloudevents/spec/blob/main/kafka-protocol-binding.md#31-key-mapping">CloudEvents Kafka specification</a>.
  * <p>
  * When using in your {@link org.apache.kafka.clients.producer.KafkaProducer},
  * it will pick the {@code partitionkey} extension from the event and will set it as record key.

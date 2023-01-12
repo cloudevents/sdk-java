@@ -75,7 +75,7 @@ and related interfaces, in order to interoperate with the other components of
 the SDK, check out the [API module documentation](api.md).
 
 You can also check out the
-[**Examples**](https://github.com/cloudevents/sdk-java/tree/master/examples).
+[**Examples**](https://github.com/cloudevents/sdk-java/tree/main/examples).
 
 ## Modules
 
@@ -121,17 +121,17 @@ You can look at the latest published artifacts on
 [HTTP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/http-protocol-binding.md
 [Kafka Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/kafka-protocol-binding.md
 [AMQP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/amqp-protocol-binding.md
-[`cloudevents-api`]: https://github.com/cloudevents/sdk-java/tree/master/api
-[`cloudevents-bom`]: https://github.com/cloudevents/sdk-java/tree/master/bom
-[`cloudevents-core`]: https://github.com/cloudevents/sdk-java/tree/master/core
-[`cloudevents-json-jackson`]: https://github.com/cloudevents/sdk-java/tree/master/formats/json-jackson
-[`cloudevents-protobuf`]: https://github.com/cloudevents/sdk-java/tree/master/formats/protobuf
-[`cloudevents-xml`]: https://github.com/cloudevents/sdk-java/tree/master/formats/xml
-[`cloudevents-http-vertx`]: https://github.com/cloudevents/sdk-java/tree/master/http/vertx
-[`cloudevents-http-basic`]: https://github.com/cloudevents/sdk-java/tree/master/http/basic
-[`cloudevents-http-restful-ws`]: https://github.com/cloudevents/sdk-java/tree/master/http/restful-ws
-[`cloudevents-http-restful-ws-jakarta`]: https://github.com/cloudevents/sdk-java/tree/master/http/restful-ws-jakarta
-[`cloudevents-kafka`]: https://github.com/cloudevents/sdk-java/tree/master/kafka
-[`cloudevents-amqp-proton`]: https://github.com/cloudevents/sdk-java/tree/master/amqp
-[`cloudevents-spring`]: https://github.com/cloudevents/sdk-java/tree/master/spring
+[`cloudevents-api`]: https://github.com/cloudevents/sdk-java/tree/main/api
+[`cloudevents-bom`]: https://github.com/cloudevents/sdk-java/tree/main/bom
+[`cloudevents-core`]: https://github.com/cloudevents/sdk-java/tree/main/core
+[`cloudevents-json-jackson`]: https://github.com/cloudevents/sdk-java/tree/main/formats/json-jackson
+[`cloudevents-protobuf`]: https://github.com/cloudevents/sdk-java/tree/main/formats/protobuf
+[`cloudevents-xml`]: https://github.com/cloudevents/sdk-java/tree/main/formats/xml
+[`cloudevents-http-vertx`]: https://github.com/cloudevents/sdk-java/tree/main/http/vertx
+[`cloudevents-http-basic`]: https://github.com/cloudevents/sdk-java/tree/main/http/basic
+[`cloudevents-http-restful-ws`]: https://github.com/cloudevents/sdk-java/tree/main/http/restful-ws
+[`cloudevents-http-restful-ws-jakarta`]: https://github.com/cloudevents/sdk-java/tree/main/http/restful-ws-jakarta
+[`cloudevents-kafka`]: https://github.com/cloudevents/sdk-java/tree/main/kafka
+[`cloudevents-amqp-proton`]: https://github.com/cloudevents/sdk-java/tree/main/amqp
+[`cloudevents-spring`]: https://github.com/cloudevents/sdk-java/tree/main/spring
 [http4k]: https://www.http4k.org/guide/modules/cloud_events/

@@ -95,4 +95,4 @@ public class CloudEventClientVerticle extends AbstractVerticle {
 
 ## Examples:
 
-- [Vert.x Client and Server](https://github.com/cloudevents/sdk-java/tree/master/examples/vertx)
+- [Vert.x Client and Server](https://github.com/cloudevents/sdk-java/tree/main/examples/vertx)

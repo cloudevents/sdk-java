@@ -10,7 +10,7 @@ Currently, active maintainers who may be found in the CNCF Slack.
 
 The release process is automated with Github actions. In order to perform a release:
 
-1. Check if master CI pass.
+1. Check if main CI pass.
 1. Open the Github repository main page and go in the tab "Actions". Trigger the workflow "Bump version" and insert the new version to release. This will create a new release PR.
 1. Check the release PR, merge it and cleanup the created branch.
 1. Wait for the CI to complete the deploy of the modules to OSSRH.
@@ -44,14 +44,14 @@ When landing pull requests, be sure to check the first line uses an appropriate 
 
 ## Branch Management
 
-The `master` branch is the bleeding edge. New major versions of the module
+The `main` branch is the bleeding edge. New major versions of the module
 are cut from this branch and tagged. If you intend to submit a pull request
-you should use `master HEAD` as your starting point.
+you should use `main HEAD` as your starting point.
 
 Each major release will result in a new branch and tag. For example, the
 release of version 1.0.0 of the module will result in a `v1.0.0` tag on the
 release commit, and a new branch `v1.x.y` for subsequent minor and patch
 level releases of that major version. However, development will continue
-apace on `master` for the next major version - e.g. 2.0.0. Version branches
+apace on `main` for the next major version - e.g. 2.0.0. Version branches
 are only created for each major version. Minor and patch level releases
 are simply tagged.

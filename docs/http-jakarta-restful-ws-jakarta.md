@@ -133,5 +133,5 @@ To migrate to use EE 9+ supported package - replace `cloudevents-http-restful-ws
 
 ## Examples
 
-- [Microprofile and Liberty](https://github.com/cloudevents/sdk-java/tree/master/examples/restful-ws-micropofile-liberty)
+- [Microprofile and Liberty](https://github.com/cloudevents/sdk-java/tree/main/examples/restful-ws-micropofile-liberty)
 
