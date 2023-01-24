@@ -1,7 +1,11 @@
 # Cloudevents Restful WS Quarkus example
 
 This sample application has a `/users` REST endpoint in which you can manage the different users.
-The way to create users is through CloudEvents. Here is an example POST:
+The way to create users is through CloudEvents. 
+
+## Example requests
+
+### [Binary Content mode](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/bindings/http-protocol-binding.md#31-binary-content-mode)
 
 ```shell script
 curl -v http://localhost:8080/users \
@@ -29,6 +33,29 @@ curl -v http://localhost:8080/users \
 < Content-Length: 0
 < Location: http://localhost:8080/users
 ```
+
+### [Structured Content mode](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/bindings/http-protocol-binding.md#32-structured-content-mode)
+
+```shell script
+curl -v http://localhost:8080/users \
+  -H "Content-Type: application/cloudevents+json" \
+  -d @examples/user_structured.json
+
+> POST /users HTTP/1.1
+> Host: localhost:8080
+> User-Agent: curl/7.82.0
+> Accept: */*
+> Content-Type: application/cloudevents+json
+> Content-Length: 290
+> 
+
+< HTTP/1.1 201 Created
+< Location: http://localhost:8081/users
+< content-length: 0
+< 
+```
+
+### Generated events
 
 In order to also show how to create and send CloudEvents, generated events will be periodically sent
 each 2 seconds through HTTP to the same endpoint using a REST client.

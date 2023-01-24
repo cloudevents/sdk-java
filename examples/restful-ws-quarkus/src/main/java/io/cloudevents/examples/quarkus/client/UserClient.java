@@ -1,11 +1,12 @@
 package io.cloudevents.examples.quarkus.client;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.jackson.JsonFormat;
+
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @Path("/users")
@@ -13,8 +14,11 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface UserClient {
 
     // This will emit binary encoded events.
-    // To use structured JSON encoding use @Produces(JsonFormat.CONTENT_TYPE).
+    // To use structured JSON encoding use @Consumes(JsonFormat.CONTENT_TYPE).
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    void emit(CloudEvent event);
+    void emitBinary(CloudEvent event);
+
+    @POST
+    @Consumes(JsonFormat.CONTENT_TYPE)
+    void emitStructured(CloudEvent event);
 }

@@ -19,7 +19,6 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.PojoCloudEventData;
 import io.cloudevents.examples.quarkus.model.User;
 import io.quarkus.scheduler.Scheduled;
-import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped
 public class UserEventsGenerator {
@@ -38,8 +37,13 @@ public class UserEventsGenerator {
     @Scheduled(every="2s")
     public void init() {
         CloudEvent event = createEvent(userCount++);
-        LOGGER.info("try to emit user: {}", event.getId());
-        userClient.emit(event);
+        if(userCount % 2 == 0) {
+            LOGGER.info("try to emit binary event for user: {}", event.getId());
+            userClient.emitBinary(event);
+        } else {
+            LOGGER.info("try to emit structured event for user: {}", event.getId());
+            userClient.emitStructured(event);
+        }
     }
 
     private CloudEvent createEvent(long id) {
