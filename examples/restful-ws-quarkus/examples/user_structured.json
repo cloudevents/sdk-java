@@ -1,0 +1,13 @@
+{
+    "specversion" : "1.0",
+    "type" : "User",
+    "source": "io.cloudevents.examples/user",
+    "id": "536808d3-88be-4077-9d7a-a3f162705f78",
+    "subject": "SUBJ-0001",
+    "data" : {
+        "username": "jsmith",
+        "firstName": "John",
+        "lastName": "Smith",
+        "age": 37
+    }
+}
