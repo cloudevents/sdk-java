@@ -22,19 +22,20 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.v1.proto.CloudEvent;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URI;
 import java.net.URL;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
@@ -44,6 +45,46 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProtobufFormatTest {
 
     EventFormat format = new ProtobufFormat();
+
+    public static Stream<Arguments> serializeTestArgumentsDefault() {
+        return Stream.of(
+            Arguments.of(V1_MIN, "v1/min.proto.json"),
+            Arguments.of(V1_WITH_JSON_DATA, "v1/json_data.proto.json"),
+            Arguments.of(V1_WITH_TEXT_DATA, "v1/text_data.proto.json"),
+            Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/json_data_with_ext.proto.json"),
+            Arguments.of(V1_WITH_XML_DATA, "v1/xml_data.proto.json"),
+            Arguments.of(V1_WITH_BINARY_EXT, "v1/binary_ext.proto.json"),
+
+            Arguments.of(V03_MIN, "v03/min.proto.json")
+
+        );
+    }
+
+    public static Stream<String> roundTripTestArguments() {
+        return Stream.of(
+            "v1/min.proto.json",
+            "v1/json_data.proto.json",
+            "v1/text_data.proto.json",
+            "v1/json_data_with_ext.proto.json",
+            "v1/xml_data.proto.json",
+            "v1/binary_ext.proto.json",
+
+            "v03/min.proto.json"
+        );
+    }
+
+    private static Message loadProto(String filename) throws IOException {
+        CloudEvent.Builder b = CloudEvent.newBuilder();
+        JsonFormat.parser().ignoringUnknownFields().merge(getReader(filename), b);
+        return b.build();
+    }
+
+    private static Reader getReader(String filename) throws IOException {
+        URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
+        assertThat(file).isNotNull();
+        File dataFile = new File(file.getFile());
+        return new FileReader(dataFile);
+    }
 
     @Test
     public void testRegistration() {
@@ -90,6 +131,8 @@ class ProtobufFormatTest {
 
     }
 
+    // ----------------------------------------------------------------
+
     /**
      * RoundTrip Test
      * <p>
@@ -131,46 +174,40 @@ class ProtobufFormatTest {
 
     }
 
-    public static Stream<Arguments> serializeTestArgumentsDefault() {
-        return Stream.of(
-            Arguments.of(V1_MIN, "v1/min.proto.json"),
-            Arguments.of(V1_WITH_JSON_DATA, "v1/json_data.proto.json"),
-            Arguments.of(V1_WITH_TEXT_DATA, "v1/text_data.proto.json"),
-            Arguments.of(V1_WITH_JSON_DATA_WITH_EXT, "v1/json_data_with_ext.proto.json"),
-            Arguments.of(V1_WITH_XML_DATA, "v1/xml_data.proto.json"),
-            Arguments.of(V1_WITH_BINARY_EXT, "v1/binary_ext.proto.json"),
+    /**
+     * This test verifies the fix for Issue #523 that reported the Data
+     * portion was being corrupted during multi-step round trips if the
+     * data was a Protobuf Message.
+     */
+    @Test
+    public void verifyMultiRoundTrip() {
 
-            Arguments.of(V03_MIN, "v03/min.proto.json")
+        io.cloudevents.CloudEvent event = CloudEventBuilder.v1()
+            .withId(UUID.randomUUID().toString())
+            .withSource(SOURCE)
+            .withType(TYPE)
+            .withData(ProtoCloudEventData.wrap(io.cloudevents.test.v1.proto.Test.Quote.newBuilder()
+                .setHigh(io.cloudevents.test.v1.proto.Test.Decimal.newBuilder().setScale(2).setUnscaled(4200).build())
+                .setPrice(io.cloudevents.test.v1.proto.Test.Decimal.newBuilder().setScale(2).setUnscaled(1000).build())
+                .setSymbol("PYPL")
+                .build()))
+            .build();
 
-        );
-    }
+        // 1st Round Trip
+        byte[] raw1 = format.serialize(event);
+        io.cloudevents.CloudEvent act1 = format.deserialize(raw1);
+        assertThat(event).withFailMessage("Mismatch on 1st round trip").isEqualTo(act1);
 
-    public static Stream<String> roundTripTestArguments() {
-        return Stream.of(
-            "v1/min.proto.json",
-            "v1/json_data.proto.json",
-            "v1/text_data.proto.json",
-            "v1/json_data_with_ext.proto.json",
-            "v1/xml_data.proto.json",
-            "v1/binary_ext.proto.json",
+        // 2nd Round Trip
+        byte[] raw2 = format.serialize(act1);
+        io.cloudevents.CloudEvent act2 = format.deserialize(raw2);
+        assertThat(event).withFailMessage("Mismatch on 2nd round trip").isEqualTo(act2);
 
-            "v03/min.proto.json"
-        );
-    }
+        // 3rd Time's a charm
+        byte[] raw3 = format.serialize(act2);
+        io.cloudevents.CloudEvent act3 = format.deserialize(raw3);
+        assertThat(event).withFailMessage("Mismatch on 3rd round trip").isEqualTo(act3);
 
-    // ----------------------------------------------------------------
-
-    private static Message loadProto(String filename) throws IOException {
-        CloudEvent.Builder b = CloudEvent.newBuilder();
-        JsonFormat.parser().ignoringUnknownFields().merge(getReader(filename), b);
-        return b.build();
-    }
-
-    private static Reader getReader(String filename) throws IOException {
-        URL file = Thread.currentThread().getContextClassLoader().getResource(filename);
-        assertThat(file).isNotNull();
-        File dataFile = new File(file.getFile());
-        return new FileReader(dataFile);
     }
 
     private byte[] getProtoData(String filename) throws IOException {

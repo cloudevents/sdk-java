@@ -105,7 +105,7 @@ class ProtoDeserializer implements CloudEventReader {
                 data = BytesCloudEventData.wrap(raw);
                 break;
             case PROTO_DATA:
-                data = new ProtoAccessor(this.protoCe);
+                data = new ProtoDataWrapper(this.protoCe.getProtoData());
                 break;
             case DATA_NOT_SET:
                 break;
@@ -130,22 +130,4 @@ class ProtoDeserializer implements CloudEventReader {
         return instant.atOffset(ZoneOffset.UTC);
     }
 
-    private static class ProtoAccessor implements ProtoCloudEventData {
-
-        private final Message message;
-
-        ProtoAccessor(CloudEvent proto){
-            this.message = proto.getProtoData();
-        }
-
-        @Override
-        public Message getMessage() {
-            return message;
-        }
-
-        @Override
-        public byte[] toBytes() {
-            return message.toByteArray();
-        }
-    }
 }
