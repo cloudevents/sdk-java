@@ -17,6 +17,8 @@
 
 package io.cloudevents.protobuf;
 
+import com.google.protobuf.Any;
+
 /**
  * General support functions.
  */
@@ -43,5 +45,17 @@ final class ProtoSupport {
             || contentType.endsWith("+json")
             || contentType.endsWith("+xml")
             ;
+    }
+
+    /**
+     * Extract the Protobuf message type from an 'Any'
+     * @param anyMessage
+     * @return
+     */
+    static String extractMessageType(final Any anyMessage) {
+        final String typeUrl = anyMessage.getTypeUrl();
+        final String[] parts = typeUrl.split("/");
+
+        return parts[parts.length -1];
     }
 }

@@ -16,11 +16,8 @@
  */
 package io.cloudevents.protobuf;
 
-import com.google.protobuf.Any;
-import com.google.protobuf.ByteString;
+import com.google.protobuf.*;
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.Timestamp;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
@@ -248,8 +245,14 @@ class ProtoSerializer {
                 // If it's a proto message we can handle that directly.
                 if (data instanceof ProtoCloudEventData) {
                     final ProtoCloudEventData protoData = (ProtoCloudEventData) data;
-                    if (protoData.getMessage() != null) {
-                        protoBuilder.setProtoData(Any.pack(protoData.getMessage()));
+                    final Message m = protoData.getMessage();
+                    if (m != null) {
+                        // If it's already an 'Any' don't re-pack it.
+                        if (m instanceof Any) {
+                            protoBuilder.setProtoData((Any) m);
+                        }else {
+                            protoBuilder.setProtoData(Any.pack(m));
+                        }
                     }
                 } else {
                     if (Objects.equals(dataContentType, PROTO_DATA_CONTENT_TYPE)) {
