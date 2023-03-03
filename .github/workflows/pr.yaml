@@ -23,5 +23,6 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
       - run: |
-          mvn clean install -DskipTests -B
-          mvn verify -B
+          ./mvnw clean install -DskipTests -B
+          ./mvnw verify -B
+          ./mvnw javadoc:javadoc
