@@ -19,7 +19,7 @@ jobs:
         with:
           java-version: 8
       - name: Bump version using Maven
-        run: 'mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -B'
+        run: './mvnw versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -B'
       - name: Bump version in docs
         if: ${{ !endsWith(github.event.inputs.version, 'SNAPSHOT') }}
         run: 'find . -type f -name "*.md" -exec sed -i -e "s+<version>[a-zA-Z0-9.-]*<\/version>+<version>$NEW_VERSION</version>+g" {} +'
