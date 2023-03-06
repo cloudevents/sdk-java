@@ -16,18 +16,14 @@
  */
 package io.cloudevents.protobuf;
 
-import com.google.protobuf.Message;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
-import io.cloudevents.rw.CloudEventDataMapper;
-import io.cloudevents.rw.CloudEventRWException;
-import io.cloudevents.rw.CloudEventReader;
-import io.cloudevents.rw.CloudEventWriter;
-import io.cloudevents.rw.CloudEventWriterFactory;
+import io.cloudevents.rw.*;
 import io.cloudevents.v1.proto.CloudEvent;
 import io.cloudevents.v1.proto.CloudEvent.CloudEventAttributeValue;
+
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;

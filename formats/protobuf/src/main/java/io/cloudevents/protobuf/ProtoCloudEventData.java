@@ -16,6 +16,7 @@
  */
 package io.cloudevents.protobuf;
 
+import com.google.protobuf.Any;
 import com.google.protobuf.Message;
 import io.cloudevents.CloudEventData;
 
@@ -26,13 +27,7 @@ import io.cloudevents.CloudEventData;
 public interface ProtoCloudEventData extends CloudEventData {
 
     /**
-     * Gets the protobuf {@link Message} representation of this data.
-     * @return The data as a {@link Message}
-     */
-    Message getMessage();
-
-    /**
-     * Convenience helper to wrap a Protobuf Message as
+     * Convenience helper to wrap a Protobuf {@link Message} as
      * CloudEventData.
      *
      * @param protoMessage The message to wrap
@@ -41,4 +36,11 @@ public interface ProtoCloudEventData extends CloudEventData {
     static CloudEventData wrap(Message protoMessage) {
         return new ProtoDataWrapper(protoMessage);
     }
+
+    /**
+     * Gets the protobuf {@link Any} representation of this data.
+     *
+     * @return The data as an {@link Any}
+     */
+    Any getAny();
 }

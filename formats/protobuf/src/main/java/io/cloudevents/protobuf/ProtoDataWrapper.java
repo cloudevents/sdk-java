@@ -19,24 +19,31 @@ package io.cloudevents.protobuf;
 import com.google.protobuf.Any;
 import com.google.protobuf.Message;
 
-import java.util.Arrays;
+import java.util.Objects;
 
 class ProtoDataWrapper implements ProtoCloudEventData {
 
-    private final Message protoMessage;
+    private final Any protoAny;
 
     ProtoDataWrapper(Message protoMessage) {
-        this.protoMessage = protoMessage;
+
+        Objects.requireNonNull(protoMessage);
+
+        if (protoMessage instanceof Any) {
+            protoAny = (Any) protoMessage;
+        } else {
+            protoAny = Any.pack(protoMessage);
+        }
     }
 
     @Override
-    public Message getMessage() {
-        return protoMessage;
+    public Any getAny() {
+        return protoAny;
     }
 
     @Override
     public byte[] toBytes() {
-        return protoMessage.toByteArray();
+        return protoAny.toByteArray();
     }
 
     @Override
@@ -53,17 +60,21 @@ class ProtoDataWrapper implements ProtoCloudEventData {
         // Now compare the actual data
         ProtoDataWrapper rhs = (ProtoDataWrapper) obj;
 
-        if (this.getMessage() == rhs.getMessage()){
-            return true;
-        }
+        final Any lhsAny = getAny();
+        final Any rhsAny = rhs.getAny();
 
         // This is split out for readability.
-        //  Compare the content in terms onf an 'Any'.
-        //  - Verify the types match
-        //  - Verify the values match.
+        //  1. Sanity compare the 'Any' references.
+        //  2. Compare the content in terms onf an 'Any'.
+        //     - Verify the types match
+        //     - Verify the values match.
 
-        final Any lhsAny = getAsAny(this.getMessage());
-        final Any rhsAny = getAsAny(rhs.getMessage());
+        // NULL checks not required as object cannot be built
+        // with a null.
+
+        if (lhsAny == rhsAny) {
+            return true;
+        }
 
         final boolean typesMatch = (ProtoSupport.extractMessageType(lhsAny).equals(ProtoSupport.extractMessageType(rhsAny)));
 
@@ -72,15 +83,7 @@ class ProtoDataWrapper implements ProtoCloudEventData {
         } else {
             return false;
         }
-    }
-
-    private Any getAsAny(Message m) {
-
-        if (m instanceof Any) {
-            return (Any) m;
-        }
-
-        return Any.pack(m);
 
     }
+
 }

@@ -45,12 +45,12 @@ class ProtoDataWrapperTest {
         ProtoDataWrapper pdw = new ProtoDataWrapper(quote1);
 
         assertThat(pdw).isNotNull();
-        assertThat(pdw.getMessage()).isNotNull();
+        assertThat(pdw.getAny()).isNotNull();
         assertThat(pdw.toBytes()).withFailMessage("toBytes was NULL").isNotNull();
         assertThat(pdw.toBytes()).withFailMessage("toBytes[] returned empty array").hasSizeGreaterThan(0);
 
-        // This is current behavior and will probably change in the next version.
-        assertThat(pdw.getMessage()).isInstanceOf(io.cloudevents.test.v1.proto.Test.Quote.class);
+        // Ensure it's a Quote.
+        assertThat(pdw.getAny().is(io.cloudevents.test.v1.proto.Test.Quote.class)).isTrue();
     }
 
     @Test
@@ -91,7 +91,7 @@ class ProtoDataWrapperTest {
         final byte[] actData = pdw.toBytes();
 
         // Verify
-        Arrays.equals(expData, actData);
+        assertThat(Arrays.equals(actData, expData)).isTrue();
 
     }
 
