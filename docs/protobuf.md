@@ -11,20 +11,22 @@ This module provides the Protocol Buffer (protobuf) `EventFormat` implementation
 Protobuf runtime and classes generated from the CloudEvents
 [proto spec](https://github.com/cloudevents/spec/blob/v1.0.1/spec.proto).
 
+# Setup
 For Maven based projects, use the following dependency:
 
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-protobuf</artifactId>
-    <version>2.3.0</version>
+    <version>x.y.z</version>
 </dependency>
 ```
 
+No further configuration is required is use the module.
+
 ## Using the Protobuf Event Format
 
-You don't need to perform any operation to configure the module, more than
-adding the dependency to your project:
+### Event serialization
 
 ```java
 import io.cloudevents.CloudEvent;
@@ -44,5 +46,51 @@ byte[]serialized = EventFormatProvider
     .serialize(event);
 ```
 
-The `EventFormatProvider` will resolve automatically the `ProtobufFormat` using the
+The `EventFormatProvider` will automatically resolve the `ProtobufFormat` using the
 `ServiceLoader` APIs.
+
+## Passing Protobuf messages as CloudEvent data.
+
+The `ProtoCloudEventData` capability provides a convenience mechanism to handle Protobuf message object data.
+
+### Building
+
+```java
+// Build my business event message.
+com.google.protobuf.Message myMessage = ..... ;
+
+// Wrap the protobuf message as CloudEventData.
+CloudEventData ceData = ProtoCloudEventData.wrap(myMessage);
+
+// Build the CloudEvent
+CloudEvent event = CloudEventBuilder.v1()
+    .withId("hello")
+    .withType("example.protodata")
+    .withSource(URI.create("http://localhost"))
+    .withData(ceData)
+    .build();
+```
+
+### Reading
+
+If the `ProtobufFormat` is used to deserialize a CloudEvent that contains a protobuf message object as data you can use
+the `ProtoCloudEventData` to access it as an 'Any' directly.
+
+```java
+
+// Deserialize the event.
+CloudEvent myEvent = eventFormat.deserialize(raw);
+
+// Get the Data
+CloudEventData eventData = myEvent.getData();
+
+if (ceData instanceOf ProtoCloudEventData) {
+
+    // Obtain the protobuf 'any'
+    Any anAny = ((ProtoCloudEventData) eventData).getAny();
+
+    ...
+}
+
+```
+

@@ -18,16 +18,16 @@ package io.cloudevents.protobuf;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.Message;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.test.v1.proto.Test.Decimal;
+import io.cloudevents.test.v1.proto.Test.Quote;
+import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 import java.net.URI;
-import org.junit.jupiter.api.Test;
-import io.cloudevents.test.v1.proto.Test.Quote;
-import io.cloudevents.test.v1.proto.Test.Decimal;
 
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +49,7 @@ public class ProtoMessageDataTest {
         assertThat(ced).isInstanceOf(ProtoCloudEventData.class);
 
         ProtoCloudEventData pced = (ProtoCloudEventData) ced;
-        assertThat(pced.getMessage()).isNotNull();
+        assertThat(pced.getAny()).isNotNull();
     }
 
     @Test
@@ -82,12 +82,11 @@ public class ProtoMessageDataTest {
         assertThat(eventData).isNotNull();
         assertThat(eventData).isInstanceOf(ProtoCloudEventData.class);
 
-        Message newMessage = ((ProtoCloudEventData) eventData).getMessage();
-        assertThat(newMessage).isNotNull();
-        assertThat(newMessage).isInstanceOf(Any.class);
+        Any newAny = ((ProtoCloudEventData) eventData).getAny();
+        assertThat(newAny).isNotNull();
 
         // Hydrate the data - maybe there's a cleaner way to do this.
-        Quote newQuote = ((Any) newMessage).unpack(Quote.class);
+        Quote newQuote = newAny.unpack(Quote.class);
         assertThat(newQuote).ignoringRepeatedFieldOrder().isEqualTo(pyplQuote);
     }
 

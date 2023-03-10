@@ -16,8 +16,11 @@
  */
 package io.cloudevents.protobuf;
 
-import com.google.protobuf.*;
+import com.google.protobuf.Any;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Timestamp;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
@@ -27,7 +30,6 @@ import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 import io.cloudevents.v1.proto.CloudEvent;
-import io.cloudevents.v1.proto.CloudEvent.*;
 
 import java.net.URI;
 import java.time.Instant;
@@ -244,16 +246,20 @@ class ProtoSerializer {
 
                 // If it's a proto message we can handle that directly.
                 if (data instanceof ProtoCloudEventData) {
+
                     final ProtoCloudEventData protoData = (ProtoCloudEventData) data;
-                    final Message m = protoData.getMessage();
-                    if (m != null) {
-                        // If it's already an 'Any' don't re-pack it.
-                        if (m instanceof Any) {
-                            protoBuilder.setProtoData((Any) m);
-                        }else {
-                            protoBuilder.setProtoData(Any.pack(m));
-                        }
+                    final Any anAny = protoData.getAny();
+
+                    // Even though our local implementation cannot be instantiated
+                    // with NULL data nothing stops somebody from having their own
+                    // variant that isn't as 'safe'.
+
+                    if (anAny != null) {
+                        protoBuilder.setProtoData(anAny);
+                    } else {
+                        throw CloudEventRWException.newOther("ProtoCloudEventData: getAny() was NULL");
                     }
+
                 } else {
                     if (Objects.equals(dataContentType, PROTO_DATA_CONTENT_TYPE)) {
                         // This will throw if the data provided is not an Any. The protobuf CloudEvent spec requires proto data to be stored as
