@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-Present The CloudEvents Authors
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package io.cloudevents.mqtt.hivemq;
 
 import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3PublishBuilder;
@@ -20,21 +36,21 @@ class V3MessageWriter implements MessageWriter<CloudEventWriter<Mqtt3PublishBuil
     @Override
     public CloudEventWriter<Mqtt3PublishBuilder> create(SpecVersion version) throws CloudEventRWException {
         // No-Op
-        return null;
+        throw CloudEventRWException.newOther("Internal Error");
     }
 
     @Override
     public Mqtt3PublishBuilder setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
         // No-Op
-        return null;
+        throw CloudEventRWException.newOther("Internal Error");
     }
 
     @Override
     public Mqtt3PublishBuilder writeStructured(CloudEvent event, String format) {
-        EventFormat eventFormat = EventFormatProvider.getInstance().resolveFormat(format);
+        final EventFormat eventFormat = EventFormatProvider.getInstance().resolveFormat(format);
 
         if (eventFormat != null) {
-            return writeStructured(event, EventFormatProvider.getInstance().resolveFormat(format));
+            return writeStructured(event, eventFormat);
         } else {
             throw CloudEventRWException.newOther("Unsupported Format: " + format);
         }

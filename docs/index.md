@@ -32,7 +32,8 @@ Using the Java SDK you can:
 |               AMQP Protocol Binding                |                          :x:                          |                          :x:                          |
 |             - [Proton](amqp-proton.md)             |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
  |               MQTT Protocol Binding                |                          :x:                          |                          :x:                          |
- |               - [Paho](mqtt-paho.md)               |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+ |                 - [Paho](mqtt.md)                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+ |                - [HiveMQ](mqtt.md)                 |                   :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                 AVRO Event Format                  |                          :x:                          |                          :x:                          |
 |               HTTP Protocol Binding                |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |             - [Vert.x](http-vertx.md)              |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-Present The CloudEvents Authors
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package io.cloudevents.mqtt.core;
 
 import io.cloudevents.SpecVersion;
@@ -25,9 +41,10 @@ public abstract class BaseMqttBinaryMessageReader extends BaseGenericBinaryMessa
 
     /**
      * Initialise the binary message reader.
-     * @param version The CloudEvent message version.
+     *
+     * @param version     The CloudEvent message version.
      * @param contentType The assigned media content type.
-     * @param payload The raw data payload from the MQTT message.
+     * @param payload     The raw data payload from the MQTT message.
      */
     protected BaseMqttBinaryMessageReader(final SpecVersion version, final String contentType, final byte[] payload) {
         super(version, payload != null && payload.length > 0 ? BytesCloudEventData.wrap(payload) : null);
@@ -82,6 +99,7 @@ public abstract class BaseMqttBinaryMessageReader extends BaseGenericBinaryMessa
 
     /**
      * Visit each MQTT user-property and invoke the supplied function.
+     *
      * @param fn The function to invoke for each MQTT User property.
      */
     protected abstract void forEachUserProperty(BiConsumer<String, Object> fn);

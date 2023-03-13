@@ -1,11 +1,25 @@
+/*
+ * Copyright 2018-Present The CloudEvents Authors
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package io.cloudevents.mqtt.paho;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.MessageWriter;
-import io.cloudevents.core.mock.CSVFormat;
-import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.jackson.JsonFormat;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -24,6 +38,23 @@ import java.util.stream.Stream;
  */
 public class V3RoundTripTests {
 
+
+    /**
+     * This test set is limited owing to the the fact that:
+     * (a) We only support JSON Format
+     * (b) Round-tripping of events with JSON 'data' doesn't reliably work owing to the way the equality tests work on the event.
+     *
+     * @return
+     */
+    static Stream<CloudEvent> simpleEvents() {
+        return Stream.of(
+            Data.V03_MIN,
+            Data.V03_WITH_TEXT_DATA,
+            Data.V1_MIN,
+            Data.V1_WITH_TEXT_DATA,
+            Data.V1_WITH_XML_DATA
+        );
+    }
 
     @ParameterizedTest
     @MethodSource("simpleEvents")
@@ -51,22 +82,6 @@ public class V3RoundTripTests {
         // And now ensure we got back what we wrote
         Assertions.assertEquals(ce, newCE);
 
-    }
-
-    /**
-     * This test set is limited owing to the the fact that:
-     *  (a) We only support JSON Format
-     *  (b) Round-tripping of events with JSON 'data' doesn't reliably work owing to the way the equality tests work on the event.
-     * @return
-     */
-    static Stream<CloudEvent> simpleEvents() {
-        return Stream.of(
-            Data.V03_MIN,
-            Data.V03_WITH_TEXT_DATA,
-            Data.V1_MIN,
-            Data.V1_WITH_TEXT_DATA,
-            Data.V1_WITH_XML_DATA
-        );
     }
 
 }

@@ -1,9 +1,24 @@
+/*
+ * Copyright 2018-Present The CloudEvents Authors
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package io.cloudevents.mqtt.paho;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.format.EventFormat;
-import io.cloudevents.core.format.EventSerializationException;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.mqtt.core.MqttUtils;
@@ -13,7 +28,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /**
  * A {@link MessageWriter} that writes an CloudEvent to a V3 MQTT Message.
- *
+ * <p>
  * Note: This only supports Structured messages in JSON format as defined
  * by the MQTT CloudEvent binding specification.
  */
@@ -28,8 +43,9 @@ class V3MessageWriter implements MessageWriter<CloudEventWriter<MqttMessage>, Mq
     /**
      * Ensure the supplied content type is appropriate for V3 messages
      * as-per binding specification.
-     *
+     * <p>
      * Raises exception if not valid.
+     *
      * @param contentType
      */
     private void ensureValidContent(String contentType) {
