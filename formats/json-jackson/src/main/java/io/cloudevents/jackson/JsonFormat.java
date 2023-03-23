@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.format.ContentType;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.format.EventSerializationException;
@@ -219,5 +220,10 @@ public final class JsonFormat implements EventFormat {
     static boolean dataIsJsonContentType(String contentType) {
         // If content type, spec states that we should assume is json
         return contentType == null || JSON_CONTENT_TYPE_PATTERN.matcher(contentType).matches();
+    }
+
+    static boolean dataIsJsonContentType(ContentType contentType) {
+        // If content type, spec states that we should assume is json
+        return dataIsJsonContentType(contentType.value());
     }
 }

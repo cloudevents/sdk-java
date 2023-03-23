@@ -20,6 +20,7 @@ package io.cloudevents.core.provider;
 import io.cloudevents.core.mock.CSVFormat;
 import org.junit.jupiter.api.Test;
 
+import static io.cloudevents.core.format.ContentType.CSV;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EventFormatProviderTest {
@@ -41,4 +42,9 @@ public class EventFormatProviderTest {
         assertThat(EventFormatProvider.getInstance().getContentTypes()).hasSize(1);
     }
 
+    @Test
+    void resolveCSVUsingEnum() {
+        assertThat(EventFormatProvider.getInstance().resolveFormat(CSV))
+            .isInstanceOf(CSVFormat.class);
+    }
 }
