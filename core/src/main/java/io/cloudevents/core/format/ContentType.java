@@ -30,6 +30,8 @@ import java.util.Set;
  *
  * <p>The two parts of a {@code ContentType} are its <em>type</em> and a <em>subtype</em>; separated by a forward slash ({@code /}).
  *
+ * <p>The constants enumerated by {@code ContentType} correspond <em>only</em> to the specialized formats supported by the Java™ SDK for CloudEvents.
+ *
  * @see io.cloudevents.core.format.EventFormat
  */
 @ParametersAreNonnullByDefault
@@ -47,11 +49,6 @@ public enum ContentType {
      * The content type for transports sending cloudevents in the protocol buffer format.
      */
     PROTO("application/cloudevents+protobuf"),
-    /**
-     * The content type to set for the "datacontenttype" attribute if the data is stored in protocol buffer format.>
-     * Note that if this content type is used, the stored data must be wrapped in {@link com.google.protobuf.Any} as specified by the protobuf format spec.>
-     */
-    PROTO_DATA("application/protobuf"),
     /**
      * The content type for transports sending cloudevents in XML format.
      */

@@ -231,7 +231,6 @@ class JsonFormatTest {
         return Stream.of(
             Arguments.of(CSV),
             Arguments.of(PROTO),
-            Arguments.of(PROTO_DATA),
             Arguments.of(XML)
         );
     }
