@@ -19,6 +19,7 @@ package io.cloudevents.xml;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.format.ContentType;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.format.EventSerializationException;
@@ -38,7 +39,7 @@ public class XMLFormat implements EventFormat {
     /**
      * The content type for transports sending cloudevents in XML format.
      */
-    public static final String XML_CONTENT_TYPE = "application/cloudevents+xml";
+    public static final String XML_CONTENT_TYPE = ContentType.XML.value();
 
     @Override
     public byte[] serialize(CloudEvent event) throws EventSerializationException {
