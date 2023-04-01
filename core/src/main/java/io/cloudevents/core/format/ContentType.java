@@ -38,10 +38,6 @@ import java.util.Set;
 public enum ContentType {
 
     /**
-     * Content type associated with the CSV event format
-     */
-    CSV("application/cloudevents+csv"),
-    /**
      * Content type associated with the JSON event format
      */
     JSON("application/cloudevents+json"),

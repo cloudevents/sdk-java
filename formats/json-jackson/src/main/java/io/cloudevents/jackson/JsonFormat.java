@@ -44,7 +44,7 @@ public final class JsonFormat implements EventFormat {
     /**
      * Content type associated with the JSON event format
      */
-    public static final String CONTENT_TYPE = "application/cloudevents+json";
+    public static final String CONTENT_TYPE = ContentType.JSON.value();
     /**
      * JSON Data Content Type Discriminator
      */
