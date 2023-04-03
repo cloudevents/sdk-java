@@ -58,24 +58,8 @@ class JsonFormatTest {
     }
 
     @ParameterizedTest
-    @MethodSource("jsonContentTypesEnum")
-    void isJsonContentType(ContentType contentType) {
-        boolean json = JsonFormat.dataIsJsonContentType(contentType);
-
-        assertThat(json).isTrue();
-    }
-
-    @ParameterizedTest
     @MethodSource("wrongJsonContentTypes")
     void isNotJsonContentType(String contentType) {
-        boolean json = JsonFormat.dataIsJsonContentType(contentType);
-
-        assertThat(json).isFalse();
-    }
-
-    @ParameterizedTest
-    @MethodSource("wrongJsonContentTypesEnums")
-    void isNotJsonContentType(ContentType contentType) {
         boolean json = JsonFormat.dataIsJsonContentType(contentType);
 
         assertThat(json).isFalse();
@@ -210,12 +194,6 @@ class JsonFormatTest {
         );
     }
 
-    static Stream<Arguments> jsonContentTypesEnum() {
-        return Stream.of(
-            Arguments.of(JSON)
-        );
-    }
-
     static Stream<Arguments> wrongJsonContentTypes() {
         return Stream.of(
             Arguments.of("applications/json"),
@@ -226,15 +204,6 @@ class JsonFormatTest {
             Arguments.of("test/json")
         );
     }
-
-    static Stream<Arguments> wrongJsonContentTypesEnums() {
-        return Stream.of(
-            Arguments.of(CSV),
-            Arguments.of(PROTO),
-            Arguments.of(XML)
-        );
-    }
-
 
     public static Stream<Arguments> serializeTestArgumentsDefault() {
         return Stream.of(

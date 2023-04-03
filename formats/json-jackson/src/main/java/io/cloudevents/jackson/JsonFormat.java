@@ -221,9 +221,4 @@ public final class JsonFormat implements EventFormat {
         // If content type, spec states that we should assume is json
         return contentType == null || JSON_CONTENT_TYPE_PATTERN.matcher(contentType).matches();
     }
-
-    static boolean dataIsJsonContentType(ContentType contentType) {
-        // If content type, spec states that we should assume is json
-        return dataIsJsonContentType(contentType.value());
-    }
 }
