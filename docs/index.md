@@ -27,23 +27,25 @@ Using the Java SDK you can:
 ## Supported features
 
 |                                                    | [v0.3](https://github.com/cloudevents/spec/tree/v0.3) | [v1.0](https://github.com/cloudevents/spec/tree/v1.0) |
-| :------------------------------------------------: | :---------------------------------------------------: | :---------------------------------------------------: |
+|:--------------------------------------------------:|:-----------------------------------------------------:|:-----------------------------------------------------:|
 |                  CloudEvents Core                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |               AMQP Protocol Binding                |                          :x:                          |                          :x:                          |
 |             - [Proton](amqp-proton.md)             |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|                 AVRO Event Format                  |                          :x:                          |                          :x:                          |
+|                 AVRO Event Format                  |                          :x:                          |                  :heavy_check_mark:                   |
 |               HTTP Protocol Binding                |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |             - [Vert.x](http-vertx.md)              |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 | - [Jakarta Restful WS](http-jakarta-restful-ws.md) |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |              - [Basic](http-basic.md)              |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |               - [Spring](spring.md)                |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|               - [http4k][http4k]<sup>†</sup>       |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|           - [http4k][http4k]<sup>†</sup>           |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                 JSON Event Format                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                 - [Avro](avro.md)                  |                          :x:                          |                  :heavy_check_mark:                   |
+|                 Avro Event Format                  |                          :x:                          |                  :heavy_check_mark:                   |
 |            - [Jackson](json-jackson.md)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|                Protobuf Event Format               |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|            - [Proto](protobuf.md)                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|                XML Event Format                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|            - [XML](xml.md)                         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|               Protobuf Event Format                |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|               - [Proto](protobuf.md)               |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                  XML Event Format                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                  - [XML](xml.md)                   |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |         [Kafka Protocol Binding](kafka.md)         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |               MQTT Protocol Binding                |                          :x:                          |                          :x:                          |
 |               NATS Protocol Binding                |                          :x:                          |                          :x:                          |
@@ -94,6 +96,8 @@ a different feature from the different sub specs of
 -   [`cloudevents-bom`] Module providing a
     [bill of materials (BOM)](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms)
     for easier integration of CloudEvents in other projects
+-   [`cloudevents-avro`] Implementation of [Avro Event format] using
+    [Apache Avro](https://avro.apache.org/)
 -   [`cloudevents-json-jackson`] Implementation of [JSON Event format] with
     [Jackson](https://github.com/FasterXML/jackson)
 -   [`cloudevents-protobuf`] Implementation of [Protobuf Event format] using code generated
@@ -116,6 +120,7 @@ a different feature from the different sub specs of
 You can look at the latest published artifacts on
 [Maven Central](https://search.maven.org/search?q=g:io.cloudevents).
 
+[Avro Event format]: https://github.com/cloudevents/spec/blob/main/avro-format.md
 [JSON Event format]: https://github.com/cloudevents/spec/blob/v1.0/json-format.md
 [Protobuf Event format]: https://github.com/cloudevents/spec/blob/v1.0.1/protobuf-format.md
 [HTTP Protocol Binding]: https://github.com/cloudevents/spec/blob/v1.0/http-protocol-binding.md
@@ -124,6 +129,7 @@ You can look at the latest published artifacts on
 [`cloudevents-api`]: https://github.com/cloudevents/sdk-java/tree/main/api
 [`cloudevents-bom`]: https://github.com/cloudevents/sdk-java/tree/main/bom
 [`cloudevents-core`]: https://github.com/cloudevents/sdk-java/tree/main/core
+[`cloudevents-avro`]: https://github.com/cloudevents/sdk-java/tree/main/formats/avro
 [`cloudevents-json-jackson`]: https://github.com/cloudevents/sdk-java/tree/main/formats/json-jackson
 [`cloudevents-protobuf`]: https://github.com/cloudevents/sdk-java/tree/main/formats/protobuf
 [`cloudevents-xml`]: https://github.com/cloudevents/sdk-java/tree/main/formats/xml
