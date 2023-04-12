@@ -109,6 +109,4 @@ public final class EventFormatProvider {
 	public EventFormat resolveFormat(ContentType contentType) {
 		return this.formats.get(contentType.value());
 	}
-
-
 }
