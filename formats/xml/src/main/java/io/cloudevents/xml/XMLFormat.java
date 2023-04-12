@@ -39,7 +39,7 @@ public class XMLFormat implements EventFormat {
     /**
      * The content type for transports sending cloudevents in XML format.
      */
-    public static final String XML_CONTENT_TYPE = ContentType.XML.value();
+    public static final String XML_CONTENT_TYPE = "application/cloudevents+xml";
 
     @Override
     public byte[] serialize(CloudEvent event) throws EventSerializationException {

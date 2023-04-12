@@ -39,7 +39,7 @@ public class ProtobufFormat implements EventFormat {
     /**
      * The content type for transports sending cloudevents in the protocol buffer format.
      */
-    public static final String PROTO_CONTENT_TYPE = ContentType.PROTO.value();
+    public static final String PROTO_CONTENT_TYPE = "application/cloudevents+protobuf";
     /**
      * The content type to set for the "datacontenttype" attribute if the data is stored in protocol buffer format.
      * Note that if this content type is used, the stored data must be wrapped in {@link com.google.protobuf.Any} as specified by the protobuf format spec.
