@@ -49,25 +49,23 @@ public class AvroFormat implements EventFormat {
     try {
       Builder builder = io.cloudevents.v1.avro.CloudEvent.newBuilder();
 
-      Map<String, Object> attribute = new HashMap<>();
-
       // mandatory
-      attribute.put(CloudEventV1.SPECVERSION, ce.getSpecVersion().toString());
-      attribute.put(CloudEventV1.SOURCE, ce.getSource().toString());
-      attribute.put(CloudEventV1.TYPE, ce.getType());
-      attribute.put(CloudEventV1.ID, ce.getId());
+      builder.setSource(ce.getSource().toString());
+      builder.setType(ce.getType());
+      builder.setId(ce.getId());
 
       // optional
       if (ce.getTime() != null)
-        attribute.put(CloudEventV1.TIME, Time.writeTime(ce.getTime()));
+        builder.setTime(Time.writeTime(ce.getTime()));
       if (ce.getSubject() != null)
-        attribute.put(CloudEventV1.SUBJECT, ce.getSubject());
+        builder.setSubject(ce.getSubject());
       if (ce.getDataContentType() != null)
-        attribute.put(CloudEventV1.DATACONTENTTYPE, ce.getDataContentType());
+        builder.setDatacontenttype(ce.getDataContentType());
       if (ce.getDataSchema() != null)
-        attribute.put(CloudEventV1.DATASCHEMA, ce.getDataSchema().toString());
+        builder.setDataschema(ce.getDataSchema().toString());
 
       // extensions
+      Map<String, Object> attribute = new HashMap<>();
       for (String name : ce.getExtensionNames()) {
         Object value = ce.getExtension(name);
         if (value instanceof byte[])
@@ -93,51 +91,34 @@ public class AvroFormat implements EventFormat {
           throws EventDeserializationException {
     try {
       io.cloudevents.v1.avro.CloudEvent avroCe = io.cloudevents.v1.avro.CloudEvent.fromByteBuffer(ByteBuffer.wrap(bytes));
-      CloudEventBuilder builder = CloudEventBuilder.fromSpecVersion(SpecVersion.parse(avroCe.getAttribute().get(CloudEventV1.SPECVERSION).toString()));
+      CloudEventBuilder builder = CloudEventBuilder.v1()
+        .withSource(URI.create(avroCe.getSource()))
+        .withType(avroCe.getType())
+        .withId(avroCe.getType())
+        .withSubject(avroCe.getSubject())
+        .withDataContentType(avroCe.getDatacontenttype());
+
+      if (avroCe.getTime() != null)
+        builder.withTime(Time.parseTime(avroCe.getTime()));
+      if (avroCe.getDataschema() != null)
+        builder.withDataSchema(URI.create(avroCe.getDataschema()));
 
       // attributes + extensions
       for (Map.Entry<String, Object> entry : avroCe.getAttribute().entrySet()) {
         String name = entry.getKey();
         Object value = entry.getValue();
-        switch (name) {
-          case CloudEventV1.SPECVERSION:
-            break;
-          case CloudEventV1.TYPE:
-            builder.withSource(URI.create((String) value));
-            break;
-          case CloudEventV1.SOURCE:
-            builder.withType((String) value);
-            break;
-          case CloudEventV1.ID:
-            builder.withId((String) value);
-            break;
-          case CloudEventV1.TIME:
-            builder.withTime(Time.parseTime((String) value));
-            break;
-          case CloudEventV1.SUBJECT:
-            builder.withSubject((String) value);
-            break;
-          case CloudEventV1.DATACONTENTTYPE:
-            builder.withDataContentType((String) value);
-            break;
-          case CloudEventV1.DATASCHEMA:
-            builder.withDataSchema(URI.create((String) value));
-            break;
-          default:
-            // must be an extension
-            // Avro supports boolean, int, string, bytes
-            if (value instanceof Boolean)
-              builder.withExtension(name, (boolean) value);
-            else if (value instanceof Integer)
-              builder.withExtension(name, (int) value);
-            else if (value instanceof String)
-              builder.withExtension(name, (String) value);
-            else if (value instanceof ByteBuffer)
-              builder.withExtension(name, ((ByteBuffer) value).array());
-            else
-              // this cannot happen, if ever seen, must be bug in this library
-              throw new AssertionError(String.format("invalid extension %s unsupported type %s", name, value.getClass()));
-        }
+        // Avro supports boolean, int, string, bytes
+        if (value instanceof Boolean)
+          builder.withExtension(name, (boolean) value);
+        else if (value instanceof Integer)
+          builder.withExtension(name, (int) value);
+        else if (value instanceof String)
+          builder.withExtension(name, (String) value);
+        else if (value instanceof ByteBuffer)
+          builder.withExtension(name, ((ByteBuffer) value).array());
+        else
+          // this cannot happen, if ever seen, must be bug in this library
+          throw new AssertionError(String.format("invalid extension %s unsupported type %s", name, value.getClass()));
       }
 
       if (avroCe.getData() == null)

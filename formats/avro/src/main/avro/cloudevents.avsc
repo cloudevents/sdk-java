@@ -5,6 +5,34 @@
   "version": "1.0",
   "doc": "Avro Event Format for CloudEvents",
   "fields": [
+   {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "source",
+      "type": "string"
+    },
+    {
+      "name": "type",
+      "type": "string"
+    },
+    {
+      "name": "datacontenttype",
+      "type": ["null", "string"]
+    },
+    {
+      "name": "dataschema",
+      "type": ["null", "string"]
+    },
+    {
+      "name": "subject",
+      "type": ["null", "string"]
+    },
+    {
+      "name": "time",
+      "type": ["null", "string"]
+    },
     {
       "name": "attribute",
       "type": {
