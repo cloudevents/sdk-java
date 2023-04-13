@@ -47,21 +47,9 @@ public class AvroFormat implements EventFormat {
   @Override
   public byte[] serialize(CloudEvent ce) throws EventSerializationException {
     try {
-      Builder builder;
-      builder = io.cloudevents.v1.avro.CloudEvent.newBuilder();
+      Builder builder = io.cloudevents.v1.avro.CloudEvent.newBuilder();
 
-      Map<String, Object> attribute = new HashMap<String,Object>() {
-        @Override
-        public Object put(String key, Object value) {
-          if (value instanceof Boolean || value instanceof Integer || value instanceof String)
-            return super.put(key, value);
-          else if (value instanceof byte[])
-            return super.put(key, ByteBuffer.wrap((byte[]) value));
-          else
-            // we cannot serialize this attribute because Avro schema does not support it
-            throw new IllegalStateException(String.format("unsupported attribute class %s of class %s", key, value.getClass()));
-        }
-      };
+      Map<String, Object> attribute = new HashMap<>();
 
       // mandatory
       attribute.put(CloudEventV1.SPECVERSION, ce.getSpecVersion().toString());
@@ -81,7 +69,11 @@ public class AvroFormat implements EventFormat {
 
       // extensions
       for (String name : ce.getExtensionNames()) {
-        attribute.put(name, ce.getExtension(name));
+        Object value = ce.getExtension(name);
+        if (value instanceof byte[])
+          attribute.put(name, ByteBuffer.wrap((byte[]) value));
+        else
+          attribute.put(name, value);
       }
 
       builder.setAttribute(attribute);
@@ -138,7 +130,7 @@ public class AvroFormat implements EventFormat {
               builder.withExtension(name, (boolean) value);
             else if (value instanceof Integer)
               builder.withExtension(name, (int) value);
-           else if (value instanceof String)
+            else if (value instanceof String)
               builder.withExtension(name, (String) value);
             else if (value instanceof ByteBuffer)
               builder.withExtension(name, ((ByteBuffer) value).array());
