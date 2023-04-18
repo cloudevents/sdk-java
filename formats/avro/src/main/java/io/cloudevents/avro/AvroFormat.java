@@ -49,37 +49,28 @@ public class AvroFormat implements EventFormat {
     try {
       Builder builder = io.cloudevents.v1.avro.CloudEvent.newBuilder();
 
-      // mandatory
-      builder.setSource(ce.getSource().toString());
-      builder.setType(ce.getType());
-      builder.setId(ce.getId());
-
-      // optional
-      if (ce.getTime() != null)
-        builder.setTime(Time.writeTime(ce.getTime()));
-      if (ce.getSubject() != null)
-        builder.setSubject(ce.getSubject());
-      if (ce.getDataContentType() != null)
-        builder.setDatacontenttype(ce.getDataContentType());
-      if (ce.getDataSchema() != null)
-        builder.setDataschema(ce.getDataSchema().toString());
-
       // extensions
       Map<String, Object> attribute = new HashMap<>();
       for (String name : ce.getExtensionNames()) {
         Object value = ce.getExtension(name);
-        if (value instanceof byte[])
-          attribute.put(name, ByteBuffer.wrap((byte[]) value));
-        else
-          attribute.put(name, value);
+        attribute.put(name, value instanceof byte[] ? ByteBuffer.wrap((byte[]) value) : value);
       }
 
-      builder.setAttribute(attribute);
+      builder.setSource(ce.getSource().toString())
+              .setType(ce.getType())
+              .setId(ce.getId())
+              .setSubject(ce.getSubject())
+              .setDatacontenttype(ce.getDataContentType())
+              .setAttribute(attribute);
+
+      if (ce.getTime() != null)
+        builder.setTime(Time.writeTime(ce.getTime()));
+      if (ce.getDataSchema() != null)
+        builder.setDataschema(ce.getDataSchema().toString());
 
       CloudEventData data = ce.getData();
-      if (data != null) {
+      if (data != null)
         builder.setData(ByteBuffer.wrap(data.toBytes()));
-      }
       return builder.build().toByteBuffer().array();
     } catch (Exception e) {
       throw new EventSerializationException(e);
@@ -87,23 +78,22 @@ public class AvroFormat implements EventFormat {
   }
 
   @Override
-  public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper)
-          throws EventDeserializationException {
+  public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper) throws EventDeserializationException {
     try {
       io.cloudevents.v1.avro.CloudEvent avroCe = io.cloudevents.v1.avro.CloudEvent.fromByteBuffer(ByteBuffer.wrap(bytes));
       CloudEventBuilder builder = CloudEventBuilder.v1()
-        .withSource(URI.create(avroCe.getSource()))
-        .withType(avroCe.getType())
-        .withId(avroCe.getType())
-        .withSubject(avroCe.getSubject())
-        .withDataContentType(avroCe.getDatacontenttype());
+              .withSource(URI.create(avroCe.getSource()))
+              .withType(avroCe.getType())
+              .withId(avroCe.getType())
+              .withSubject(avroCe.getSubject())
+              .withDataContentType(avroCe.getDatacontenttype());
 
       if (avroCe.getTime() != null)
         builder.withTime(Time.parseTime(avroCe.getTime()));
       if (avroCe.getDataschema() != null)
         builder.withDataSchema(URI.create(avroCe.getDataschema()));
 
-      // attributes + extensions
+      // extensions
       for (Map.Entry<String, Object> entry : avroCe.getAttribute().entrySet()) {
         String name = entry.getKey();
         Object value = entry.getValue();
