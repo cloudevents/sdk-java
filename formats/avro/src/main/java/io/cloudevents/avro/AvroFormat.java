@@ -32,6 +32,8 @@ import io.cloudevents.v1.avro.CloudEvent.Builder;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +66,7 @@ public class AvroFormat implements EventFormat {
               .setAttribute(attribute);
 
       if (ce.getTime() != null)
-        builder.setTime(Time.writeTime(ce.getTime()));
+        builder.setTime(ce.getTime().toInstant().toEpochMilli());
       if (ce.getDataSchema() != null)
         builder.setDataschema(ce.getDataSchema().toString());
 
@@ -89,7 +91,7 @@ public class AvroFormat implements EventFormat {
               .withDataContentType(avroCe.getDatacontenttype());
 
       if (avroCe.getTime() != null)
-        builder.withTime(Time.parseTime(avroCe.getTime()));
+        builder.withTime(Instant.ofEpochMilli(avroCe.getTime()).atOffset(ZoneOffset.UTC));
       if (avroCe.getDataschema() != null)
         builder.withDataSchema(URI.create(avroCe.getDataschema()));
 
