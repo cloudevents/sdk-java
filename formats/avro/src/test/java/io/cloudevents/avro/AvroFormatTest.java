@@ -25,7 +25,9 @@ import io.cloudevents.core.provider.EventFormatProvider;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +54,7 @@ class AvroFormatTest {
             .withSource(URI.create(""))
             .withType("")
             // optional
-            .withTime(OffsetDateTime.MIN)
+            .withTime(Instant.EPOCH.atOffset(ZoneOffset.UTC))
             .withSubject("")
             .withDataSchema(URI.create(""))
             // extension

@@ -5,7 +5,7 @@
   "version": "1.0",
   "doc": "Avro Event Format for CloudEvents",
   "fields": [
-   {
+    {
       "name": "id",
       "type": "string"
     },
@@ -19,19 +19,35 @@
     },
     {
       "name": "datacontenttype",
-      "type": ["null", "string"]
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
     },
     {
       "name": "dataschema",
-      "type": ["null", "string"]
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
     },
     {
       "name": "subject",
-      "type": ["null", "string"]
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
     },
     {
       "name": "time",
-      "type": ["null", "string"]
+      "type": [
+        "null",
+        "long"
+      ],
+      "default": null
     },
     {
       "name": "attribute",
