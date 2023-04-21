@@ -28,9 +28,9 @@ adding the dependency to your project:
 
 ```java
 import io.cloudevents.CloudEvent;
+import io.cloudevents.core.format.ContentType;
 import io.cloudevents.core.format.EventFormatProvider;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.jackson.JsonFormat;
 
 CloudEvent event = CloudEventBuilder.v1()
     .withId("hello")
@@ -40,7 +40,7 @@ CloudEvent event = CloudEventBuilder.v1()
 
 byte[]serialized = EventFormatProvider
     .getInstance()
-    .resolveFormat(JsonFormat.CONTENT_TYPE)
+    .resolveFormat(ContentType.JSON)
     .serialize(event);
 ```
 

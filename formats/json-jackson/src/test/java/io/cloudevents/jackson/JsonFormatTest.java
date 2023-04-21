@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.format.ContentType;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.rw.CloudEventRWException;
@@ -40,6 +41,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static io.cloudevents.core.format.ContentType.*;
 import static io.cloudevents.core.test.Data.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -185,7 +187,10 @@ class JsonFormatTest {
             //https://www.rfc-editor.org/rfc/rfc2045#section-5.1
             // any us-ascii char can be part of parameters (except CTRLs and tspecials)
             Arguments.of("text/json; char-set = $!#$%&'*+.^_`|"),
-            Arguments.of((Object) null)
+            Arguments.of((Object) null),
+            Arguments.of(JSON + ""),
+            Arguments.of(JSON.value()),
+            Arguments.of(JSON.toString())
         );
     }
 
@@ -307,7 +312,7 @@ class JsonFormatTest {
     }
 
     private JsonFormat getFormat() {
-        return (JsonFormat) EventFormatProvider.getInstance().resolveFormat(JsonFormat.CONTENT_TYPE);
+        return (JsonFormat) EventFormatProvider.getInstance().resolveFormat(JSON);
     }
 
     private static byte[] loadFile(String input) {
