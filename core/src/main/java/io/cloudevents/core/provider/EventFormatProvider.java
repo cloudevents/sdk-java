@@ -25,6 +25,7 @@ import java.util.stream.StreamSupport;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.cloudevents.core.format.ContentType;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.lang.Nullable;
 
@@ -98,4 +99,14 @@ public final class EventFormatProvider {
 		return this.formats.get(contentType);
 	}
 
+	/**
+	 * Resolve an event format starting from the content type.
+	 *
+	 * @param contentType the content type to resolve the event format
+	 * @return null if no format was found for the provided content type
+	 */
+	@Nullable
+	public EventFormat resolveFormat(ContentType contentType) {
+		return this.formats.get(contentType.value());
+	}
 }
