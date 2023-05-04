@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cloudevents-restful-ws-quarkus-example</artifactId>
     <properties>
-        <quarkus-plugin.version>1.10.3.Final</quarkus-plugin.version>
+        <quarkus-plugin.version>3.0.2.Final</quarkus-plugin.version>
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <quarkus.platform.version>1.10.3.Final</quarkus.platform.version>
