@@ -52,6 +52,7 @@ Supported features of the specification:
 |          MQTT Protocol Binding          |                          :x:                          |                          :x:                          |
 |          NATS Protocol Binding          |                          :x:                          |                          :x:                          |
 |                Web hook                 |                          :x:                          |                          :x:                          |
+|        RocketMQ Protocol Binding        |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 
 <sub>† Source/artifacts hosted externally</sub>
 
