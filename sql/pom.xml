@@ -87,6 +87,10 @@
                     <listener>true</listener> <!-- TODO do we need the listener? -->
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 

@@ -87,6 +87,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>8</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Maven plugins -->
@@ -125,6 +126,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.12.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
                         <archive>
@@ -133,6 +139,36 @@
                             </manifestEntries>
                         </archive>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.moditect</groupId>
+                    <artifactId>moditect-maven-plugin</artifactId>
+                    <version>1.0.0.Final</version>
+                    <executions>
+                        <execution>
+                            <id>add-module-infos</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>add-module-info</goal>
+                            </goals>
+                            <configuration>
+                                <overwriteExistingFiles>true</overwriteExistingFiles>
+                                <failOnWarning>false</failOnWarning>
+                                <module>
+                                    <moduleInfo>
+                                        <name>${module-name}</name>
+                                        <!-- export everything -->
+                                        <exports>*;</exports>
+                                        <!-- declare services consumed by the artifact -->
+                                        <addServiceUses>true</addServiceUses>
+                                    </moduleInfo>
+                                </module>
+                                <jdepsExtraArgs>
+                                    <arg>--multi-release=9</arg>
+                                </jdepsExtraArgs>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.ec4j.maven</groupId>

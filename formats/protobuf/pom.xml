@@ -61,6 +61,10 @@
                     <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
@@ -126,5 +130,4 @@
         </dependency>
 
     </dependencies>
-
 </project>
