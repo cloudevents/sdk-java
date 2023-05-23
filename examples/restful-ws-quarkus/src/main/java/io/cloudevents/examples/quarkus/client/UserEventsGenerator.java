@@ -3,9 +3,9 @@ package io.cloudevents.examples.quarkus.client;
 import java.net.URI;
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,7 +31,7 @@ public class UserEventsGenerator {
     @Inject
     @RestClient
     UserClient userClient;
-    
+
     long userCount=0;
 
     @Scheduled(every="2s")
