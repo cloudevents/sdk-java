@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.rocketmq.impl;
+package io.cloudevents.rocketmq;
 
 import io.cloudevents.CloudEventData;
 import io.cloudevents.SpecVersion;
@@ -38,7 +38,7 @@ import org.apache.rocketmq.client.apis.message.MessageBuilder;
  * {@link MessageWriter} interface for creating and completing CloudEvents messages in a
  * RocketMQ-compatible format.
  */
-public final class RocketmqMessageWriter implements MessageWriter<CloudEventWriter<Message>, Message>, CloudEventWriter<Message> {
+final class RocketmqMessageWriter implements MessageWriter<CloudEventWriter<Message>, Message>, CloudEventWriter<Message> {
     private final Map<String, String> messageProperties;
     private final MessageBuilder messageBuilder;
 
@@ -47,7 +47,7 @@ public final class RocketmqMessageWriter implements MessageWriter<CloudEventWrit
      *
      * @param topic message's topic.
      */
-    public RocketmqMessageWriter(String topic) {
+    RocketmqMessageWriter(String topic) {
         this.messageProperties = new HashMap<>();
         final ClientServiceProvider provider = ClientServiceProvider.loadService();
         this.messageBuilder = provider.newMessageBuilder();

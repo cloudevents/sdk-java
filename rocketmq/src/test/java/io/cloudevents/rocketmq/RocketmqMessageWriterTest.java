@@ -22,7 +22,6 @@ import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.v1.CloudEventV1;
-import io.cloudevents.rocketmq.impl.RocketmqConstants;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

@@ -25,7 +25,6 @@ import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.core.v03.CloudEventV03;
 import io.cloudevents.core.v1.CloudEventV1;
-import io.cloudevents.rocketmq.impl.RocketmqConstants;
 import io.cloudevents.types.Time;
 import java.util.AbstractMap;
 import java.util.Map;

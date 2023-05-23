@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.rocketmq.impl;
+package io.cloudevents.rocketmq;
 
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
@@ -27,7 +27,7 @@ import java.util.function.BiConsumer;
 /**
  * A RocketMQ message reader that can be read as a <em>CloudEvent</em>.
  */
-public class RocketmqBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
+final class RocketmqBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<String, Object> {
     private final String contentType;
     private final Map<String, String> messageProperties;
 
@@ -39,7 +39,7 @@ public class RocketmqBinaryMessageReader extends BaseGenericBinaryMessageReaderI
      * @param contentType       The content-type property of the RocketMQ message or {@code null} if the message content type if unknown.
      * @param body              The message payload or {@code null}/{@link RocketmqConstants#EMPTY_BODY} if the message does not contain any payload.
      */
-    public RocketmqBinaryMessageReader(final SpecVersion specVersion, Map<String, String> messageProperties,
+    RocketmqBinaryMessageReader(final SpecVersion specVersion, Map<String, String> messageProperties,
         final String contentType, final byte[] body) {
         super(specVersion, body != null && !Arrays.equals(RocketmqConstants.EMPTY_BODY, body) && body.length > 0 ? BytesCloudEventData.wrap(body) : null);
         this.contentType = contentType;

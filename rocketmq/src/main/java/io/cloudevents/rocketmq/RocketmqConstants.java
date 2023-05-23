@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.rocketmq.impl;
+package io.cloudevents.rocketmq;
 
 import io.cloudevents.core.message.impl.MessageUtils;
 import java.util.Map;
@@ -23,20 +23,20 @@ import java.util.Map;
 /**
  * Constants and methods used throughout the RocketMQ binding for cloud events.
  */
-public final class RocketmqConstants {
+final class RocketmqConstants {
     private RocketmqConstants() {
         // prevent instantiation
     }
 
-    public static final byte[] EMPTY_BODY = new byte[] {(byte) '\0'};
+    static final byte[] EMPTY_BODY = new byte[] {(byte) '\0'};
 
     /**
      * The prefix name for CloudEvent attributes for use in properties of a RocketMQ message.
      */
-    public static final String CE_PREFIX = "CE_";
+    static final String CE_PREFIX = "CE_";
 
-    public static final Map<String, String> ATTRIBUTES_TO_PROPERTY_NAMES = MessageUtils.generateAttributesToHeadersMapping(CEA -> CE_PREFIX + CEA);
+    static final Map<String, String> ATTRIBUTES_TO_PROPERTY_NAMES = MessageUtils.generateAttributesToHeadersMapping(CEA -> CE_PREFIX + CEA);
 
-    public static final String PROPERTY_CONTENT_TYPE = "CE_contenttype";
-    public static final String MESSAGE_PROPERTY_SPEC_VERSION = ATTRIBUTES_TO_PROPERTY_NAMES.get("specversion");
+    static final String PROPERTY_CONTENT_TYPE = "CE_contenttype";
+    static final String MESSAGE_PROPERTY_SPEC_VERSION = ATTRIBUTES_TO_PROPERTY_NAMES.get("specversion");
 }
