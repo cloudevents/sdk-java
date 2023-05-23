@@ -81,6 +81,7 @@
         <module>spring</module>
         <module>sql</module>
         <module>bom</module>
+        <module>rocketmq</module>
     </modules>
 
     <properties>
