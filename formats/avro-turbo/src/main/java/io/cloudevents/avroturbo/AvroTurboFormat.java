@@ -34,9 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An implementation of {@link EventFormat} for <a href="github.com/cloudevents/spec/blob/v1.0.1/avro-format">the Avro format</a>.
+ * An implementation of {@link EventFormat} for the Avro Turbo format.
  * This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #AVRO_TURBO_CONTENT_TYPE}.
- * It only supports data that is bytes.
  */
 public class AvroTurboFormat implements EventFormat {
 
