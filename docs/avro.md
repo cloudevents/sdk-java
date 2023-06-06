@@ -1,15 +1,13 @@
 ---
-title: CloudEvents Avro
+title: CloudEvents Avro Turbo
 nav_order: 4
 ---
 
-# CloudEvents Avro
+# CloudEvents Avro Turbo
 
-[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-avro.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-avro)
+[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-avro-turbo.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-avro-turbo)
 
-This module provides the Avro Buffer (avro) `EventFormat` implementation using the Java
-avro runtime and classes generated from the CloudEvents
-[avro spec](https://github.com/cloudevents/spec/blob/main/spec.avro).
+This module provides the Avro Turbo `EventFormat` implementation.
 
 # Setup
 For Maven based projects, use the following dependency:
@@ -17,14 +15,14 @@ For Maven based projects, use the following dependency:
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
-    <artifactId>cloudevents-avro</artifactId>
+    <artifactId>cloudevents-avro-turbo</artifactId>
     <version>x.y.z</version>
 </dependency>
 ```
 
 No further configuration is required is use the module.
 
-## Using the Avro Event Format
+## Using the Avro Turbo Event Format
 
 ### Event serialization
 
@@ -32,7 +30,7 @@ No further configuration is required is use the module.
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormatProvider;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.avro.avroFormat;
+import io.cloudevents.avro.avroturbo.AvroTurboFormat;
 
 CloudEvent event = CloudEventBuilder.v1()
     .withId("hello")
@@ -42,10 +40,10 @@ CloudEvent event = CloudEventBuilder.v1()
 
 byte[]serialized = EventFormatProvider
     .getInstance()
-    .resolveFormat(AvroFormat.CONTENT_TYPE)
+    .resolveFormat(AvroTurboFormat.CONTENT_TYPE)
     .serialize(event);
 ```
 
-The `EventFormatProvider` will automatically resolve the `avroFormat` using the
+The `EventFormatProvider` will automatically resolve the format using the
 `ServiceLoader` APIs.
 
