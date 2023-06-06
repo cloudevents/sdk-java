@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AvroTurboFormatTest {
 
-    private final EventFormat format = EventFormatProvider.getInstance().resolveFormat(AvroTurboFormat.AVRO_CONTENT_TYPE);
+    private final EventFormat format = EventFormatProvider.getInstance().resolveFormat(AvroTurboFormat.AVRO_TURBO_CONTENT_TYPE);
 
     // TODO - add test cases for
     // - null data

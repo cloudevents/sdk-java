@@ -35,12 +35,12 @@ import java.util.Map;
 
 /**
  * An implementation of {@link EventFormat} for <a href="github.com/cloudevents/spec/blob/v1.0.1/avro-format">the Avro format</a>.
- * This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #AVRO_CONTENT_TYPE}.
+ * This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #AVRO_TURBO_CONTENT_TYPE}.
  * It only supports data that is bytes.
  */
 public class AvroTurboFormat implements EventFormat {
 
-    public static final String AVRO_CONTENT_TYPE = "application/cloudevents+avroturbo";
+    public static final String AVRO_TURBO_CONTENT_TYPE = "application/cloudevents+avroturbo";
 
     @Override
     public byte[] serialize(CloudEvent from) throws EventSerializationException {
@@ -122,6 +122,6 @@ public class AvroTurboFormat implements EventFormat {
 
     @Override
     public String serializedContentType() {
-        return AVRO_CONTENT_TYPE;
+        return AVRO_TURBO_CONTENT_TYPE;
     }
 }
