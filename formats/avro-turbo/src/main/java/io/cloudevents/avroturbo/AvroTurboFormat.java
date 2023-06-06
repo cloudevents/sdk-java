@@ -25,7 +25,7 @@ import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.format.EventSerializationException;
 import io.cloudevents.rw.CloudEventDataMapper;
-import io.cloudevents.v1.avro.CloudEvent.Builder;
+import io.cloudevents.v1.avroturbo.CloudEvent.Builder;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -44,13 +44,13 @@ public class AvroTurboFormat implements EventFormat {
     @Override
     public byte[] serialize(CloudEvent from) throws EventSerializationException {
         try {
-            Builder to = io.cloudevents.v1.avro.CloudEvent.newBuilder();
+            Builder to = io.cloudevents.v1.avroturbo.CloudEvent.newBuilder();
 
             // extensions
-            Map<String, Object> attribute = new HashMap<>();
+            Map<String, Object> attributes = new HashMap<>();
             for (String name : from.getExtensionNames()) {
                 Object value = from.getExtension(name);
-                attribute.put(name, value instanceof byte[] ? ByteBuffer.wrap((byte[]) value) : value);
+                attributes.put(name, value instanceof byte[] ? ByteBuffer.wrap((byte[]) value) : value);
             }
 
             to.setSource(from.getSource().toString())
@@ -58,7 +58,7 @@ public class AvroTurboFormat implements EventFormat {
                     .setId(from.getId())
                     .setSubject(from.getSubject())
                     .setDatacontenttype(from.getDataContentType())
-                    .setAttribute(attribute);
+                    .setAttributes(attributes);
 
             if (from.getTime() != null)
                 to.setTime(from.getTime().toInstant());
@@ -77,7 +77,7 @@ public class AvroTurboFormat implements EventFormat {
     @Override
     public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper) throws EventDeserializationException {
         try {
-            io.cloudevents.v1.avro.CloudEvent from = io.cloudevents.v1.avro.CloudEvent.fromByteBuffer(ByteBuffer.wrap(bytes));
+            io.cloudevents.v1.avroturbo.CloudEvent from = io.cloudevents.v1.avroturbo.CloudEvent.fromByteBuffer(ByteBuffer.wrap(bytes));
             CloudEventBuilder to = CloudEventBuilder.v1()
                     .withSource(URI.create(from.getSource()))
                     .withType(from.getType())
@@ -91,7 +91,7 @@ public class AvroTurboFormat implements EventFormat {
                 to.withDataSchema(URI.create(from.getDataschema()));
 
             // extensions
-            for (Map.Entry<String, Object> entry : from.getAttribute().entrySet()) {
+            for (Map.Entry<String, Object> entry : from.getAttributes().entrySet()) {
                 String name = entry.getKey();
                 Object value = entry.getValue();
                 // Avro supports boolean, int, string, bytes
