@@ -99,6 +99,8 @@ public class AvroTurboFormat implements EventFormat {
                     to.withExtension(name, (boolean) value);
                 else if (value instanceof Integer)
                     to.withExtension(name, (int) value);
+                else if (value instanceof Long)
+                    to.withExtension(name, (long) value);
                 else if (value instanceof String)
                     to.withExtension(name, (String) value);
                 else if (value instanceof ByteBuffer)
