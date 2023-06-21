@@ -35,11 +35,6 @@ class AvroCompactFormatTest {
 
     private final EventFormat format = EventFormatProvider.getInstance().resolveFormat(AvroCompactFormat.AVRO_COMPACT_CONTENT_TYPE);
 
-    // TODO - add test cases for
-    // - null data
-    // - non-bytes data
-    // - extension that is bytes
-    // - invalid extension type
     @Test
     void format() {
         assertNotNull(format);
@@ -55,11 +50,12 @@ class AvroCompactFormatTest {
                 .withSubject("")
                 .withDataSchema(URI.create(""))
                 // extension
-                // support boolean, int, string, bytes
+                // support boolean, int, long, string, bytes
                 .withExtension("boolean", false)
                 .withExtension("int", 0)
+                .withExtension("long", 0L)
                 .withExtension("string", "")
-                // omitting bytes, because it is not supported be CloudEvent.equals
+                // omitting bytes, because it is not supported by CloudEvent.equals
                 .withData("", BytesCloudEventData.wrap(new byte[0]))
                 .build();
 
