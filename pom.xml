@@ -68,7 +68,7 @@
     <modules>
         <module>api</module>
         <module>core</module>
-        <module>formats/avro-turbo</module>
+        <module>formats/avro-compact</module>
         <module>formats/json-jackson</module>
         <module>formats/protobuf</module>
         <module>formats/xml</module>

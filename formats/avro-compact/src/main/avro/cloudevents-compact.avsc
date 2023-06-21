@@ -1,9 +1,9 @@
 {
-  "namespace": "io.cloudevents.v1.avroturbo",
+  "namespace": "io.cloudevents.v1.avro.compact",
   "type": "record",
   "name": "CloudEvent",
   "version": "1.0",
-  "doc": "Avro Turbo Event Format for CloudEvents",
+  "doc": "Avro Compact Event Format for CloudEvents",
   "fields": [
     {
       "name": "id",

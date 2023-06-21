@@ -14,10 +14,9 @@
  * limitations under the License.
  *
  */
-package io.cloudevents.avro;
+package io.cloudevents.avro.compact;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.avroturbo.AvroTurboFormat;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.format.EventFormat;
@@ -32,9 +31,9 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class AvroTurboFormatTest {
+class AvroCompactFormatTest {
 
-    private final EventFormat format = EventFormatProvider.getInstance().resolveFormat(AvroTurboFormat.AVRO_TURBO_CONTENT_TYPE);
+    private final EventFormat format = EventFormatProvider.getInstance().resolveFormat(AvroCompactFormat.AVRO_COMPACT_CONTENT_TYPE);
 
     // TODO - add test cases for
     // - null data
@@ -44,7 +43,7 @@ class AvroTurboFormatTest {
     @Test
     void format() {
         assertNotNull(format);
-        assertEquals(Collections.singleton("application/cloudevents+avroturbo"), format.deserializableContentTypes());
+        assertEquals(Collections.singleton("application/cloudevents+avrocompact"), format.deserializableContentTypes());
 
         CloudEvent event = CloudEventBuilder.v1()
                 // mandatory

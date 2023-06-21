@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.cloudevents.avroturbo;
+package io.cloudevents.avro.compact;
 
 
 import io.cloudevents.CloudEvent;
@@ -25,7 +25,7 @@ import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.format.EventSerializationException;
 import io.cloudevents.rw.CloudEventDataMapper;
-import io.cloudevents.v1.avroturbo.CloudEvent.Builder;
+import io.cloudevents.v1.avro.compact.CloudEvent.Builder;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -34,17 +34,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An implementation of {@link EventFormat} for the Avro Turbo format.
- * This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #AVRO_TURBO_CONTENT_TYPE}.
+ * An implementation of {@link EventFormat} for the Avro Compact format.
+ * This format is resolvable with {@link io.cloudevents.core.provider.EventFormatProvider} using the content type {@link #AVRO_COMPACT_CONTENT_TYPE}.
  */
-public class AvroTurboFormat implements EventFormat {
+public class AvroCompactFormat implements EventFormat {
 
-    public static final String AVRO_TURBO_CONTENT_TYPE = "application/cloudevents+avroturbo";
+    public static final String AVRO_COMPACT_CONTENT_TYPE = "application/cloudevents+avrocompact";
 
     @Override
     public byte[] serialize(CloudEvent from) throws EventSerializationException {
         try {
-            Builder to = io.cloudevents.v1.avroturbo.CloudEvent.newBuilder();
+            Builder to = io.cloudevents.v1.avro.compact.CloudEvent.newBuilder();
 
             // extensions
             Map<String, Object> attributes = new HashMap<>();
@@ -77,7 +77,7 @@ public class AvroTurboFormat implements EventFormat {
     @Override
     public CloudEvent deserialize(byte[] bytes, CloudEventDataMapper<? extends CloudEventData> mapper) throws EventDeserializationException {
         try {
-            io.cloudevents.v1.avroturbo.CloudEvent from = io.cloudevents.v1.avroturbo.CloudEvent.fromByteBuffer(ByteBuffer.wrap(bytes));
+            io.cloudevents.v1.avro.compact.CloudEvent from = io.cloudevents.v1.avro.compact.CloudEvent.fromByteBuffer(ByteBuffer.wrap(bytes));
             CloudEventBuilder to = CloudEventBuilder.v1()
                     .withSource(URI.create(from.getSource()))
                     .withType(from.getType())
@@ -123,6 +123,6 @@ public class AvroTurboFormat implements EventFormat {
 
     @Override
     public String serializedContentType() {
-        return AVRO_TURBO_CONTENT_TYPE;
+        return AVRO_COMPACT_CONTENT_TYPE;
     }
 }

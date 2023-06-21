@@ -27,13 +27,13 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>cloudevents-avro-turbo</artifactId>
-    <name>CloudEvents - Avro Turbo</name>
+    <artifactId>cloudevents-avro-compact</artifactId>
+    <name>CloudEvents - Avro Compact</name>
 
 
     <properties>
         <jackson.version>2.13.3</jackson.version>
-        <module-name>io.cloudevents.formats.avroturbo</module-name>
+        <module-name>io.cloudevents.formats.avro.compact</module-name>
     </properties>
 
     <build>
