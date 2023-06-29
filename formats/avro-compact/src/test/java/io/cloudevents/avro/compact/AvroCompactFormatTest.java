@@ -53,7 +53,7 @@ class AvroCompactFormatTest {
                 // support boolean, int, long, string, bytes
                 .withExtension("boolean", false)
                 .withExtension("int", 0)
-                .withExtension("long", 0L)
+                .withExtension("time", Instant.EPOCH.atOffset(ZoneOffset.UTC))
                 .withExtension("string", "")
                 // omitting bytes, because it is not supported by CloudEvent.equals
                 .withData("", BytesCloudEventData.wrap(new byte[0]))

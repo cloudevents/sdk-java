@@ -53,14 +53,16 @@
       "default": null
     },
     {
-      "name": "attributes",
+      "name": "extensions",
       "type": {
         "type": "map",
         "values": [
-          "null",
           "boolean",
           "int",
-          "long",
+          {
+            "type": "long",
+            "logicalType" : "timestamp-micros"
+          },
           "string",
           "bytes"
         ]

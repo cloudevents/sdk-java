@@ -29,6 +29,8 @@ import io.cloudevents.v1.avro.compact.CloudEvent.Builder;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,10 +49,14 @@ public class AvroCompactFormat implements EventFormat {
             Builder to = io.cloudevents.v1.avro.compact.CloudEvent.newBuilder();
 
             // extensions
-            Map<String, Object> attributes = new HashMap<>();
+            Map<String, Object> extensions = new HashMap<>();
             for (String name : from.getExtensionNames()) {
                 Object value = from.getExtension(name);
-                attributes.put(name, value instanceof byte[] ? ByteBuffer.wrap((byte[]) value) : value);
+                if (value instanceof byte[])
+                    value = ByteBuffer.wrap((byte[]) value);
+                else if (value instanceof OffsetDateTime)
+                    value = ((OffsetDateTime) value).toInstant();
+                extensions.put(name,  value);
             }
 
             to.setSource(from.getSource().toString())
@@ -58,7 +64,7 @@ public class AvroCompactFormat implements EventFormat {
                     .setId(from.getId())
                     .setSubject(from.getSubject())
                     .setDatacontenttype(from.getDataContentType())
-                    .setAttributes(attributes);
+                    .setExtensions(extensions);
 
             if (from.getTime() != null)
                 to.setTime(from.getTime().toInstant());
@@ -91,7 +97,7 @@ public class AvroCompactFormat implements EventFormat {
                 to.withDataSchema(URI.create(from.getDataschema()));
 
             // extensions
-            for (Map.Entry<String, Object> entry : from.getAttributes().entrySet()) {
+            for (Map.Entry<String, Object> entry : from.getExtensions().entrySet()) {
                 String name = entry.getKey();
                 Object value = entry.getValue();
                 // Avro supports boolean, int, string, bytes
@@ -99,8 +105,8 @@ public class AvroCompactFormat implements EventFormat {
                     to.withExtension(name, (boolean) value);
                 else if (value instanceof Integer)
                     to.withExtension(name, (int) value);
-                else if (value instanceof Long)
-                    to.withExtension(name, (long) value);
+                else if (value instanceof Instant)
+                    to.withExtension(name, ((Instant) value).atOffset(ZoneOffset.UTC));
                 else if (value instanceof String)
                     to.withExtension(name, (String) value);
                 else if (value instanceof ByteBuffer)
