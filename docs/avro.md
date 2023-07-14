@@ -38,7 +38,7 @@ CloudEvent event = CloudEventBuilder.v1()
     .withSource(URI.create("http://localhost"))
     .build();
 
-byte[]serialized = EventFormatProvider
+byte[] serialized = EventFormatProvider
     .getInstance()
     .resolveFormat(AvroCompactFormat.CONTENT_TYPE)
     .serialize(event);
