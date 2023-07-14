@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -66,6 +67,11 @@ class AvroCompactFormatTest {
         CloudEvent deserialized = format.deserialize(serialized);
 
         assertEquals(event, deserialized);
+
+        byte[] reserialized = format.serialize(deserialized);
+
+        assertArrayEquals(serialized, reserialized);
+        
 
     }
 }
