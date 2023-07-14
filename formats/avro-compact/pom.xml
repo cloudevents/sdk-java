@@ -32,7 +32,6 @@
 
 
     <properties>
-        <jackson.version>2.13.3</jackson.version>
         <module-name>io.cloudevents.formats.avro.compact</module-name>
     </properties>
 
