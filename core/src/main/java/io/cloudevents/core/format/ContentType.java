@@ -46,6 +46,10 @@ public enum ContentType {
      */
     PROTO("application/cloudevents+protobuf"),
     /**
+     * The content type for transports sending cloudevents in the compact Avro format.
+     */
+    AVRO_COMPACT("application/cloudevents+avrocompact"),
+    /**
      * The content type for transports sending cloudevents in XML format.
      */
     XML("application/cloudevents+xml");

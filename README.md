@@ -63,6 +63,7 @@ Javadocs are available on [javadoc.io](https://www.javadoc.io):
 
 -   [cloudevents-api](https://www.javadoc.io/doc/io.cloudevents/cloudevents-api)
 -   [cloudevents-core](https://www.javadoc.io/doc/io.cloudevents/cloudevents-core)
+-   [cloudevents-avro-compact](https://www.javadoc.io/doc/io.cloudevents/cloudevents-avro-compact)
 -   [cloudevents-json-jackson](https://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
 -   [cloudevents-protobuf](https://www.javadoc.io/doc/io.cloudevents/cloudevents-protobuf)
 -   [cloudevents-xml](https://www.javadoc.io/doc/io.cloudevents/cloudevents-xml)
