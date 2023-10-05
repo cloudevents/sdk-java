@@ -142,4 +142,48 @@ public class CloudEventBuilderTest {
         ).hasMessageContaining("Attribute 'type' cannot be null");
     }
 
+    @Test
+    void testClassNotFoundExceptionForValidator(){
+
+        System.setProperty("header.validator.class", "io.cloudevents.core.v1.CustomCloudEventValidatorTest");
+            assertThatCode(() -> CloudEventBuilder
+            .v1()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .withType("aaa")
+            .withExtension("astring", 10)
+            .build()
+        ).hasMessageContaining("Unable to load the header.validator.class passed as vm argument");
+    }
+
+    @Test
+    void testClassCastExceptionForValidator(){
+
+        System.setProperty("header.validator.class", "io.cloudevents.core.v1.CustomCloudEventValidator");
+        assertThatCode(() -> CloudEventBuilder
+            .v1()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .withType("aaa")
+            .withExtension("astring", 10)
+            .build()
+        ).hasMessageContaining("Passed class is not an instance of CloudEventValidator");
+    }
+
+    /**
+     * This test is to check for the mandatory extension 'namespace' as per Organization need
+     */
+    @Test
+    void testMissingNamespaceExtension(){
+
+        System.setProperty("header.validator.class", "io.cloudevents.core.v1.CustomCloudEventValidatorImpl");
+        assertThatCode(() -> CloudEventBuilder
+            .v1()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .withType("aaa")
+            .build()
+        ).hasMessageContaining("Extension 'namespace' cannot be null");
+    }
+
 }

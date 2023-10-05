@@ -21,6 +21,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.impl.BaseCloudEventBuilder;
+import io.cloudevents.core.validator.CloudEventValidator;
 import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
@@ -119,7 +120,31 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
             throw createMissingAttributeException(TYPE);
         }
 
-        return new CloudEventV1(id, source, type, datacontenttype, dataschema, subject, time, this.data, this.extensions);
+        CloudEvent cloudEvent = new CloudEventV1(id, source, type, datacontenttype, dataschema, subject, time, this.data, this.extensions);
+
+        String name = null;
+        try{
+            // check if the header.validator.class is set as a system property,
+            if ((name = System.getProperty("header.validator.class")) != null){
+                Class<?> dynamicClass  = Class.forName(name);
+                Object dynamicObject = dynamicClass.newInstance();
+
+                if (dynamicObject instanceof CloudEventValidator) {
+                    // pluggable implementation of validation implementation
+                    CloudEventValidator cloudEventValidator = (CloudEventValidator) dynamicObject;
+
+                    cloudEventValidator.validate(cloudEvent);
+                }
+                else {
+                    throw new IllegalArgumentException("Passed class is not an instance of CloudEventValidator");
+                }
+            }
+        }
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Unable to load the header.validator.class passed as vm argument = " + name + ". Please check the classpath", e);
+        }
+
+        return cloudEvent;
     }
 
     @Override
