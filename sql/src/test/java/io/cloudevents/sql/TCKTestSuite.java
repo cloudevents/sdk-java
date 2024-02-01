@@ -115,7 +115,8 @@ public class TCKTestSuite {
             "parse_errors",
             "spec_examples",
             "string_builtin_functions",
-            "sub_expression"
+            "sub_expression",
+            "subscriptions_api_recreations"
         ).map(fileName -> "/tck/" + fileName + ".yaml");
 
         return tckFiles
