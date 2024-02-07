@@ -123,7 +123,7 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
 
         CloudEvent cloudEvent = new CloudEventV1(id, source, type, datacontenttype, dataschema, subject, time, this.data, this.extensions);
 
-        CloudEventValidatorProvider validator = CloudEventValidatorProvider.getInstance();
+        final CloudEventValidatorProvider validator = CloudEventValidatorProvider.getInstance();
         validator.validate(cloudEvent);
 
         return cloudEvent;

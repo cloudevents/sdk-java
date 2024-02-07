@@ -142,4 +142,16 @@ public class CloudEventBuilderTest {
         ).hasMessageContaining("Attribute 'type' cannot be null");
     }
 
+    @Test
+    void testValidatorProvider(){
+        assertThatCode(() -> CloudEventBuilder
+            .v1()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .withType(TYPE)
+            .withExtension("namespace", "order")
+            .build()
+        ).hasMessageContaining("Expecting sales in namespace extension");
+    }
+
 }

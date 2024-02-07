@@ -28,18 +28,15 @@ import java.util.ServiceLoader;
  */
 public class CloudEventValidatorProvider {
 
-    private static CloudEventValidatorProvider cloudEventValidatorProvider;
+    private static final CloudEventValidatorProvider cloudEventValidatorProvider = new CloudEventValidatorProvider();
 
-    private ServiceLoader<CloudEventValidator> loader;
+    private final ServiceLoader<CloudEventValidator> loader;
 
     private CloudEventValidatorProvider(){
         loader = ServiceLoader.load(CloudEventValidator.class);
     }
 
-    public static synchronized CloudEventValidatorProvider getInstance(){
-        if(cloudEventValidatorProvider == null){
-            cloudEventValidatorProvider = new CloudEventValidatorProvider();
-        }
+    public static CloudEventValidatorProvider getInstance() {
         return cloudEventValidatorProvider;
     }
 
@@ -48,23 +45,8 @@ public class CloudEventValidatorProvider {
      * @param cloudEvent
      */
     public void validate(CloudEvent cloudEvent){
-        try{
-            //
-            Iterator<CloudEventValidator> validatorIterator = loader.iterator();
-            while (validatorIterator.hasNext()){
-                CloudEventValidator validator = validatorIterator.next();
-                validator.validate(cloudEvent);
-
-            }
-        } catch (ServiceConfigurationError serviceError) {
-
-            serviceError.printStackTrace();
+        for (final CloudEventValidator validator : loader) {
+            validator.validate(cloudEvent);
         }
-
     }
-
-
-
-
-
 }
