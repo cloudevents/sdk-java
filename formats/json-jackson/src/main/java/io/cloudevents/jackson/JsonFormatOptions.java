@@ -21,24 +21,27 @@ public final class JsonFormatOptions {
     private final boolean forceStringSerialization;
     private final boolean forceExtensionNameLowerCaseDeserialization;
     private final boolean forceIgnoreInvalidExtensionNameDeserialization;
+    private final boolean disableDataContentTypeDefaulting;
 
     /**
      * Create a new instance of this class options the serialization / deserialization.
      */
     public JsonFormatOptions() {
-        this(false, false, false, false);
+        this(false, false, false, false, false);
     }
 
     JsonFormatOptions(
         boolean forceDataBase64Serialization,
         boolean forceStringSerialization,
         boolean forceExtensionNameLowerCaseDeserialization,
-        boolean forceIgnoreInvalidExtensionNameDeserialization
+        boolean forceIgnoreInvalidExtensionNameDeserialization,
+        boolean disableDataContentTypeDefaulting
     ) {
         this.forceDataBase64Serialization = forceDataBase64Serialization;
         this.forceStringSerialization = forceStringSerialization;
         this.forceExtensionNameLowerCaseDeserialization = forceExtensionNameLowerCaseDeserialization;
         this.forceIgnoreInvalidExtensionNameDeserialization = forceIgnoreInvalidExtensionNameDeserialization;
+        this.disableDataContentTypeDefaulting = disableDataContentTypeDefaulting;
     }
 
     public static JsonFormatOptionsBuilder builder() {
@@ -61,11 +64,14 @@ public final class JsonFormatOptions {
         return this.forceIgnoreInvalidExtensionNameDeserialization;
     }
 
+    public boolean isDataContentTypeDefaultingDisabled() { return this.disableDataContentTypeDefaulting; }
+
     public static class JsonFormatOptionsBuilder {
         private boolean forceDataBase64Serialization = false;
         private boolean forceStringSerialization = false;
         private boolean forceExtensionNameLowerCaseDeserialization = false;
         private boolean forceIgnoreInvalidExtensionNameDeserialization = false;
+        private boolean disableDataContentTypeDefaulting = false;
 
         public JsonFormatOptionsBuilder forceDataBase64Serialization(boolean forceDataBase64Serialization) {
             this.forceDataBase64Serialization = forceDataBase64Serialization;
@@ -87,12 +93,18 @@ public final class JsonFormatOptions {
             return this;
         }
 
+        public JsonFormatOptionsBuilder disableDataContentTypeDefaulting(boolean disableDataContentTypeDefaulting) {
+            this.disableDataContentTypeDefaulting = disableDataContentTypeDefaulting;
+            return this;
+        }
+
         public JsonFormatOptions build() {
             return new JsonFormatOptions(
                 this.forceDataBase64Serialization,
                 this.forceStringSerialization,
                 this.forceExtensionNameLowerCaseDeserialization,
-                this.forceIgnoreInvalidExtensionNameDeserialization
+                this.forceIgnoreInvalidExtensionNameDeserialization,
+                this.disableDataContentTypeDefaulting
             );
         }
     }

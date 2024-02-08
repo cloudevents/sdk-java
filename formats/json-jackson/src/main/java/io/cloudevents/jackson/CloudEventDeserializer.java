@@ -42,18 +42,21 @@ import java.io.IOException;
 class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
     private final boolean forceExtensionNameLowerCaseDeserialization;
     private final boolean forceIgnoreInvalidExtensionNameDeserialization;
+    private final boolean disableDataContentTypeDefaulting;
 
     protected CloudEventDeserializer() {
-        this(false, false);
+        this(false, false, false);
     }
 
     protected CloudEventDeserializer(
         boolean forceExtensionNameLowerCaseDeserialization,
-        boolean forceIgnoreInvalidExtensionNameDeserialization
+        boolean forceIgnoreInvalidExtensionNameDeserialization,
+        boolean disableDataContentTypeDefaulting
     ) {
         super(CloudEvent.class);
         this.forceExtensionNameLowerCaseDeserialization = forceExtensionNameLowerCaseDeserialization;
         this.forceIgnoreInvalidExtensionNameDeserialization = forceIgnoreInvalidExtensionNameDeserialization;
+        this.disableDataContentTypeDefaulting = disableDataContentTypeDefaulting;
     }
 
     private static class JsonMessage implements CloudEventReader {
@@ -62,17 +65,20 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         private final ObjectNode node;
         private final boolean forceExtensionNameLowerCaseDeserialization;
         private final boolean forceIgnoreInvalidExtensionNameDeserialization;
+        private final boolean disableDataContentTypeDefaulting;
 
         public JsonMessage(
             JsonParser p,
             ObjectNode node,
             boolean forceExtensionNameLowerCaseDeserialization,
-            boolean forceIgnoreInvalidExtensionNameDeserialization
+            boolean forceIgnoreInvalidExtensionNameDeserialization,
+            boolean disableDataContentTypeDefaulting
         ) {
             this.p = p;
             this.node = node;
             this.forceExtensionNameLowerCaseDeserialization = forceExtensionNameLowerCaseDeserialization;
             this.forceIgnoreInvalidExtensionNameDeserialization = forceIgnoreInvalidExtensionNameDeserialization;
+            this.disableDataContentTypeDefaulting = disableDataContentTypeDefaulting;
         }
 
         @Override
@@ -92,6 +98,9 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
 
                 // Parse datacontenttype if any
                 String contentType = getOptionalStringNode(this.node, this.p, "datacontenttype");
+                if (!this.disableDataContentTypeDefaulting && contentType == null && this.node.has("data")) {
+                    contentType = "application/json";
+                }
                 if (contentType != null) {
                     writer.withContextAttribute("datacontenttype", contentType);
                 }
@@ -257,7 +266,7 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
         ObjectNode node = ctxt.readValue(p, ObjectNode.class);
 
         try {
-            return new JsonMessage(p, node, this.forceExtensionNameLowerCaseDeserialization, this.forceIgnoreInvalidExtensionNameDeserialization)
+            return new JsonMessage(p, node, this.forceExtensionNameLowerCaseDeserialization, this.forceIgnoreInvalidExtensionNameDeserialization, this.disableDataContentTypeDefaulting)
                 .read(CloudEventBuilder::fromSpecVersion);
         } catch (RuntimeException e) {
             // Yeah this is bad but it's needed to support checked exceptions...
