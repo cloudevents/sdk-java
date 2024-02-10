@@ -32,7 +32,7 @@
 
     <properties>
         <module-name>io.cloudevents.spring</module-name>
-        <spring-boot.version>2.4.3</spring-boot.version>
+        <spring-boot.version>3.1.8</spring-boot.version>
     </properties>
 
     <dependencyManagement>
