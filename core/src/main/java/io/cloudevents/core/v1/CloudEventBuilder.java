@@ -21,6 +21,8 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.CloudEventUtils;
 import io.cloudevents.core.impl.BaseCloudEventBuilder;
+import io.cloudevents.core.provider.CloudEventValidatorProvider;
+import io.cloudevents.core.validator.CloudEventValidator;
 import io.cloudevents.rw.CloudEventContextReader;
 import io.cloudevents.rw.CloudEventContextWriter;
 import io.cloudevents.rw.CloudEventRWException;
@@ -119,7 +121,12 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
             throw createMissingAttributeException(TYPE);
         }
 
-        return new CloudEventV1(id, source, type, datacontenttype, dataschema, subject, time, this.data, this.extensions);
+        CloudEvent cloudEvent = new CloudEventV1(id, source, type, datacontenttype, dataschema, subject, time, this.data, this.extensions);
+
+        final CloudEventValidatorProvider validator = CloudEventValidatorProvider.getInstance();
+        validator.validate(cloudEvent);
+
+        return cloudEvent;
     }
 
     @Override
