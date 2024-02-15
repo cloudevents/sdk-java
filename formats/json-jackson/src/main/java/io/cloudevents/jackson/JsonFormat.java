@@ -213,7 +213,7 @@ public final class JsonFormat implements EventFormat {
         ceModule.addSerializer(CloudEvent.class, new CloudEventSerializer(
             options.isForceDataBase64Serialization(), options.isForceStringSerialization()));
         ceModule.addDeserializer(CloudEvent.class, new CloudEventDeserializer(
-            options.isForceExtensionNameLowerCaseDeserialization(), options.isForceIgnoreInvalidExtensionNameDeserialization()));
+            options.isForceExtensionNameLowerCaseDeserialization(), options.isForceIgnoreInvalidExtensionNameDeserialization(), options.isDataContentTypeDefaultingDisabled()));
         return ceModule;
     }
 
