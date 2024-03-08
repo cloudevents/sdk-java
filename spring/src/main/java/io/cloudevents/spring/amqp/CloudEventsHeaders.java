@@ -16,16 +16,40 @@
 
 package io.cloudevents.spring.amqp;
 
+/**
+ * Constants used throughout the Spring AMQP binding for cloud events.
+ */
 public class CloudEventsHeaders {
 
     /**
      * CloudEvent attributes MUST be prefixed with either "cloudEvents_" or "cloudEvents:" for use in the application-properties section.
+     *
      * @see <a href="https://github.com/cloudevents/spec/blob/main/cloudevents/bindings/amqp-protocol-binding.md#3131-amqp-application-property-names">
      * AMQP Protocol Binding for CloudEvents</a>
-     * */
+     */
     public static final String CE_PREFIX = "cloudEvents_";
-
+    /**
+     * CloudEvents AMQP consumers SHOULD understand the "cloudEvents" prefix with both the '_' and the ':' separators as permitted within the constraints of the client model.
+     *
+     * @see <a href="https://github.com/cloudevents/spec/blob/main/cloudevents/bindings/amqp-protocol-binding.md#3131-amqp-application-property-names">
+     * AMQP Protocol Binding for CloudEvents</a>
+     */
+    public static final String ALT_CE_PREFIX = "cloudEvents:";
+    /**
+     * The spec version header name.
+     */
     public static final String SPEC_VERSION = CE_PREFIX + "specversion";
-
+    /**
+     * The alternative spec version header name.
+     */
+    public static final String ALT_SPEC_VERSION = ALT_CE_PREFIX + "specversion";
+    /**
+     * The data content-type header name.
+     */
     public static final String CONTENT_TYPE = CE_PREFIX + "datacontenttype";
+
+    /**
+     * The alternative data content-type header name.
+     */
+    public static final String ALT_CONTENT_TYPE = ALT_CE_PREFIX + "datacontenttype";
 }

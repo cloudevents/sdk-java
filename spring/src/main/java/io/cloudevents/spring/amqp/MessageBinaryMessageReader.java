@@ -49,7 +49,8 @@ class MessageBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<Stri
 
     @Override
     protected boolean isCloudEventsHeader(String key) {
-        return key != null && key.length() > CE_PREFIX.length() && StringUtils.startsWithIgnoreCase(key, CE_PREFIX);
+        return key != null && key.length() > CE_PREFIX.length() && (StringUtils.startsWithIgnoreCase(key, CE_PREFIX)
+            || StringUtils.startsWithIgnoreCase(key, ALT_CE_PREFIX));
     }
 
     @Override

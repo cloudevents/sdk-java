@@ -29,7 +29,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 
 /**
  * A {@link MessageConverter} that can translate to and from a {@link Message} and a {@link CloudEvent}.
- * The {@link CloudEventContext} is canonicalized, with key names given a {@code ce-} prefix in the
+ * The {@link CloudEventContext} is canonicalized, with key names given a {@code cloudEvents_} prefix in the
  * {@link MessageProperties}.
  *
  * @author Lars Michele
@@ -62,6 +62,9 @@ public class CloudEventMessageConverter implements MessageConverter {
 
     private String version(MessageProperties properties) {
         Object header = properties.getHeader(CloudEventsHeaders.SPEC_VERSION);
+        if (header == null) {
+            header = properties.getHeader(CloudEventsHeaders.ALT_SPEC_VERSION);
+        }
         return header == null ? null : header.toString();
     }
 
@@ -77,6 +80,9 @@ public class CloudEventMessageConverter implements MessageConverter {
         String contentType = properties.getContentType();
         if (contentType == null) {
             Object header = properties.getHeader(CloudEventsHeaders.CONTENT_TYPE);
+            if (header == null) {
+                header = properties.getHeader(CloudEventsHeaders.ALT_CONTENT_TYPE);
+            }
             return header == null ? null : header.toString();
         }
         return contentType;
