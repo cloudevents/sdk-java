@@ -14,7 +14,7 @@ RESTful Web Services Binding for Jakarta EE 9+:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-http-restful-ws-jakarta</artifactId>
-    <version>2.5.0-SNAPSHOT</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
