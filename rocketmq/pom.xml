@@ -23,7 +23,7 @@
     <parent>
         <artifactId>cloudevents-parent</artifactId>
         <groupId>io.cloudevents</groupId>
-        <version>3.0.0</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>cloudevents-rocketmq</artifactId>
