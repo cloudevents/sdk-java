@@ -33,7 +33,7 @@
 
     <properties>
         <module-name>io.cloudevents.formats.xml</module-name>
-        <xmlunit.version>2.9.0</xmlunit.version>
+        <xmlunit.version>2.10.0</xmlunit.version>
         <javax.xml.version>2.3.1</javax.xml.version>
     </properties>
 
