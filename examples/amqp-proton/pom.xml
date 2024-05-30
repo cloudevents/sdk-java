@@ -10,7 +10,8 @@
   <artifactId>cloudevents-amqp-proton-example</artifactId>
 
 	<properties>
-       <vertx.version>4.0.0.Beta1</vertx.version>
+      <module-name>cloudevents.example.amqp.proton</module-name>
+      <vertx.version>4.0.0.Beta1</vertx.version>
 	</properties>
   <dependencies>
   	 <dependency>

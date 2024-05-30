@@ -13,6 +13,7 @@
     <properties>
         <openliberty.maven.version>3.5.1</openliberty.maven.version>
         <app.name>cloudevents-microprofile</app.name>
+        <module-name>cloudevents.example.restful.ws.microprofile.liberty</module-name>
 
         <!-- Liberty server properties -->
         <final.name>cloudeventsServer</final.name>
