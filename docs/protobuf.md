@@ -18,7 +18,7 @@ For Maven based projects, use the following dependency:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-protobuf</artifactId>
-    <version>x.y.z</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
