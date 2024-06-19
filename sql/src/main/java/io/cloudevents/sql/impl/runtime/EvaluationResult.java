@@ -38,14 +38,14 @@ public class EvaluationResult implements Result {
         this.latestException = null;
     }
 
-    public EvaluationResult wrap(EvaluationResult other) {
+    public EvaluationResult wrapExceptions(EvaluationResult other) {
         if (other != null && other.exceptions != null) {
-            return this.wrap(other.exceptions);
+            return this.wrapExceptions(other.exceptions);
         }
         return this;
     }
 
-    public EvaluationResult wrap(List<EvaluationException> exceptions) {
+    public EvaluationResult wrapExceptions(List<EvaluationException> exceptions) {
         if (!exceptions.isEmpty()) {
             this.exceptions.addAll(exceptions);
         }

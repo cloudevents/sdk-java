@@ -4,7 +4,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.ExceptionFactory;
 import io.cloudevents.sql.Type;
-import io.cloudevents.sql.impl.ExceptionFactoryImpl;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
@@ -23,7 +22,7 @@ public abstract class BaseIntegerBinaryExpression extends BaseBinaryExpression {
         EvaluationResult right = this.getRightOperand().evaluate(runtime, event, exceptionFactory);
 
         if (left.isMissingAttributeException() || right.isMissingAttributeException()) {
-            return left.wrap(right).copyWithDefaultValueForType(Type.INTEGER);
+            return left.wrapExceptions(right).copyWithDefaultValueForType(Type.INTEGER);
         }
 
         EvaluationResult x = castToInteger(exceptionFactory, left);
@@ -34,7 +33,7 @@ public abstract class BaseIntegerBinaryExpression extends BaseBinaryExpression {
             (Integer)x.value(),
             (Integer)y.value(),
             exceptionFactory
-        ).wrap(x).wrap(y);
+        ).wrapExceptions(x).wrapExceptions(y);
     }
 
 }

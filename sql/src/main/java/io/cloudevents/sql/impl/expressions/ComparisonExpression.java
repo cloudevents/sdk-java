@@ -42,7 +42,7 @@ public class ComparisonExpression extends BaseBinaryExpression {
         EvaluationResult right = this.getRightOperand().evaluate(runtime, event, exceptionFactory);
 
         if (left.isMissingAttributeException() || right.isMissingAttributeException()) {
-            return left.wrap(right).copyWithDefaultValueForType(Type.BOOLEAN);
+            return left.wrapExceptions(right).copyWithDefaultValueForType(Type.BOOLEAN);
         }
 
         left = TypeCastingProvider.cast(

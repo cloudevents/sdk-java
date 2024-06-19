@@ -3,8 +3,6 @@ package io.cloudevents.sql.impl.expressions;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.ExceptionFactory;
-import io.cloudevents.sql.Type;
-import io.cloudevents.sql.impl.ExceptionFactoryImpl;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
@@ -25,6 +23,6 @@ public class XorExpression extends BaseBinaryExpression {
         return new EvaluationResult(Boolean.logicalXor(
             (Boolean)x.value(),
             (Boolean)y.value()
-        )).wrap(x).wrap(y);
+        )).wrapExceptions(x).wrapExceptions(y);
     }
 }

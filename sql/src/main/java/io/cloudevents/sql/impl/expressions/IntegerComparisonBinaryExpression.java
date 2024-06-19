@@ -4,7 +4,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.ExceptionFactory;
 import io.cloudevents.sql.Type;
-import io.cloudevents.sql.impl.ExceptionFactoryImpl;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
@@ -43,7 +42,7 @@ public class IntegerComparisonBinaryExpression extends BaseBinaryExpression {
         EvaluationResult right = this.getRightOperand().evaluate(runtime, event, exceptionFactory);
 
         if (left.isMissingAttributeException() || right.isMissingAttributeException()) {
-            return left.wrap(right).copyWithDefaultValueForType(Type.BOOLEAN);
+            return left.wrapExceptions(right).copyWithDefaultValueForType(Type.BOOLEAN);
         }
 
         EvaluationResult x = castToInteger(exceptionFactory, left);
@@ -52,7 +51,7 @@ public class IntegerComparisonBinaryExpression extends BaseBinaryExpression {
         return new EvaluationResult(this.operation.evaluate(
             (Integer)x.value(),
             (Integer)y.value()
-        )).wrap(x).wrap(y);
+        )).wrapExceptions(x).wrapExceptions(y);
     }
 
 }

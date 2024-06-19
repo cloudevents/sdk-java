@@ -40,7 +40,7 @@ public class InExpression extends BaseExpression {
             if (Objects.equals(leftValue.value(), rightValue.value())) {
                 return new EvaluationResult(true, null, leftValue, rightValue);
             } else {
-                leftValue.wrap(rightValue);
+                leftValue.wrapExceptions(rightValue);
             }
         }
         return leftValue.copyWithValue(false);

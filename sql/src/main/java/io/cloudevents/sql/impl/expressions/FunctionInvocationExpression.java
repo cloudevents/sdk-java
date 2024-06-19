@@ -52,7 +52,7 @@ public class FunctionInvocationExpression extends BaseExpression {
             runtime,
             event,
             computedArguments
-        ).wrap(exceptions);
+        ).wrapExceptions(exceptions);
     }
 
     @Override
