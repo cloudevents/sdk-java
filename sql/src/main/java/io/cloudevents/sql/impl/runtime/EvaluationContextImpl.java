@@ -2,19 +2,20 @@ package io.cloudevents.sql.impl.runtime;
 
 import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationException;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
+import io.cloudevents.sql.impl.ExceptionFactoryImpl;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class EvaluationContextImpl implements EvaluationContext {
 
     private final Interval expressionInterval;
     private final String expressionText;
-    private final ExceptionThrower exceptionThrower;
+    private final ExceptionFactory exceptionFactory;
 
-    public EvaluationContextImpl(Interval expressionInterval, String expressionText, ExceptionThrower exceptionThrower) {
+    public EvaluationContextImpl(Interval expressionInterval, String expressionText, ExceptionFactory exceptionFactory) {
         this.expressionInterval = expressionInterval;
         this.expressionText = expressionText;
-        this.exceptionThrower = exceptionThrower;
+        this.exceptionFactory = exceptionFactory;
     }
 
     @Override
@@ -28,12 +29,7 @@ public class EvaluationContextImpl implements EvaluationContext {
     }
 
     @Override
-    public void appendException(EvaluationException exception) {
-        this.exceptionThrower.throwException(exception);
-    }
-
-    @Override
-    public void appendException(EvaluationException.EvaluationExceptionFactory exceptionFactory) {
-        this.exceptionThrower.throwException(exceptionFactory.create(expressionInterval(), expressionText()));
+    public ExceptionFactory exceptionFactory() {
+        return this.exceptionFactory;
     }
 }

@@ -5,7 +5,7 @@ import io.cloudevents.sql.*;
 public class EvaluationRuntimeImpl implements EvaluationRuntime {
 
     private static class SingletonContainer {
-        private final static EvaluationRuntimeImpl INSTANCE = new EvaluationRuntimeImpl(new TypeCastingProvider(), FunctionTable.getDefaultInstance());
+        private final static EvaluationRuntimeImpl INSTANCE = new EvaluationRuntimeImpl(FunctionTable.getDefaultInstance());
     }
 
     /**
@@ -15,27 +15,10 @@ public class EvaluationRuntimeImpl implements EvaluationRuntime {
         return EvaluationRuntimeImpl.SingletonContainer.INSTANCE;
     }
 
-    private final TypeCastingProvider typeCastingProvider;
     private final FunctionTable functionTable;
 
-    public EvaluationRuntimeImpl(TypeCastingProvider typeCastingProvider, FunctionTable functionTable) {
-        this.typeCastingProvider = typeCastingProvider;
+    public EvaluationRuntimeImpl(FunctionTable functionTable) {
         this.functionTable = functionTable;
-    }
-
-    @Override
-    public boolean canCast(Object value, Type target) {
-        return this.typeCastingProvider.canCast(value, target);
-    }
-
-    @Override
-    public Object cast(EvaluationContext ctx, Object value, Type target) {
-        return this.typeCastingProvider.cast(ctx, value, target);
-    }
-
-    @Override
-    public Object cast(Object value, Type target) throws EvaluationException {
-        return this.typeCastingProvider.cast(FailFastExceptionThrower.getInstance(), value, target);
     }
 
     @Override

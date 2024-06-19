@@ -18,7 +18,6 @@ public class EvaluationRuntimeBuilder {
 
     public EvaluationRuntime build() {
         return new EvaluationRuntimeImpl(
-            new TypeCastingProvider(),
             functionTable
         );
     }
