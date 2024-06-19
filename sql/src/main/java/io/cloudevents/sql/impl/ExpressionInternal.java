@@ -2,6 +2,8 @@ package io.cloudevents.sql.impl;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.ExceptionFactory;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 public interface ExpressionInternal {
@@ -10,7 +12,7 @@ public interface ExpressionInternal {
 
     String expressionText();
 
-    Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower);
+    EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory);
 
     <T> T visit(ExpressionInternalVisitor<T> visitor);
 
