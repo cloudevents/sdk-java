@@ -11,11 +11,26 @@ import io.cloudevents.sql.impl.runtime.TypeCastingProvider;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 public class ComparisonExpression extends BaseBinaryExpression {
+    public enum Comparison {
+        EQUALS(Objects::equals),
+        NOT_EQUALS((x, y) -> !Objects.equals(x, y));
+        private final BiFunction<Object, Object, Boolean> fn;
+        Comparison(BiFunction<Object, Object, Boolean> fn) {
+            this.fn = fn;
+        }
+        boolean evaluate(Object a, Object b) {
+            return this.fn.apply(a, b);
+        }
+    }
 
-    public ComparisonExpression(Interval expressionInterval, String expressionText, ExpressionInternal leftOperand, ExpressionInternal rightOperand) {
+    private final Comparison comparison;
+
+    public ComparisonExpression(Interval expressionInterval, String expressionText, ExpressionInternal leftOperand, ExpressionInternal rightOperand, Comparison comparison) {
         super(expressionInterval, expressionText, leftOperand, rightOperand);
+        this.comparison = comparison;
     }
 
     // x = y: Boolean x Boolean -> Boolean
@@ -36,6 +51,6 @@ public class ComparisonExpression extends BaseBinaryExpression {
             Type.fromValue(right.value())
         );
 
-        return new EvaluationResult(Objects.equals(left.value(), right.value()), null, left, right);
+        return new EvaluationResult(this.comparison.evaluate(left.value(), right.value()), null, left, right);
     }
 }

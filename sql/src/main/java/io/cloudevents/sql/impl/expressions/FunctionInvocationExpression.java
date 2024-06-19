@@ -1,14 +1,12 @@
 package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
-import io.cloudevents.sql.EvaluationContext;
-import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.Function;
-import io.cloudevents.sql.impl.ExceptionFactory;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.*;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
 import io.cloudevents.sql.impl.runtime.EvaluationContextImpl;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
+import io.cloudevents.sql.impl.runtime.TypeCastingProvider;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.ArrayList;
@@ -26,26 +24,27 @@ public class FunctionInvocationExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
-        EvaluationContext context = new EvaluationContextImpl(expressionInterval(), expressionText(), thrower);
+    public EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory) {
+        EvaluationContext context = new EvaluationContextImpl(expressionInterval(), expressionText(), exceptionFactory);
 
         Function function;
         try {
             function = runtime.resolveFunction(functionName, arguments.size());
         } catch (Exception e) {
-            thrower.throwException(
-                ExceptionFactory.cannotDispatchFunction(expressionInterval(), expressionText(), functionName, e)
-            );
-            return "";
+            return new EvaluationResult(false, exceptionFactory.cannotDispatchFunction(expressionInterval(), expressionText(), functionName, e));
         }
 
         List<Object> computedArguments = new ArrayList<>(arguments.size());
+        List<EvaluationException> exceptions =  new ArrayList<>(); // used to accumulate any exceptions encountered while evaluating the arguments to the function
         for (int i = 0; i < arguments.size(); i++) {
             ExpressionInternal expr = arguments.get(i);
-            Object computed = expr.evaluate(runtime, event, thrower);
-            Object casted = runtime
+            EvaluationResult computed = expr.evaluate(runtime, event, exceptionFactory);
+            EvaluationResult casted = TypeCastingProvider
                 .cast(context, computed, function.typeOfParameter(i));
-            computedArguments.add(casted);
+            if (casted.causes() != null) {
+                exceptions.addAll(casted.causes());
+            }
+            computedArguments.add(casted.value());
         }
 
         return function.invoke(
@@ -53,7 +52,7 @@ public class FunctionInvocationExpression extends BaseExpression {
             runtime,
             event,
             computedArguments
-        );
+        ).wrap(exceptions);
     }
 
     @Override

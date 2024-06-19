@@ -1,10 +1,11 @@
 package io.cloudevents.sql.impl.expressions;
 
-import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.ExceptionFactory;
 import io.cloudevents.sql.Type;
-import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.runtime.EvaluationContextImpl;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
+import io.cloudevents.sql.impl.runtime.TypeCastingProvider;
 import org.antlr.v4.runtime.misc.Interval;
 
 public abstract class BaseExpression implements ExpressionInternal {
@@ -27,25 +28,25 @@ public abstract class BaseExpression implements ExpressionInternal {
         return this.expressionText;
     }
 
-    public Boolean castToBoolean(EvaluationRuntime runtime, ExceptionThrower exceptions, Object value) {
-        return (Boolean) runtime.cast(
-            new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
+    public EvaluationResult castToBoolean(ExceptionFactory exceptionFactory, EvaluationResult value) {
+        return TypeCastingProvider.cast(
+            new EvaluationContextImpl(expressionInterval(), expressionText(), exceptionFactory),
             value,
             Type.BOOLEAN
         );
     }
 
-    public Integer castToInteger(EvaluationRuntime runtime, ExceptionThrower exceptions, Object value) {
-        return (Integer) runtime.cast(
-            new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
+    public EvaluationResult castToInteger(ExceptionFactory exceptionFactory, EvaluationResult value) {
+        return TypeCastingProvider.cast(
+            new EvaluationContextImpl(expressionInterval(), expressionText(), exceptionFactory),
             value,
             Type.INTEGER
         );
     }
 
-    public String castToString(EvaluationRuntime runtime, ExceptionThrower exceptions, Object value) {
-        return (String) runtime.cast(
-            new EvaluationContextImpl(expressionInterval(), expressionText(), exceptions),
+    public EvaluationResult castToString(ExceptionFactory exceptionFactory, EvaluationResult value) {
+        return TypeCastingProvider.cast(
+            new EvaluationContextImpl(expressionInterval(), expressionText(), exceptionFactory),
             value,
             Type.STRING
         );

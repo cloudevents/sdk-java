@@ -2,9 +2,12 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
+import io.cloudevents.sql.Type;
+import io.cloudevents.sql.impl.ExceptionFactoryImpl;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 public abstract class BaseUnaryExpression extends BaseExpression {
@@ -16,11 +19,17 @@ public abstract class BaseUnaryExpression extends BaseExpression {
         this.internal = internal;
     }
 
-    public abstract Object evaluate(EvaluationRuntime runtime, Object value, ExceptionThrower exceptions);
+    public abstract EvaluationResult evaluate(EvaluationRuntime runtime, EvaluationResult result, ExceptionFactory exceptionFactory);
+
+    public abstract Type returnType();
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
-        return evaluate(runtime, internal.evaluate(runtime, event, thrower), thrower);
+    public EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory) {
+        EvaluationResult value = internal.evaluate(runtime, event, exceptionFactory);
+        if (value.isMissingAttributeException()) {
+            return value.copyWithDefaultValueForType(this.returnType());
+        }
+        return evaluate(runtime, value, exceptionFactory);
     }
 
     @Override

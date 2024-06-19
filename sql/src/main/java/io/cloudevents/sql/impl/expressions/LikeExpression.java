@@ -2,9 +2,11 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
+import io.cloudevents.sql.impl.ExceptionFactoryImpl;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.regex.Pattern;
@@ -22,14 +24,13 @@ public class LikeExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
-        String value = castToString(
-            runtime,
-            thrower,
-            internal.evaluate(runtime, event, thrower)
+    public EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory) {
+        EvaluationResult result = castToString(
+            exceptionFactory,
+            internal.evaluate(runtime, event, exceptionFactory)
         );
 
-        return pattern.matcher(value).matches();
+        return result.copyWithValue(pattern.matcher((String) result.value()).matches());
     }
 
     private Pattern convertLikePatternToRegex(String pattern) {

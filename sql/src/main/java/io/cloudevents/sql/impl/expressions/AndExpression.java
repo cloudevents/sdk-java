@@ -1,8 +1,11 @@
 package io.cloudevents.sql.impl.expressions;
 
+import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
+import io.cloudevents.sql.Type;
 import io.cloudevents.sql.impl.ExpressionInternal;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class AndExpression extends BaseBinaryExpression {
@@ -12,12 +15,15 @@ public class AndExpression extends BaseBinaryExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions) {
-        boolean x = castToBoolean(runtime, exceptions, left);
-        if (!x) {
+    public EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory) {
+        EvaluationResult left = this.getLeftOperand().evaluate(runtime, event, exceptionFactory);
+        EvaluationResult x = castToBoolean(exceptionFactory, left);
+        if (!(Boolean)x.value()) {
             // Short circuit
-            return false;
+            return x;
         }
-        return castToBoolean(runtime, exceptions, right);
+
+        EvaluationResult right = this.getRightOperand().evaluate(runtime, event, exceptionFactory);
+        return castToBoolean(exceptionFactory, right).wrap(left);
     }
 }

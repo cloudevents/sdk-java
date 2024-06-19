@@ -2,8 +2,10 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
+import io.cloudevents.sql.impl.ExceptionFactoryImpl;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class ExistsExpression extends BaseExpression {
@@ -16,8 +18,8 @@ public class ExistsExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
-        return hasContextAttribute(event, key);
+    public EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory) {
+        return new EvaluationResult(hasContextAttribute(event, key));
     }
 
     @Override
