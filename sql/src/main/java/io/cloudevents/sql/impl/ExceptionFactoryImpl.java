@@ -1,20 +1,16 @@
 package io.cloudevents.sql.impl;
 
 import io.cloudevents.sql.EvaluationException;
-import io.cloudevents.sql.ParseException;
-import io.cloudevents.sql.Type;
-import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.Interval;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * This class includes a list of static methods to create {@link io.cloudevents.sql.ParseException} and {@link io.cloudevents.sql.EvaluationException}.
  */
 public class ExceptionFactoryImpl implements io.cloudevents.sql.ExceptionFactory {
-    private final boolean shouldFail;
+    private final boolean shouldThrow;
 
-    public ExceptionFactoryImpl(boolean shouldFail) {
-        this.shouldFail = shouldFail;
+    public ExceptionFactoryImpl(boolean shouldThrow) {
+        this.shouldThrow = shouldThrow;
     }
 
     public EvaluationException.EvaluationExceptionFactory invalidCastTarget(Class<?> from, Class<?> to) {
@@ -27,7 +23,7 @@ public class ExceptionFactoryImpl implements io.cloudevents.sql.ExceptionFactory
                 null
             );
 
-            if (this.shouldFail) {
+            if (this.shouldThrow) {
                 throw exception;
             }
             return exception;
@@ -44,7 +40,7 @@ public class ExceptionFactoryImpl implements io.cloudevents.sql.ExceptionFactory
                 cause
             );
 
-            if (this.shouldFail) {
+            if (this.shouldThrow) {
                 throw exception;
             }
             return exception;
@@ -60,7 +56,7 @@ public class ExceptionFactoryImpl implements io.cloudevents.sql.ExceptionFactory
             null
         );
 
-        if (this.shouldFail) {
+        if (this.shouldThrow) {
             throw exception;
         }
         return exception;
@@ -75,7 +71,7 @@ public class ExceptionFactoryImpl implements io.cloudevents.sql.ExceptionFactory
             cause
         );
 
-        if (this.shouldFail) {
+        if (this.shouldThrow) {
             throw exception;
         }
         return exception;
@@ -91,7 +87,7 @@ public class ExceptionFactoryImpl implements io.cloudevents.sql.ExceptionFactory
                 cause
             );
 
-            if (this.shouldFail) {
+            if (this.shouldThrow) {
                 throw exception;
             }
             return exception;
@@ -112,7 +108,7 @@ public class ExceptionFactoryImpl implements io.cloudevents.sql.ExceptionFactory
             null
         );
 
-        if (this.shouldFail) {
+        if (this.shouldThrow) {
             throw exception;
         }
         return exception;
