@@ -1,9 +1,9 @@
 package io.cloudevents.sql.impl.parser;
 
+import io.cloudevents.sql.ExceptionFactory;
 import io.cloudevents.sql.Type;
 import io.cloudevents.sql.generated.CESQLParserBaseVisitor;
 import io.cloudevents.sql.generated.CESQLParserParser;
-import io.cloudevents.sql.impl.ExceptionFactory;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.expressions.*;
 
@@ -121,11 +121,11 @@ public class ExpressionTranslatorVisitor extends CESQLParserBaseVisitor<Expressi
 
         if (ctx.EQUAL() != null) {
             // Equality operation is ambiguous, we have a specific implementation for it
-            return new EqualExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression);
+            return new ComparisonExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, ComparisonExpression.Comparison.EQUALS);
         }
         if (ctx.NOT_EQUAL() != null || ctx.LESS_GREATER() != null) {
             // Equality operation is ambiguous, we have a specific implementation for it
-            return new NotExpression(ctx.getSourceInterval(), ctx.getText(), new EqualExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression));
+            return new ComparisonExpression(ctx.getSourceInterval(), ctx.getText(), leftExpression, rightExpression, ComparisonExpression.Comparison.NOT_EQUALS);
         }
 
         // From this onward, just operators defined on integers
