@@ -18,6 +18,9 @@ public interface FunctionSignature {
      */
     Type typeOfParameter(int i) throws IllegalArgumentException;
 
+    /**
+     * @return function return type
+     */
     Type returnType();
 
     /**

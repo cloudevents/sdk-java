@@ -99,18 +99,7 @@ public class ExceptionFactoryImpl implements io.cloudevents.sql.ExceptionFactory
     }
 
     public EvaluationException divisionByZero(Interval interval, String expression, Integer dividend) {
-        final EvaluationException exception = new EvaluationException(
-            EvaluationException.ErrorKind.MATH,
-            interval,
-            expression,
-            "Division by zero: " + dividend + " / 0",
-            null
-        );
-
-        if (this.shouldFail) {
-            throw exception;
-        }
-        return exception;
+        return mathError(interval, expression, "Division by zero: " + dividend + " / 0");
     }
 
     @Override
