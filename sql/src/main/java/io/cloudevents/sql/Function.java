@@ -1,6 +1,7 @@
 package io.cloudevents.sql;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public interface Function extends FunctionSignature {
      * @param ctx               the evaluation context
      * @param evaluationRuntime the evaluation runtime
      * @param event             the expression input event
-     * @param arguments         the arguments passed to this function. Note: the arguments are already casted to the appropriate type declared in the signature
+     * @param arguments         the arguments passed to this function. Note: the arguments are already cast to the appropriate type declared in the signature
      * @return the return value of the function
      */
-    Object invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, List<Object> arguments);
+    EvaluationResult invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, List<Object> arguments);
 
 }
