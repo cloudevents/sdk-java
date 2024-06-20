@@ -124,8 +124,7 @@ public class TCKTestSuite {
                 try {
                     return mapper.readValue(this.getClass().getResource(fileName), TestSuiteModel.class);
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
+                    throw new RuntimeException(fileName, e);
                 }
             })
             .filter(Objects::nonNull)
