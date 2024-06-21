@@ -30,7 +30,9 @@
     <artifactId>cloudevents-http-restful-ws-integration-tests-common</artifactId>
     <name>CloudEvents - JAX-RS Integration Tests - Common</name>
     <packaging>jar</packaging>
-
+    <properties>
+        <module-name>io.cloudevents.jaxrs.integration.tests.common</module-name>
+    </properties>
 
     <dependencies>
         <dependency>

@@ -11,6 +11,10 @@
     <name>CloudEvents - JAX-RS Jakarta EE9+ Integration Tests - Common</name>
     <packaging>jar</packaging>
 
+	<properties>
+      <module-name>cloudevents.http.restful.ws.jakarta.integration.tests.common</module-name>
+	</properties>
+
     <dependencies>
         <dependency>
             <groupId>io.cloudevents</groupId>

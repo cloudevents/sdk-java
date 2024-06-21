@@ -12,6 +12,7 @@
     <artifactId>cloudevents-spring-reactive-example</artifactId>
 
     <properties>
+        <module-name>cloudevents.example.spring.reactive</module-name>
         <spring-boot.version>2.4.3</spring-boot.version>
     </properties>
 

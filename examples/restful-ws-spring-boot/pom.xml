@@ -12,6 +12,7 @@
     <artifactId>cloudevents-spring-boot-example</artifactId>
 
     <properties>
+        <module-name>cloudevents.example.spring.boot</module-name>
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
         <spring.version>5.2.9.RELEASE</spring.version>
     </properties>

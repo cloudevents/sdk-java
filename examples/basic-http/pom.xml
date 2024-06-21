@@ -26,6 +26,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-basic-http-example</artifactId>
+    <properties>
+        <module-name>cloudevents.example.basic.http</module-name>
+    </properties>
 
     <dependencies>
         <dependency>
