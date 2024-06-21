@@ -12,18 +12,18 @@ public class FunctionTable {
     private static class SingletonContainer {
         private final static FunctionTable INSTANCE = new FunctionTable(
             Stream.of(
-                new InfallibleOneArgumentFunction<>("ABS", Integer.class, Math::abs),
+                new AbsFunction(),
                 new IntFunction(),
                 new BoolFunction(),
                 new StringFunction(),
                 new IsBoolFunction(),
                 new IsIntFunction(),
-                new InfallibleOneArgumentFunction<>("LENGTH", String.class, String::length),
+                new InfallibleOneArgumentFunction<>("LENGTH", String.class, Integer.class, String::length),
                 new ConcatFunction(),
                 new ConcatWSFunction(),
-                new InfallibleOneArgumentFunction<>("LOWER", String.class, String::toLowerCase),
-                new InfallibleOneArgumentFunction<>("UPPER", String.class, String::toUpperCase),
-                new InfallibleOneArgumentFunction<>("TRIM", String.class, String::trim),
+                new InfallibleOneArgumentFunction<>("LOWER", String.class, String.class, String::toLowerCase),
+                new InfallibleOneArgumentFunction<>("UPPER", String.class, String.class, String::toUpperCase),
+                new InfallibleOneArgumentFunction<>("TRIM", String.class, String.class, String::trim),
                 new LeftFunction(),
                 new RightFunction(),
                 new SubstringFunction(),

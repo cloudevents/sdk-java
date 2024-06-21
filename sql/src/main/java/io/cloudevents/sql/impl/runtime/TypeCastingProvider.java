@@ -2,13 +2,12 @@ package io.cloudevents.sql.impl.runtime;
 
 import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.Type;
-import io.cloudevents.sql.impl.ExceptionFactory;
 
 import java.util.Objects;
 
 public class TypeCastingProvider {
 
-    boolean canCast(Object value, Type target) {
+    public static boolean canCast(Object value, Type target) {
         if (target.valueClass().equals(value.getClass())) {
             return true;
         }
@@ -22,7 +21,7 @@ public class TypeCastingProvider {
                         return false;
                     }
                 }
-                return false;
+                return value instanceof Boolean;
             case BOOLEAN:
                 if (value instanceof String) {
                     try {
@@ -31,58 +30,55 @@ public class TypeCastingProvider {
                     } catch (IllegalArgumentException e) {
                         return false;
                     }
-                }
-                return false;
+                } else return value instanceof Integer;
         }
         return true;
     }
 
-    Object cast(EvaluationContext ctx, Object value, Type target) {
-        Objects.requireNonNull(value);
-        if (target.valueClass().equals(value.getClass())) {
-            return value;
+    public static EvaluationResult cast(EvaluationContext ctx, EvaluationResult result, Type target) {
+        Objects.requireNonNull(result);
+        Objects.requireNonNull(result.value());
+        if (target.valueClass().equals(result.value().getClass())) {
+            return result;
         }
         switch (target) {
             case ANY:
-                return value;
+                return result;
             case STRING:
-                return Objects.toString(value);
+                return result.copyWithValue(Objects.toString(result.value()));
             case INTEGER:
-                if (value instanceof String) {
+                if (result.value() instanceof String) {
                     try {
-                        return Integer.parseInt((String) value);
+                        return result.copyWithValue(Integer.parseInt((String) result.value()));
                     } catch (NumberFormatException e) {
-                        ctx.appendException(
-                            ExceptionFactory.castError(String.class, Integer.class, e)
-                        );
+                        return new EvaluationResult(0, ctx.exceptionFactory().castError(String.class, Integer.class, e).create(ctx.expressionInterval(), ctx.expressionText()));
                     }
+                } else if (result.value() instanceof Boolean) {
+                    if ((Boolean) result.value()) {
+                        return result.copyWithValue(1);
+                    }
+                    return result.copyWithValue(0);
                 } else {
-                    ctx.appendException(
-                        ExceptionFactory.invalidCastTarget(value.getClass(), target.valueClass())
-                    );
+                    return new EvaluationResult(0, ctx.exceptionFactory().invalidCastTarget(result.getClass(), target.valueClass()).create(ctx.expressionInterval(), ctx.expressionText()));
                 }
-                return 0;
             case BOOLEAN:
-                if (value instanceof String) {
+                if (result.value() instanceof String) {
                     try {
-                        return parseBool((String) value);
+                        return result.copyWithValue(parseBool((String) result.value()));
                     } catch (IllegalArgumentException e) {
-                        ctx.appendException(
-                            ExceptionFactory.castError(String.class, Boolean.class, e)
-                        );
+                        return new EvaluationResult(false, ctx.exceptionFactory().castError(String.class, Boolean.class, e).create(ctx.expressionInterval(), ctx.expressionText()));
                     }
+                } else if (result.value() instanceof Integer) {
+                    return result.copyWithValue(((Integer) result.value()) != 0);
                 } else {
-                    ctx.appendException(
-                        ExceptionFactory.invalidCastTarget(value.getClass(), target.valueClass())
-                    );
+                    return new EvaluationResult(false, ctx.exceptionFactory().invalidCastTarget(result.getClass(), target.getClass()).create(ctx.expressionInterval(), ctx.expressionText()));
                 }
-                return false;
         }
         // This should never happen
         throw new IllegalArgumentException("target type doesn't correspond to a known type");
     }
 
-    private boolean parseBool(String val) {
+    private static boolean parseBool(String val) {
         switch (val.toLowerCase()) {
             case "true":
                 return true;

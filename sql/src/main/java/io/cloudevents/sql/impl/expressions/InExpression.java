@@ -2,11 +2,13 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
+import io.cloudevents.sql.ExceptionFactory;
 import io.cloudevents.sql.Type;
-import io.cloudevents.sql.impl.ExceptionThrower;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
 import io.cloudevents.sql.impl.runtime.EvaluationContextImpl;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
+import io.cloudevents.sql.impl.runtime.TypeCastingProvider;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.List;
@@ -26,18 +28,22 @@ public class InExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
-        Object leftValue = leftExpression.evaluate(runtime, event, thrower);
-        return setExpressions.stream()
-            .anyMatch(expr -> {
-                Object rightValue = runtime.cast(
-                    new EvaluationContextImpl(expressionInterval(), expressionText(), thrower),
-                    expr.evaluate(runtime, event, thrower),
-                    Type.fromValue(leftValue)
-                );
+    public EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory) {
+        EvaluationResult leftValue = leftExpression.evaluate(runtime, event, exceptionFactory);
+        for (ExpressionInternal setExpression : this.setExpressions) {
+            EvaluationResult rightValue = TypeCastingProvider.cast(
+                    new EvaluationContextImpl(expressionInterval(), expressionText(), exceptionFactory),
+                    setExpression.evaluate(runtime, event, exceptionFactory),
+                    Type.fromValue(leftValue.value())
+            );
 
-                return Objects.equals(leftValue, rightValue);
-            });
+            if (Objects.equals(leftValue.value(), rightValue.value())) {
+                return new EvaluationResult(true, null, leftValue, rightValue);
+            } else {
+                leftValue.wrapExceptions(rightValue);
+            }
+        }
+        return leftValue.copyWithValue(false);
     }
 
     @Override

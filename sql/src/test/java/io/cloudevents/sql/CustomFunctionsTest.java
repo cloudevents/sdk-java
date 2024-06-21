@@ -5,6 +5,7 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.sql.impl.functions.BaseFunction;
 import io.cloudevents.sql.impl.functions.InfallibleOneArgumentFunction;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import io.cloudevents.sql.impl.runtime.EvaluationRuntimeBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,7 @@ public class CustomFunctionsTest {
             .addFunction(new InfallibleOneArgumentFunction<>(
                 "MY_STRING_PREDICATE",
                 String.class,
+                Boolean.class,
                 s -> s.length() % 2 == 0
             ))
             .build();
@@ -37,12 +39,12 @@ public class CustomFunctionsTest {
             Parser.parseDefault("MY_STRING_PREDICATE('abc', 'xyz')")
                 .evaluate(runtime, Data.V1_MIN)
         )
-            .hasFailure(EvaluationException.ErrorKind.FUNCTION_DISPATCH);
+            .hasFailure(EvaluationException.ErrorKind.MISSING_FUNCTION);
         assertThat(
             Parser.parseDefault("MY_STRING_PR('abc', 'xyz')")
                 .evaluate(runtime, Data.V1_MIN)
         )
-            .hasFailure(EvaluationException.ErrorKind.FUNCTION_DISPATCH);
+            .hasFailure(EvaluationException.ErrorKind.MISSING_FUNCTION);
     }
 
     @Test
@@ -55,7 +57,7 @@ public class CustomFunctionsTest {
             Parser.parseDefault("MY_STRING_FN('abc')")
                 .evaluate(runtime, Data.V1_MIN)
         )
-            .hasFailure(EvaluationException.ErrorKind.FUNCTION_DISPATCH);
+            .hasFailure(EvaluationException.ErrorKind.MISSING_FUNCTION);
         assertThat(
             Parser.parseDefault("MY_STRING_FN('abc', 'b')")
                 .evaluate(runtime, Data.V1_MIN)
@@ -85,6 +87,7 @@ public class CustomFunctionsTest {
             .addFunction(new InfallibleOneArgumentFunction<>(
                 "MY_STRING_FN",
                 String.class,
+                Boolean.class,
                 s -> s.length() % 2 == 0
             ))
             .addFunction(new VariadicMockFunction("MY_STRING_FN", 2, Type.STRING))
@@ -126,6 +129,7 @@ public class CustomFunctionsTest {
             .addFunction(new InfallibleOneArgumentFunction<>(
                 "MY_STRING_FN",
                 String.class,
+                Boolean.class,
                 s -> s.length() % 2 == 0
             ));
 
@@ -153,6 +157,7 @@ public class CustomFunctionsTest {
             .addFunction(new InfallibleOneArgumentFunction<>(
                 "MY_STRING_FN",
                 String.class,
+                Boolean.class,
                 s -> s.length() % 2 == 0
             ));
 
@@ -160,6 +165,7 @@ public class CustomFunctionsTest {
             new InfallibleOneArgumentFunction<>(
                 "MY_STRING_FN",
                 String.class,
+                Boolean.class,
                 s -> s.length() % 2 == 0
             )
         )).isInstanceOf(IllegalArgumentException.class);
@@ -167,6 +173,7 @@ public class CustomFunctionsTest {
             new InfallibleOneArgumentFunction<>(
                 "MY_STRING_FN",
                 Integer.class,
+                Boolean.class,
                 s -> s % 2 == 0
             )
         )).isInstanceOf(IllegalArgumentException.class);
@@ -178,6 +185,7 @@ public class CustomFunctionsTest {
             .addFunction(new InfallibleOneArgumentFunction<>(
                 "MY_STRING_PREDICATE",
                 String.class,
+                Boolean.class,
                 s -> s.length() % 2 == 0
             ))
             .build();
@@ -211,8 +219,8 @@ public class CustomFunctionsTest {
         }
 
         @Override
-        public Object invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, List<Object> arguments) {
-            return arguments.size();
+        public EvaluationResult invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, List<Object> arguments) {
+            return new EvaluationResult(arguments.size());
         }
 
         @Override
@@ -228,6 +236,11 @@ public class CustomFunctionsTest {
         @Override
         public boolean isVariadic() {
             return true;
+        }
+
+        @Override
+        public Type returnType() {
+            return Type.INTEGER;
         }
     }
 

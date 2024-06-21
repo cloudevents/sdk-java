@@ -3,24 +3,21 @@ package io.cloudevents.sql.impl.functions;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionFactory;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 
-public class RightFunction extends BaseTwoArgumentFunction<String, Integer> {
+public class RightFunction extends BaseTwoArgumentFunction<String, Integer, String> {
     public RightFunction() {
-        super("RIGHT", String.class, Integer.class);
+        super("RIGHT", String.class, Integer.class, String.class);
     }
 
     @Override
-    Object invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, String s, Integer length) {
+    EvaluationResult invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, String s, Integer length) {
         if (length > s.length()) {
-            return s;
+            return new EvaluationResult(s);
         }
         if (length < 0) {
-            ctx.appendException(
-                ExceptionFactory.functionExecutionError(name(), new IllegalArgumentException("The length of the RIGHT substring is lower than 0: " + length))
-            );
-            return s;
+            return new EvaluationResult(s, ctx.exceptionFactory().functionExecutionError(name(), new IllegalArgumentException("The length of the RIGHT substring is lower than 0: " + length)).create(ctx.expressionInterval(), ctx.expressionText()));
         }
-        return s.substring(s.length() - length);
+        return new EvaluationResult(s.substring(s.length() - length));
     }
 }

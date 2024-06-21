@@ -3,23 +3,19 @@ package io.cloudevents.sql.impl.functions;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionFactory;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 
-public class SubstringWithLengthFunction extends BaseThreeArgumentFunction<String, Integer, Integer> {
+public class SubstringWithLengthFunction extends BaseThreeArgumentFunction<String, Integer, Integer, String> {
     public SubstringWithLengthFunction() {
-        super("SUBSTRING", String.class, Integer.class, Integer.class);
+        super("SUBSTRING", String.class, Integer.class, Integer.class, String.class);
     }
 
     @Override
-    Object invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, String x, Integer pos, Integer len) {
+    EvaluationResult invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, String x, Integer pos, Integer len) {
         try {
-            return substring(x, pos, len);
+            return new EvaluationResult(substring(x, pos, len));
         } catch (Exception e) {
-            ctx.appendException(ExceptionFactory.functionExecutionError(
-                name(),
-                e
-            ));
-            return "";
+            return new EvaluationResult("", ctx.exceptionFactory().functionExecutionError(name(), e).create(ctx.expressionInterval(), ctx.expressionText()));
         }
     }
 

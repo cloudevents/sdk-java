@@ -1,8 +1,10 @@
 package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
+import io.cloudevents.sql.Type;
 import io.cloudevents.sql.impl.ExpressionInternal;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class NotExpression extends BaseUnaryExpression {
@@ -12,7 +14,13 @@ public class NotExpression extends BaseUnaryExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, Object value, ExceptionThrower exceptions) {
-        return !castToBoolean(runtime, exceptions, value);
+    public Type returnType() {
+        return Type.BOOLEAN;
+    }
+
+    @Override
+    public EvaluationResult evaluate(EvaluationRuntime runtime, EvaluationResult value, ExceptionFactory exceptions) {
+        EvaluationResult x = castToBoolean(exceptions, value);
+        return x.copyWithValue(!(Boolean)x.value());
     }
 }

@@ -1,9 +1,9 @@
 package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionFactory;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
 import io.cloudevents.sql.impl.ExpressionInternal;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class DivisionExpression extends BaseIntegerBinaryExpression {
@@ -13,14 +13,11 @@ public class DivisionExpression extends BaseIntegerBinaryExpression {
     }
 
     @Override
-    Object evaluate(EvaluationRuntime runtime, int left, int right, ExceptionThrower exceptions) {
+    EvaluationResult evaluate(EvaluationRuntime runtime, int left, int right, ExceptionFactory exceptionFactory) {
         if (right == 0) {
-            exceptions.throwException(
-                ExceptionFactory.divisionByZero(expressionInterval(), expressionText(), left)
-            );
-            return 0;
+            return new EvaluationResult(0, exceptionFactory.divisionByZero(expressionInterval(), expressionText(), left));
         }
-        return left / right;
+        return new EvaluationResult(left / right);
     }
 
 }

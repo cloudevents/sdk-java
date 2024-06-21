@@ -2,9 +2,11 @@ package io.cloudevents.sql.impl.expressions;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
+import io.cloudevents.sql.impl.ExceptionFactoryImpl;
 import io.cloudevents.sql.impl.ExpressionInternal;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 public abstract class BaseBinaryExpression extends BaseExpression {
@@ -18,14 +20,7 @@ public abstract class BaseBinaryExpression extends BaseExpression {
         this.rightOperand = rightOperand;
     }
 
-    public abstract Object evaluate(EvaluationRuntime runtime, Object left, Object right, ExceptionThrower exceptions);
-
-    @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
-        Object left = leftOperand.evaluate(runtime, event, thrower);
-        Object right = rightOperand.evaluate(runtime, event, thrower);
-        return evaluate(runtime, left, right, thrower);
-    }
+    public abstract EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory);
 
     @Override
     public <T> T visit(ExpressionInternalVisitor<T> visitor) {

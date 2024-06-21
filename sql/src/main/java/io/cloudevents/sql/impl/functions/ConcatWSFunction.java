@@ -4,6 +4,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Type;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,11 +16,11 @@ public class ConcatWSFunction extends BaseFunction {
     }
 
     @Override
-    public Object invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, List<Object> arguments) {
-        return arguments.stream()
+    public EvaluationResult invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, List<Object> arguments) {
+        return new EvaluationResult(arguments.stream()
             .skip(1)
             .map(o -> (String) o)
-            .collect(Collectors.joining((String) arguments.get(0)));
+            .collect(Collectors.joining((String) arguments.get(0))));
     }
 
     @Override
@@ -35,5 +36,10 @@ public class ConcatWSFunction extends BaseFunction {
     @Override
     public boolean isVariadic() {
         return true;
+    }
+
+    @Override
+    public Type returnType() {
+        return Type.STRING;
     }
 }

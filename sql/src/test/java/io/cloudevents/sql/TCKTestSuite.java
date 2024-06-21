@@ -78,15 +78,15 @@ public class TCKTestSuite {
         public EvaluationException.ErrorKind getEvaluationExceptionErrorKind() {
             switch (this.error) {
                 case CAST:
-                    return EvaluationException.ErrorKind.INVALID_CAST;
+                    return EvaluationException.ErrorKind.CAST;
                 case MATH:
                     return EvaluationException.ErrorKind.MATH;
                 case MISSING_FUNCTION:
-                    return EvaluationException.ErrorKind.FUNCTION_DISPATCH;
+                    return EvaluationException.ErrorKind.MISSING_FUNCTION;
                 case MISSING_ATTRIBUTE:
                     return EvaluationException.ErrorKind.MISSING_ATTRIBUTE;
                 case FUNCTION_EVALUATION:
-                    return EvaluationException.ErrorKind.FUNCTION_EXECUTION;
+                    return EvaluationException.ErrorKind.FUNCTION_EVALUATION;
             }
             return null;
         }
@@ -124,8 +124,7 @@ public class TCKTestSuite {
                 try {
                     return mapper.readValue(this.getClass().getResource(fileName), TestSuiteModel.class);
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
+                    throw new RuntimeException(fileName, e);
                 }
             })
             .filter(Objects::nonNull)

@@ -3,9 +3,9 @@ package io.cloudevents.sql.impl.expressions;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.sql.EvaluationRuntime;
-import io.cloudevents.sql.impl.ExceptionFactory;
-import io.cloudevents.sql.impl.ExceptionThrower;
+import io.cloudevents.sql.ExceptionFactory;
 import io.cloudevents.sql.impl.ExpressionInternalVisitor;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.Base64;
@@ -24,18 +24,15 @@ public class AccessAttributeExpression extends BaseExpression {
     }
 
     @Override
-    public Object evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionThrower thrower) {
+    public EvaluationResult evaluate(EvaluationRuntime runtime, CloudEvent event, ExceptionFactory exceptionFactory) {
         Object value = this.getter.apply(event);
         if (value == null) {
-            thrower.throwException(
-                ExceptionFactory.missingAttribute(this.expressionInterval(), this.expressionText(), key)
-            );
-            return "";
+            return new EvaluationResult(false, exceptionFactory.missingAttribute(this.expressionInterval(), this.expressionText(), key));
         }
 
         // Because the CESQL type system is smaller than the CE type system,
         // we need to coherce some values to string
-        return coherceTypes(value);
+        return new EvaluationResult(coherceTypes(value));
     }
 
     @Override

@@ -20,7 +20,7 @@ public class EvaluationException extends RuntimeException {
         /**
          * An implicit or an explicit casting failed.
          */
-        INVALID_CAST,
+        CAST,
         /**
          * An event attribute was addressed, but missing.
          */
@@ -28,15 +28,19 @@ public class EvaluationException extends RuntimeException {
         /**
          * Error happened while dispatching a function invocation. Reasons may be invalid function name or invalid arguments number.
          */
-        FUNCTION_DISPATCH,
+        MISSING_FUNCTION,
         /**
          * Error happened while executing a function. This usually contains a non null cause.
          */
-        FUNCTION_EXECUTION,
+        FUNCTION_EVALUATION,
         /**
          * Error happened while executing a math operation. Reason may be a division by zero.
          */
-        MATH
+        MATH,
+        /**
+         * Any error that does not fall into the other error kinds
+         */
+        GENERIC,
     }
 
     private final ErrorKind errorKind;

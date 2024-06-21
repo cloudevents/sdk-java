@@ -4,15 +4,17 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.sql.EvaluationContext;
 import io.cloudevents.sql.EvaluationRuntime;
 import io.cloudevents.sql.Type;
+import io.cloudevents.sql.impl.runtime.EvaluationResult;
+import io.cloudevents.sql.impl.runtime.TypeCastingProvider;
 
-public class IntFunction extends BaseOneArgumentFunction<String> {
+public class IntFunction extends BaseOneArgumentFunction<Object, Integer> {
 
     public IntFunction() {
-        super("INT", String.class);
+        super("INT", Object.class, Integer.class);
     }
 
     @Override
-    public Object invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, String argument) {
-        return evaluationRuntime.cast(ctx, argument, Type.INTEGER);
+    public EvaluationResult invoke(EvaluationContext ctx, EvaluationRuntime evaluationRuntime, CloudEvent event, Object argument) {
+        return TypeCastingProvider.cast(ctx, new EvaluationResult(argument), Type.INTEGER);
     }
 }

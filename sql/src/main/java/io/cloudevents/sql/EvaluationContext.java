@@ -18,19 +18,5 @@ public interface EvaluationContext {
      */
     String expressionText();
 
-    /**
-     * Append a new exception to the evaluation context.
-     * This exception will be propagated back in the evaluation result.
-     *
-     * @param exception exception to append
-     */
-    void appendException(EvaluationException exception);
-
-    /**
-     * Append a new exception to the evaluation context.
-     * This exception will be propagated back in the evaluation result.
-     *
-     * @param exceptionFactory exception factory, which will automatically include expression interval and text
-     */
-    void appendException(EvaluationException.EvaluationExceptionFactory exceptionFactory);
+    ExceptionFactory exceptionFactory();
 }

@@ -17,6 +17,7 @@ tests:
       myext: "customext"
   - name: Prefix filter on missing string extension
     expression: "myext LIKE 'custom%'"
+    result: false
     error: missingAttribute
 
   - name: Suffix filter (1)
@@ -36,6 +37,7 @@ tests:
       myext: "customext"
   - name: Suffix filter on missing string extension
     expression: "myext LIKE '%ext'"
+    result: false
     error: missingAttribute
 
   - name: Exact filter (1)
@@ -55,6 +57,7 @@ tests:
       myext: "customext"
   - name: Exact filter on missing string extension
     expression: "myext = 'customext'"
+    result: false
     error: missingAttribute
 
   - name: Prefix filter AND Suffix filter (1)
@@ -77,9 +80,10 @@ tests:
       type: "com.github.error"
   - name: Prefix AND Suffix filter (4)
     expression: "type LIKE 'example.%' AND myext LIKE 'custom%'"
-    error: missingAttribute
+    result: false
     eventOverrides:
       type: "example.event.type"
+    error: missingAttribute
 
   - name: Prefix OR Suffix filter (1)
     expression: "id LIKE 'my%' OR source LIKE '%.ca'"
@@ -107,20 +111,20 @@ tests:
       source: "http://www.some-website.com"
 
   - name: Disjunctive Normal Form (1)
-    expresion: "(id = 'myId' AND type LIKE '%.success') OR (id = 'notmyId' AND source LIKE 'http://%' AND type LIKE '%.warning')"
+    expression: "(id = 'myId' AND type LIKE '%.success') OR (id = 'notmyId' AND source LIKE 'http://%' AND type LIKE '%.warning')"
     result: true
     eventOverrides:
       id: "myId"
       type: "example.event.success"
   - name: Disjunctive Normal Form (2)
-    expresion: "(id = 'myId' AND type LIKE '%.success') OR (id = 'notmyId' AND source LIKE 'http://%' AND type LIKE '%.warning')"
+    expression: "(id = 'myId' AND type LIKE '%.success') OR (id = 'notmyId' AND source LIKE 'http://%' AND type LIKE '%.warning')"
     result: true
     eventOverrides:
       id: "notmyId"
       type: "example.event.warning"
       source: "http://localhost.localdomain"
   - name: Disjunctive Normal Form (3)
-    expresion: "(id = 'myId' AND type LIKE '%.success') OR (id = 'notmyId' AND source LIKE 'http://%' AND type LIKE '%.warning')"
+    expression: "(id = 'myId' AND type LIKE '%.success') OR (id = 'notmyId' AND source LIKE 'http://%' AND type LIKE '%.warning')"
     result: false 
     eventOverrides:
       id: "notmyId"
@@ -150,18 +154,19 @@ tests:
       source: "http://localhost.localdomain"
   - name: Conjunctive Normal Form (4)
     expression: "(id = 'myId' OR type LIKE '%.success') AND (id = 'notmyId' OR source LIKE 'https://%' OR type LIKE '%.warning')"
-    result: true
+    result: false
     eventOverrides:
       id: "myId" 
       type: "example.event.success"
       source: "http://localhost.localdomain"
   - name: Conjunctive Normal Form (5)
     expression: "(id = 'myId' OR type LIKE '%.success') AND (id = 'notmyId' OR source LIKE 'https://%' OR type LIKE '%.warning') AND (myext = 'customext')"
-    error: missingAttribute
+    result: false
     eventOverrides:
       id: "myId" 
-      type: "example.event.success"
+      type: "example.event.warning"
       source: "http://localhost.localdomain"
+    error: missingAttribute
 
 
 

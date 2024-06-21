@@ -19,6 +19,11 @@ public interface FunctionSignature {
     Type typeOfParameter(int i) throws IllegalArgumentException;
 
     /**
+     * @return function return type
+     */
+    Type returnType();
+
+    /**
      * @return the arity, excluding the vararg parameter if {@code isVariadic() == true}
      */
     int arity();
