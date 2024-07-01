@@ -5,6 +5,14 @@ on:
       version:
         description: 'Version to bump (without prepending "v")'
         required: true
+      maven-modules:
+        description: "Whether to bump versions in pom.xml files"
+        type: choice
+        required: true
+        default: 'true'
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   bump:
@@ -19,6 +27,7 @@ jobs:
         with:
           java-version: 8
       - name: Bump version using Maven
+        if: ${{ inputs.maven-modules == 'true' }}
         run: './mvnw versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -B'
       - name: Bump version in docs
         if: ${{ !endsWith(github.event.inputs.version, 'SNAPSHOT') }}
