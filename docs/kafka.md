@@ -17,7 +17,7 @@ For Maven based projects, use the following to configure the
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-kafka</artifactId>
-    <version>3.0.0</version>
+    <version>4.0.0</version>
 </dependency>
 ```
 
