@@ -19,8 +19,8 @@ package io.cloudevents.core.provider;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.validator.CloudEventValidator;
 
-import java.util.Iterator;
-import java.util.ServiceConfigurationError;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ServiceLoader;
 
 /**
@@ -30,10 +30,14 @@ public class CloudEventValidatorProvider {
 
     private static final CloudEventValidatorProvider cloudEventValidatorProvider = new CloudEventValidatorProvider();
 
-    private final ServiceLoader<CloudEventValidator> loader;
+    private final Collection<CloudEventValidator> validators;
 
-    private CloudEventValidatorProvider(){
-        loader = ServiceLoader.load(CloudEventValidator.class);
+    private CloudEventValidatorProvider() {
+        final ServiceLoader<CloudEventValidator> loader = ServiceLoader.load(CloudEventValidator.class);
+        this.validators = new ArrayList<>(2);
+        for (CloudEventValidator cloudEventValidator : loader) {
+            validators.add(cloudEventValidator);
+        }
     }
 
     public static CloudEventValidatorProvider getInstance() {
@@ -42,10 +46,11 @@ public class CloudEventValidatorProvider {
 
     /**
      * iterates through available Cloudevent validators.
-     * @param cloudEvent
+     *
+     * @param cloudEvent event to validate.
      */
-    public void validate(CloudEvent cloudEvent){
-        for (final CloudEventValidator validator : loader) {
+    public void validate(CloudEvent cloudEvent) {
+        for (final CloudEventValidator validator : validators) {
             validator.validate(cloudEvent);
         }
     }
