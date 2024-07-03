@@ -33,7 +33,7 @@
 
     <properties>
         <module-name>io.cloudevents.jaxrs.integration.tests.resteasy</module-name>
-        <vertx.version>3.9.2</vertx.version>
+        <vertx.version>4.5.8</vertx.version>
         <resteasy.version>4.5.6.Final</resteasy.version>
     </properties>
 
