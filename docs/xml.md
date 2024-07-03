@@ -18,7 +18,7 @@ For Maven based projects, use the following dependency:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-xml</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
 </dependency>
 ```
 
