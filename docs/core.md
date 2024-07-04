@@ -87,7 +87,7 @@ with Jackson, add `cloudevents-json-jackson` as a dependency and then using the
 `EventFormatProvider`:
 
 ```java
-import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.jackson.JsonFormat;
 
 EventFormat format = EventFormatProvider

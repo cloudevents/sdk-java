@@ -28,7 +28,7 @@ No further configuration is required is use the module.
 
 ```java
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.avro.avro.compact.AvroCompactFormat;
 

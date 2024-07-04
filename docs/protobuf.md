@@ -31,7 +31,7 @@ No further configuration is required is use the module.
 ```java
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.ContentType;
-import io.cloudevents.core.format.EventFormatProvider;
+import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.core.builder.CloudEventBuilder;
 
 CloudEvent event = CloudEventBuilder.v1()
