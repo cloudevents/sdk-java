@@ -83,7 +83,7 @@
             </dependency>
             <dependency>
                 <groupId>io.cloudevents</groupId>
-                <artifactId>io.cloudevents.sql</artifactId>
+                <artifactId>cloudevents-sql</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
