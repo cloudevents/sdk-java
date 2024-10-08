@@ -15,7 +15,7 @@
 
     <properties>
         <module-name>cloudevents.http.restful.ws.jakarta.integration.tests.resteasy</module-name>
-        <vertx.version>4.3.3</vertx.version>
+        <vertx.version>4.5.8</vertx.version>
         <resteasy.version>6.0.3.Final</resteasy.version>
     </properties>
 
