@@ -154,4 +154,27 @@ public class CloudEventBuilderTest {
         ).hasMessageContaining("Expecting sales in namespace extension");
     }
 
+    @Test
+    void testMissingSubject() {
+        CloudEvent actual = CloudEventBuilder
+            .v1()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .withType(TYPE)
+            .build();
+
+        assertThat(actual).isNotNull();
+    }
+
+    @Test
+    void testEmptySubject() {
+        assertThatCode(() -> CloudEventBuilder
+            .v1()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .withType(TYPE)
+            .withSubject("")
+            .build()
+        ).hasMessageContaining("Attribute 'subject' cannot be empty");
+    }
 }

@@ -124,6 +124,9 @@ public final class CloudEventBuilder extends BaseCloudEventBuilder<CloudEventBui
         if (type == null) {
             throw createMissingAttributeException("type");
         }
+        if (subject != null && subject.isEmpty()) {
+            throw createEmptyAttributeException(("subject"));
+        }
 
         CloudEventV03 cloudEvent = new CloudEventV03(id, source, type, time, schemaurl, datacontenttype, subject, this.data, this.extensions);
         final CloudEventValidatorProvider validator = CloudEventValidatorProvider.getInstance();
