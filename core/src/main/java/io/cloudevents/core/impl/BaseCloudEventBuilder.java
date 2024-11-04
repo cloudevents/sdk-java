@@ -219,6 +219,10 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
         return new IllegalStateException("Attribute '" + attributeName + "' cannot be null");
     }
 
+    protected static IllegalStateException createEmptyAttributeException(String attributeName) {
+        return new IllegalStateException("Attribute '" + attributeName + "' cannot be empty");
+    }
+
     /**
      * Validates the extension name as defined in  CloudEvents spec.
      *

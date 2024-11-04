@@ -48,7 +48,7 @@ class AvroCompactFormatTest {
                 .withType("")
                 // optional
                 .withTime(Instant.EPOCH.atOffset(ZoneOffset.UTC))
-                .withSubject("")
+                .withSubject("subject")
                 .withDataSchema(URI.create(""))
                 // extension
                 // support boolean, int, long, string, bytes
@@ -71,7 +71,5 @@ class AvroCompactFormatTest {
         byte[] reserialized = format.serialize(deserialized);
 
         assertArrayEquals(serialized, reserialized);
-        
-
     }
 }

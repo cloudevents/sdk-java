@@ -158,4 +158,27 @@ public class CloudEventBuilderTest {
         ).hasMessageContaining("Attribute 'type' cannot be null");
     }
 
+    @Test
+    void testMissingSubject() {
+        CloudEvent actual = CloudEventBuilder
+            .v03()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .withType(TYPE)
+            .build();
+
+        assertThat(actual).isNotNull();
+    }
+
+    @Test
+    void testEmptySubject() {
+        assertThatCode(() -> CloudEventBuilder
+            .v03()
+            .withId("000")
+            .withSource(URI.create("http://localhost"))
+            .withType(TYPE)
+            .withSubject("")
+            .build()
+        ).hasMessageContaining("Attribute 'subject' cannot be empty");
+    }
 }
