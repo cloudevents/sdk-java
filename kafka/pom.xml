@@ -31,7 +31,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <kafka.version>3.0.0</kafka.version>
+        <kafka.version>3.7.1</kafka.version>
         <module-name>io.cloudevents.kafka</module-name>
     </properties>
 
