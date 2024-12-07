@@ -32,7 +32,7 @@
 
     <properties>
         <module-name>io.cloudevents.spring</module-name>
-        <spring-boot.version>2.4.3</spring-boot.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -61,6 +61,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
