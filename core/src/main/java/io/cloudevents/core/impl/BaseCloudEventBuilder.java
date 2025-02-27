@@ -224,7 +224,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     /**
-     * Validates the extension name as defined in  CloudEvents spec.
+     * Validates the extension name as defined in CloudEvents spec.
      *
      * @param name the extension name
      * @return true if extension name is valid, false otherwise
@@ -240,7 +240,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     private static boolean isValidChar(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
+        return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_';
     }
 
     protected void requireValidAttributeWrite(String name) {
