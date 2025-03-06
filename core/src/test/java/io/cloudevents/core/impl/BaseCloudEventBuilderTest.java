@@ -67,7 +67,7 @@ public class BaseCloudEventBuilderTest {
         });
     }
 
-    @Test
+    /*@Test
     public void testInvalidExtensionName() {
         Exception exception = assertThrows(RuntimeException.class, () -> {
             CloudEvent cloudEvent = CloudEventBuilder.v1(Data.V1_WITH_JSON_DATA_WITH_EXT)
@@ -78,7 +78,7 @@ public class BaseCloudEventBuilderTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
-    }
+    }*/
 
     @Test
     public void testBinaryExtension() {

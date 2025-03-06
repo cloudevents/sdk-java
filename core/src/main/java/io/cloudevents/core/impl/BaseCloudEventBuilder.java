@@ -240,7 +240,7 @@ public abstract class BaseCloudEventBuilder<SELF extends BaseCloudEventBuilder<S
     }
 
     private static boolean isValidChar(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_';
+        return ((c >= 'a' || c >= 'A') && (c <= 'z' || c <= 'Z')) || (c >= '0' && c <= '9') || c == '_';
     }
 
     protected void requireValidAttributeWrite(String name) {
