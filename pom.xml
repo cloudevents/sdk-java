@@ -72,6 +72,9 @@
         <module>formats/json-jackson</module>
         <module>formats/protobuf</module>
         <module>formats/xml</module>
+        <module>bindings/mqtt/core</module>
+        <module>bindings/mqtt/paho</module>
+        <module>bindings/mqtt/hivemq</module>
         <module>amqp</module>
         <module>http/basic</module>
         <module>http/vertx</module>
