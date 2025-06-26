@@ -11,7 +11,7 @@
 
 	<properties>
       <module-name>cloudevents.example.amqp.proton</module-name>
-      <vertx.version>4.0.0.Beta1</vertx.version>
+      <vertx.version>4.5.10</vertx.version>
 	</properties>
   <dependencies>
   	 <dependency>
