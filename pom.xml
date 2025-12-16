@@ -85,16 +85,17 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>25</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Maven plugins -->
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
-        <maven-editorconfig-plugin.version>0.1.0</maven-editorconfig-plugin.version>
+        <maven-editorconfig-plugin.version>0.2.0</maven-editorconfig-plugin.version>
 
         <!-- Dependencies -->
-        <assertj-core.version>3.16.1</assertj-core.version>
+        <assertj-core.version>3.27.6</assertj-core.version>
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
     </properties>
 

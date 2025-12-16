@@ -32,7 +32,7 @@
 
     <properties>
         <module-name>io.cloudevents.spring</module-name>
-        <spring-boot.version>2.4.3</spring-boot.version>
+        <spring-boot.version>4.0.0</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -105,6 +105,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

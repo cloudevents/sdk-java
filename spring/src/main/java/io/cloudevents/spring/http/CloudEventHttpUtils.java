@@ -27,6 +27,10 @@ import io.cloudevents.rw.CloudEventRWException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -52,7 +56,9 @@ public class CloudEventHttpUtils {
      * @throws CloudEventRWException if something goes wrong while resolving the {@link SpecVersion} or if the message has unknown encoding
      */
     public static MessageReader toReader(HttpHeaders headers, Supplier<byte[]> body) throws CloudEventRWException {
-        return HttpMessageFactory.createReaderFromMultimap(headers, body.get());
+        Map<String, List<String>> headersMap = new HashMap<>();
+        headers.forEach((key, values) -> headersMap.put(key, new ArrayList<>(values)));
+        return HttpMessageFactory.createReaderFromMultimap(headersMap, body.get()); // TODO - Take header iterator instead
     }
 
 	/**
