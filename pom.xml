@@ -75,8 +75,6 @@
         <module>amqp</module>
         <module>http/basic</module>
         <module>http/vertx</module>
-        <module>http/restful-ws</module>
-        <module>http/restful-ws-jakarta</module>
         <module>kafka</module>
         <module>spring</module>
         <module>sql</module>
@@ -96,7 +94,7 @@
 
         <!-- Dependencies -->
         <assertj-core.version>3.27.6</assertj-core.version>
-        <junit-jupiter.version>5.7.0</junit-jupiter.version>
+        <junit-jupiter.version>6.0.1</junit-jupiter.version>
     </properties>
 
     <distributionManagement>
@@ -172,7 +170,7 @@
                         <link>https://kafka.apache.org/30/javadoc/</link>
                         <link>https://fasterxml.github.io/jackson-databind/javadoc/2.10/</link>
                     </links>
-                    <source>8</source>
+                    <source>25</source>
                 </configuration>
                 <executions>
                     <execution>
@@ -213,8 +211,7 @@
             </activation>
             <modules>
                 <module>benchmarks</module>
-                <module>http/restful-ws-integration-tests</module>
-                <module>http/restful-ws-jakarta-integration-tests</module>
+                <module>http/integration-tests</module>
                 <module>examples</module>
             </modules>
         </profile>
