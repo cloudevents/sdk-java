@@ -8,11 +8,11 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.spring.http.CloudEventHttpUtils;
 import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
 import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
+import org.springframework.boot.http.codec.CodecCustomizer;
 import reactor.core.publisher.Mono;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

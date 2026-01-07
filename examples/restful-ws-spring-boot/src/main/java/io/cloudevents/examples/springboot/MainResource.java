@@ -27,7 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import static io.cloudevents.core.CloudEventUtils.mapData;
 
@@ -35,7 +35,7 @@ import static io.cloudevents.core.CloudEventUtils.mapData;
 public class MainResource {
     public static final String HAPPY_BIRTHDAY_EVENT_TYPE = "happybirthday.myapplication";
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
 
     @PostMapping("/happy_birthday")
     public ResponseEntity handleHappyBirthdayEvent(@RequestBody CloudEvent inputEvent) {
@@ -45,7 +45,7 @@ public class MainResource {
                 .body("Event type should be \"" + HAPPY_BIRTHDAY_EVENT_TYPE + "\" but is \"" + inputEvent.getType() + "\"");
         }
 
-        PojoCloudEventData<User> cloudEventData = mapData(inputEvent, PojoCloudEventDataMapper.from(objectMapper, User.class));
+        PojoCloudEventData<User> cloudEventData = mapData(inputEvent, PojoCloudEventDataMapper.from(jsonMapper, User.class));
 
         if (cloudEventData == null) {
             return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("Event should contain the user");
@@ -54,7 +54,7 @@ public class MainResource {
         User user = cloudEventData.getValue();
         user.setAge(user.getAge() + 1);
 
-        CloudEvent outputEvent = CloudEventBuilder.from(inputEvent).withData(PojoCloudEventData.wrap(user, objectMapper::writeValueAsBytes)).build();
+        CloudEvent outputEvent = CloudEventBuilder.from(inputEvent).withData(PojoCloudEventData.wrap(user, jsonMapper::writeValueAsBytes)).build();
 
         return ResponseEntity.ok(outputEvent);
     }
