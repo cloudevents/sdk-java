@@ -20,7 +20,7 @@
 
     <modules>
         <module>kafka</module>
-        <!--<module>restful-ws-quarkus</module> TODO!-->
+        <module>restful-ws-quarkus</module>
         <module>restful-ws-microprofile-liberty</module>
         <module>vertx</module>
         <module>basic-http</module>
@@ -28,7 +28,7 @@
         <module>amqp-proton</module>
         <module>spring-reactive</module>
         <module>spring-rsocket</module>
-        <!--<module>spring-function</module> TODO!-->
+        <module>spring-function</module>
         <module>rocketmq</module>
     </modules>
 

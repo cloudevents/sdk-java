@@ -3,11 +3,11 @@ package io.cloudevents.examples.quarkus.client;
 import java.net.URI;
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
@@ -26,12 +26,12 @@ public class UserEventsGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEventsGenerator.class);
 
     @Inject
-    ObjectMapper mapper;
+    JsonMapper mapper;
 
     @Inject
     @RestClient
     UserClient userClient;
-    
+
     long userCount=0;
 
     @Scheduled(every="2s")

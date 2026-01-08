@@ -25,6 +25,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
             .asInstanceOf(INTEGER);
     }
 
+    @Override
     public StringAssert asString() {
         isNotNull();
         return (StringAssert) assertThat(this.actual.value())

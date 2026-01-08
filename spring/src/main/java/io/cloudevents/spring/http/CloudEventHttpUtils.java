@@ -58,7 +58,7 @@ public class CloudEventHttpUtils {
     public static MessageReader toReader(HttpHeaders headers, Supplier<byte[]> body) throws CloudEventRWException {
         Map<String, List<String>> headersMap = new HashMap<>();
         headers.forEach((key, values) -> headersMap.put(key, new ArrayList<>(values)));
-        return HttpMessageFactory.createReaderFromMultimap(headersMap, body.get()); // TODO - Take header iterator instead
+        return HttpMessageFactory.createReaderFromMultimap(headersMap, body.get());
     }
 
 	/**
