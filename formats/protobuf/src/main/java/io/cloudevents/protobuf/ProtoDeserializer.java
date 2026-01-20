@@ -34,7 +34,7 @@ import java.util.Map.Entry;
 /**
  * Implements a {@link CloudEventReader} that can deserialize a {@link CloudEvent} protobuf representation;
  */
-class ProtoDeserializer implements CloudEventReader {
+public class ProtoDeserializer implements CloudEventReader {
     private final CloudEvent protoCe;
 
     public ProtoDeserializer(CloudEvent protoCe) {
