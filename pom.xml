@@ -170,7 +170,7 @@
                         <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
                         <link>https://kafka.apache.org/30/javadoc/</link>
                     </links>
-                    <source>25</source>
+                    <source>17</source>
                 </configuration>
                 <executions>
                     <execution>

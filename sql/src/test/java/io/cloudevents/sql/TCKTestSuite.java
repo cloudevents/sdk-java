@@ -61,11 +61,14 @@ class TCKTestSuite {
             if (this.eventOverrides != null) {
                 CloudEventBuilder builder = CloudEventBuilder.from(inputEvent);
                 this.eventOverrides.forEach((k, v) -> {
-                    switch (v) {
-                        case String s -> builder.withContextAttribute(k, s);
-                        case Boolean b -> builder.withContextAttribute(k, b);
-                        case Number number -> builder.withContextAttribute(k, number.intValue());
-                        default -> throw new IllegalArgumentException("Unexpected event override attribute '" + k + "' type: " + v.getClass());
+                    if (v instanceof String) {
+                        builder.withContextAttribute(k, (String) v);
+                    } else if (v instanceof Boolean) {
+                        builder.withContextAttribute(k, (Boolean) v);
+                    } else if (v instanceof Number) {
+                        builder.withContextAttribute(k, ((Number) v).intValue());
+                    } else {
+                        throw new IllegalArgumentException("Unexpected event override attribute '" + k + "' type: " + v.getClass());
                     }
                 });
                 inputEvent = builder.build();
@@ -74,14 +77,19 @@ class TCKTestSuite {
         }
 
         public EvaluationException.ErrorKind getEvaluationExceptionErrorKind() {
-            return switch (this.error) {
-                case CAST -> EvaluationException.ErrorKind.CAST;
-                case MATH -> EvaluationException.ErrorKind.MATH;
-                case MISSING_FUNCTION -> EvaluationException.ErrorKind.MISSING_FUNCTION;
-                case MISSING_ATTRIBUTE -> EvaluationException.ErrorKind.MISSING_ATTRIBUTE;
-                case FUNCTION_EVALUATION -> EvaluationException.ErrorKind.FUNCTION_EVALUATION;
-                default -> null;
-            };
+            switch (this.error) {
+                case CAST:
+                    return EvaluationException.ErrorKind.CAST;
+                case MATH:
+                    return EvaluationException.ErrorKind.MATH;
+                case MISSING_FUNCTION:
+                    return EvaluationException.ErrorKind.MISSING_FUNCTION;
+                case MISSING_ATTRIBUTE:
+                    return EvaluationException.ErrorKind.MISSING_ATTRIBUTE;
+                case FUNCTION_EVALUATION:
+                    return EvaluationException.ErrorKind.FUNCTION_EVALUATION;
+            }
+            return null;
         }
 
     }
