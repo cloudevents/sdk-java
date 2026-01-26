@@ -25,6 +25,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
             .asInstanceOf(INTEGER);
     }
 
+    @Override
     public StringAssert asString() {
         isNotNull();
         return (StringAssert) assertThat(this.actual.value())
@@ -53,7 +54,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         return assertThat(this.actual.value());
     }
 
-    public IterableAssert<EvaluationException> causes() {
+    public AbstractCollectionAssert<?, ?, EvaluationException, ObjectAssert<EvaluationException>> causes() {
         return assertThat(this.actual.causes());
     }
 

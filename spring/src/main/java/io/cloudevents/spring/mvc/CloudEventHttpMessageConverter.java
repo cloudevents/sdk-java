@@ -17,6 +17,8 @@ package io.cloudevents.spring.mvc;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.CloudEventUtils;
+import io.cloudevents.core.format.EventFormat;
+import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.spring.http.CloudEventHttpUtils;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -37,37 +39,46 @@ import java.io.IOException;
  * @author Dave Syer
  */
 public class CloudEventHttpMessageConverter extends AbstractHttpMessageConverter<CloudEvent> {
+    public CloudEventHttpMessageConverter() {
+        super(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL);
+    }
 
-	public CloudEventHttpMessageConverter() {
-		super(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL);
-	}
+    @Override
+    protected boolean supports(Class<?> clazz) {
+        return CloudEvent.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	protected boolean supports(Class<?> clazz) {
-		return CloudEvent.class.isAssignableFrom(clazz);
-	}
+    @Override
+    protected CloudEvent readInternal(Class<? extends CloudEvent> clazz, HttpInputMessage inputMessage)
+        throws IOException, HttpMessageNotReadableException {
+        byte[] body = StreamUtils.copyToByteArray(inputMessage.getBody());
+        return CloudEventHttpUtils.toReader(inputMessage.getHeaders(), () -> body).toEvent();
+    }
 
-	@Override
-	protected CloudEvent readInternal(Class<? extends CloudEvent> clazz, HttpInputMessage inputMessage)
-			throws IOException, HttpMessageNotReadableException {
-		byte[] body = StreamUtils.copyToByteArray(inputMessage.getBody());
-		return CloudEventHttpUtils.toReader(inputMessage.getHeaders(), () -> body).toEvent();
-	}
+    @Override
+    protected void writeInternal(CloudEvent event, HttpOutputMessage outputMessage)
+        throws IOException, HttpMessageNotWritableException {
+        MediaType contentType = outputMessage.getHeaders().getContentType();
+        EventFormat format = contentType != null
+            ? EventFormatProvider.getInstance().resolveFormat(contentType.toString())
+            : null;
 
-	@Override
-	protected void writeInternal(CloudEvent event, HttpOutputMessage outputMessage)
-			throws IOException, HttpMessageNotWritableException {
-		CloudEventUtils.toReader(event)
-				.read(CloudEventHttpUtils.toWriter(outputMessage.getHeaders(), body -> copy(body, outputMessage)));
-	}
+        if (format != null) {
+            byte[] serialized = format.serialize(event);
+            StreamUtils.copy(serialized, outputMessage.getBody());
+        } else {
+            CloudEventUtils.toReader(event)
+                .read(CloudEventHttpUtils.toWriter(outputMessage.getHeaders(), body -> copy(body, outputMessage)));
+        }
+    }
 
-	private void copy(byte[] body, HttpOutputMessage outputMessage) {
-		try {
-			StreamUtils.copy(body, outputMessage.getBody());
-		}
-		catch (IOException e) {
-			throw new IllegalStateException(e);
-		}
-	}
-
+    private void copy(byte[] body, HttpOutputMessage outputMessage) {
+        try {
+            if (body != null && body.length != 0) {
+                StreamUtils.copy(body, outputMessage.getBody());
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

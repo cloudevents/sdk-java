@@ -21,7 +21,7 @@
 
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-parent</artifactId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>CloudEvents</name>
@@ -75,8 +75,6 @@
         <module>amqp</module>
         <module>http/basic</module>
         <module>http/vertx</module>
-        <module>http/restful-ws</module>
-        <module>http/restful-ws-jakarta</module>
         <module>kafka</module>
         <module>spring</module>
         <module>sql</module>
@@ -85,17 +83,19 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Maven plugins -->
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <maven-editorconfig-plugin.version>0.1.0</maven-editorconfig-plugin.version>
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        <maven-editorconfig-plugin.version>0.2.0</maven-editorconfig-plugin.version>
 
         <!-- Dependencies -->
-        <assertj-core.version>3.16.1</assertj-core.version>
-        <junit-jupiter.version>5.7.0</junit-jupiter.version>
+        <assertj-core.version>3.27.6</assertj-core.version>
+        <junit-jupiter.version>6.0.1</junit-jupiter.version>
+        <jackson.version>3.0.3</jackson.version>
     </properties>
 
     <distributionManagement>
@@ -162,16 +162,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.12.0</version>
                 <configuration>
                     <detectLinks/>
                     <links>
                         <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
                         <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
                         <link>https://kafka.apache.org/30/javadoc/</link>
-                        <link>https://fasterxml.github.io/jackson-databind/javadoc/2.10/</link>
                     </links>
-                    <source>8</source>
+                    <source>17</source>
                 </configuration>
                 <executions>
                     <execution>
@@ -212,8 +211,7 @@
             </activation>
             <modules>
                 <module>benchmarks</module>
-                <module>http/restful-ws-integration-tests</module>
-                <module>http/restful-ws-jakarta-integration-tests</module>
+                <module>http/integration-tests</module>
                 <module>examples</module>
             </modules>
         </profile>

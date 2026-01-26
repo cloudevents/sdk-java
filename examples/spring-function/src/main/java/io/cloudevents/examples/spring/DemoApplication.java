@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.codec.CodecCustomizer;
+import org.springframework.boot.http.codec.CodecCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.CodecConfigurer;
@@ -19,8 +19,7 @@ import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 
 @SpringBootApplication
 public class DemoApplication {
-
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
@@ -52,13 +51,10 @@ public class DemoApplication {
 	 */
 	@Configuration
 	public static class CloudEventHandlerConfiguration implements CodecCustomizer {
-
 		@Override
 		public void customize(CodecConfigurer configurer) {
 			configurer.customCodecs().register(new CloudEventHttpMessageReader());
 			configurer.customCodecs().register(new CloudEventHttpMessageWriter());
 		}
-
 	}
-
 }

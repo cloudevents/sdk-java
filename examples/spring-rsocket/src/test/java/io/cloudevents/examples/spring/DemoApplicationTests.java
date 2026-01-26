@@ -3,7 +3,6 @@ package io.cloudevents.examples.spring;
 import java.net.URI;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.PojoCloudEventData;
@@ -15,11 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.util.MimeType;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class DemoApplicationTests {
+class DemoApplicationTests {
 
 	@Autowired
 	private RSocketRequester.Builder builder;
@@ -30,7 +30,7 @@ public class DemoApplicationTests {
 	private RSocketRequester rsocketRequester;
 
 	@BeforeEach
-	public void init() {
+	 void init() {
 		String host = "localhost";
 		int port = 7000;
 		rsocketRequester = builder

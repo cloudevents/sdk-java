@@ -1,16 +1,18 @@
 package io.cloudevents.sql;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.test.Data;
 import io.cloudevents.jackson.JsonFormat;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
-import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TCKTestSuite {
-
+class TCKTestSuite {
     public static class TestSuiteModel {
         public String name;
         public List<TestCaseModel> tests;
@@ -94,8 +95,7 @@ public class TCKTestSuite {
     }
 
     public Stream<Map.Entry<String, TestCaseModel>> tckTestCases() {
-        ObjectMapper mapper = new YAMLMapper();
-        mapper.registerModule(JsonFormat.getCloudEventJacksonModule());
+        ObjectMapper mapper = YAMLMapper.builder().addModule(JsonFormat.getCloudEventJacksonModule()).build();
 
         // Files to load
         Stream<String> tckFiles = Stream.of(
@@ -122,10 +122,12 @@ public class TCKTestSuite {
         return tckFiles
             .map(fileName -> {
                 try {
-                    return mapper.readValue(this.getClass().getResource(fileName), TestSuiteModel.class);
-                } catch (IOException e) {
+                    Path path = Paths.get(this.getClass().getResource(fileName).toURI());
+                    return mapper.readValue(path.toFile(), TestSuiteModel.class);
+                } catch (URISyntaxException e) {
                     throw new RuntimeException(fileName, e);
                 }
+
             })
             .filter(Objects::nonNull)
             .flatMap(m -> m.tests.stream().map(tc -> new AbstractMap.SimpleImmutableEntry<>(m.name + ": " + tc.name, tc)));
