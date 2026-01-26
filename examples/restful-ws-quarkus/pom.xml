@@ -47,11 +47,6 @@
         </dependency>
         <dependency>
             <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-http-restful-ws</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-json-jackson</artifactId>
             <version>${project.version}</version>
         </dependency>
