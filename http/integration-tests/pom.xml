@@ -35,8 +35,8 @@
         <module-name>io.cloudevents.http.integration.tests</module-name>
         <!-- No need to generate javadocs for these IT tests -->
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <spring-boot.version>4.0.0</spring-boot.version>
-        <spring.version>7.0.2</spring.version>
+        <spring-boot.version>4.0.2</spring-boot.version>
+        <spring.version>7.0.4</spring.version>
     </properties>
 
     <dependencyManagement>
