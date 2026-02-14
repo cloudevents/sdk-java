@@ -182,16 +182,7 @@ class WebFluxRestControllerTests {
 
 	}
 
-    static class Foo {
-        private String value;
-
-        public String getValue() {
-            return this.value;
-        }
-
-        @Override
-        public String toString() {
-            return "Foo [value=" + this.value + "]";
-        }
-    }
+    record Foo(
+        String value
+    ) {}
 }
