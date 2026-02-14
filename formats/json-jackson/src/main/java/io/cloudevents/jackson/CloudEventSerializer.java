@@ -114,8 +114,8 @@ class CloudEventSerializer extends StdSerializer<CloudEvent> {
         // Serialize data
         if (value.getData() != null) {
             CloudEventData data = value.getData();
-            if (data instanceof JsonCloudEventData) {
-                gen.writePOJOProperty("data", ((JsonCloudEventData) data).getNode());
+            if (data instanceof JsonCloudEventData eventData) {
+                gen.writePOJOProperty("data", eventData.getNode());
             } else {
                 byte[] dataBytes = data.toBytes();
                 String contentType = value.getDataContentType();
