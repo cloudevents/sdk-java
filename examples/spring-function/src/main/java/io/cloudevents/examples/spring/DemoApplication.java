@@ -19,7 +19,7 @@ import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 
 @SpringBootApplication
 public class DemoApplication {
-	static void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
