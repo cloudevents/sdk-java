@@ -84,8 +84,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Maven plugins -->
@@ -170,7 +169,7 @@
                         <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
                         <link>https://kafka.apache.org/30/javadoc/</link>
                     </links>
-                    <source>17</source>
+                    <source>${java.version}</source>
                 </configuration>
                 <executions>
                     <execution>
