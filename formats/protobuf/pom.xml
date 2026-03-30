@@ -32,7 +32,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <protobuf.version>4.31.1</protobuf.version>
+        <protobuf.version>4.34.1</protobuf.version>
         <module-name>io.cloudevents.formats.protobuf</module-name>
     </properties>
 
