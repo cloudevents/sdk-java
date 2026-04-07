@@ -29,8 +29,8 @@ public class PojoCloudEventDataMapper<T> implements CloudEventDataMapper<PojoClo
     @Override
     public PojoCloudEventData<T> map(CloudEventData data) throws CloudEventRWException {
         // Best case, event is already from json
-        if (data instanceof JsonCloudEventData) {
-            JsonNode node = ((JsonCloudEventData) data).getNode();
+        if (data instanceof JsonCloudEventData eventData) {
+            JsonNode node = eventData.getNode();
             T value;
             try {
                 value = this.mapper.convertValue(node, target);

@@ -49,8 +49,7 @@ public class CloudEventMessageConverter implements MessageConverter {
 
 	@Override
 	public Message<?> toMessage(Object payload, MessageHeaders headers) {
-		if (payload instanceof CloudEvent) {
-			CloudEvent event = (CloudEvent) payload;
+		if (payload instanceof CloudEvent event) {
 			return CloudEventUtils.toReader(event).read(new MessageBuilderMessageWriter(headers));
 		}
 		return null;
@@ -92,11 +91,11 @@ public class CloudEventMessageConverter implements MessageConverter {
 
 	private byte[] getBinaryData(Message<?> message) {
 		Object payload = message.getPayload();
-		if (payload instanceof byte[]) {
-			return (byte[]) payload;
+		if (payload instanceof byte[] bytes) {
+			return bytes;
 		}
-		else if (payload instanceof String) {
-			return ((String) payload).getBytes(StandardCharsets.UTF_8);
+		else if (payload instanceof String string) {
+			return string.getBytes(StandardCharsets.UTF_8);
 		}
 		return null;
 	}

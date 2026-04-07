@@ -189,8 +189,8 @@ class ProtoSerializer {
             throws CloudEventRWException {
 
             // TODO - Future Cleanup
-            if (value instanceof Integer) {
-                return withContextAttribute(name, (Integer) value);
+            if (value instanceof Integer integer) {
+                return withContextAttribute(name, integer);
             } else {
                 return withContextAttribute(name, value.toString());
             }
@@ -245,9 +245,7 @@ class ProtoSerializer {
                 }
 
                 // If it's a proto message we can handle that directly.
-                if (data instanceof ProtoCloudEventData) {
-
-                    final ProtoCloudEventData protoData = (ProtoCloudEventData) data;
+                if (data instanceof ProtoCloudEventData protoData) {
                     final Any anAny = protoData.getAny();
 
                     // Even though our local implementation cannot be instantiated

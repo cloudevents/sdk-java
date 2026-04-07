@@ -46,8 +46,8 @@ public final class CloudEventUtils {
      * @return the reader implementation
      */
     public static CloudEventReader toReader(CloudEvent event) {
-        if (event instanceof CloudEventReader) {
-            return (CloudEventReader) event;
+        if (event instanceof CloudEventReader reader) {
+            return reader;
         } else {
             return new CloudEventReaderAdapter(event);
         }
@@ -63,8 +63,8 @@ public final class CloudEventUtils {
      * @return the context reader implementation
      */
     public static CloudEventContextReader toContextReader(CloudEventContext event) {
-        if (event instanceof CloudEventContextReader) {
-            return (CloudEventContextReader) event;
+        if (event instanceof CloudEventContextReader reader) {
+            return reader;
         } else {
             return new CloudEventContextReaderAdapter(event);
         }
