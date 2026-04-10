@@ -14,7 +14,7 @@ HTTP Transport:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-http-vertx</artifactId>
-    <version>4.0.1</version>
+    <version>4.0.2</version>
 </dependency>
 ```
 
