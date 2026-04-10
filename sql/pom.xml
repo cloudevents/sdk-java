@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-sql</artifactId>
+    <name>CloudEvents - SQL</name>
+    <packaging>jar</packaging>
 
     <properties>
         <module-name>io.cloudevents.sql</module-name>
