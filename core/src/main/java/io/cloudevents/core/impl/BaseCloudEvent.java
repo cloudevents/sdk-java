@@ -65,20 +65,14 @@ public abstract class BaseCloudEvent implements CloudEvent, CloudEventReader, Cl
     }
 
     protected void readExtensions(CloudEventContextWriter writer) throws CloudEventRWException {
-        // TODO to be improved
         for (Map.Entry<String, Object> entry : this.extensions.entrySet()) {
-            if (entry.getValue() instanceof String) {
-                writer.withContextAttribute(entry.getKey(), (String) entry.getValue());
-            } else if (entry.getValue() instanceof Number) {
-                writer.withContextAttribute(entry.getKey(), (Number) entry.getValue());
-            } else if (entry.getValue() instanceof Boolean) {
-                writer.withContextAttribute(entry.getKey(), (Boolean) entry.getValue());
-            } else if (entry.getValue() instanceof URI) {
-                writer.withContextAttribute(entry.getKey(), (URI) entry.getValue());
-            } else if (entry.getValue() instanceof OffsetDateTime) {
-                writer.withContextAttribute(entry.getKey(), (OffsetDateTime) entry.getValue());
-            } else if (entry.getValue() instanceof byte[]) {
-                writer.withContextAttribute(entry.getKey(), (byte[]) entry.getValue());
+            Object value = entry.getValue();
+            if (value instanceof String || value instanceof Number || value instanceof Boolean || value instanceof URI) {
+                writer.withContextAttribute(entry.getKey(), value.toString());
+            } else if (value instanceof OffsetDateTime) {
+                writer.withContextAttribute(entry.getKey(), (OffsetDateTime) value);
+            } else if (value instanceof byte[]) {
+                writer.withContextAttribute(entry.getKey(), (byte[]) value);
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + entry);
