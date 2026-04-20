@@ -46,13 +46,13 @@ public enum SpecVersion {
         Arrays.asList("datacontenttype", "dataschema", "subject", "time")
     );
 
-    private final String stringValue;
+    private final String version;
     private final Set<String> mandatoryAttributes;
     private final Set<String> optionalAttributes;
     private final Set<String> allAttributes;
 
-    SpecVersion(String stringValue, Collection<String> mandatoryAttributes, Collection<String> optionalAttributes) {
-        this.stringValue = stringValue;
+    SpecVersion(String version, Collection<String> mandatoryAttributes, Collection<String> optionalAttributes) {
+        this.version = version;
         this.mandatoryAttributes = Collections.unmodifiableSet(new HashSet<>(mandatoryAttributes));
         this.optionalAttributes = Collections.unmodifiableSet(new HashSet<>(optionalAttributes));
         this.allAttributes = Collections.unmodifiableSet(
@@ -62,7 +62,7 @@ public enum SpecVersion {
 
     @Override
     public String toString() {
-        return this.stringValue;
+        return this.version;
     }
 
     /**
