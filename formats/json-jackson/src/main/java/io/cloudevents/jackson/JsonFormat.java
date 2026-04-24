@@ -16,18 +16,18 @@
  */
 package io.cloudevents.jackson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.core.format.ContentType;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.format.EventSerializationException;
 import io.cloudevents.rw.CloudEventDataMapper;
 import io.cloudevents.rw.CloudEventRWException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -49,7 +49,7 @@ public final class JsonFormat implements EventFormat {
      * JSON Data Content Type Discriminator
      */
     private static final Pattern JSON_CONTENT_TYPE_PATTERN = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?json(;.*)*$");
-    private final ObjectMapper mapper;
+    private final JsonMapper mapper;
     private final JsonFormatOptions options;
 
     /**
@@ -75,8 +75,9 @@ public final class JsonFormat implements EventFormat {
      * @param options json serialization / deserialization options
      */
     public JsonFormat(JsonFormatOptions options) {
-        this.mapper = new ObjectMapper();
-        this.mapper.registerModule(getCloudEventJacksonModule(options));
+        this.mapper = JsonMapper.builder()
+            .addModule(getCloudEventJacksonModule(options))
+            .build();
         this.options = options;
     }
 
@@ -147,7 +148,7 @@ public final class JsonFormat implements EventFormat {
     public byte[] serialize(CloudEvent event) throws EventSerializationException {
         try {
             return mapper.writeValueAsBytes(event);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new EventSerializationException(e);
         }
     }
@@ -156,7 +157,7 @@ public final class JsonFormat implements EventFormat {
     public CloudEvent deserialize(byte[] bytes) throws EventDeserializationException {
         try {
             return mapper.readValue(bytes, CloudEvent.class);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new EventDeserializationException(e);
         }
     }

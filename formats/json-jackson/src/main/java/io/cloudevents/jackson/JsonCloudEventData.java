@@ -17,8 +17,8 @@
 
 package io.cloudevents.jackson;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.cloudevents.CloudEventData;
+import tools.jackson.databind.JsonNode;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -27,7 +27,6 @@ import java.util.Objects;
  * This class is a wrapper for Jackson {@link JsonNode} implementing {@link CloudEventData}.
  */
 public class JsonCloudEventData implements CloudEventData {
-
     private final JsonNode node;
 
     /**

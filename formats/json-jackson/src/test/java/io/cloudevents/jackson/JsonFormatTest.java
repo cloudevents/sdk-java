@@ -17,14 +17,9 @@
 
 package io.cloudevents.jackson;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.builder.CloudEventBuilder;
-import io.cloudevents.core.format.ContentType;
 import io.cloudevents.core.format.EventDeserializationException;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.rw.CloudEventRWException;
@@ -32,6 +27,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.exc.MismatchedInputException;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.JsonNodeFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -41,13 +40,26 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static io.cloudevents.core.format.ContentType.*;
-import static io.cloudevents.core.test.Data.*;
-import static org.assertj.core.api.Assertions.*;
+import static io.cloudevents.core.format.ContentType.JSON;
+import static io.cloudevents.core.test.Data.V03_MIN;
+import static io.cloudevents.core.test.Data.V03_WITH_JSON_DATA;
+import static io.cloudevents.core.test.Data.V03_WITH_JSON_DATA_WITH_EXT;
+import static io.cloudevents.core.test.Data.V03_WITH_TEXT_DATA;
+import static io.cloudevents.core.test.Data.V03_WITH_XML_DATA;
+import static io.cloudevents.core.test.Data.V1_MIN;
+import static io.cloudevents.core.test.Data.V1_WITH_BINARY_EXT;
+import static io.cloudevents.core.test.Data.V1_WITH_JSON_DATA;
+import static io.cloudevents.core.test.Data.V1_WITH_JSON_DATA_WITH_EXT;
+import static io.cloudevents.core.test.Data.V1_WITH_JSON_DATA_WITH_FRACTIONAL_TIME;
+import static io.cloudevents.core.test.Data.V1_WITH_NUMERIC_EXT;
+import static io.cloudevents.core.test.Data.V1_WITH_TEXT_DATA;
+import static io.cloudevents.core.test.Data.V1_WITH_XML_DATA;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class JsonFormatTest {
-
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = new JsonMapper();
 
     @ParameterizedTest
     @MethodSource("jsonContentTypes")
@@ -67,7 +79,7 @@ class JsonFormatTest {
 
     @ParameterizedTest
     @MethodSource("serializeTestArgumentsDefault")
-    void serialize(CloudEvent input, String outputFile) throws IOException {
+    void serialize(CloudEvent input, String outputFile) {
         JsonNode jsonOutput = mapper.readValue(loadFile(outputFile), JsonNode.class);
 
         byte[] serialized = getFormat().serialize(input);
@@ -78,7 +90,7 @@ class JsonFormatTest {
 
     @ParameterizedTest
     @MethodSource("serializeTestArgumentsString")
-    void serializeWithStringData(CloudEvent input, String outputFile) throws IOException {
+    void serializeWithStringData(CloudEvent input, String outputFile) {
         JsonNode jsonOutput = mapper.readValue(loadFile(outputFile), JsonNode.class);
 
         byte[] serialized = getFormat().withForceNonJsonDataToString().serialize(input);
@@ -89,7 +101,7 @@ class JsonFormatTest {
 
     @ParameterizedTest
     @MethodSource("serializeTestArgumentsBase64")
-    void serializeWithBase64Data(CloudEvent input, String outputFile) throws IOException {
+    void serializeWithBase64Data(CloudEvent input, String outputFile) {
         JsonNode jsonOutput = mapper.readValue(loadFile(outputFile), JsonNode.class);
 
         byte[] serialized = getFormat().withForceJsonDataToBase64().serialize(input);
@@ -124,7 +136,7 @@ class JsonFormatTest {
 
     @ParameterizedTest
     @MethodSource("roundTripTestArguments")
-    void jsonRoundTrip(String inputFile) throws IOException {
+    void jsonRoundTrip(String inputFile) {
         byte[] input = loadFile(inputFile);
 
         JsonNode jsonInput = mapper.readTree(input);
@@ -156,7 +168,7 @@ class JsonFormatTest {
 
     @ParameterizedTest
     @MethodSource("badJsonContent")
-    /**
+    /*
      * JSON content that should fail deserialization
      * as it represents content that is not CE
      * specification compliant.
@@ -328,7 +340,7 @@ class JsonFormatTest {
 
     private static CloudEvent normalizeToJsonValueIfNeeded(CloudEvent event) {
         if (event.getData() != null && JsonFormat.dataIsJsonContentType(event.getDataContentType())) {
-            CloudEventBuilder builder = null;
+            CloudEventBuilder builder;
             if (event.getSpecVersion() == SpecVersion.V1) {
                 builder = CloudEventBuilder.v1(event);
             } else {

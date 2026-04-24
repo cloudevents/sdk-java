@@ -54,16 +54,16 @@ public class CloudEventContextReaderAdapter implements CloudEventContextReader {
     public void readExtensions(CloudEventContextWriter writer) throws RuntimeException {
         for (String key : event.getExtensionNames()) {
             Object value = event.getExtension(key);
-            if (value instanceof String) {
-                writer.withContextAttribute(key, (String) value);
-            } else if (value instanceof Number) {
-                writer.withContextAttribute(key, (Number) value);
-            } else if (value instanceof Boolean) {
-                writer.withContextAttribute(key, (Boolean) value);
-            } else if (value instanceof URI) {
-                writer.withContextAttribute(key, (URI) value);
-            } else if (value instanceof OffsetDateTime) {
-                writer.withContextAttribute(key, (OffsetDateTime) value);
+            if (value instanceof String string) {
+                writer.withContextAttribute(key, string);
+            } else if (value instanceof Number number) {
+                writer.withContextAttribute(key, number);
+            } else if (value instanceof Boolean boolean1) {
+                writer.withContextAttribute(key, boolean1);
+            } else if (value instanceof URI rI) {
+                writer.withContextAttribute(key, rI);
+            } else if (value instanceof OffsetDateTime time) {
+                writer.withContextAttribute(key, time);
             } else {
                 // This should never happen because we build that map only through our builders
                 throw new IllegalStateException("Illegal value inside extensions map: " + key + " " + value);

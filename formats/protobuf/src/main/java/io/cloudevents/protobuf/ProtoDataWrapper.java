@@ -29,8 +29,8 @@ class ProtoDataWrapper implements ProtoCloudEventData {
 
         Objects.requireNonNull(protoMessage);
 
-        if (protoMessage instanceof Any) {
-            protoAny = (Any) protoMessage;
+        if (protoMessage instanceof Any any) {
+            protoAny = any;
         } else {
             protoAny = Any.pack(protoMessage);
         }

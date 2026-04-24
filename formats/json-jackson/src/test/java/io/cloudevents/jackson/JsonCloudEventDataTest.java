@@ -17,7 +17,6 @@
 
 package io.cloudevents.jackson;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.mock.MyCloudEventData;
@@ -26,16 +25,16 @@ import io.cloudevents.core.test.Data;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import tools.jackson.databind.node.JsonNodeFactory;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JsonCloudEventDataTest {
-
     @ParameterizedTest
     @MethodSource("textContentArguments")
-    public void testMapper(String contentType) {
+    void testMapper(String contentType) {
         CloudEvent event = CloudEventBuilder.v1(Data.V1_MIN)
             .withData(contentType, JsonCloudEventData.wrap(JsonNodeFactory.instance.numberNode(10)))
             .build();

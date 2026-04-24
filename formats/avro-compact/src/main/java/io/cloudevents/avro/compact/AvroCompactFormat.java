@@ -52,10 +52,10 @@ public class AvroCompactFormat implements EventFormat {
             Map<String, Object> extensions = new HashMap<>();
             for (String name : from.getExtensionNames()) {
                 Object value = from.getExtension(name);
-                if (value instanceof byte[])
-                    value = ByteBuffer.wrap((byte[]) value);
-                else if (value instanceof OffsetDateTime)
-                    value = ((OffsetDateTime) value).toInstant();
+                if (value instanceof byte[] bytes)
+                    value = ByteBuffer.wrap(bytes);
+                else if (value instanceof OffsetDateTime time)
+                    value = time.toInstant();
                 extensions.put(name,  value);
             }
 
@@ -101,16 +101,16 @@ public class AvroCompactFormat implements EventFormat {
                 String name = entry.getKey();
                 Object value = entry.getValue();
                 // Avro supports boolean, int, string, bytes
-                if (value instanceof Boolean)
-                    to.withExtension(name, (boolean) value);
-                else if (value instanceof Integer)
-                    to.withExtension(name, (int) value);
-                else if (value instanceof Instant)
-                    to.withExtension(name, ((Instant) value).atOffset(ZoneOffset.UTC));
-                else if (value instanceof String)
-                    to.withExtension(name, (String) value);
-                else if (value instanceof ByteBuffer)
-                    to.withExtension(name, ((ByteBuffer) value).array());
+                if (value instanceof Boolean boolean1)
+                    to.withExtension(name, boolean1);
+                else if (value instanceof Integer integer)
+                    to.withExtension(name, integer);
+                else if (value instanceof Instant instant)
+                    to.withExtension(name, instant.atOffset(ZoneOffset.UTC));
+                else if (value instanceof String string)
+                    to.withExtension(name, string);
+                else if (value instanceof ByteBuffer buffer)
+                    to.withExtension(name, buffer.array());
                 else
                     // this cannot happen, if ever seen, must be bug in this library
                     throw new AssertionError(String.format("invalid extension %s unsupported type %s", name, value.getClass()));
