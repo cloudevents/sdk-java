@@ -13,8 +13,8 @@
 
     <properties>
         <module-name>cloudevents.example.spring.boot</module-name>
-        <spring-boot.version>4.0.2</spring-boot.version>
-        <spring.version>7.0.4</spring.version>
+        <spring-boot.version>4.0.6</spring-boot.version>
+        <spring.version>7.0.7</spring.version>
     </properties>
 
     <dependencyManagement>
