@@ -5,7 +5,7 @@ nav_order: 5
 
 # HTTP Protocol Binding for Jakarta EE 9+ - Jakarta RESTful Web Services
 
-[![Javadocs](https://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws.svg?color=green)](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
+[![Javadocs](https://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws-jakarta.svg?color=green)](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws-jakarta)
 
 For Maven based projects, use the following to configure the CloudEvents Jakarta
 RESTful Web Services Binding for Jakarta EE 9+:

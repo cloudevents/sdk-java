@@ -13,6 +13,7 @@ There are also more specialized HTTP bindings:
 
 - [`cloudevents-http-vertx`](http-vertx.md)
 - [`cloudevents-http-restful-ws`](http-jakarta-restful-ws.md)
+- [`cloudevents-http-restful-ws-jakarta`](http-jakarta-restful-ws-jakarta.md)
 - [`cloudevents-spring`](spring.md)
 
 Since this module is generic it doesn't offer optimal performance for all HTTP

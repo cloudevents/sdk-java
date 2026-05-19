@@ -32,26 +32,27 @@ Stay tuned!
 
 Supported features of the specification:
 
-|                                         | [v0.3](https://github.com/cloudevents/spec/tree/v0.3) | [v1.0](https://github.com/cloudevents/spec/tree/v1.0) |
-| :-------------------------------------: | :---------------------------------------------------: | :---------------------------------------------------: |
-|            CloudEvents Core             |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|          AMQP Protocol Binding          |                          :x:                          |                          :x:                          |
-|            - [Proton](amqp)             |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|            AVRO Event Format            |                          :x:                          |                          :x:                          |
-|          HTTP Protocol Binding          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|         - [Vert.x](http/vertx)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-| - [Jakarta Restful WS](http/restful-ws) |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|          - [Basic](http/basic)          |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|           - [Spring](spring)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|           - [http4k][http4k]<sup>†</sup>|                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|            JSON Event Format            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|    - [Jackson](formats/json-jackson)    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|            Protobuf Event Format        |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|            - [Proto](formats/protobuf)  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|     [Kafka Protocol Binding](kafka)     |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|          MQTT Protocol Binding          |                          :x:                          |                          :x:                          |
-|          NATS Protocol Binding          |                          :x:                          |                          :x:                          |
-|                Web hook                 |                          :x:                          |                          :x:                          |
+|                                                        | [v0.3](https://github.com/cloudevents/spec/tree/v0.3) | [v1.0](https://github.com/cloudevents/spec/tree/v1.0) |
+|:------------------------------------------------------:|:-----------------------------------------------------:|:-----------------------------------------------------:|
+|                    CloudEvents Core                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                 AMQP Protocol Binding                  |                          :x:                          |                          :x:                          |
+|                    - [Proton](amqp)                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                   AVRO Event Format                    |                          :x:                          |                          :x:                          |
+|                 HTTP Protocol Binding                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                 - [Vert.x](http/vertx)                 |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|      - [Jakarta EE 8 Restful WS](http/restful-ws)      |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+| - [Jakarta EE 9+ Restful WS](http/restful-ws-jakarta)  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                 - [Basic](http/basic)                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                   - [Spring](spring)                   |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|             - [http4k][http4k]<sup>†</sup>             |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                   JSON Event Format                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|           - [Jackson](formats/json-jackson)            |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                 Protobuf Event Format                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|              - [Proto](formats/protobuf)               |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|            [Kafka Protocol Binding](kafka)             |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                 MQTT Protocol Binding                  |                          :x:                          |                          :x:                          |
+|                 NATS Protocol Binding                  |                          :x:                          |                          :x:                          |
+|                        Web hook                        |                          :x:                          |                          :x:                          |
 
 <sub>† Source/artifacts hosted externally</sub>
 
@@ -69,6 +70,7 @@ Javadocs are available on [javadoc.io](https://www.javadoc.io):
 -   [cloudevents-xml](https://www.javadoc.io/doc/io.cloudevents/cloudevents-xml)
 -   [cloudevents-http-basic](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-basic)
 -   [cloudevents-http-restful-ws](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
+-   [cloudevents-http-restful-ws-jakarta](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws-jakarta)
 -   [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
 -   [cloudevents-kafka](https://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)
 -   [cloudevents-amqp](https://www.javadoc.io/doc/io.cloudevents/cloudevents-amqp)
