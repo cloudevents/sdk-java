@@ -188,6 +188,8 @@
                         <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
                         <link>https://kafka.apache.org/30/javadoc/</link>
                         <link>https://fasterxml.github.io/jackson-databind/javadoc/2.10/</link>
+                        <link>https://projectreactor.io/docs/core/release/api/</link>
+                        <link>https://www.reactive-streams.org/reactive-streams-1.0.4-javadoc/</link>
                     </links>
                     <source>8</source>
                 </configuration>
