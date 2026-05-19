@@ -11,7 +11,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <openliberty.maven.version>3.5.1</openliberty.maven.version>
+        <openliberty.maven.version>3.12.0</openliberty.maven.version>
         <app.name>cloudevents-microprofile</app.name>
         <module-name>cloudevents.example.restful.ws.microprofile.liberty</module-name>
 
@@ -60,7 +60,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <packagingExcludes>pom.xml</packagingExcludes>
@@ -69,7 +68,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
                 <executions>
                     <execution>
                         <id>copy-server-files</id>
@@ -148,7 +146,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.5.5</version>
                 <executions>
                     <execution>
                         <phase>integration-test</phase>
