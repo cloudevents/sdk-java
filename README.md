@@ -11,10 +11,10 @@ Using the Java SDK you can:
 
 -   Access, create and manipulate `CloudEvent` inside your application.
 -   Serialize and deserialize `CloudEvent` back and forth using the _CloudEvents
-    Event Format_, like Json.
+    Event Format_, like JSON.
 -   Read and write `CloudEvent` back and forth to HTTP, Kafka, AMQP using the
     _CloudEvents Protocol Binding_ implementations we provide for a wide range
-    of well known Java frameworks/libraries.
+    of well-known Java frameworks/libraries.
 
 To check out the complete documentation and how to get started, look at the dedicated website
 https://cloudevents.github.io/sdk-java/.

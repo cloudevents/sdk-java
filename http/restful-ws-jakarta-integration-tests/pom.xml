@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-http-restful-ws-jakarta-integration-tests</artifactId>
-    <name>CloudEvents - JAX-RS Jakarta EE9+ Web Http Binding Integration Tests</name>
+    <name>CloudEvents - JAX-RS Jakarta EE 9+ Web Http Binding Integration Tests</name>
     <packaging>pom</packaging>
 
     <properties>

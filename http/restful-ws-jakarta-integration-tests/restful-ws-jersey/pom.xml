@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-http-restful-ws-jakarta-integration-tests-jersey</artifactId>
-    <name>CloudEvents - JAX-RS Jakarta EE9+ Integration Tests - Jersey</name>
+    <name>CloudEvents - JAX-RS Jakarta EE 9+ Integration Tests - Jersey</name>
     <packaging>jar</packaging>
 
     <properties>

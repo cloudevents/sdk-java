@@ -3,7 +3,7 @@ title: CloudEvents HTTP Jakarta RESTful Web Services
 nav_order: 5
 ---
 
-# HTTP Protocol Binding for Jakarta EE8 - RESTful Web Services
+# HTTP Protocol Binding for Jakarta EE 8 - RESTful Web Services
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
 

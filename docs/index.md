@@ -19,10 +19,10 @@ Using the Java SDK you can:
 
 -   Access, create and manipulate `CloudEvent` inside your application.
 -   Serialize and deserialize `CloudEvent` back and forth using the _CloudEvents
-    Event Format_, like Json.
+    Event Format_, like JSON.
 -   Read and write `CloudEvent` back and forth to HTTP, Kafka, AMQP using the
     _CloudEvents Protocol Binding_ implementations we provide for a wide range
-    of well known Java frameworks/libraries.
+    of well-known Java frameworks/libraries.
 
 ## Supported features
 
@@ -104,7 +104,7 @@ a different feature from the different sub specs of
     [Vert.x Core](https://vertx.io/)
 -   [`cloudevents-http-restful-ws`] Implementation of [HTTP Protocol Binding]
     for [Jakarta EE 8 Restful WS](https://jakarta.ee/specifications/restful-ws/2.1/)
--   [`cloudevents-http-restful-ws-jakarta`] Implementation of  [HTTP Protocol Binding]
+-   [`cloudevents-http-restful-ws-jakarta`] Implementation of [HTTP Protocol Binding]
       for [Jakarta EE 9+ Restful WS](https://jakarta.ee/specifications/restful-ws/)
 -   [`cloudevents-http-basic`] Generic implementation of [HTTP Protocol
     Binding], primarily intended for integrators
