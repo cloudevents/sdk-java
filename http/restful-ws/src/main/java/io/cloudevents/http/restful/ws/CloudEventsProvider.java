@@ -51,6 +51,7 @@ import java.util.Optional;
 @Provider
 @Consumes(MediaType.WILDCARD)
 @Produces(MediaType.WILDCARD)
+@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
 public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, MessageBodyWriter<CloudEvent>, ClientRequestFilter {
 
     /**

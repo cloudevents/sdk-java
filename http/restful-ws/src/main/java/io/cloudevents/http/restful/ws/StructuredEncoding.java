@@ -28,6 +28,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
 public @interface StructuredEncoding {
     /**
      * Specify the content type of the structured mode.

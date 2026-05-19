@@ -12,7 +12,7 @@ This module is designed to be usable with various HTTP APIs.
 There are also more specialized HTTP bindings:
 
 - [`cloudevents-http-vertx`](http-vertx.md)
-- [`cloudevents-http-restful-ws`](http-jakarta-restful-ws.md)
+- [`cloudevents-http-restful-ws`](http-jakarta-restful-ws.md) (deprecated, please use `cloudevents-http-restful-ws-jakarta`)
 - [`cloudevents-http-restful-ws-jakarta`](http-jakarta-restful-ws-jakarta.md)
 - [`cloudevents-spring`](spring.md)
 

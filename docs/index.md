@@ -103,7 +103,7 @@ a different feature from the different sub specs of
 -   [`cloudevents-http-vertx`] Implementation of [HTTP Protocol Binding] with
     [Vert.x Core](https://vertx.io/)
 -   [`cloudevents-http-restful-ws`] Implementation of [HTTP Protocol Binding]
-    for [Jakarta EE 8 Restful WS](https://jakarta.ee/specifications/restful-ws/2.1/)
+    for [Jakarta EE 8 Restful WS](https://jakarta.ee/specifications/restful-ws/2.1/) (deprecated, please use `cloudevents-http-restful-ws-jakarta`)
 -   [`cloudevents-http-restful-ws-jakarta`] Implementation of [HTTP Protocol Binding]
       for [Jakarta EE 9+ Restful WS](https://jakarta.ee/specifications/restful-ws/)
 -   [`cloudevents-http-basic`] Generic implementation of [HTTP Protocol

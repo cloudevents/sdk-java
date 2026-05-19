@@ -29,6 +29,7 @@ import java.util.function.BiConsumer;
 
 import static io.cloudevents.http.restful.ws.impl.CloudEventsHeaders.CE_PREFIX;
 
+@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
 public final class BinaryRestfulWSMessageReaderImpl extends BaseGenericBinaryMessageReaderImpl<String, String> {
 
     private final MultivaluedMap<String, String> headers;
