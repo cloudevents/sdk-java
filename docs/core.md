@@ -10,7 +10,7 @@ nav_order: 3
 This package includes implementations and utilities to create and process
 `CloudEvent` and interfaces to deal with Protocol Bindings and Event Formats.
 
-For Maven based projects, use the following dependency:
+For Maven-based projects, use the following dependency:
 
 ```xml
 <dependency>

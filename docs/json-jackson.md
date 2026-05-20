@@ -3,7 +3,7 @@ title: CloudEvents Json Jackson
 nav_order: 4
 ---
 
-# CloudEvents Json Jackson
+# CloudEvents JSON Jackson
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-json-jackson.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
 

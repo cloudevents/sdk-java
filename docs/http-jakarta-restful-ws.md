@@ -10,7 +10,7 @@ Please migrate to Jakarta EE 9+ and use the `cloudevents-http-restful-ws-jakarta
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
 
-For Maven based projects, use the following to configure the CloudEvents Jakarta
+For Maven-based projects, use the following to configure the CloudEvents Jakarta
 RESTful Web Services Binding for Jakarta EE 8:
 
 ```xml

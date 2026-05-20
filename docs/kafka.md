@@ -9,11 +9,10 @@ nav_order: 5
 
 Implementation of Kafka Protocol Binding to send and receive CloudEvents.
 
-For Maven based projects, use the following to configure the
+For Maven-based projects, use the following to configure the
 [Kafka Protocol Binding](https://github.com/cloudevents/spec/blob/main/kafka-protocol-binding.md):
 
 ```xml
-
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-kafka</artifactId>

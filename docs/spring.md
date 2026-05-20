@@ -7,13 +7,11 @@ nav_order: 5
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-spring.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-spring)
 
-This module provides the integration of `CloudEvent` with different Spring APIs,
-like MVC, WebFlux, RSocket and Messaging
+This module provides the integration of `CloudEvent` with different Spring APIs, like MVC, WebFlux, RSocket and Messaging.
 
-For Maven based projects, use the following dependency:
+For Maven-based projects, use the following dependency:
 
 ```xml
-
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-spring</artifactId>
@@ -25,18 +23,11 @@ plus whatever you need to support your use case (e.g. `spring-boot-starter-webfl
 
 ## Introduction
 
-This module provides classes and interfaces that can be used by
-[Spring frameworks](https://spring.io/) and integrations to assist with Cloud
-Event processing.
+This module provides classes and interfaces that can be used by [Spring frameworks](https://spring.io/) and integrations to assist with Cloud Event processing.
 
-Given that Spring defines
-[Message](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/Message.html)
-abstraction, which perfectly maps to the structure defined by Cloud Events
-specification, one may say Cloud Events are already supported by any Spring
-framework that relies on `Message`. So this modules provides several utilities
-and interfaces to simplify working with Cloud Events in the context of Spring
-frameworks and integrations (see individual component's javadocs for more
-details).
+Given that Spring defines [Message](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/Message.html)
+abstraction, which perfectly maps to the structure defined by Cloud Events specification, one may say Cloud Events are already supported by any Spring framework that relies on `Message`.
+So this module provides several utilities and interfaces to simplify working with Cloud Events in the context of Spring frameworks and integrations (see individual component's javadocs for more details).
 
 ## Examples
 
@@ -56,7 +47,8 @@ public static class CloudEventHandlerConfiguration implements WebMvcConfigurer {
 }
 ```
 
-With this in place you can write a `@RestController` with `CloudEvent` inputs or outputs, and the conversion will be handled by Spring. Example "echo" endpoint:
+With this in place you can write a `@RestController` with `CloudEvent` inputs or outputs, and the conversion will be handled by Spring.
+Example "echo" endpoint:
 
 ```java
 @PostMapping("/echo")
@@ -70,7 +62,9 @@ public CloudEvent ce(@RequestBody CloudEvent event) {
 }
 ```
 
-Both structured and binary events are supported. So if you know that the `CloudEvent` is in binary mode and the data can be converted to a `Foo`, then you can also use the `CloudEventHttpUtils` to deal with HTTP headers and stick to POJOs in the handler method. Example:
+Both structured and binary events are supported.
+So if you know that the `CloudEvent` is in binary mode and the data can be converted to a `Foo`, then you can also use the `CloudEventHttpUtils` to deal with HTTP headers and stick to POJOs in the handler method.
+Example:
 
 ```java
 @PostMapping("/echo")
@@ -87,7 +81,8 @@ public ResponseEntity<Foo> echo(@RequestBody Foo foo, @RequestHeader HttpHeaders
 
 ### Spring Webflux
 
-If you are using Spring Webflux instead of Spring MVC you can use the same patterns, but the configuration is different. In this case we have a pair of readers and writers that you can register with the `CodecCustomizer`:
+If you are using Spring Webflux instead of Spring MVC you can use the same patterns, but the configuration is different.
+In this case we have a pair of readers and writers that you can register with the `CodecCustomizer`:
 
 ```java
 @Configuration
@@ -102,7 +97,8 @@ public static class CloudEventHandlerConfiguration implements CodecCustomizer {
 }
 ```
 
-Then you can write similar code to the MVC example above, but with reactive signatures. Example echo endpoint:
+Then you can write similar code to the MVC example above but with reactive signatures.
+Example echo endpoint:
 
 ```java
 @PostMapping("/event")
@@ -115,7 +111,8 @@ public Mono<CloudEvent> event(@RequestBody Mono<CloudEvent> body) {
 }
 ```
 
-The `CodecCustomizer` also works on the client side, so you can use it anywhere that you use a `WebClient` (including in an MVC application). Here's a simple example of a Cloud Event HTTP client:
+The `CodecCustomizer` also works on the client side, so you can use it anywhere that you use a `WebClient` (including in an MVC application).
+Here's a simple example of a Cloud Event HTTP client:
 
 ```java
 WebClient client = ...; // Either WebClient.create() or @Autowired a WebClient.Builder
@@ -129,7 +126,11 @@ Mono<CloudEvent> response = client.post()
 
 ### Messaging
 
-Spring Messaging is applicable in a wide range of use cases including WebSockets, JMS, Apache Kafka, RabbitMQ and others. It is also a core part of the Spring Cloud Function and Spring Cloud Stream libraries, so those are natural tools to use to build applications that use Cloud Events. The core abstraction in Spring is the `Message` which carries headers and a payload, just like a `CloudEvent`. Since the mapping is quite direct it makes sense to have a set of converters for Spring applications, so you can consume and produce `CloudEvents`, by treating them as `Messages`. This project provides a converter that you can register in a Spring Messaging application:
+Spring Messaging is applicable in a wide range of use cases including WebSockets, JMS, Apache Kafka, RabbitMQ and others.
+It is also a core part of the Spring Cloud Function and Spring Cloud Stream libraries, so those are natural tools to use to build applications that use Cloud Events.
+The core abstraction in Spring is the `Message` which carries headers and a payload, just like a `CloudEvent`.
+Since the mapping is quite direct, it makes sense to have a set of converters for Spring applications, so you can consume and produce `CloudEvents`, by treating them as `Messages`.
+This project provides a converter that you can register in a Spring Messaging application:
 
 ```java
 @Configuration
@@ -159,7 +160,10 @@ public Function<CloudEvent, CloudEvent> events() {
 
 ### Generic Encoder and Decoder
 
-Some applications present Cloud Events as binary data, but do not have "headers" like in HTTP or messages. For those use cases there is a lower level construct in Spring, and this project provides implementations in the form of `CloudEventEncoder` and `CloudEventDecoder`. Since the headers are not available in the surrounding abstraction, these only support _structured_ Cloud Events, where the attributes and data are packed together in the same byte buffer. As an example in an RSockets application you can register them like this:
+Some applications present Cloud Events as binary data, but do not have "headers" like in HTTP or messages.
+For those use cases there is a lower level construct in Spring, and this project provides implementations in the form of `CloudEventEncoder` and `CloudEventDecoder`.
+Since the headers are not available in the surrounding abstraction, these only support _structured_ Cloud Events, where the attributes and data are packed together in the same byte buffer.
+As an example, in an RSockets application, you can register them like this:
 
 ```java
 @Bean
