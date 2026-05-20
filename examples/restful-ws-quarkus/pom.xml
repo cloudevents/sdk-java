@@ -12,7 +12,7 @@
     <name>Cloudevents - JAX-RS Quarkus example</name>
     <properties>
         <module-name>cloudevents.example.restful.ws.quarkus</module-name>
-        <quarkus.version>1.10.3.Final</quarkus.version>
+        <quarkus.version>1.13.7.Final</quarkus.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -76,9 +76,12 @@
                             <goal>prepare</goal>
                             <goal>prepare-tests</goal>
                             <goal>build</goal>
+                            <goal>generate-code</goal>
+                            <goal>generate-code-tests</goal>
                         </goals>
                     </execution>
                 </executions>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
