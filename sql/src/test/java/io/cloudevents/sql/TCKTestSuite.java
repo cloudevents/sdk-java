@@ -60,12 +60,12 @@ public class TCKTestSuite {
             if (this.eventOverrides != null) {
                 CloudEventBuilder builder = CloudEventBuilder.from(inputEvent);
                 this.eventOverrides.forEach((k, v) -> {
-                    if (v instanceof String) {
-                        builder.withContextAttribute(k, (String) v);
-                    } else if (v instanceof Boolean) {
-                        builder.withContextAttribute(k, (Boolean) v);
-                    } else if (v instanceof Number) {
-                        builder.withContextAttribute(k, ((Number) v).intValue());
+                    if (v instanceof String string) {
+                        builder.withContextAttribute(k, string);
+                    } else if (v instanceof Boolean bool) {
+                        builder.withContextAttribute(k, bool);
+                    } else if (v instanceof Number number) {
+                        builder.withContextAttribute(k, number.intValue());
                     } else {
                         throw new IllegalArgumentException("Unexpected event override attribute '" + k + "' type: " + v.getClass());
                     }

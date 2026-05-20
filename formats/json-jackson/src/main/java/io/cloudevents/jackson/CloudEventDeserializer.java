@@ -178,8 +178,8 @@ class CloudEventDeserializer extends StdDeserializer<CloudEvent> {
 
                             // Only 'Int' values are supported by the specification
 
-                            if (numericValue instanceof Integer){
-                                writer.withContextAttribute(extensionName, (Integer) numericValue);
+                            if (numericValue instanceof Integer integer){
+                                writer.withContextAttribute(extensionName, integer);
                             } else{
                                 throw CloudEventRWException.newInvalidAttributeType(extensionName,numericValue);
                             }
