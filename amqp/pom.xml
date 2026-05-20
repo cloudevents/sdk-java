@@ -13,13 +13,12 @@
 	<name>CloudEvents - Proton AMQP Binding</name>
 	<packaging>jar</packaging>
 
-    <properties>
-       <protonj.version>0.34.1</protonj.version>
-       <jsr305.version>3.0.2</jsr305.version>
-        <module-name>io.cloudevents.amqp.proton</module-name>
-    </properties>
+	<properties>
+		<protonj.version>0.34.1</protonj.version>
+		<module-name>io.cloudevents.amqp.proton</module-name>
+	</properties>
 
-    <dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>org.apache.qpid</groupId>
 			<artifactId>proton-j</artifactId>
