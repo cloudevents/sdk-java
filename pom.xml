@@ -187,7 +187,7 @@
                         <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
                         <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
                         <link>https://kafka.apache.org/30/javadoc/</link>
-                        <link>https://fasterxml.github.io/jackson-databind/javadoc/2.10/</link>
+                        <link>https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind/latest/</link>
                         <link>https://projectreactor.io/docs/core/release/api/</link>
                         <link>https://www.reactive-streams.org/reactive-streams-1.0.4-javadoc/</link>
                     </links>
