@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-kafka-example</artifactId>
+    <name>Cloudevents - Kafka example</name>
+
     <properties>
         <module-name>cloudevents.example.kafka</module-name>
     </properties>

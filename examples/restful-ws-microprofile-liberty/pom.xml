@@ -8,6 +8,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cloudevents-restful-ws-microprofile-liberty-example</artifactId>
+    <name>Cloudevents - JAX-RS, Microprofile and Liberty example</name>
     <packaging>war</packaging>
 
     <properties>

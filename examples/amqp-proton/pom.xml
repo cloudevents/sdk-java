@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>cloudevents-examples</artifactId>
-    <groupId>io.cloudevents</groupId>
-    <version>4.1.1-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cloudevents-examples</artifactId>
+        <groupId>io.cloudevents</groupId>
+        <version>4.1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>cloudevents-amqp-proton-example</artifactId>
+    <artifactId>cloudevents-amqp-proton-example</artifactId>
+    <name>Cloudevents - AMQP Proton + Vert.x example</name>
 
-	<properties>
-      <module-name>cloudevents.example.amqp.proton</module-name>
-      <vertx.version>4.0.0.Beta1</vertx.version>
-	</properties>
-  <dependencies>
-  	 <dependency>
-         <groupId>io.cloudevents</groupId>
-  	     <artifactId>cloudevents-amqp-proton</artifactId>
-  	     <version>${project.version}</version>
-  	 </dependency>
-     <dependency>
-         <groupId>io.vertx</groupId>
-         <artifactId>vertx-core</artifactId>
-         <version>${vertx.version}</version>
-     </dependency>
-     <dependency>
-         <groupId>io.vertx</groupId>
-  	     <artifactId>vertx-proton</artifactId>
-  	     <version>${vertx.version}</version>
-     </dependency>
+    <properties>
+        <module-name>cloudevents.example.amqp.proton</module-name>
+        <vertx.version>4.0.0.Beta1</vertx.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>io.cloudevents</groupId>
+            <artifactId>cloudevents-amqp-proton</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-proton</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 
 </project>

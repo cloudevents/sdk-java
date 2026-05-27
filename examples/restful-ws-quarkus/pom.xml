@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cloudevents-restful-ws-quarkus-example</artifactId>
+    <name>Cloudevents - JAX-RS Quarkus example</name>
     <properties>
         <module-name>cloudevents.example.restful.ws.quarkus</module-name>
         <quarkus.version>1.10.3.Final</quarkus.version>
