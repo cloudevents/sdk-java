@@ -29,6 +29,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.io.OutputStream;
 
+@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
 public final class RestfulWSMessageWriter implements CloudEventWriter<Void>, MessageWriter<RestfulWSMessageWriter, Void> {
 
     private final MultivaluedMap<String, Object> httpHeaders;

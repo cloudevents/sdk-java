@@ -26,16 +26,16 @@ import io.cloudevents.http.restful.ws.impl.RestfulWSMessageFactory;
 import io.cloudevents.http.restful.ws.impl.RestfulWSMessageWriter;
 import io.cloudevents.rw.CloudEventWriter;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.Provider;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,16 +46,15 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * This provider implements {@link CloudEvent} encoding and decoding for Jax-Rs Resources and with {@link javax.ws.rs.client.Client}.
+ * This provider implements {@link CloudEvent} encoding and decoding for Jax-Rs Resources and with {@link jakarta.ws.rs.client.Client}.
  */
 @Provider
 @Consumes(MediaType.WILDCARD)
 @Produces(MediaType.WILDCARD)
-@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
 public class CloudEventsProvider implements MessageBodyReader<CloudEvent>, MessageBodyWriter<CloudEvent>, ClientRequestFilter {
 
     /**
-     * The content type to use when sending {@link CloudEvent} with {@link javax.ws.rs.client.Client}
+     * The content type to use when sending {@link CloudEvent} with {@link jakarta.ws.rs.client.Client}
      */
     public static MediaType CLOUDEVENT_TYPE = MediaType.valueOf("application/cloudevents");
 

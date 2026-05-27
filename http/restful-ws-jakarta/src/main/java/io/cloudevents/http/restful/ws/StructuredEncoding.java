@@ -24,10 +24,15 @@ import java.lang.annotation.Target;
 
 /**
  * Annotate a method with this annotation to specify that you want to write the returned event
- * in binary mode.
+ * in structured mode.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
-public @interface BinaryEncoding {
+public @interface StructuredEncoding {
+    /**
+     * Specify the content type of the structured mode.
+     * This values will be used to resolve the {@link io.cloudevents.core.format.EventFormat} through
+     * the {@link io.cloudevents.core.provider.EventFormatProvider}.
+     */
+    String value();
 }

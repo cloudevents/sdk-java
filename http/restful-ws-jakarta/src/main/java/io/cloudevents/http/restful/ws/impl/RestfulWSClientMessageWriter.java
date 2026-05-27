@@ -24,11 +24,10 @@ import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 
-@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
 public final class RestfulWSClientMessageWriter implements CloudEventWriter<Void>, MessageWriter<RestfulWSClientMessageWriter, Void> {
 
     private final ClientRequestContext context;

@@ -21,11 +21,10 @@ import io.cloudevents.core.message.MessageReader;
 import io.cloudevents.core.message.impl.GenericStructuredMessageReader;
 import io.cloudevents.core.message.impl.MessageUtils;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 
-@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
 public final class RestfulWSMessageFactory {
 
     private RestfulWSMessageFactory() {

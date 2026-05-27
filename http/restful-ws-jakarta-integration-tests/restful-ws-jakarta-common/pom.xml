@@ -8,7 +8,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cloudevents-http-restful-ws-jakarta-integration-tests-common</artifactId>
-    <name>CloudEvents - JAX-RS Jakarta EE9+ Integration Tests - Common</name>
+    <name>CloudEvents - JAX-RS Jakarta EE 9+ Integration Tests - Common</name>
     <packaging>jar</packaging>
 
 	<properties>

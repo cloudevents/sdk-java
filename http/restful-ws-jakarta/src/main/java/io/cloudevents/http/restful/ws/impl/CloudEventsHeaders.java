@@ -15,19 +15,24 @@
  *
  */
 
-package io.cloudevents.http.restful.ws;
+package io.cloudevents.http.restful.ws.impl;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.cloudevents.core.message.impl.MessageUtils;
 
-/**
- * Annotate a method with this annotation to specify that you want to write the returned event
- * in binary mode.
- */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
-public @interface BinaryEncoding {
+import jakarta.ws.rs.core.HttpHeaders;
+import java.util.Map;
+
+class CloudEventsHeaders {
+
+    static final String CE_PREFIX = "ce-";
+
+    static final Map<String, String> ATTRIBUTES_TO_HEADERS = MessageUtils.generateAttributesToHeadersMapping(v -> {
+        if (v.equals("datacontenttype")) {
+            return HttpHeaders.CONTENT_TYPE;
+        }
+        return CE_PREFIX + v;
+    });
+
+    static final String SPEC_VERSION = ATTRIBUTES_TO_HEADERS.get("specversion");
+
 }

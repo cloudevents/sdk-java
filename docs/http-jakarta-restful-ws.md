@@ -3,7 +3,10 @@ title: CloudEvents HTTP Jakarta RESTful Web Services
 nav_order: 5
 ---
 
-# HTTP Protocol Binding for Jakarta EE8 - RESTful Web Services
+# HTTP Protocol Binding for Jakarta EE 8 - RESTful Web Services
+
+This module is deprecated and will be removed in version 5.0.
+Please migrate to Jakarta EE 9+ and use the `cloudevents-http-restful-ws-jakarta` module instead.
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
 

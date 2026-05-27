@@ -61,37 +61,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources
-                        </phase>
-                        <configuration>
-                            <target>
-                                <delete dir="src/main"/>
-                                <copy todir="src">
-                                    <fileset dir="../restful-ws\src" />
-                                    <filterchain>
-                                        <replaceregex pattern="javax." replace="jakarta." />
-                                    </filterchain>
-                                </copy>
-                                <move todir="src/main/resources/META-INF/services">
-                                    <fileset dir="src/main/resources/META-INF/services" />
-                                    <mapper type="regexp" from="(.*)javax.(.*)" to="\1jakarta.\2"/>
-                                </move>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

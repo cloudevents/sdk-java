@@ -24,53 +24,68 @@ import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.rw.CloudEventRWException;
 import io.cloudevents.rw.CloudEventWriter;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedMap;
+import java.io.IOException;
+import java.io.OutputStream;
 
-@Deprecated // to be removed in version 5.0, use cloudevents-http-restful-ws-jakarta module instead
-public final class RestfulWSClientMessageWriter implements CloudEventWriter<Void>, MessageWriter<RestfulWSClientMessageWriter, Void> {
+public final class RestfulWSMessageWriter implements CloudEventWriter<Void>, MessageWriter<RestfulWSMessageWriter, Void> {
 
-    private final ClientRequestContext context;
+    private final MultivaluedMap<String, Object> httpHeaders;
+    private final OutputStream entityStream;
 
-    public RestfulWSClientMessageWriter(ClientRequestContext context) {
-        this.context = context;
+    public RestfulWSMessageWriter(MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) {
+        this.httpHeaders = httpHeaders;
+        this.entityStream = entityStream;
 
         // http headers could contain a content type, so let's remove it
-        this.context.getHeaders().remove(HttpHeaders.CONTENT_TYPE);
-        this.context.setEntity(null);
+        this.httpHeaders.remove(HttpHeaders.CONTENT_TYPE);
     }
 
     @Override
-    public RestfulWSClientMessageWriter create(SpecVersion version) {
-        this.context.getHeaders().add(CloudEventsHeaders.SPEC_VERSION, version.toString());
+    public RestfulWSMessageWriter create(SpecVersion version) {
+        this.httpHeaders.add(CloudEventsHeaders.SPEC_VERSION, version.toString());
         return this;
     }
 
     @Override
-    public RestfulWSClientMessageWriter withContextAttribute(String name, String value) throws CloudEventRWException {
+    public RestfulWSMessageWriter withContextAttribute(String name, String value) throws CloudEventRWException {
         String headerName = CloudEventsHeaders.ATTRIBUTES_TO_HEADERS.get(name);
         if (headerName == null) {
             headerName = CloudEventsHeaders.CE_PREFIX + name;
         }
-        this.context.getHeaders().add(headerName, value);
+        this.httpHeaders.add(headerName, value);
         return this;
     }
 
     @Override
     public Void end(CloudEventData value) throws CloudEventRWException {
-        this.context.setEntity(value.toBytes());
-        return null;
+        try {
+            this.entityStream.write(value.toBytes());
+        } catch (IOException e) {
+            throw CloudEventRWException.newOther(e);
+        }
+        return this.end();
     }
 
     @Override
     public Void end() {
+        try {
+            this.entityStream.flush();
+        } catch (IOException e) {
+            throw CloudEventRWException.newOther(e);
+        }
         return null;
     }
 
     @Override
     public Void setEvent(EventFormat format, byte[] value) throws CloudEventRWException {
-        this.context.setEntity(value, null, MediaType.valueOf(format.serializedContentType()));
-        return null;
+        this.httpHeaders.add(HttpHeaders.CONTENT_TYPE, format.serializedContentType());
+        try {
+            this.entityStream.write(value);
+        } catch (IOException e) {
+            throw CloudEventRWException.newOther(e);
+        }
+        return this.end();
     }
 }
