@@ -43,7 +43,7 @@
     <properties>
         <jakarta-ee.version>3.0.0</jakarta-ee.version>
         <jersey.version>3.0.8</jersey.version>
-        <vertx.version>4.4.3</vertx.version>
+        <vertx.version>4.5.27</vertx.version>
         <resteasy.version>6.0.3.Final</resteasy.version>
         <module-name>io.cloudevents.http.restfulws</module-name>
     </properties>
