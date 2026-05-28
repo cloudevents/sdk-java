@@ -17,6 +17,8 @@
     <properties>
         <module-name>cloudevents.http.restful.ws.jakarta.integration.tests.microprofile</module-name>
 
+        <resteasy.version>6.0.3.Final</resteasy.version>
+
         <!-- Liberty configuration -->
         <liberty.var.default.http.port>9080</liberty.var.default.http.port>
         <liberty.var.default.https.port>9443</liberty.var.default.https.port>
@@ -66,13 +68,13 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>6.0.3.Final</version>
+            <version>${resteasy.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-json-binding-provider</artifactId>
-            <version>6.0.3.Final</version>
+            <version>${resteasy.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
