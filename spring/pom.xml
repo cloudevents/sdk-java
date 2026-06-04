@@ -32,7 +32,7 @@
 
     <properties>
         <module-name>io.cloudevents.spring</module-name>
-        <spring-boot.version>2.4.3</spring-boot.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
+            <version>${jsr305.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

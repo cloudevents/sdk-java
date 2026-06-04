@@ -9,19 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cloudevents-restful-ws-quarkus-example</artifactId>
+    <name>Cloudevents - JAX-RS Quarkus example</name>
     <properties>
         <module-name>cloudevents.example.restful.ws.quarkus</module-name>
-        <quarkus-plugin.version>1.10.3.Final</quarkus-plugin.version>
-        <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
-        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        <quarkus.platform.version>1.10.3.Final</quarkus.platform.version>
+        <quarkus.version>1.13.7.Final</quarkus.version>
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>${quarkus.platform.group-id}</groupId>
-                <artifactId>${quarkus.platform.artifact-id}</artifactId>
-                <version>${quarkus.platform.version}</version>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-universe-bom</artifactId>
+                <version>${quarkus.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -71,16 +69,19 @@
             <plugin>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
-                <version>${quarkus-plugin.version}</version>
+                <version>${quarkus.version}</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>prepare</goal>
                             <goal>prepare-tests</goal>
                             <goal>build</goal>
+                            <goal>generate-code</goal>
+                            <goal>generate-code-tests</goal>
                         </goals>
                     </execution>
                 </executions>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
@@ -95,8 +96,8 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
                         <executions>
                             <execution>
                                 <goals>

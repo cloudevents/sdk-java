@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-rocketmq-example</artifactId>
+    <name>Cloudevents - RocketMQ example</name>
+
     <properties>
         <module-name>cloudevents.example.rocketmq</module-name>
     </properties>

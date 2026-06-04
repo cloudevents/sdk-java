@@ -10,7 +10,7 @@ nav_order: 4
 This module provides the Avro Compact `EventFormat` implementation.
 
 # Setup
-For Maven based projects, use the following dependency:
+For Maven-based projects, use the following dependency:
 
 ```xml
 <dependency>

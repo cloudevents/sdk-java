@@ -89,13 +89,10 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- Maven plugins -->
-        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
-        <maven-editorconfig-plugin.version>0.1.0</maven-editorconfig-plugin.version>
-
         <!-- Dependencies -->
-        <assertj-core.version>3.16.1</assertj-core.version>
-        <junit-jupiter.version>5.7.0</junit-jupiter.version>
+        <assertj-core.version>3.27.7</assertj-core.version>
+        <junit-jupiter.version>5.14.4</junit-jupiter.version>
+        <jsr305.version>3.0.2</jsr305.version>
     </properties>
 
     <distributionManagement>
@@ -121,11 +118,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven-surefire-plugin.version}</version>
+                    <version>3.5.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>3.5.5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.5.0</version>
                     <configuration>
                         <archive>
                             <manifestEntries>
@@ -137,7 +140,7 @@
                 <plugin>
                     <groupId>org.ec4j.maven</groupId>
                     <artifactId>editorconfig-maven-plugin</artifactId>
-                    <version>${maven-editorconfig-plugin.version}</version>
+                    <version>0.2.0</version>
                     <executions>
                         <execution>
                             <id>check</id>
@@ -155,6 +158,21 @@
                         </excludes>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.5.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.10.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -162,14 +180,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.12.0</version>
                 <configuration>
                     <detectLinks/>
                     <links>
                         <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
                         <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
-                        <link>https://kafka.apache.org/30/javadoc/</link>
-                        <link>https://fasterxml.github.io/jackson-databind/javadoc/2.10/</link>
+                        <link>https://kafka.apache.org/39/javadoc/</link>
+                        <link>https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind/latest/</link>
+                        <link>https://projectreactor.io/docs/core/release/api/</link>
+                        <link>https://www.reactive-streams.org/reactive-streams-1.0.4-javadoc/</link>
                     </links>
                     <source>8</source>
                 </configuration>
@@ -186,7 +206,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -241,7 +261,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.8</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

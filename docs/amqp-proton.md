@@ -9,9 +9,9 @@ nav_order: 5
 
 This module implements `MessageReader` and `MessageWriter` using the Qpid Proton
 library. It can be used with Qpid Proton or any integrations based on Qpid
-Proton (e.g vertx-proton).
+Proton (e.g. vertx-proton).
 
-For Maven based projects, use the following to configure the `proton` AMQP
+For Maven-based projects, use the following to configure the `proton` AMQP
 binding for CloudEvents:
 
 ```xml

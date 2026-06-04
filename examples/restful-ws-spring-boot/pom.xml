@@ -10,19 +10,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-spring-boot-example</artifactId>
+    <name>Cloudevents - Spring Boot example</name>
 
     <properties>
         <module-name>cloudevents.example.spring.boot</module-name>
-        <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
-        <spring.version>5.2.9.RELEASE</spring.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring.version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -33,7 +33,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jersey</artifactId>
-            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>io.cloudevents</groupId>
