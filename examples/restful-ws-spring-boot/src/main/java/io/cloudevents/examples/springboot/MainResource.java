@@ -22,40 +22,40 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.PojoCloudEventData;
 import io.cloudevents.jackson.PojoCloudEventDataMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import static io.cloudevents.core.CloudEventUtils.mapData;
 
-@Path("/")
+@RestController
 public class MainResource {
 
     public static final String HAPPY_BIRTHDAY_EVENT_TYPE = "happybirthday.myapplication";
 
-    @Autowired
-    ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    @POST
-    @Path("happy_birthday")
-    public Response handleHappyBirthdayEvent(CloudEvent inputEvent) {
+    public MainResource(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    @PostMapping("/happy_birthday")
+    public ResponseEntity handleHappyBirthdayEvent(@RequestBody CloudEvent inputEvent) {
         if (!inputEvent.getType().equals(HAPPY_BIRTHDAY_EVENT_TYPE)) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                .type(MediaType.TEXT_PLAIN)
-                .entity("Event type should be \"" + HAPPY_BIRTHDAY_EVENT_TYPE + "\" but is \"" + inputEvent.getType() + "\"")
-                .build();
+            return ResponseEntity.badRequest()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body("Event type should be \"" + HAPPY_BIRTHDAY_EVENT_TYPE + "\" but is \"" + inputEvent.getType() + "\"");
         }
 
         PojoCloudEventData<User> cloudEventData = mapData(inputEvent, PojoCloudEventDataMapper.from(objectMapper, User.class));
 
         if (cloudEventData == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                .type(MediaType.TEXT_PLAIN)
-                .entity("Event should contain the user")
-                .build();
+            return ResponseEntity.badRequest()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body("Event should contain the user");
         }
 
         User user = cloudEventData.getValue();
@@ -65,6 +65,6 @@ public class MainResource {
             .withData(PojoCloudEventData.wrap(user, objectMapper::writeValueAsBytes))
             .build();
 
-        return Response.ok(outputEvent).build();
+        return ResponseEntity.ok(outputEvent);
     }
 }

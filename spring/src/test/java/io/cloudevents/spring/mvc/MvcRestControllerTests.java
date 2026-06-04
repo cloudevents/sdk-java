@@ -52,156 +52,135 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MvcRestControllerTests {
 
-	@Autowired
-	private TestRestTemplate rest;
+    @Autowired
+    private TestRestTemplate rest;
 
-	@LocalServerPort
-	private int port;
+    @LocalServerPort
+    private int port;
 
-	@Test
-	void echoWithCorrectHeaders() {
+    @Test
+    void echoWithCorrectHeaders() {
 
-		ResponseEntity<String> response = rest.exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/")) //
-				.header("ce-id", "12345") //
-				.header("ce-specversion", "1.0") //
-				.header("ce-type", "io.spring.event") //
-				.header("ce-source", "https://spring.io/events") //
-				.contentType(MediaType.APPLICATION_JSON) //
-				.body("{\"value\":\"Dave\"}"), String.class);
+        ResponseEntity<String> response = rest.exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/")) //
+            .header("ce-id", "12345") //
+            .header("ce-specversion", "1.0") //
+            .header("ce-type", "io.spring.event") //
+            .header("ce-source", "https://spring.io/events") //
+            .contentType(MediaType.APPLICATION_JSON) //
+            .body("{\"value\":\"Dave\"}"), String.class);
 
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
 
-		HttpHeaders headers = response.getHeaders();
+        HttpHeaders headers = response.getHeaders();
 
-		assertThat(headers).containsKey("ce-id");
-		assertThat(headers).containsKey("ce-source");
-		assertThat(headers).containsKey("ce-type");
+        assertThat(headers).containsKey("ce-id");
+        assertThat(headers).containsKey("ce-source");
+        assertThat(headers).containsKey("ce-type");
 
-		// assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
-		assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
-		assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
+        // assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
+        assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
+        assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
 
-	}
+    }
 
-	@Test
-	void structuredRequestResponseEvents() {
+    @Test
+    void structuredRequestResponseEvents() {
 
-		ResponseEntity<String> response = rest
-				.exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/event")) //
-						.contentType(new MediaType("application", "cloudevents+json")) //
-						.body("{" //
-								+ "\"id\":\"12345\"," //
-								+ "\"specversion\":\"1.0\"," //
-								+ "\"type\":\"io.spring.event\"," //
-								+ "\"source\":\"https://spring.io/events\"," //
-								+ "\"data\":{\"value\":\"Dave\"}}"),
-						String.class);
+        ResponseEntity<String> response = rest
+            .exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/event")) //
+                    .contentType(new MediaType("application", "cloudevents+json")) //
+                    .body("""
+                        {
+                        "id":"12345",
+                        "specversion":"1.0",
+                        "type":"io.spring.event",
+                        "source":"https://spring.io/events",
+                        "data":{"value":"Dave"}}"""),
+                String.class);
 
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
 
-		HttpHeaders headers = response.getHeaders();
+        HttpHeaders headers = response.getHeaders();
 
-		assertThat(headers).containsKey("ce-id");
-		assertThat(headers).containsKey("ce-source");
-		assertThat(headers).containsKey("ce-type");
+        assertThat(headers).containsKey("ce-id");
+        assertThat(headers).containsKey("ce-source");
+        assertThat(headers).containsKey("ce-type");
 
-		// assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
-		assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
-		assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
+        // assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
+        assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
+        assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
 
-	}
+    }
 
-	@Test
-	void requestResponseEvents() {
+    @Test
+    void requestResponseEvents() {
 
-		ResponseEntity<String> response = rest
-				.exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/event")) //
-						.header("ce-id", "12345") //
-						.header("ce-specversion", "1.0") //
-						.header("ce-type", "io.spring.event") //
-						.header("ce-source", "https://spring.io/events") //
-						.contentType(MediaType.APPLICATION_JSON) //
-						.body("{\"value\":\"Dave\"}"), String.class);
+        ResponseEntity<String> response = rest
+            .exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/event")) //
+                .header("ce-id", "12345") //
+                .header("ce-specversion", "1.0") //
+                .header("ce-type", "io.spring.event") //
+                .header("ce-source", "https://spring.io/events") //
+                .contentType(MediaType.APPLICATION_JSON) //
+                .body("{\"value\":\"Dave\"}"), String.class);
 
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
 
-		HttpHeaders headers = response.getHeaders();
+        HttpHeaders headers = response.getHeaders();
 
-		assertThat(headers).containsKey("ce-id");
-		assertThat(headers).containsKey("ce-source");
-		assertThat(headers).containsKey("ce-type");
+        assertThat(headers).containsKey("ce-id");
+        assertThat(headers).containsKey("ce-source");
+        assertThat(headers).containsKey("ce-type");
 
-		assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
-		assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
-		assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
+        assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
+        assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
+        assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
 
-	}
+    }
 
-	@SpringBootApplication
-	@RestController
-	static class TestApplication {
+    @SpringBootApplication
+    @RestController
+    static class TestApplication {
 
-		@PostMapping("/")
-		public ResponseEntity<Foo> echo(@RequestBody Foo foo, @RequestHeader HttpHeaders headers) {
-			CloudEvent attributes = CloudEventHttpUtils.fromHttp(headers) //
-					.withId(UUID.randomUUID().toString()) //
-					.withSource(URI.create("https://spring.io/foos")) //
-					.withType("io.spring.event.Foo") //
-					.build();
-			HttpHeaders outgoing = CloudEventHttpUtils.toHttp(attributes);
-			return ResponseEntity.ok().headers(outgoing).body(foo);
-		}
+        @PostMapping("/")
+        public ResponseEntity<Foo> echo(@RequestBody Foo foo, @RequestHeader HttpHeaders headers) {
+            CloudEvent attributes = CloudEventHttpUtils.fromHttp(headers) //
+                .withId(UUID.randomUUID().toString()) //
+                .withSource(URI.create("https://spring.io/foos")) //
+                .withType("io.spring.event.Foo") //
+                .build();
+            HttpHeaders outgoing = CloudEventHttpUtils.toHttp(attributes);
+            return ResponseEntity.ok().headers(outgoing).body(foo);
+        }
 
-		@PostMapping("/event")
-		public CloudEvent ce(@RequestBody CloudEvent event) {
-			CloudEvent attributes = CloudEventBuilder.from(event) //
-					.withId(UUID.randomUUID().toString()) //
-					.withSource(URI.create("https://spring.io/foos")) //
-					.withType("io.spring.event.Foo") //
-					.withData(event.getData().toBytes()) //
-					.build();
-			return attributes;
-		}
+        @PostMapping("/event")
+        public CloudEvent ce(@RequestBody CloudEvent event) {
+            CloudEvent attributes = CloudEventBuilder.from(event) //
+                .withId(UUID.randomUUID().toString()) //
+                .withSource(URI.create("https://spring.io/foos")) //
+                .withType("io.spring.event.Foo") //
+                .withData(event.getData().toBytes()) //
+                .build();
+            return attributes;
+        }
 
-		@Configuration
-		public static class CloudEventHandlerConfiguration implements WebMvcConfigurer {
+        @Configuration
+        public static class CloudEventHandlerConfiguration implements WebMvcConfigurer {
 
-			@Override
-			public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-				converters.add(0, new CloudEventHttpMessageConverter());
-			}
+            @Override
+            public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+                converters.add(0, new CloudEventHttpMessageConverter());
+            }
 
-		}
+        }
 
-	}
-
-}
-
-class Foo {
-
-	private String value;
-
-	public Foo() {
-	}
-
-	public Foo(String value) {
-		this.value = value;
-	}
-
-	public String getValue() {
-		return this.value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	@Override
-	public String toString() {
-		return "Foo [value=" + this.value + "]";
-	}
+    }
 
 }
+
+record Foo(
+    String value
+) {}

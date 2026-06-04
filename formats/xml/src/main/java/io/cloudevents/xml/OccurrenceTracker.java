@@ -37,8 +37,8 @@ class OccurrenceTracker {
     }
 
     /**
-     * Record an occurrence of attribute name.
-     * @param name The name  to track.
+     * Record an occurrence of an attribute name.
+     * @param name The name to track.
      * @return boolean true => accepted, false => duplicate name.
      */
     boolean trackOccurrence(String name) {
