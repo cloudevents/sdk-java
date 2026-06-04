@@ -16,7 +16,7 @@
     <properties>
         <module-name>cloudevents.http.restful.ws.jakarta.integration.tests.microprofile</module-name>
 
-        <resteasy.version>6.0.3.Final</resteasy.version>
+        <resteasy.version>6.2.16.Final</resteasy.version>
 
         <!-- Liberty configuration -->
         <liberty.var.default.http.port>9080</liberty.var.default.http.port>
