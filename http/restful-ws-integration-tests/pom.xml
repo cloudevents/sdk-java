@@ -40,7 +40,6 @@
         <module>restful-ws-common</module>
         <module>restful-ws-spring</module>
         <module>restful-ws-jersey</module>
-        <module>restful-ws-resteasy</module>
     </modules>
 
 </project>
