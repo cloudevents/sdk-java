@@ -16,14 +16,9 @@
 
 package io.cloudevents.examples.http.basic;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
-import java.util.Enumeration;
+import java.nio.ByteBuffer;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -33,70 +28,58 @@ import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.http.HttpMessageFactory;
 
 import org.eclipse.jetty.http.HttpStatus;
-import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.Response;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.util.Callback;
 
 public class JettyServer {
 
-    private static class Handler extends AbstractHandler {
+    private static class CloudeventsHandler extends Handler.Abstract {
 
         @Override
-        public void handle(String uri,
-                           Request request,
-                           HttpServletRequest httpServletRequest,
-                           HttpServletResponse httpServletResponse) throws IOException, ServletException {
-            if (!"/echo".equalsIgnoreCase(uri)) {
-                httpServletResponse.setStatus(HttpStatus.NOT_FOUND_404);
-                return;
+        public boolean handle(Request request, Response response, Callback callback) throws IOException {
+            if (!"/echo".equalsIgnoreCase(request.getHttpURI().getPath())) {
+                return false;
             }
             if (!"POST".equalsIgnoreCase(request.getMethod())) {
-                httpServletResponse.setStatus(HttpStatus.METHOD_NOT_ALLOWED_405);
-                return;
+                response.setStatus(HttpStatus.METHOD_NOT_ALLOWED_405);
+                callback.succeeded();
+                return true;
             }
 
-            CloudEvent receivedEvent = createMessageReader(httpServletRequest).toEvent();
+            CloudEvent receivedEvent = createMessageReader(request).toEvent();
             System.out.println("Handling event: " + receivedEvent);
-            createMessageWriter(httpServletResponse).writeBinary(receivedEvent);
+            createMessageWriter(response, callback).writeBinary(receivedEvent);
+            return true;
         }
     }
 
-    private static MessageReader createMessageReader(HttpServletRequest httpServletRequest) throws IOException {
-        Consumer<BiConsumer<String, String>> forEachHeader = processHeader -> {
-            Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                String name = headerNames.nextElement();
-                processHeader.accept(name, httpServletRequest.getHeader(name));
-
-            }
-        };
-        byte[] body = IOUtils.toByteArray(httpServletRequest.getInputStream());
+    private static MessageReader createMessageReader(Request request) {
+        Consumer<BiConsumer<String, String>> forEachHeader = processHeader ->
+            request.getHeaders()
+                .forEach(header -> processHeader.accept(header.getName(), header.getValue()));
+        byte[] body = request.read().takeByteArray();
         return HttpMessageFactory.createReader(forEachHeader, body);
     }
 
-    private static MessageWriter createMessageWriter(HttpServletResponse httpServletResponse) throws IOException {
+    private static MessageWriter createMessageWriter(Response response, Callback callback) {
         return HttpMessageFactory.createWriter(
-            httpServletResponse::addHeader,
+            response.getHeaders()::add,
             body -> {
-                try {
-                    try (ServletOutputStream outputStream = httpServletResponse.getOutputStream()) {
-                        if (body != null) {
-                            httpServletResponse.setContentLength(body.length);
-                            httpServletResponse.setStatus(HttpStatus.OK_200);
-                            outputStream.write(body);
-                        } else {
-                            httpServletResponse.setStatus(HttpStatus.NO_CONTENT_204);
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
+                if (body != null) {
+                    response.setStatus(HttpStatus.OK_200);
+                    response.write(true, ByteBuffer.wrap(body), callback);
+                } else {
+                    response.setStatus(HttpStatus.NO_CONTENT_204);
                 }
             });
     }
 
     public static void main(String[] args) throws Exception {
         Server server = new Server(new InetSocketAddress("localhost", 8080));
-        server.setHandler(new Handler());
+        server.setHandler(new CloudeventsHandler());
         server.start();
         server.join();
     }
