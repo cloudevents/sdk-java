@@ -40,7 +40,6 @@ Supported features of the specification:
 |                   AVRO Event Format                    |                          :x:                          |                          :x:                          |
 |                 HTTP Protocol Binding                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                 - [Vert.x](http/vertx)                 |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|      - [Jakarta EE 8 Restful WS](http/restful-ws)      |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 | - [Jakarta EE 9+ Restful WS](http/restful-ws-jakarta)  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                 - [Basic](http/basic)                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                   - [Spring](spring)                   |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
@@ -69,7 +68,6 @@ Javadocs are available on [javadoc.io](https://www.javadoc.io):
 -   [cloudevents-protobuf](https://www.javadoc.io/doc/io.cloudevents/cloudevents-protobuf)
 -   [cloudevents-xml](https://www.javadoc.io/doc/io.cloudevents/cloudevents-xml)
 -   [cloudevents-http-basic](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-basic)
--   [cloudevents-http-restful-ws](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
 -   [cloudevents-http-restful-ws-jakarta](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws-jakarta)
 -   [cloudevents-http-vertx](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
 -   [cloudevents-kafka](https://www.javadoc.io/doc/io.cloudevents/cloudevents-kafka)

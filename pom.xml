@@ -75,7 +75,6 @@
         <module>amqp</module>
         <module>http/basic</module>
         <module>http/vertx</module>
-        <module>http/restful-ws</module>
         <module>http/restful-ws-jakarta</module>
         <module>kafka</module>
         <module>spring</module>
@@ -232,7 +231,6 @@
             </activation>
             <modules>
                 <module>benchmarks</module>
-                <module>http/restful-ws-integration-tests</module>
                 <module>http/restful-ws-jakarta-integration-tests</module>
                 <module>examples</module>
             </modules>
