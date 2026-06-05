@@ -15,11 +15,16 @@
  *
  */
 
-package io.cloudevents.http.restful.ws.spring;
+package io.cloudevents.http.restful.ws.jakarta.spring;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import io.cloudevents.http.restful.ws.CloudEventsProvider;
+import io.cloudevents.http.restful.ws.TestResource;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.springframework.context.annotation.Configuration;
 
-@SpringBootApplication(scanBasePackages = {"io.cloudevents.http.restful.ws.spring"})
-public class TestApplication extends SpringBootServletInitializer {
+@Configuration
+public class JerseyConfig extends ResourceConfig {
+    public JerseyConfig() {
+        registerClasses(CloudEventsProvider.class, TestResource.class);
+    }
 }

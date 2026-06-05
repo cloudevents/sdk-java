@@ -38,7 +38,6 @@
 
     <modules>
         <module>restful-ws-common</module>
-        <module>restful-ws-spring</module>
     </modules>
 
 </project>

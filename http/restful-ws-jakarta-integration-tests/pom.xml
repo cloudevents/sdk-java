@@ -24,6 +24,7 @@
         <module>restful-ws-resteasy</module>
         <module>restful-ws-jersey</module>
         <module>restful-ws-liberty</module>
+        <module>restful-ws-spring</module>
     </modules>
 
 </project>

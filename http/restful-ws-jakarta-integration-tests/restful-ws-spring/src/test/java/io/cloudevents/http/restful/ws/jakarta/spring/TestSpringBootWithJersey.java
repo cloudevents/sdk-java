@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.http.restful.ws.spring;
+package io.cloudevents.http.restful.ws.jakarta.spring;
 
 import io.cloudevents.core.mock.CSVFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
@@ -27,8 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
 import java.net.URI;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
