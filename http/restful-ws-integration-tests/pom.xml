@@ -39,7 +39,6 @@
     <modules>
         <module>restful-ws-common</module>
         <module>restful-ws-spring</module>
-        <module>restful-ws-jersey</module>
     </modules>
 
 </project>
