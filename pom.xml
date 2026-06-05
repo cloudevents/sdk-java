@@ -90,6 +90,7 @@
 
         <!-- Dependencies -->
         <assertj-core.version>3.27.7</assertj-core.version>
+        <jakartaee.version>10.0.0</jakartaee.version>
         <junit-jupiter.version>5.14.4</junit-jupiter.version>
         <jsr305.version>3.0.2</jsr305.version>
     </properties>
@@ -110,6 +111,18 @@
             <url>https://central.sonatype.com</url>
         </repository>
     </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>${jakartaee.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -184,7 +197,7 @@
                     <detectLinks/>
                     <links>
                         <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
-                        <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
+                        <link>https://jakarta.ee/specifications/platform/10/apidocs/</link>
                         <link>https://kafka.apache.org/39/javadoc/</link>
                         <link>https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind/latest/</link>
                         <link>https://projectreactor.io/docs/core/release/api/</link>

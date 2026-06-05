@@ -33,7 +33,6 @@
     <properties>
         <module-name>cloudevents.http.restful.ws.jakarta.integration.tests.jersey</module-name>
         <jersey.version>3.1.11</jersey.version>
-        <jakarta-ee.version>3.0.0</jakarta-ee.version>
     </properties>
 
     <dependencies>
@@ -47,7 +46,6 @@
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>${jakarta-ee.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
