@@ -10,7 +10,7 @@ This directory includes some examples on how to use CloudEvents sdk-java:
     `cloudevents-http-restful-ws` with Quarkus to receive and send CloudEvents
     through HTTP.
 -   [restful-ws-spring-boot](restful-ws-spring-boot) shows how to use the module
-    `cloudevents-http-restful-ws` with Spring Boot and Jersey to receive and
+    `cloudevents-http-restful-ws-jakarta` with Spring Boot and Jersey to receive and
     send CloudEvents through HTTP.
 -   [spring-reactive](spring-reactive) shows how to use the module
     `cloudevents-spring` with Spring Boot and Webflux to receive and
