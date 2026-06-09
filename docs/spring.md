@@ -15,7 +15,7 @@ For Maven-based projects, use the following dependency:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-spring</artifactId>
-    <version>4.1.0</version>
+    <version>4.1.1</version>
 </dependency>
 ```
 
