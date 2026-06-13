@@ -11,7 +11,7 @@ This module provides the JSON `EventFormat` implementation using Jackson 2 and a
 `PojoCloudEventDataMapper` to convert `CloudEventData` to POJOs using the
 Jackson `ObjectMapper`.
 
-For Maven based projects, use the following dependency:
+For Maven-based projects, use the following dependency:
 
 ```xml
 <dependency>

@@ -17,7 +17,6 @@
 package io.cloudevents.spring.codec;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
@@ -40,11 +39,15 @@ import org.springframework.util.MimeTypeUtils;
  */
 public class CloudEventEncoder extends AbstractSingleValueEncoder<CloudEvent> {
 
-	public CloudEventEncoder() {
-		super(EventFormatProvider.getInstance().getContentTypes().stream()
-				.map(type -> MimeTypeUtils.parseMimeType(type))
-				.collect(Collectors.toList()).toArray(new MimeType[0]));
-	}
+    public CloudEventEncoder() {
+        super(EventFormatProvider
+            .getInstance()
+            .getContentTypes()
+            .stream()
+            .map(MimeTypeUtils::parseMimeType)
+            .toList()
+            .toArray(new MimeType[0]));
+    }
 
 	@Override
 	public boolean canEncode(ResolvableType elementType, @Nullable MimeType mimeType) {
