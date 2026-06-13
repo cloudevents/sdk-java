@@ -70,6 +70,7 @@
         <module>core</module>
         <module>formats/avro-compact</module>
         <module>formats/json-jackson</module>
+        <module>formats/json-jackson3</module>
         <module>formats/protobuf</module>
         <module>formats/xml</module>
         <module>amqp</module>

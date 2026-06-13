@@ -1,13 +1,13 @@
 ---
-title: CloudEvents Json Jackson 2
+title: CloudEvents Json Jackson 3
 nav_order: 4
 ---
 
-# CloudEvents JSON Jackson 2
+# CloudEvents JSON Jackson 3
 
-[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-json-jackson.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
+[![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-json-jackson3.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson3)
 
-This module provides the JSON `EventFormat` implementation using Jackson 2 and a
+This module provides the JSON `EventFormat` implementation using Jackson 3 and a
 `PojoCloudEventDataMapper` to convert `CloudEventData` to POJOs using the
 Jackson `ObjectMapper`.
 
@@ -16,8 +16,8 @@ For Maven based projects, use the following dependency:
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
-    <artifactId>cloudevents-json-jackson</artifactId>
-    <version>5.0.0</version>
+    <artifactId>cloudevents-json-jackson3</artifactId>
+    <version>4.1.1</version>
 </dependency>
 ```
 
