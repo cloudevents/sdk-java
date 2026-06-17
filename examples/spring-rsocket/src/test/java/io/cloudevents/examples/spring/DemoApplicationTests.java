@@ -1,20 +1,19 @@
 package io.cloudevents.examples.spring;
 
-import java.net.URI;
-import java.util.UUID;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.PojoCloudEventData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.util.MimeType;
+import tools.jackson.databind.ObjectMapper;
+
+import java.net.URI;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,7 +52,6 @@ public class DemoApplicationTests {
 
 		assertThat(new String(result.getData().toBytes()))
 				.isEqualTo("{\"value\":\"Dave\"}");
-
 	}
 
 }

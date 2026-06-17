@@ -14,7 +14,7 @@
 
     <properties>
         <module-name>cloudevents.example.spring.reactive</module-name>
-        <spring-boot.version>3.5.14</spring-boot.version>
+        <spring-boot.version>4.0.7</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -35,6 +35,10 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webclient</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-spring</artifactId>
             <version>${project.version}</version>
@@ -46,12 +50,17 @@
         </dependency>
         <dependency>
             <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-json-jackson</artifactId>
+            <artifactId>cloudevents-json-jackson3</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webtestclient</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

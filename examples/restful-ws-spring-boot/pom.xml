@@ -14,7 +14,7 @@
 
     <properties>
         <module-name>cloudevents.example.spring.boot</module-name>
-        <spring-boot.version>3.5.14</spring-boot.version>
+        <spring-boot.version>4.0.7</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -42,7 +42,7 @@
         <!-- To use the json format and the cloudevent data mapper -->
         <dependency>
             <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-json-jackson</artifactId>
+            <artifactId>cloudevents-json-jackson3</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
