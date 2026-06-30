@@ -49,9 +49,14 @@ public class JettyServer {
                 return true;
             }
 
-            CloudEvent receivedEvent = createMessageReader(request).toEvent();
-            System.out.println("Handling event: " + receivedEvent);
-            createMessageWriter(response, callback).writeBinary(receivedEvent);
+            try {
+                CloudEvent receivedEvent = createMessageReader(request).toEvent();
+                System.out.println("Handling event: " + receivedEvent);
+                createMessageWriter(response, callback).writeBinary(receivedEvent);
+            } catch (Exception e) {
+                response.setStatus(HttpStatus.BAD_REQUEST_400);
+                callback.succeeded();
+            }
             return true;
         }
     }
@@ -73,6 +78,7 @@ public class JettyServer {
                     response.write(true, ByteBuffer.wrap(body), callback);
                 } else {
                     response.setStatus(HttpStatus.NO_CONTENT_204);
+                    callback.succeeded();
                 }
             });
     }
