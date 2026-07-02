@@ -116,7 +116,7 @@ public class ProtonAmqpMessageWriterTest {
     }
     private void addProperty(final Map<String, Object> map, final String name, final String value, final boolean prefix) {
         if (prefix) {
-            map.put(String.format("cloudEvents:%s", name), value);
+            map.put("cloudEvents:%s".formatted(name), value);
         } else {
             map.put(name, value);
         }

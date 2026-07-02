@@ -22,9 +22,9 @@
     <modules>
         <module>restful-ws-jakarta-common</module>
         <module>restful-ws-resteasy</module>
-        <!-- Requires JDK11 to be used -->
-        <!-- <module>restful-ws-jersey</module> -->
+        <module>restful-ws-jersey</module>
         <module>restful-ws-liberty</module>
+        <module>restful-ws-spring</module>
     </modules>
 
 </project>

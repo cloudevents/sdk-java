@@ -14,7 +14,7 @@
 
     <properties>
         <module-name>cloudevents.example.spring.rsocket</module-name>
-        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-boot.version>3.5.14</spring-boot.version>
     </properties>
 
     <dependencyManagement>

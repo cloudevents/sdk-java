@@ -34,7 +34,6 @@ Using the Java SDK you can:
 |                        AVRO Event Format                         |                          :x:                          |                          :x:                          |
 |                      HTTP Protocol Binding                       |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                    - [Vert.x](http-vertx.md)                     |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|     - [Jakarta EE 8 Restful WS](http-jakarta-restful-ws.md)      |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 | - [Jakarta EE 9+ Restful WS](http-jakarta-restful-ws-jakarta.md) |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                     - [Basic](http-basic.md)                     |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                      - [Spring](spring.md)                       |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
@@ -65,7 +64,6 @@ receive CloudEvents, check out the dedicated pages:
 
 -   [AMQP using Proton](amqp-proton.md)
 -   [HTTP using Vert.x](http-vertx.md)
--   [HTTP using Jakarta EE 8 - Jakarta Restful WS](http-jakarta-restful-ws.md)
 -   [HTTP using Jakarta EE 9+ - Jakarta Restful WS](http-jakarta-restful-ws-jakarta.md)
 -   [HTTP using Spring](spring.md)
 -   [HTTP using Jackson](json-jackson.md)
@@ -102,8 +100,6 @@ a different feature from the different sub specs of
 -   [`cloudevents-xml`] Implementation of the XML Event Format.
 -   [`cloudevents-http-vertx`] Implementation of [HTTP Protocol Binding] with
     [Vert.x Core](https://vertx.io/)
--   [`cloudevents-http-restful-ws`] Implementation of [HTTP Protocol Binding]
-    for [Jakarta EE 8 Restful WS](https://jakarta.ee/specifications/restful-ws/2.1/) (deprecated, please use `cloudevents-http-restful-ws-jakarta`)
 -   [`cloudevents-http-restful-ws-jakarta`] Implementation of [HTTP Protocol Binding]
       for [Jakarta EE 9+ Restful WS](https://jakarta.ee/specifications/restful-ws/)
 -   [`cloudevents-http-basic`] Generic implementation of [HTTP Protocol
@@ -130,7 +126,6 @@ You can look at the latest published artifacts on
 [`cloudevents-xml`]: https://github.com/cloudevents/sdk-java/tree/main/formats/xml
 [`cloudevents-http-vertx`]: https://github.com/cloudevents/sdk-java/tree/main/http/vertx
 [`cloudevents-http-basic`]: https://github.com/cloudevents/sdk-java/tree/main/http/basic
-[`cloudevents-http-restful-ws`]: https://github.com/cloudevents/sdk-java/tree/main/http/restful-ws
 [`cloudevents-http-restful-ws-jakarta`]: https://github.com/cloudevents/sdk-java/tree/main/http/restful-ws-jakarta
 [`cloudevents-kafka`]: https://github.com/cloudevents/sdk-java/tree/main/kafka
 [`cloudevents-amqp-proton`]: https://github.com/cloudevents/sdk-java/tree/main/amqp

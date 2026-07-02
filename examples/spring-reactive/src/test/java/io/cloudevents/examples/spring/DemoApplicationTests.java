@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class DemoApplicationTests {
 
@@ -49,12 +51,13 @@ public class DemoApplicationTests {
 
         rest.post().uri("/event") //
                 .contentType(new MediaType("application", "cloudevents+json")) //
-                .bodyValue("{" //
-                        + "\"id\":\"12345\"," //
-                        + "\"specversion\":\"1.0\"," //
-                        + "\"type\":\"io.spring.event\"," //
-                        + "\"source\":\"https://spring.io/events\"," //
-                        + "\"data\":{\"value\":\"Dave\"}}") //
+                .bodyValue("""
+                    {
+                    "id":"12345",
+                    "specversion":"1.0",
+                    "type":"io.spring.event",
+                    "source":"https://spring.io/events",
+                    "data":{"value":"Dave"}}""") //
                 .exchange() //
                 .expectStatus().isOk() //
                 .expectHeader().exists("ce-id") //

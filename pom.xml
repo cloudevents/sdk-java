@@ -75,7 +75,6 @@
         <module>amqp</module>
         <module>http/basic</module>
         <module>http/vertx</module>
-        <module>http/restful-ws</module>
         <module>http/restful-ws-jakarta</module>
         <module>kafka</module>
         <module>spring</module>
@@ -85,12 +84,13 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Dependencies -->
         <assertj-core.version>3.27.7</assertj-core.version>
+        <jakartaee.version>10.0.0</jakartaee.version>
         <junit-jupiter.version>5.14.4</junit-jupiter.version>
         <jsr305.version>3.0.2</jsr305.version>
     </properties>
@@ -111,6 +111,18 @@
             <url>https://central.sonatype.com</url>
         </repository>
     </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>${jakartaee.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -185,13 +197,13 @@
                     <detectLinks/>
                     <links>
                         <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
-                        <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
-                        <link>https://kafka.apache.org/39/javadoc/</link>
+                        <link>https://jakarta.ee/specifications/platform/10/apidocs/</link>
+                        <link>https://kafka.apache.org/43/javadoc/</link>
                         <link>https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind/latest/</link>
                         <link>https://projectreactor.io/docs/core/release/api/</link>
                         <link>https://www.reactive-streams.org/reactive-streams-1.0.4-javadoc/</link>
                     </links>
-                    <source>8</source>
+                    <source>${java.version}</source>
                 </configuration>
                 <executions>
                     <execution>
@@ -232,7 +244,6 @@
             </activation>
             <modules>
                 <module>benchmarks</module>
-                <module>http/restful-ws-integration-tests</module>
                 <module>http/restful-ws-jakarta-integration-tests</module>
                 <module>examples</module>
             </modules>

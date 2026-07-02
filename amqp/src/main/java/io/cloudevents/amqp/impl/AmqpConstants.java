@@ -110,11 +110,9 @@ public final class AmqpConstants {
             return null;
         }
 
-        if (payload instanceof Data) {
-            final Data body = (Data) payload;
+        if (payload instanceof Data body) {
             return body.getValue().getArray();
-        } else if (payload instanceof AmqpValue) {
-            final AmqpValue body = (AmqpValue) payload;
+        } else if (payload instanceof AmqpValue body) {
             if (body.getValue() instanceof byte[]) {
                 return (byte[]) body.getValue();
             } else if (body.getValue() instanceof String &&

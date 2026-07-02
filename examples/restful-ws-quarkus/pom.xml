@@ -12,7 +12,7 @@
     <name>Cloudevents - JAX-RS Quarkus example</name>
     <properties>
         <module-name>cloudevents.example.restful.ws.quarkus</module-name>
-        <quarkus.version>1.13.7.Final</quarkus.version>
+        <quarkus.version>3.36.1</quarkus.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -28,7 +28,7 @@
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jackson</artifactId>
+            <artifactId>quarkus-rest-jackson</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-http-restful-ws</artifactId>
+            <artifactId>cloudevents-http-restful-ws-jakarta</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-junit5</artifactId>
+            <artifactId>quarkus-junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -73,8 +73,6 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>prepare</goal>
-                            <goal>prepare-tests</goal>
                             <goal>build</goal>
                             <goal>generate-code</goal>
                             <goal>generate-code-tests</goal>

@@ -38,36 +38,35 @@ import java.io.IOException;
  */
 public class CloudEventHttpMessageConverter extends AbstractHttpMessageConverter<CloudEvent> {
 
-	public CloudEventHttpMessageConverter() {
-		super(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL);
-	}
+    public CloudEventHttpMessageConverter() {
+        super(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL);
+    }
 
-	@Override
-	protected boolean supports(Class<?> clazz) {
-		return CloudEvent.class.isAssignableFrom(clazz);
-	}
+    @Override
+    protected boolean supports(Class<?> clazz) {
+        return CloudEvent.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	protected CloudEvent readInternal(Class<? extends CloudEvent> clazz, HttpInputMessage inputMessage)
-			throws IOException, HttpMessageNotReadableException {
-		byte[] body = StreamUtils.copyToByteArray(inputMessage.getBody());
-		return CloudEventHttpUtils.toReader(inputMessage.getHeaders(), () -> body).toEvent();
-	}
+    @Override
+    protected CloudEvent readInternal(Class<? extends CloudEvent> clazz, HttpInputMessage inputMessage)
+        throws IOException, HttpMessageNotReadableException {
+        byte[] body = StreamUtils.copyToByteArray(inputMessage.getBody());
+        return CloudEventHttpUtils.toReader(inputMessage.getHeaders(), () -> body).toEvent();
+    }
 
-	@Override
-	protected void writeInternal(CloudEvent event, HttpOutputMessage outputMessage)
-			throws IOException, HttpMessageNotWritableException {
-		CloudEventUtils.toReader(event)
-				.read(CloudEventHttpUtils.toWriter(outputMessage.getHeaders(), body -> copy(body, outputMessage)));
-	}
+    @Override
+    protected void writeInternal(CloudEvent event, HttpOutputMessage outputMessage)
+        throws IOException, HttpMessageNotWritableException {
+        CloudEventUtils.toReader(event)
+            .read(CloudEventHttpUtils.toWriter(outputMessage.getHeaders(), body -> copy(body, outputMessage)));
+    }
 
-	private void copy(byte[] body, HttpOutputMessage outputMessage) {
-		try {
-			StreamUtils.copy(body, outputMessage.getBody());
-		}
-		catch (IOException e) {
-			throw new IllegalStateException(e);
-		}
-	}
+    private void copy(byte[] body, HttpOutputMessage outputMessage) {
+        try {
+            StreamUtils.copy(body, outputMessage.getBody());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
 }

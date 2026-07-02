@@ -125,7 +125,7 @@ public class Data {
         .withExtension("integer", 42)
         .withExtension("decimal", new BigDecimal("42.42"))
         .withExtension("float", 4.2f)
-        .withExtension("long", new Long(4200))
+        .withExtension("long", Long.valueOf(4200))
         .build();
 
     public static final CloudEvent V03_MIN = CloudEventBuilder.v03(V1_MIN).build();

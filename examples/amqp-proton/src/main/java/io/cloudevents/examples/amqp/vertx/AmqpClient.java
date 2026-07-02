@@ -18,7 +18,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 /**
- * A example vertx-based AMQP client that interacts with a remote AMQP server to send and receive CloudEvent messages.
+ * An example vertx-based AMQP client that interacts with a remote AMQP server to send and receive CloudEvent messages.
  */
 public class AmqpClient {
 
