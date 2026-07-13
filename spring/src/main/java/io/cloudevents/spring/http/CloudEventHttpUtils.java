@@ -27,8 +27,6 @@ import io.cloudevents.rw.CloudEventRWException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -55,10 +53,23 @@ public class CloudEventHttpUtils {
      * @return a {@link MessageReader} representing the {@link CloudEvent}
      * @throws CloudEventRWException if something goes wrong while resolving the {@link SpecVersion} or if the message has unknown encoding
      */
+    @SuppressWarnings("unchecked")
     public static MessageReader toReader(HttpHeaders headers, Supplier<byte[]> body) throws CloudEventRWException {
-        Map<String, List<String>> headersMap = new HashMap<>();
-        headers.forEach((key, values) -> headersMap.put(key, new ArrayList<>(values)));
-        return HttpMessageFactory.createReaderFromMultimap(headersMap, body.get());
+        MessageReader reader;
+
+        // Temporary compatibility workaround for Spring Framework 7 HttpHeaders changes.
+        // Remove this branch and use the standard path once native Spring 7 support is released.
+        if (headers instanceof Map<?, ?>) {
+            reader = HttpMessageFactory.createReaderFromMultimap((Map<String, List<String>>) headers, body.get());
+        } else {
+            // Spring 7+ no longer guarantees HttpHeaders implements Map, so use the header visitor API.
+            reader = HttpMessageFactory.createReader(
+                processHeader -> headers.forEach(
+                    (key, values) -> values.forEach(value -> processHeader.accept(key, value))),
+                body.get());
+        }
+
+        return reader;
     }
 
 	/**
