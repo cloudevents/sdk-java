@@ -39,7 +39,8 @@ Using the Java SDK you can:
 |                      - [Spring](spring.md)                       |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                  - [http4k][http4k]<sup>†</sup>                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                        JSON Event Format                         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
-|                   - [Jackson](json-jackson.md)                   |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                  - [Jackson 2](json-jackson.md)                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
+|                 - [Jackson 3](json-jackson3.md)                  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                      Protobuf Event Format                       |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                      - [Proto](protobuf.md)                      |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
 |                         XML Event Format                         |                  :heavy_check_mark:                   |                  :heavy_check_mark:                   |
@@ -57,7 +58,7 @@ In order to start learning how to create, access and manipulate `CloudEvent`s,
 check out the [Core module documentation](core.md).
 
 If you want to serialize and deserialize events and data back and forth to JSON,
-check out the [Jackson Json module documentation](json-jackson.md).
+check out the [Jackson 2 JSON module documentation](json-jackson.md) or the [Jackson 3 JSON module documentation](json-jackson3.md).
 
 Depending on the protocol and framework you're using, if you want to send and
 receive CloudEvents, check out the dedicated pages:
@@ -66,7 +67,8 @@ receive CloudEvents, check out the dedicated pages:
 -   [HTTP using Vert.x](http-vertx.md)
 -   [HTTP using Jakarta EE 9+ - Jakarta Restful WS](http-jakarta-restful-ws-jakarta.md)
 -   [HTTP using Spring](spring.md)
--   [HTTP using Jackson](json-jackson.md)
+-   [HTTP using Jackson 2](json-jackson.md)
+-   [HTTP using Jackson 3](json-jackson3.md)
 -   [Kafka](kafka.md)
 
 If you're interested in implementing an object conforming to the `CloudEvent`
@@ -94,7 +96,9 @@ a different feature from the different sub specs of
     [bill of materials (BOM)](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms)
     for easier integration of CloudEvents in other projects
 -   [`cloudevents-json-jackson`] Implementation of [JSON Event format] with
-    [Jackson](https://github.com/FasterXML/jackson)
+    [Jackson 2](https://github.com/FasterXML/jackson)
+-   [`cloudevents-json-jackson3`] Implementation of [JSON Event format] with
+    [Jackson 3](https://github.com/FasterXML/jackson)
 -   [`cloudevents-protobuf`] Implementation of [Protobuf Event format] using code generated
     from the standard [protoc](https://github.com/protocolbuffers/protobuf) compiler.
 -   [`cloudevents-xml`] Implementation of the XML Event Format.
@@ -122,6 +126,7 @@ You can look at the latest published artifacts on
 [`cloudevents-bom`]: https://github.com/cloudevents/sdk-java/tree/main/bom
 [`cloudevents-core`]: https://github.com/cloudevents/sdk-java/tree/main/core
 [`cloudevents-json-jackson`]: https://github.com/cloudevents/sdk-java/tree/main/formats/json-jackson
+[`cloudevents-json-jackson3`]: https://github.com/cloudevents/sdk-java/tree/main/formats/json-jackson3
 [`cloudevents-protobuf`]: https://github.com/cloudevents/sdk-java/tree/main/formats/protobuf
 [`cloudevents-xml`]: https://github.com/cloudevents/sdk-java/tree/main/formats/xml
 [`cloudevents-http-vertx`]: https://github.com/cloudevents/sdk-java/tree/main/http/vertx

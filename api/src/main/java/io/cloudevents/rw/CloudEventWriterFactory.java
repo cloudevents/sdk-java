@@ -20,7 +20,7 @@ package io.cloudevents.rw;
 import io.cloudevents.SpecVersion;
 
 /**
- * This factory is used to enforce setting the {@link SpecVersion} as first step in the writing process.
+ * This factory is used to enforce setting the {@link SpecVersion} as the first step in the writing process.
  *
  * @param <W> The type of the {@link CloudEventWriter} created by this factory
  * @param <R> The return value of the {@link CloudEventWriter} created by this factory

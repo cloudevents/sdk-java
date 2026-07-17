@@ -73,14 +73,11 @@ public enum SpecVersion {
      * @throws CloudEventRWException When the spec version string is unrecognized
      */
     public static SpecVersion parse(String sv) {
-        switch (sv) {
-            case "0.3":
-                return SpecVersion.V03;
-            case "1.0":
-                return SpecVersion.V1;
-            default:
-                throw CloudEventRWException.newInvalidSpecVersion(sv);
-        }
+        return switch (sv) {
+            case "0.3" -> SpecVersion.V03;
+            case "1.0" -> SpecVersion.V1;
+            default -> throw CloudEventRWException.newInvalidSpecVersion(sv);
+        };
     }
 
     /**

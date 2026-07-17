@@ -1,17 +1,17 @@
 ---
-title: CloudEvents Json Jackson
+title: CloudEvents Json Jackson 2
 nav_order: 4
 ---
 
-# CloudEvents JSON Jackson
+# CloudEvents JSON Jackson 2
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-json-jackson.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-json-jackson)
 
-This module provides the JSON `EventFormat` implementation using Jackson and a
+This module provides the JSON `EventFormat` implementation using Jackson 2 and a
 `PojoCloudEventDataMapper` to convert `CloudEventData` to POJOs using the
 Jackson `ObjectMapper`.
 
-For Maven based projects, use the following dependency:
+For Maven-based projects, use the following dependency:
 
 ```xml
 <dependency>
@@ -60,7 +60,7 @@ import static io.cloudevents.core.CloudEventUtils.mapData;
 
 PojoCloudEventData<User> cloudEventData = mapData(
     inputEvent,
-    PojoCloudEventDataMapper.from(objectMapper,User.class)
+    PojoCloudEventDataMapper.from(objectMapper, User.class)
 );
 // check if cloudEventData is null
 User user = cloudEventData.getValue();

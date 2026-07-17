@@ -16,7 +16,6 @@
 
 package io.cloudevents.examples.http.basic;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.function.BiConsumer;
@@ -39,7 +38,7 @@ public class JettyServer {
     private static class CloudeventsHandler extends Handler.Abstract {
 
         @Override
-        public boolean handle(Request request, Response response, Callback callback) throws IOException {
+        public boolean handle(Request request, Response response, Callback callback) {
             if (!"/echo".equalsIgnoreCase(request.getHttpURI().getPath())) {
                 return false;
             }

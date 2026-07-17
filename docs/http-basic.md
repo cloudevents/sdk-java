@@ -50,4 +50,4 @@ public class HttpMessageFactory {
 
 - [Standard Java HttpServer](https://github.com/cloudevents/sdk-java/tree/main/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/BasicHttpServer.java)
 - [Http Client with HttpURLConnection](https://github.com/cloudevents/sdk-java/tree/main/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/HttpURLConnectionClient.java)
-- [Http Servlet with Jetty](https://github.com/cloudevents/sdk-java/tree/main/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/JettyServer.java)
+- [Http Servlet with Jetty 12](https://github.com/cloudevents/sdk-java/tree/main/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/JettyServer.java)
