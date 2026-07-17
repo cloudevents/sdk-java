@@ -43,12 +43,27 @@
             </dependency>
             <dependency>
                 <groupId>io.cloudevents</groupId>
+                <artifactId>cloudevents-avro-compact</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cloudevents</groupId>
                 <artifactId>cloudevents-json-jackson</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cloudevents</groupId>
+                <artifactId>cloudevents-json-jackson3</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cloudevents</groupId>
                 <artifactId>cloudevents-protobuf</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cloudevents</groupId>
+                <artifactId>cloudevents-xml</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -63,12 +78,22 @@
             </dependency>
             <dependency>
                 <groupId>io.cloudevents</groupId>
+                <artifactId>cloudevents-http-restful-ws-jakarta</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cloudevents</groupId>
                 <artifactId>cloudevents-http-vertx</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cloudevents</groupId>
                 <artifactId>cloudevents-kafka</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cloudevents</groupId>
+                <artifactId>cloudevents-rocketmq</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
