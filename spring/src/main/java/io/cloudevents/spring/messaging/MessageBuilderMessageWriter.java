@@ -42,7 +42,9 @@ class MessageBuilderMessageWriter
 	private Map<String, Object> headers = new HashMap<>();
 
 	public MessageBuilderMessageWriter(Map<String, Object> headers) {
-		this.headers.putAll(headers);
+		if (headers != null) {
+			this.headers.putAll(headers);
+		}
 	}
 
 	public MessageBuilderMessageWriter() {
