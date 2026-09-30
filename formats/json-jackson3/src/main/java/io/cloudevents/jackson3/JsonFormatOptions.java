@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.cloudevents.jackson;
+package io.cloudevents.jackson3;
 
 public final class JsonFormatOptions {
     private final boolean forceDataBase64Serialization;

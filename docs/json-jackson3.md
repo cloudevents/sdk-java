@@ -54,7 +54,7 @@ any `CloudEventData`:
 
 ```java
 import io.cloudevents.core.data.PojoCloudEventData;
-import io.cloudevents.jackson.PojoCloudEventDataMapper;
+import io.cloudevents.jackson3.PojoCloudEventDataMapper;
 
 import static io.cloudevents.core.CloudEventUtils.mapData;
 

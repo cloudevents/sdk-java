@@ -15,7 +15,7 @@
  *
  */
 
-package io.cloudevents.jackson;
+package io.cloudevents.jackson3;
 
 import io.cloudevents.CloudEventData;
 import tools.jackson.databind.JsonNode;

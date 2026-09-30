@@ -1,4 +1,4 @@
-package io.cloudevents.jackson;
+package io.cloudevents.jackson3;
 
 import io.cloudevents.CloudEvent;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import tools.jackson.databind.module.SimpleModule;
 
 import java.io.StringReader;
 
-import static io.cloudevents.jackson.JsonFormat.getCloudEventJacksonModule;
+import static io.cloudevents.jackson3.JsonFormat.getCloudEventJacksonModule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CloudEventDeserializerTest {

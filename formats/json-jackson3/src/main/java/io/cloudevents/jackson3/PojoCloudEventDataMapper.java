@@ -1,4 +1,4 @@
-package io.cloudevents.jackson;
+package io.cloudevents.jackson3;
 
 import io.cloudevents.CloudEventData;
 import io.cloudevents.core.data.PojoCloudEventData;
