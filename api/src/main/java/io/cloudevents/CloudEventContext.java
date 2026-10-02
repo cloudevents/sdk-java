@@ -17,7 +17,7 @@
 package io.cloudevents;
 
 /**
- * Interface representing an in memory read only representation of CloudEvent attributes and extensions.
+ * Interface representing an in-memory read-only representation of CloudEvent attributes and extensions.
  */
 public interface CloudEventContext extends CloudEventAttributes, CloudEventExtensions {
 }

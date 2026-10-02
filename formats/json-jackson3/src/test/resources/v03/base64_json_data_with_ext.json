@@ -1,0 +1,15 @@
+{
+    "specversion": "0.3",
+    "id": "1",
+    "type": "mock.test",
+    "source": "http://localhost/source",
+    "schemaurl": "http://localhost/schema",
+    "datacontenttype": "application/json",
+    "datacontentencoding": "base64",
+    "data": "e30=",
+    "subject": "sub",
+    "time": "2018-04-26T14:48:09+02:00",
+    "astring": "aaa",
+    "aboolean": true,
+    "anumber": 10
+}

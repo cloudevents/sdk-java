@@ -15,33 +15,29 @@
  */
 package io.cloudevents.spring.mvc;
 
-import java.net.URI;
-import java.util.List;
-import java.util.UUID;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.spring.http.CloudEventHttpUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters;
+import org.springframework.test.web.servlet.client.RestTestClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.net.URI;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,93 +48,79 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MvcRestControllerTests {
 
-    @Autowired
-    private TestRestTemplate rest;
+    private static final String BODY = "{\"value\":\"Dave\"}";
+
+    private RestTestClient testClient;
 
     @LocalServerPort
     private int port;
 
+    @BeforeEach
+    void setUp() {
+        testClient = RestTestClient
+            .bindToServer()
+            .baseUrl(String.format("http://localhost:%d/", port))
+            .build();
+    }
+
     @Test
     void echoWithCorrectHeaders() {
-
-        ResponseEntity<String> response = rest.exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/")) //
-            .header("ce-id", "12345") //
-            .header("ce-specversion", "1.0") //
-            .header("ce-type", "io.spring.event") //
-            .header("ce-source", "https://spring.io/events") //
-            .contentType(MediaType.APPLICATION_JSON) //
-            .body("{\"value\":\"Dave\"}"), String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
-
-        HttpHeaders headers = response.getHeaders();
-
-        assertThat(headers).containsKey("ce-id");
-        assertThat(headers).containsKey("ce-source");
-        assertThat(headers).containsKey("ce-type");
-
-        // assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
-        assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
-        assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
-
+        testClient.post()
+            .header("ce-id", "12345")
+            .header("ce-specversion", "1.0")
+            .header("ce-type", "io.spring.event")
+            .header("ce-source", "https://spring.io/events")
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BODY)
+            .exchange()
+            .expectStatus().isOk()
+            .expectHeader().exists("ce-id")
+            .expectHeader().value("ce-id", value -> assertThat(value).isNotEqualTo("12345"))
+            .expectHeader().valueEquals("ce-type", "io.spring.event.Foo")
+            .expectHeader().valueEquals("ce-source", "https://spring.io/foos")
+            .expectBody(String.class).isEqualTo(BODY);
     }
 
     @Test
     void structuredRequestResponseEvents() {
-
-        ResponseEntity<String> response = rest
-            .exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/event")) //
-                    .contentType(new MediaType("application", "cloudevents+json")) //
-                    .body("""
-                        {
-                        "id":"12345",
-                        "specversion":"1.0",
-                        "type":"io.spring.event",
-                        "source":"https://spring.io/events",
-                        "data":{"value":"Dave"}}"""),
-                String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
-
-        HttpHeaders headers = response.getHeaders();
-
-        assertThat(headers).containsKey("ce-id");
-        assertThat(headers).containsKey("ce-source");
-        assertThat(headers).containsKey("ce-type");
-
-        // assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
-        assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
-        assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
-
+        testClient.post()
+            .uri("event")
+            .contentType(new MediaType("application", "cloudevents+json"))
+            .body("""
+                    {
+                        "id": "12345",
+                        "specversion": "1.0",
+                        "type": "io.spring.event",
+                        "source": "https://spring.io/events",
+                        "data": %s
+                    }
+                    """.formatted(BODY))
+            .exchange()
+            .expectStatus().isOk()
+            .expectHeader().exists("ce-id")
+            .expectHeader().value("ce-id", value -> assertThat(value).isNotEqualTo("12345"))
+            .expectHeader().valueEquals("ce-type", "io.spring.event.Foo")
+            .expectHeader().valueEquals("ce-source", "https://spring.io/foos")
+            .expectBody(String.class).isEqualTo(BODY);
     }
 
     @Test
     void requestResponseEvents() {
-
-        ResponseEntity<String> response = rest
-            .exchange(RequestEntity.post(URI.create("http://localhost:" + port + "/event")) //
-                .header("ce-id", "12345") //
-                .header("ce-specversion", "1.0") //
-                .header("ce-type", "io.spring.event") //
-                .header("ce-source", "https://spring.io/events") //
-                .contentType(MediaType.APPLICATION_JSON) //
-                .body("{\"value\":\"Dave\"}"), String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("{\"value\":\"Dave\"}");
-
-        HttpHeaders headers = response.getHeaders();
-
-        assertThat(headers).containsKey("ce-id");
-        assertThat(headers).containsKey("ce-source");
-        assertThat(headers).containsKey("ce-type");
-
-        assertThat(headers.getFirst("ce-id")).isNotEqualTo("12345");
-        assertThat(headers.getFirst("ce-type")).isEqualTo("io.spring.event.Foo");
-        assertThat(headers.getFirst("ce-source")).isEqualTo("https://spring.io/foos");
-
+        testClient.post()
+            .uri("event")
+            .header("ce-id", "12345")
+            .header("ce-specversion", "1.0")
+            .header("ce-type", "io.spring.event")
+            .header("ce-source", "https://spring.io/events")
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BODY)
+            .exchange()
+            .expectStatus().isOk()
+            .expectHeader().exists("ce-id")
+            .expectHeader().value("ce-id", value -> assertThat(value).isNotEqualTo("12345"))
+            .expectHeader().valueEquals("ce-type", "io.spring.event.Foo")
+            .expectHeader().valueEquals("ce-source", "https://spring.io/foos")
+            .expectBody(String.class).isEqualTo(BODY);
     }
 
     @SpringBootApplication
@@ -158,27 +140,23 @@ class MvcRestControllerTests {
 
         @PostMapping("/event")
         public CloudEvent ce(@RequestBody CloudEvent event) {
-            CloudEvent attributes = CloudEventBuilder.from(event) //
+            return CloudEventBuilder.from(event) //
                 .withId(UUID.randomUUID().toString()) //
                 .withSource(URI.create("https://spring.io/foos")) //
                 .withType("io.spring.event.Foo") //
                 .withData(event.getData().toBytes()) //
                 .build();
-            return attributes;
         }
 
         @Configuration
         public static class CloudEventHandlerConfiguration implements WebMvcConfigurer {
 
             @Override
-            public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-                converters.add(0, new CloudEventHttpMessageConverter());
+            public void configureMessageConverters(HttpMessageConverters.ServerBuilder builder) {
+                builder.addCustomConverter(new CloudEventHttpMessageConverter());
             }
-
         }
-
     }
-
 }
 
 record Foo(

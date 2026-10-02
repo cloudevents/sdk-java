@@ -1,0 +1,10 @@
+{
+    "specversion": "1.0",
+    "id": "1",
+    "type": "mock.test",
+    "source": "http://localhost/source",
+    "integer": 42,
+    "decimal": "42.42",
+    "float": "4.2",
+    "long": "4200"
+}

@@ -62,7 +62,7 @@ class MessageBinaryMessageReader extends BaseGenericBinaryMessageReaderImpl<Stri
 
 	@Override
 	protected void forEachHeader(BiConsumer<String, Object> fn) {
-		headers.forEach((k, v) -> fn.accept(k, v));
+		headers.forEach(fn);
 	}
 
 	@Override

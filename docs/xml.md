@@ -12,7 +12,7 @@ to the CloudEvent XML Format specification.
 
 This format also supports specialized handling for XML CloudEvent `data`.
 
-For Maven based projects, use the following dependency:
+For Maven-based projects, use the following dependency:
 
 ```xml
 <dependency>

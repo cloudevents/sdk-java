@@ -39,7 +39,7 @@ import org.springframework.messaging.support.MessageBuilder;
 class MessageBuilderMessageWriter
 		implements CloudEventWriter<Message<byte[]>>, MessageWriter<MessageBuilderMessageWriter, Message<byte[]>> {
 
-	private Map<String, Object> headers = new HashMap<>();
+	private final Map<String, Object> headers = new HashMap<>();
 
 	public MessageBuilderMessageWriter(Map<String, Object> headers) {
 		this.headers.putAll(headers);

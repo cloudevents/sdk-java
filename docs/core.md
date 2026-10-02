@@ -83,12 +83,12 @@ prefer as dependency in your project and the core module, through the
 `ServiceLoader` mechanism, will load it into the classpath. For example, to use
 the
 [JSON event format](https://github.com/cloudevents/spec/blob/v1.0/json-format.md)
-with Jackson, add `cloudevents-json-jackson` as a dependency and then using the
+with Jackson 3, add `cloudevents-json-jackson3` as a dependency and then using the
 `EventFormatProvider`:
 
 ```java
 import io.cloudevents.core.provider.EventFormatProvider;
-import io.cloudevents.jackson.JsonFormat;
+import io.cloudevents.jackson3.JsonFormat;
 
 EventFormat format = EventFormatProvider
   .getInstance()

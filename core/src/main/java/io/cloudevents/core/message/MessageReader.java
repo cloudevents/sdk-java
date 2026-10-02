@@ -43,7 +43,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     }
 
     /**
-     * Read the message as binary encoded message using the provided writer factory.
+     * Read the message as a binary-encoded message using the provided writer factory.
      *
      * @param <W>           the {@link CloudEventWriter} type
      * @param <R>           the return type of the {@link CloudEventWriter}
@@ -55,12 +55,12 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     <W extends CloudEventWriter<R>, R> R read(CloudEventWriterFactory<W, R> writerFactory, CloudEventDataMapper<? extends CloudEventData> mapper) throws CloudEventRWException, IllegalStateException;
 
     /**
-     * Read the message as structured encoded message using the provided writer
+     * Read the message as a structured encoded message using the provided writer
      *
      * @param <R>    the return type of the {@link StructuredMessageWriter}
      * @param writer Structured Message writer
      * @throws CloudEventRWException if something went wrong during the visit.
-     * @throws IllegalStateException if the message is not in structured encoding.
+     * @throws IllegalStateException if the message is not in a structured encoding.
      */
     <R> R read(StructuredMessageWriter<R> writer) throws CloudEventRWException, IllegalStateException;
 
@@ -70,7 +70,7 @@ public interface MessageReader extends StructuredMessageReader, CloudEventReader
     Encoding getEncoding();
 
     /**
-     * Read the content of this object using a {@link MessageWriter}. This method allows to transcode an event from one transport to another without
+     * Read the content of this object using a {@link MessageWriter}. This method allows transcoding an event from one transport to another without
      * converting it to {@link CloudEvent}. The resulting encoding will be the same as the original encoding.
      *
      * @param <BW>   the {@link CloudEventWriter} type
