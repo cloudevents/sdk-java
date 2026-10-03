@@ -128,4 +128,19 @@ class CloudEventMessageConverterTests {
 		assertThat(converter.toMessage(new byte[0], new MessageHeaders(Collections.emptyMap()))).isNull();
 	}
 
+	// gh-689: toMessage should not throw NPE when the caller provides no headers,
+	// e.g. RabbitMessagingTemplate#convertAndSend(String, Object) passes null.
+	@Test
+	void fromCloudEventWithNullHeaders() {
+		CloudEvent attributes = CloudEventBuilder.v1().withId("A234-1234-1234")
+				.withSource(URI.create("https://spring.io/")).withType("org.springframework")
+				.withData("hello".getBytes(StandardCharsets.UTF_8)).build();
+		Message<?> message = converter.toMessage(attributes, null);
+		Map<String, ?> headers = message.getHeaders();
+		assertThat(headers.get("ce-id")).isEqualTo("A234-1234-1234");
+		assertThat(headers.get("ce-specversion")).isEqualTo("1.0");
+		assertThat(headers.get("ce-source")).isEqualTo("https://spring.io/");
+		assertThat(headers.get("ce-type")).isEqualTo("org.springframework");
+	}
+
 }
