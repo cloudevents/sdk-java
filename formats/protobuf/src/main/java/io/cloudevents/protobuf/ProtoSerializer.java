@@ -45,7 +45,7 @@ import static io.cloudevents.v1.proto.CloudEvent.*;
 /**
  * Provides functionality for turning a {@link io.cloudevents.CloudEvent} to the protobuf representation {@link CloudEvent}.
  */
-class ProtoSerializer {
+public class ProtoSerializer {
 
     /**
      * Convert the Java SDK CloudEvent into a protobuf representation.
