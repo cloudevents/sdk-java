@@ -27,7 +27,7 @@ HTTP Transport:
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-http-basic</artifactId>
-    <version>5.0.0</version>
+    <version>5.1.0</version>
 </dependency>
 ```
 
