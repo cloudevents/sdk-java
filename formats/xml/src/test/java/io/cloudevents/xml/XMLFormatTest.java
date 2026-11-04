@@ -209,7 +209,9 @@ public class XMLFormatTest {
             Arguments.of("v1/xml_data.xml"),
             Arguments.of("v1/xml_data_with_ns1.xml"),
             Arguments.of("v1/xml_data_with_ns2.xml"),
-            Arguments.of("v1/xml_data_with_ns3.xml")
+            Arguments.of("v1/xml_data_with_ns3.xml"),
+            Arguments.of("v1/xml_data_with_attrs.xml"),
+            Arguments.of("v1/xml_data_with_text.xml")
         );
     }
 
