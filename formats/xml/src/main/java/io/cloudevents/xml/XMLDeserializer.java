@@ -185,20 +185,8 @@ class XMLDeserializer implements CloudEventReader {
 
                     Element eventData = findFirstElement(data);
 
-                    Element newRoot = newDoc.createElementNS(eventData.getNamespaceURI(), eventData.getLocalName());
-                    newDoc.appendChild(newRoot);
-
-                    // Copy the children...
-                    NodeList nodesToCopy = eventData.getChildNodes();
-
-                    for (int i = 0; i < nodesToCopy.getLength(); i++) {
-                        Node n = nodesToCopy.item(i);
-
-                        if (n.getNodeType() == Node.ELEMENT_NODE) {
-                            Node newNode = newDoc.importNode(n, true);
-                            newRoot.appendChild(newNode);
-                        }
-                    }
+                    // Copy the element with its attributes and all of its children
+                    newDoc.appendChild(newDoc.importNode(eventData, true));
 
                     newDoc.normalizeDocument();
                     retVal = XMLCloudEventData.wrap(newDoc);
