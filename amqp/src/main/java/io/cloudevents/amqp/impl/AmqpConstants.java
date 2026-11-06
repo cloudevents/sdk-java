@@ -18,8 +18,10 @@
 package io.cloudevents.amqp.impl;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Map;
 
+import org.apache.qpid.proton.amqp.Binary;
 import org.apache.qpid.proton.amqp.messaging.AmqpValue;
 import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
 import org.apache.qpid.proton.amqp.messaging.Data;
@@ -111,7 +113,12 @@ public final class AmqpConstants {
         }
 
         if (payload instanceof Data body) {
-            return body.getValue().getArray();
+            final Binary binary = body.getValue();
+            final byte[] bytes = binary.getArray();
+            if (binary.getArrayOffset() == 0 && binary.getLength() == bytes.length) {
+                return bytes;
+            }
+            return Arrays.copyOfRange(bytes, binary.getArrayOffset(), binary.getArrayOffset() + binary.getLength());
         } else if (payload instanceof AmqpValue body) {
             if (body.getValue() instanceof byte[]) {
                 return (byte[]) body.getValue();

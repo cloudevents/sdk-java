@@ -30,11 +30,15 @@ import io.cloudevents.types.Time;
 import org.apache.qpid.proton.amqp.Binary;
 import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
 import org.apache.qpid.proton.amqp.messaging.Section;
+import org.apache.qpid.proton.message.Message;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -69,6 +73,53 @@ public class ProtonAmqpMessageFactoryTest {
         final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, null, new org.apache.qpid.proton.amqp.messaging.Data(new Binary(contentPayload)));
         assertThat(amqpReader.getEncoding()).isEqualTo(Encoding.STRUCTURED);
         assertThat(amqpReader.toEvent()).isEqualTo(event);
+    }
+
+    @ParameterizedTest
+    @MethodSource("binaryDataSlices")
+    public void readBinaryDataSlice(final String storage, final int offset, final int length, final String expected) {
+        final Message message = ProtonAmqpMessageFactory.createWriter().writeBinary(Data.V1_WITH_TEXT_DATA);
+        message.setBody(new org.apache.qpid.proton.amqp.messaging.Data(
+            new Binary(storage.getBytes(StandardCharsets.UTF_8), offset, length)));
+
+        final MessageReader reader = ProtonAmqpMessageFactory.createReader(message);
+        assertThat(reader.getEncoding()).isEqualTo(Encoding.BINARY);
+        final CloudEvent event = reader.toEvent();
+        assertThat(event.getId()).isEqualTo(Data.ID);
+        assertThat(event.getDataContentType()).isEqualTo(Data.DATACONTENTTYPE_TEXT);
+        if (expected.isEmpty()) {
+            assertThat(event.getData()).isNull();
+        } else {
+            assertThat(event.getData()).isNotNull();
+            assertThat(event.getData().toBytes()).containsExactly(expected.getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+    @Test
+    public void readStructuredDataSlice() {
+        final CloudEvent expected = Data.V1_WITH_JSON_DATA;
+        final byte[] payload = CSVFormat.INSTANCE.serialize(expected);
+        final byte[] storage = new byte[payload.length + 8];
+        Arrays.fill(storage, (byte) '!');
+        System.arraycopy(payload, 0, storage, 3, payload.length);
+
+        final MessageReader reader = ProtonAmqpMessageFactory.createReader(
+            CSVFormat.INSTANCE.serializedContentType(), null,
+            new org.apache.qpid.proton.amqp.messaging.Data(new Binary(storage, 3, payload.length)));
+
+        assertThat(reader.getEncoding()).isEqualTo(Encoding.STRUCTURED);
+        assertThat(reader.toEvent()).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> binaryDataSlices() {
+        return Stream.of(
+            Arguments.of("__payload__", 2, 7, "payload"),
+            Arguments.of("__payload", 2, 7, "payload"),
+            Arguments.of("payload__", 0, 7, "payload"),
+            Arguments.of("payload", 0, 7, "payload"),
+            Arguments.of("padding", 3, 0, ""),
+            Arguments.of("", 0, 0, "")
+        );
     }
 
     private static Stream<Arguments> binaryTestArguments() {
