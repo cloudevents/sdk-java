@@ -19,6 +19,7 @@ package io.cloudevents.amqp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -28,10 +29,13 @@ import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
 import org.apache.qpid.proton.amqp.messaging.Section;
 import org.apache.qpid.proton.message.Message;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import io.cloudevents.CloudEvent;
+import io.cloudevents.SpecVersion;
 import io.cloudevents.amqp.impl.ProtonAmqpMessageWriter;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.message.MessageWriter;
 import io.cloudevents.core.mock.CSVFormat;
@@ -58,6 +62,33 @@ public class ProtonAmqpMessageWriterTest {
         assertThat(Objects.toString(actualMessage.getBody())).isEqualTo(Objects.toString(expectedMessage.getBody()));
         assertThat(actualMessage.getApplicationProperties().getValue()).
                   isEqualTo(expectedMessage.getApplicationProperties().getValue());
+    }
+
+    @ParameterizedTest
+    @EnumSource(SpecVersion.class)
+    public void testRoundTripBinaryExtensions(final SpecVersion version) {
+        final String traceparent = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
+        final CloudEvent event = CloudEventBuilder.fromSpecVersion(version)
+            .withId("extension-test")
+            .withSource(URI.create("/test"))
+            .withType("test.extensions")
+            .withExtension("traceparent", traceparent)
+            .withExtension("tracestate", "example=value")
+            .withExtension("custom", "custom-value")
+            .build();
+
+        final Message message = ProtonAmqpMessageFactory.createWriter().writeBinary(event);
+        final byte[] encoded = new byte[1024];
+        final int length = message.encode(encoded, 0, encoded.length);
+        final Message decoded = Message.Factory.create();
+        decoded.decode(encoded, 0, length);
+
+        assertThat(ProtonAmqpMessageFactory.createReader(decoded).toEvent()).isEqualTo(event);
+        assertThat(decoded.getApplicationProperties().getValue())
+            .containsEntry("cloudEvents:traceparent", traceparent)
+            .containsEntry("cloudEvents:tracestate", "example=value")
+            .containsEntry("cloudEvents:custom", "custom-value")
+            .doesNotContainKeys("traceparent", "tracestate", "custom");
     }
 
     /**
@@ -91,12 +122,12 @@ public class ProtonAmqpMessageWriterTest {
                 } else if (name.equals("datacontenttype") && event.getAttribute(name) != null) {
                     message.setContentType(event.getAttribute(name).toString());
                 } else {
-                    addProperty(map, name, Objects.toString(event.getAttribute(name)), true);
+                    addProperty(map, name, Objects.toString(event.getAttribute(name)));
                 }
             });
         }
         if (!event.getExtensionNames().isEmpty()) {
-            event.getExtensionNames().forEach(name -> addProperty(map, name, Objects.toString(event.getExtension(name)), false));
+            event.getExtensionNames().forEach(name -> addProperty(map, name, Objects.toString(event.getExtension(name))));
         }
 
         if (event.getData() != null) {
@@ -114,11 +145,7 @@ public class ProtonAmqpMessageWriterTest {
         message.setBody(new org.apache.qpid.proton.amqp.messaging.Data(new Binary(format.serialize(event))));
         return message;
     }
-    private void addProperty(final Map<String, Object> map, final String name, final String value, final boolean prefix) {
-        if (prefix) {
-            map.put("cloudEvents:%s".formatted(name), value);
-        } else {
-            map.put(name, value);
-        }
+    private void addProperty(final Map<String, Object> map, final String name, final String value) {
+        map.put("cloudEvents:%s".formatted(name), value);
     }
 }
