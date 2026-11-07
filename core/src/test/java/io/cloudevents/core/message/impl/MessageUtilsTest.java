@@ -76,7 +76,10 @@ class MessageUtilsTest {
     private static Stream<Arguments> testBadContentTypes() {
         return Stream.of(
             Arguments.of("application/cloudevents"),
-            Arguments.of("application/cloudevents+morse")
+            Arguments.of("application/cloudevents+morse"),
+            Arguments.of("APPLICATION/CLOUDEVENTS"),
+            Arguments.of("Application/CloudEvents+Morse"),
+            Arguments.of("APPLICATION/CLOUDEVENTS+MORSE; charset=UTF-8")
         );
     }
 

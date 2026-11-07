@@ -27,6 +27,7 @@ import io.cloudevents.types.Time;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,6 +90,24 @@ public class HttpMessageReaderWriterTest {
             .isEqualTo(Encoding.STRUCTURED);
         assertThat(message.toEvent())
             .isEqualTo(event);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "application/cloudevents+csv",
+        "APPLICATION/CLOUDEVENTS+CSV",
+        "Application/CloudEvents+Csv; charset=UTF-8"
+    })
+    void testReadStructuredWithCaseInsensitiveContentType(String contentType) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("content-type", contentType);
+        headers.put("ce-specversion", "1.0");
+
+        MessageReader message = HttpMessageFactory.createReader(
+            headers, CSVFormat.INSTANCE.serialize(V1_WITH_TEXT_DATA));
+
+        assertThat(message.getEncoding()).isEqualTo(Encoding.STRUCTURED);
+        assertThat(message.toEvent()).isEqualTo(V1_WITH_TEXT_DATA);
     }
 
     @ParameterizedTest
