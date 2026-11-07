@@ -62,7 +62,7 @@ public final class ProtonAmqpMessageWriter<R> implements MessageWriter<CloudEven
             }
             String propName = AmqpConstants.ATTRIBUTES_TO_PROPERTYNAMES.get(name);
             if (propName == null) {
-                propName = name;
+                propName = AmqpConstants.CE_PREFIX + name;
             }
             applicationProperties.getValue().put(propName, value);
         }
