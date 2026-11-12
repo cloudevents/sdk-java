@@ -32,7 +32,7 @@
 
     <properties>
         <module-name>cloudevents.http.restful.ws.jakarta.integration.tests.jersey</module-name>
-        <jersey.version>3.1.11</jersey.version>
+        <jersey.version>4.0.2</jersey.version>
     </properties>
 
     <dependencies>

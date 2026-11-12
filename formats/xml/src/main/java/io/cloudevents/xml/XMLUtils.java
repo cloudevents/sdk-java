@@ -41,8 +41,8 @@ import java.util.regex.Pattern;
 
 class XMLUtils {
 
-    private static final Pattern XML_PATTERN = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?xml(;.*)*$");
-    private static final Pattern TEXT_PATTERN = Pattern.compile("^application\\/([a-zA-Z]+\\+)?(xml|json)(;.*)*$");
+    private static final Pattern XML_PATTERN = Pattern.compile("^(application|text)\\/([a-zA-Z]+\\+)?xml(;.*)?$");
+    private static final Pattern TEXT_PATTERN = Pattern.compile("^application\\/([a-zA-Z]+\\+)?(xml|json)(;.*)?$");
 
 
     // Prevent Construction
@@ -62,6 +62,12 @@ class XMLUtils {
         dbf.setNamespaceAware(true);
 
         try {
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            dbf.setExpandEntityReferences(false);
+            dbf.setXIncludeAware(false);
             DocumentBuilder builder = dbf.newDocumentBuilder();
             return builder.parse(new ByteArrayInputStream(data));
         } catch (ParserConfigurationException | SAXException | IOException e) {
