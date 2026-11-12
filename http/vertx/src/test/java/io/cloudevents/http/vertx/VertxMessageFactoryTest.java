@@ -121,7 +121,7 @@ public class VertxMessageFactoryTest {
                 .onFailure(cause -> context.completeNow())
                 .onSuccess(reader -> context.failNow("Expected failed future"))
             )
-            .listen(port, context.succeeding(s -> cd.countDown()));
+            .listen(port, "0.0.0.0").onComplete(context.succeeding(s -> cd.countDown()));
 
         cd.await(2, TimeUnit.SECONDS);
 

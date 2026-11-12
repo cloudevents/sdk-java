@@ -58,7 +58,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     testContext.failNow(e);
                 }
             })
-            .listen(9000, testContext.succeeding(server -> {
+            .listen(9000, "0.0.0.0").onComplete(testContext.succeeding(server -> {
                 WebClient client = WebClient.create(vertx);
                 client.get(server.actualPort(), "localhost", "/")
                     .send()
@@ -94,7 +94,7 @@ public class VertxHttpServerResponseMessageWriterTest {
                     testContext.failNow(e);
                 }
             })
-            .listen(9000, testContext.succeeding(server -> {
+            .listen(9000, "0.0.0.0").onComplete(testContext.succeeding(server -> {
                 WebClient client = WebClient.create(vertx);
                 client.get(server.actualPort(), "localhost", "/")
                     .send()
