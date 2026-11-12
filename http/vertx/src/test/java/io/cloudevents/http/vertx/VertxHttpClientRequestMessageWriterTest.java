@@ -63,7 +63,7 @@ public class VertxHttpClientRequestMessageWriterTest {
                 });
                 httpServerRequest.response().end();
             })
-            .listen(9000, testContext.succeeding(server -> {
+            .listen(9000, "0.0.0.0").onComplete(testContext.succeeding(server -> {
                 WebClient client = WebClient.create(vertx);
                 try {
                     VertxMessageFactory
@@ -105,7 +105,7 @@ public class VertxHttpClientRequestMessageWriterTest {
                 });
                 httpServerRequest.response().end();
             })
-            .listen(9000, testContext.succeeding(server -> {
+            .listen(9000, "0.0.0.0").onComplete(testContext.succeeding(server -> {
                 WebClient client = WebClient.create(vertx);
                 try {
                     VertxMessageFactory
