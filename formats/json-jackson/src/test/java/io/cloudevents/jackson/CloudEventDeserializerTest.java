@@ -13,25 +13,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CloudEventDeserializerTest {
 
-    private static final String nonBinaryPayload = "{\n" +
-        "    \"specversion\" : \"1.0\",\n" +
-        "    \"type\" : \"com.example.someevent\",\n" +
-        "    \"source\" : \"/mycontext\",\n" +
-        "    \"subject\": null,\n" +
-        "    \"id\" : \"D234-1234-1234\",\n" +
-        "    \"time\" : \"2018-04-05T17:31:00Z\",\n" +
-        "    \"comexampleextension1\" : \"value\",\n" +
-        "    \"comexampleothervalue\" : 5,\n" +
-        "    \"data\" : \"I'm just a string\"\n" +
-        "}";
+    private static final String nonBinaryPayload = """
+        {
+            "specversion" : "1.0",
+            "type" : "com.example.someevent",
+            "source" : "/mycontext",
+            "subject": null,
+            "id" : "D234-1234-1234",
+            "time" : "2018-04-05T17:31:00Z",
+            "comexampleextension1" : "value",
+            "comexampleothervalue" : 5,
+            "data" : "I'm just a string"
+        }\
+        """;
 
-    private static final String binaryPayload = "{\n" +
-        "    \"specversion\" : \"1.0\",\n" +
-        "    \"type\" : \"com.example.someevent\",\n" +
-        "    \"source\" : \"/mycontext\",\n" +
-        "    \"id\" : \"D234-1234-1234\",\n" +
-        "    \"data_base64\" : \"eyAieHl6IjogMTIzIH0=\"\n" +
-        "}";
+    private static final String binaryPayload = """
+        {
+            "specversion" : "1.0",
+            "type" : "com.example.someevent",
+            "source" : "/mycontext",
+            "id" : "D234-1234-1234",
+            "data_base64" : "eyAieHl6IjogMTIzIH0="
+        }\
+        """;
 
     @Test
     void impliedDataContentTypeNonBinaryData() throws IOException {

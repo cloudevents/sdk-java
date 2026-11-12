@@ -12,21 +12,18 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.net.URL;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Arquilian does not support assertj, so test cases have been ported to Junit to work with arquilian
- */
-@RunWith(Arquillian.class)
+@ExtendWith(ArquillianExtension.class)
 public class TestMicroprofile {
 
     private static final String WARNAME = "microprofile-test.war";
@@ -57,8 +54,8 @@ public class TestMicroprofile {
     public void getMinEvent() {
         Response res = getWebTarget().path("getMinEvent").request().buildGet().invoke();
 
-        Assert.assertEquals("1.0",res.getHeaderString("ce-specversion"));
-        Assert.assertEquals(Data.V1_MIN,res.readEntity(CloudEvent.class));
+        assertThat(res.getHeaderString("ce-specversion")).isEqualTo("1.0");
+        assertThat(res.readEntity(CloudEvent.class)).isEqualTo(Data.V1_MIN);
 
         res.close();
     }
@@ -68,8 +65,8 @@ public class TestMicroprofile {
     public void getStructuredEvent() {
         Response res = getWebTarget().path("getStructuredEvent").request().buildGet().invoke();
 
-        Assert.assertEquals(Data.V1_MIN,res.readEntity(CloudEvent.class));
-        Assert.assertEquals(CSVFormat.INSTANCE.serializedContentType(),res.getHeaderString(HttpHeaders.CONTENT_TYPE));
+        assertThat(res.readEntity(CloudEvent.class)).isEqualTo(Data.V1_MIN);
+        assertThat(res.getHeaderString(HttpHeaders.CONTENT_TYPE)).isEqualTo(CSVFormat.INSTANCE.serializedContentType());
 
         res.close();
     }
@@ -79,8 +76,8 @@ public class TestMicroprofile {
     public void testGetEvent() throws Exception {
         Response response = getWebTarget().path("getEvent").request().buildGet().invoke();
 
-        Assert.assertEquals("Valid response code", 200, response.getStatus());
-        Assert.assertEquals("should match", Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, response.readEntity(CloudEvent.class));
+        assertThat(response.getStatus()).as("Valid response code").isEqualTo(200);
+        assertThat(response.readEntity(CloudEvent.class)).as("should match").isEqualTo(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING);
 
         response.close();
     }
@@ -94,7 +91,7 @@ public class TestMicroprofile {
             .buildPost(Entity.entity(Data.V1_MIN, CloudEventsProvider.CLOUDEVENT_TYPE))
             .invoke();
 
-        Assert.assertEquals(200,res.getStatus());
+        assertThat(res.getStatus()).isEqualTo(200);
     }
 
     @Test
@@ -106,7 +103,7 @@ public class TestMicroprofile {
             .buildPost(Entity.entity(Data.V1_MIN, "application/cloudevents+csv"))
             .invoke();
 
-        Assert.assertEquals(200,res.getStatus());
+        assertThat(res.getStatus()).isEqualTo(200);
     }
 
     @Test
@@ -118,6 +115,6 @@ public class TestMicroprofile {
             .buildPost(Entity.entity(Data.V1_WITH_JSON_DATA_WITH_EXT_STRING, CloudEventsProvider.CLOUDEVENT_TYPE))
             .invoke();
 
-        Assert.assertEquals(200,res.getStatus());
+        assertThat(res.getStatus()).isEqualTo(200);
     }
 }

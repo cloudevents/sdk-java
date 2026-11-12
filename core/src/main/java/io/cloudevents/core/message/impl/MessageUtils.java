@@ -65,7 +65,7 @@ public class MessageUtils {
                  * CloudEvent family it indicates it's a structured
                  * representation that we can't interpret.
                  */
-                if (ct.startsWith("application/cloudevents")) {
+                if (ct.regionMatches(true, 0, "application/cloudevents", 0, "application/cloudevents".length())) {
                     throw newUnknownEncodingException();
                 }
             }

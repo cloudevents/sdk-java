@@ -228,7 +228,7 @@ public class ProtonAmqpMessageFactoryTest {
     private static final SimpleEntry<String, Object> property(final String name, final Object value) {
         return name.equalsIgnoreCase("ignored") ?
                 new SimpleEntry<>(name, value) :
-                new SimpleEntry<>(String.format(PREFIX_TEMPLATE, name), value);
+                new SimpleEntry<>(PREFIX_TEMPLATE.formatted(name), value);
     }
 
     @SafeVarargs

@@ -12,22 +12,22 @@ This module is designed to be usable with various HTTP APIs.
 There are also more specialized HTTP bindings:
 
 - [`cloudevents-http-vertx`](http-vertx.md)
-- [`cloudevents-http-restful-ws`](http-jakarta-restful-ws.md)
+- [`cloudevents-http-restful-ws-jakarta`](http-jakarta-restful-ws-jakarta.md)
 - [`cloudevents-spring`](spring.md)
 
-Since this module is generic it doesn't offer optimal performance for all HTTP
+Since this module is generic, it doesn't offer optimal performance for all HTTP
 implementations. For better performance consider implementing `MessageReader`
 and `MessageWriter` that are tailored for specific HTTP implementation. As a
-reference you can take aforementioned existing bindings.
+reference, you can take the aforementioned existing bindings.
 
-For Maven based projects, use the following to configure the CloudEvents Generic
+For Maven-based projects, use the following to configure the CloudEvents Generic
 HTTP Transport:
 
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-http-basic</artifactId>
-    <version>4.0.2</version>
+    <version>5.1.0</version>
 </dependency>
 ```
 
@@ -50,4 +50,4 @@ public class HttpMessageFactory {
 
 - [Standard Java HttpServer](https://github.com/cloudevents/sdk-java/tree/main/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/BasicHttpServer.java)
 - [Http Client with HttpURLConnection](https://github.com/cloudevents/sdk-java/tree/main/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/HttpURLConnectionClient.java)
-- [Http Servlet with Jetty](https://github.com/cloudevents/sdk-java/tree/main/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/JettyServer.java)
+- [Http Servlet with Jetty 12](https://github.com/cloudevents/sdk-java/tree/main/examples/basic-http/src/main/java/io/cloudevents/examples/http/basic/JettyServer.java)

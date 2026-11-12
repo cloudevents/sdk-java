@@ -25,6 +25,8 @@ import org.apache.kafka.common.record.TimestampType;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import java.util.Optional;
+
 import static io.cloudevents.core.test.Data.V1_WITH_JSON_DATA_WITH_EXT;
 
 public class KafkaConsumerMessageToCloudEventBenchmark {
@@ -45,12 +47,12 @@ public class KafkaConsumerMessageToCloudEventBenchmark {
                 0,
                 0,
                 TimestampType.NO_TIMESTAMP_TYPE,
-                -1L,
                 ConsumerRecord.NULL_SIZE,
                 ConsumerRecord.NULL_SIZE,
                 "aaa",
                 inRecord.value(),
-                inRecord.headers()
+                inRecord.headers(),
+                Optional.empty()
             );
         }
     }
@@ -81,12 +83,12 @@ public class KafkaConsumerMessageToCloudEventBenchmark {
                 0,
                 0,
                 TimestampType.NO_TIMESTAMP_TYPE,
-                -1L,
                 ConsumerRecord.NULL_SIZE,
                 ConsumerRecord.NULL_SIZE,
                 "aaa",
                 inRecord.value(),
-                inRecord.headers()
+                inRecord.headers(),
+                Optional.empty()
             );
         }
     }

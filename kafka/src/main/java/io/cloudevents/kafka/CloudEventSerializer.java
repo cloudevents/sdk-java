@@ -56,23 +56,23 @@ public class CloudEventSerializer implements Serializer<CloudEvent> {
             throw new IllegalArgumentException("Cannot use CloudEventSerializer as key serializer");
         }
         Object encodingConfig = configs.get(ENCODING_CONFIG);
-        if (encodingConfig instanceof String) {
-            this.encoding = Encoding.valueOf((String) encodingConfig);
-        } else if (encodingConfig instanceof Encoding) {
-            this.encoding = (Encoding) encodingConfig;
+        if (encodingConfig instanceof String string) {
+            this.encoding = Encoding.valueOf(string);
+        } else if (encodingConfig instanceof Encoding encoding1) {
+            this.encoding = encoding1;
         } else if (encodingConfig != null) {
             throw new IllegalArgumentException(ENCODING_CONFIG + " can be of type String or " + Encoding.class.getCanonicalName());
         }
 
         if (this.encoding == Encoding.STRUCTURED) {
             Object eventFormatConfig = configs.get(EVENT_FORMAT_CONFIG);
-            if (eventFormatConfig instanceof String) {
-                this.format = EventFormatProvider.getInstance().resolveFormat((String) eventFormatConfig);
+            if (eventFormatConfig instanceof String string) {
+                this.format = EventFormatProvider.getInstance().resolveFormat(string);
                 if (this.format == null) {
                     throw new IllegalArgumentException(EVENT_FORMAT_CONFIG + " cannot be resolved with " + eventFormatConfig);
                 }
-            } else if (eventFormatConfig instanceof EventFormat) {
-                this.format = (EventFormat) eventFormatConfig;
+            } else if (eventFormatConfig instanceof EventFormat eventFormat) {
+                this.format = eventFormat;
             } else {
                 throw new IllegalArgumentException(EVENT_FORMAT_CONFIG + " cannot be null and can be of type String or " + EventFormat.class.getCanonicalName());
             }

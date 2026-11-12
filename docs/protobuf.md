@@ -12,13 +12,13 @@ Protobuf runtime and classes generated from the CloudEvents
 [proto spec](https://github.com/cloudevents/spec/blob/v1.0.1/spec.proto).
 
 # Setup
-For Maven based projects, use the following dependency:
+For Maven-based projects, use the following dependency:
 
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-protobuf</artifactId>
-    <version>4.0.2</version>
+    <version>5.1.0</version>
 </dependency>
 ```
 

@@ -56,7 +56,7 @@ public class XMLFormatTest {
         CloudEvent ce = format.deserialize(raw);
         assertThat(ce).isNotNull();
 
-        assertExtension(ce, "myinteger", new Integer(42));
+        assertExtension(ce, "myinteger", Integer.valueOf(42));
         assertExtension(ce, "mystring", "Greetings");
         assertExtension(ce, "myboolean", Boolean.FALSE);
     }

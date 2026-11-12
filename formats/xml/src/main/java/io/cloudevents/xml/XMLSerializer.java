@@ -169,8 +169,8 @@ class XMLSerializer {
         @Override
         public CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException {
 
-            if (value instanceof Integer) {
-                return withContextAttribute(name, (Integer) value);
+            if (value instanceof Integer integer) {
+                return withContextAttribute(name, integer);
             } else {
                 return withContextAttribute(name, String.valueOf(value));
             }
@@ -200,8 +200,8 @@ class XMLSerializer {
         @Override
         public Document end(CloudEventData data) throws CloudEventRWException {
 
-            if (data instanceof XMLCloudEventData) {
-                writeXmlData(((XMLCloudEventData) data).getDocument());
+            if (data instanceof XMLCloudEventData eventData) {
+                writeXmlData(eventData.getDocument());
             } else if (XMLUtils.isXmlContent(dataContentType)) {
                 writeXmlData(data.toBytes());
             } else if (XMLUtils.isTextContent(dataContentType)) {

@@ -13,9 +13,9 @@ public class TypeCastingProvider {
         }
         switch (target) {
             case INTEGER:
-                if (value instanceof String) {
+                if (value instanceof String string) {
                     try {
-                        Integer.parseInt((String) value);
+                        Integer.parseInt(string);
                         return true;
                     } catch (NumberFormatException e) {
                         return false;
@@ -23,9 +23,9 @@ public class TypeCastingProvider {
                 }
                 return value instanceof Boolean;
             case BOOLEAN:
-                if (value instanceof String) {
+                if (value instanceof String string) {
                     try {
-                        parseBool((String) value);
+                        parseBool(string);
                         return true;
                     } catch (IllegalArgumentException e) {
                         return false;

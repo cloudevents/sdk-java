@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>cloudevents-examples</artifactId>
         <groupId>io.cloudevents</groupId>
-        <version>4.1.0-SNAPSHOT</version>
+        <version>5.2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-spring-reactive-example</artifactId>
+    <name>Cloudevents - Reactive Spring example</name>
 
     <properties>
         <module-name>cloudevents.example.spring.reactive</module-name>
-        <spring-boot.version>2.4.3</spring-boot.version>
+        <spring-boot.version>4.0.7</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -34,6 +35,10 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webclient</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.cloudevents</groupId>
             <artifactId>cloudevents-spring</artifactId>
             <version>${project.version}</version>
@@ -45,12 +50,17 @@
         </dependency>
         <dependency>
             <groupId>io.cloudevents</groupId>
-            <artifactId>cloudevents-json-jackson</artifactId>
+            <artifactId>cloudevents-json-jackson3</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webtestclient</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -64,5 +74,5 @@
             </plugin>
         </plugins>
     </build>
-   
+
 </project>

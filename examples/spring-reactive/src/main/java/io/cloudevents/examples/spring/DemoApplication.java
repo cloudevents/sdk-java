@@ -1,18 +1,13 @@
 package io.cloudevents.examples.spring;
 
-import java.net.URI;
-import java.util.UUID;
-
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.spring.http.CloudEventHttpUtils;
 import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
 import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
-import reactor.core.publisher.Mono;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.codec.CodecCustomizer;
+import org.springframework.boot.http.codec.CodecCustomizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +16,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.util.UUID;
 
 @SpringBootApplication
 @RestController
 public class DemoApplication {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
@@ -64,4 +63,7 @@ public class DemoApplication {
 
 	}
 
+    public record Foo(
+        String value
+    ) {}
 }

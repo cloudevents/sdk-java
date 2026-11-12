@@ -64,7 +64,7 @@ public class BasicHttpServer {
 
     private static MessageReader createMessageReader(HttpExchange httpExchange) throws IOException {
         Headers headers = httpExchange.getRequestHeaders();
-        byte[] body = IOUtils.toByteArray(httpExchange.getRequestBody());
+        byte[] body = httpExchange.getRequestBody().readAllBytes();
         return HttpMessageFactory.createReaderFromMultimap(headers, body);
     }
 

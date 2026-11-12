@@ -5,17 +5,18 @@
     <parent>
         <artifactId>cloudevents-http-restful-ws-jakarta-integration-tests</artifactId>
         <groupId>io.cloudevents</groupId>
-        <version>4.1.0-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <version>5.2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-http-restful-ws-jakarta-integration-tests-microprofile</artifactId>
-    <name>CloudEvents - JAX-RS Jakarta EE9+ Integration Tests - Microprofile and Liberty</name>
+    <name>CloudEvents - JAX-RS Jakarta EE 9+ Integration Tests - Microprofile and Liberty</name>
     <packaging>war</packaging>
 
     <properties>
         <module-name>cloudevents.http.restful.ws.jakarta.integration.tests.microprofile</module-name>
+
+        <resteasy.version>6.2.16.Final</resteasy.version>
 
         <!-- Liberty configuration -->
         <liberty.var.default.http.port>9080</liberty.var.default.http.port>
@@ -41,13 +42,13 @@
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>9.1.0</version>
+            <version>${jakartaee.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>5.0</version>
+            <version>6.0</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
@@ -66,13 +67,13 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>6.0.3.Final</version>
+            <version>${resteasy.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-json-binding-provider</artifactId>
-            <version>6.0.3.Final</version>
+            <version>${resteasy.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -83,20 +84,25 @@
         </dependency>
         <!-- For JDK 9 & above Support -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.5</version>
         </dependency>
         <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
         </dependency>
         <dependency>
             <groupId>io.openliberty.arquillian</groupId>
-            <artifactId>arquillian-liberty-managed-jakarta-junit</artifactId>
+            <artifactId>arquillian-liberty-managed-jakarta-junit5</artifactId>
             <version>2.1.4</version>
             <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -112,7 +118,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
                 <configuration>
                     <packagingExcludes>pom.xml</packagingExcludes>
                 </configuration>
@@ -120,7 +125,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.5.5</version>
                 <configuration>
                     <systemPropertyVariables>
                         <arquillian.war.name>${arquillian.war.name}.war</arquillian.war.name>
@@ -138,7 +142,7 @@
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.12.5</version>
                 <configuration>
                     <arquillianProperties>
                         <javaVmArguments>

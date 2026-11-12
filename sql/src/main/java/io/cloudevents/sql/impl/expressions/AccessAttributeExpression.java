@@ -49,8 +49,8 @@ public class AccessAttributeExpression extends BaseExpression {
             // No casting required
             return value;
         }
-        if (value instanceof byte[]) {
-            return Base64.getEncoder().encodeToString((byte[]) value);
+        if (value instanceof byte[] bytes) {
+            return Base64.getEncoder().encodeToString(bytes);
         }
         return Objects.toString(value);
     }

@@ -48,7 +48,7 @@ public class EvaluationException extends RuntimeException {
     private final String expression;
 
     public EvaluationException(ErrorKind errorKind, Interval interval, String expression, String message, Throwable cause) {
-        super(String.format("%s at %s `%s`: %s", errorKind.name(), interval.toString(), expression, message), cause);
+        super("%s at %s `%s`: %s".formatted(errorKind.name(), interval.toString(), expression, message), cause);
         this.errorKind = errorKind;
         this.interval = interval;
         this.expression = expression;

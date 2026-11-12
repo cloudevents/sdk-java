@@ -221,7 +221,7 @@ public class RocketmqMessageFactoryTest {
     private static AbstractMap.SimpleEntry<String, String> property(final String name, final String value) {
         return name.equalsIgnoreCase("ignored") ?
             new AbstractMap.SimpleEntry<>(name, value) :
-            new AbstractMap.SimpleEntry<>(String.format(PREFIX_TEMPLATE, name), value);
+            new AbstractMap.SimpleEntry<>(PREFIX_TEMPLATE.formatted(name), value);
     }
 
     @SafeVarargs

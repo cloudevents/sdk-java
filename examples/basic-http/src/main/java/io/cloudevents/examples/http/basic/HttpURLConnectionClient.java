@@ -64,7 +64,7 @@ public class HttpURLConnectionClient {
 
     private static MessageReader createMessageReader(HttpURLConnection httpUrlConnection) throws IOException {
         Map<String, List<String>> headers = httpUrlConnection.getHeaderFields();
-        byte[] body = IOUtils.toByteArray(httpUrlConnection.getInputStream());
+        byte[] body = httpUrlConnection.getInputStream().readAllBytes();
         return HttpMessageFactory.createReaderFromMultimap(headers, body);
     }
 

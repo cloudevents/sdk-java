@@ -23,7 +23,7 @@
     <parent>
         <groupId>io.cloudevents</groupId>
         <artifactId>cloudevents-parent</artifactId>
-        <version>4.1.0-SNAPSHOT</version>
+        <version>5.2.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -114,6 +114,12 @@
             <artifactId>truth-proto-extension</artifactId>
             <version>1.4.4</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

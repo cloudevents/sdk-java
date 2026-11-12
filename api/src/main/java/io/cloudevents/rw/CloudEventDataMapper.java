@@ -35,7 +35,7 @@ public interface CloudEventDataMapper<R extends CloudEventData> {
      *
      * @param data the input data
      * @return The new data
-     * @throws CloudEventRWException is anything goes wrong while mapping the input data
+     * @throws CloudEventRWException if anything goes wrong while mapping the input data
      */
     R map(CloudEventData data) throws CloudEventRWException;
 

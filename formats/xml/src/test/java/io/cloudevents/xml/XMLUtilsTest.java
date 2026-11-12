@@ -50,7 +50,7 @@ public class XMLUtilsTest {
 
         assertThat(XMLUtils.countOfChildElements(root)).isEqualTo(1);
 
-        // Add a another child
+        // Add another child
         Element c2 = doc.createElement("ChildTwo");
         root.appendChild(c2);
 

@@ -5,22 +5,22 @@ nav_order: 5
 
 # HTTP Protocol Binding for Jakarta EE 9+ - Jakarta RESTful Web Services
 
-[![Javadocs](https://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws.svg?color=green)](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws)
+[![Javadocs](https://www.javadoc.io/badge/io.cloudevents/cloudevents-http-restful-ws-jakarta.svg?color=green)](https://www.javadoc.io/doc/io.cloudevents/cloudevents-http-restful-ws-jakarta)
 
-For Maven based projects, use the following to configure the CloudEvents Jakarta
+For Maven-based projects, use the following to configure the CloudEvents Jakarta
 RESTful Web Services Binding for Jakarta EE 9+:
 
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-http-restful-ws-jakarta</artifactId>
-    <version>4.0.2</version>
+    <version>5.1.0</version>
 </dependency>
 ```
 
 This integration is tested with Jersey (Requires JDK11 or higher), RestEasy & Microprofile Liberty.
 
-#### * Before using this package ensure your web framework  does support the `jakarta.*` namespace.
+#### * Before using this package ensure your web framework does support the `jakarta.*` namespace.
 
 ## Receiving CloudEvents
 
@@ -40,8 +40,6 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/")
 public class EventReceiverResource {
-
-
 
     @GET
     @Path("getMinEvent")

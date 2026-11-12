@@ -10,14 +10,14 @@ nav_order: 2
 This module contains the interfaces to represent `CloudEvent` in memory and to
 read and write an object using as CloudEvent.
 
-For Maven based projects, use the following dependency:
+For Maven-based projects, use the following dependency:
 
 ```xml
 
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-api</artifactId>
-    <version>4.0.2</version>
+    <version>5.1.0</version>
 </dependency>
 ```
 
@@ -47,8 +47,8 @@ binary mode containing a valid CloudEvent can be translated to a
 CloudEvent, hence an eventual response builder could implement
 `CloudEventWriter`.
 
-`CloudEventReader` and `CloudEventWriter` implementations doesn't have any
-particular knowledge about specification version, difference between attributes
+`CloudEventReader` and `CloudEventWriter` implementations do not have any
+particular knowledge about a specification version, difference between attributes
 and extensions, and so on. Their only concern is how to read and write context
 attributes and data back and forth to the "CloudEvents type system", as defined
 in the package `io.cloudevents`.

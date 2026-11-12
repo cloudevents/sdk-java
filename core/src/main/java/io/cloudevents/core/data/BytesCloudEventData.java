@@ -16,6 +16,7 @@ public class BytesCloudEventData implements CloudEventData {
      * @param value the bytes to wrap
      * @deprecated use {@link BytesCloudEventData#wrap(byte[])}
      */
+    @Deprecated
     public BytesCloudEventData(byte[] value) {
         Objects.requireNonNull(value);
         this.value = value;

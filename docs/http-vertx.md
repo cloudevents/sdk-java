@@ -7,14 +7,14 @@ nav_order: 5
 
 [![Javadocs](http://www.javadoc.io/badge/io.cloudevents/cloudevents-http-vertx.svg?color=green)](http://www.javadoc.io/doc/io.cloudevents/cloudevents-http-vertx)
 
-For Maven based projects, use the following to configure the CloudEvents Vertx
+For Maven-based projects, use the following to configure the CloudEvents Vertx
 HTTP Transport:
 
 ```xml
 <dependency>
     <groupId>io.cloudevents</groupId>
     <artifactId>cloudevents-http-vertx</artifactId>
-    <version>4.0.2</version>
+    <version>5.1.0</version>
 </dependency>
 ```
 
@@ -58,7 +58,7 @@ public class CloudEventServerVerticle extends AbstractVerticle {
 
 ## Sending CloudEvents
 
-Below is a sample on how to use the client to send and receive a CloudEvent:
+Below is a sample of how to use the client to send and receive a CloudEvent:
 
 ```java
 import io.cloudevents.CloudEvent;

@@ -18,6 +18,7 @@
 package io.cloudevents.core.provider;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeSet;
@@ -69,8 +70,16 @@ public final class EventFormatProvider {
 	 */
 	public void registerFormat(EventFormat format) {
 		for (String k : format.deserializableContentTypes()) {
-			this.formats.put(k, format);
+			this.formats.put(normalizeContentType(k), format);
 		}
+	}
+
+	private static String normalizeContentType(String contentType) {
+		int i = contentType.indexOf(';');
+		if (i != -1) {
+			return contentType.substring(0, i).toLowerCase(Locale.ROOT) + contentType.substring(i);
+		}
+		return contentType.toLowerCase(Locale.ROOT);
 	}
 
 	/**
@@ -96,7 +105,7 @@ public final class EventFormatProvider {
 		if (i != -1) {
 			contentType = contentType.substring(0, i);
 		}
-		return this.formats.get(contentType);
+		return this.formats.get(contentType.toLowerCase(Locale.ROOT));
 	}
 
 	/**

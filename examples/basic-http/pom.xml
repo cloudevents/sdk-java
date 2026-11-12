@@ -21,11 +21,13 @@
     <parent>
         <artifactId>cloudevents-examples</artifactId>
         <groupId>io.cloudevents</groupId>
-        <version>4.1.0-SNAPSHOT</version>
+        <version>5.2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudevents-basic-http-example</artifactId>
+    <name>Cloudevents - basic HTTP example</name>
+
     <properties>
         <module-name>cloudevents.example.basic.http</module-name>
     </properties>
@@ -44,7 +46,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.4.55.v20240627</version>
+            <version>12.1.10</version>
         </dependency>
     </dependencies>
 </project>

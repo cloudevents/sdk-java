@@ -27,7 +27,7 @@ public class ParseException extends RuntimeException {
     private final String expression;
 
     public ParseException(ErrorKind errorKind, Interval interval, String expression, String message, Throwable cause) {
-        super(String.format("[%s at %d:%d `%s`] %s", errorKind.name(), interval.a, interval.b, expression, message), cause);
+        super("[%s at %d:%d `%s`] %s".formatted(errorKind.name(), interval.a, interval.b, expression, message), cause);
         this.errorKind = errorKind;
         this.interval = interval;
         this.expression = expression;

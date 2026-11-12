@@ -68,8 +68,8 @@ class CloudEventSerializer extends StdSerializer<CloudEvent> {
         public CloudEventContextWriter withContextAttribute(String name, Number value) throws CloudEventRWException
         {
             // Only Integer types are supported by the specification
-            if (value instanceof Integer) {
-                this.withContextAttribute(name, (Integer) value);
+            if (value instanceof Integer integer) {
+                this.withContextAttribute(name, integer);
             } else {
                 // Default to string representation for other numeric values
                 this.withContextAttribute(name, value.toString());
@@ -116,8 +116,8 @@ class CloudEventSerializer extends StdSerializer<CloudEvent> {
         // Serialize data
         if (value.getData() != null) {
             CloudEventData data = value.getData();
-            if (data instanceof JsonCloudEventData) {
-                gen.writeObjectField("data", ((JsonCloudEventData) data).getNode());
+            if (data instanceof JsonCloudEventData eventData) {
+                gen.writeObjectField("data", eventData.getNode());
             } else {
                 byte[] dataBytes = data.toBytes();
                 String contentType = value.getDataContentType();
