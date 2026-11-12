@@ -17,8 +17,11 @@
 
 package io.cloudevents.core.provider;
 
+import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.mock.CSVFormat;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,6 +37,37 @@ public class EventFormatProviderTest {
     void resolveCSVWithParams() {
         assertThat(EventFormatProvider.getInstance().resolveFormat(CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8"))
             .isInstanceOf(CSVFormat.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "APPLICATION/CLOUDEVENTS+CSV",
+        "Application/CloudEvents+Csv",
+        "application/CLOUDEVENTS+csv; charset=UTF-8"
+    })
+    void resolveCSVWithCaseInsensitiveContentType(String contentType) {
+        assertThat(EventFormatProvider.getInstance().resolveFormat(contentType))
+            .isInstanceOf(CSVFormat.class);
+    }
+
+    @Test
+    void registerFormatWithMixedCaseContentType() {
+        EventFormatProvider provider = EventFormatProvider.getInstance();
+        EventFormat original = provider.resolveFormat(CSVFormat.INSTANCE.serializedContentType());
+        CSVFormat format = new CSVFormat() {
+            @Override
+            public String serializedContentType() {
+                return "Application/CloudEvents+CSV";
+            }
+        };
+
+        try {
+            provider.registerFormat(format);
+            assertThat(provider.resolveFormat("application/cloudevents+csv")).isSameAs(format);
+            assertThat(provider.resolveFormat("APPLICATION/CLOUDEVENTS+CSV")).isSameAs(format);
+        } finally {
+            provider.registerFormat(original);
+        }
     }
 
     @Test
