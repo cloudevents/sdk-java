@@ -16,6 +16,7 @@
  */
 package io.cloudevents.xml;
 
+import io.cloudevents.rw.CloudEventRWException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,6 +27,7 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,6 +58,15 @@ public class XMLUtilsTest {
 
         assertThat(XMLUtils.countOfChildElements(root)).isEqualTo(2);
 
+    }
+
+    @Test
+    public void testRejectsDoctype() {
+        String xml = "<!DOCTYPE root [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><root>&xxe;</root>";
+        Assertions.assertThrows(
+            CloudEventRWException.class,
+            () -> XMLUtils.parseIntoDocument(xml.getBytes(StandardCharsets.UTF_8))
+        );
     }
 
     @ParameterizedTest
