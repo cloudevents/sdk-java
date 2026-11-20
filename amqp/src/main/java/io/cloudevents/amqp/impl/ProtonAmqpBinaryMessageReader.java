@@ -68,16 +68,17 @@ public final class ProtonAmqpBinaryMessageReader extends BaseGenericBinaryMessag
     }
 
     /**
-     * Tests whether the given attribute key is prefixed with <em>cloudEvents:</em>
+     * Tests whether the given attribute key is prefixed with <em>cloudEvents:</em> or <em>cloudEvents_</em>
      *
      * @param key   The key to test for the presence of the prefix.
-     * @return      True if the specified key starts with the prefix or
+     * @return      True if the specified key starts with either prefix or
      *              false otherwise.
      */
     @Override
     protected boolean isCloudEventsHeader(final String key) {
         final int prefixLength = AmqpConstants.CE_PREFIX.length();
-        return key.length() > prefixLength && key.startsWith(AmqpConstants.CE_PREFIX);
+        return key.length() > prefixLength
+            && (key.startsWith(AmqpConstants.CE_PREFIX) || key.startsWith(AmqpConstants.CE_UNDERSCORE_PREFIX));
     }
 
     /**
@@ -89,6 +90,7 @@ public final class ProtonAmqpBinaryMessageReader extends BaseGenericBinaryMessag
      */
     @Override
     protected String toCloudEventsKey(final String key) {
+        // both prefixes have the same length
         return key.substring(AmqpConstants.CE_PREFIX.length());
     }
 
