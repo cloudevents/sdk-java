@@ -20,8 +20,11 @@ package io.cloudevents.amqp.impl;
 import io.cloudevents.SpecVersion;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.message.impl.BaseGenericBinaryMessageReaderImpl;
+import io.cloudevents.types.Time;
 import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
 
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
@@ -117,7 +120,8 @@ public final class ProtonAmqpBinaryMessageReader extends BaseGenericBinaryMessag
     /**
      * Gets the cloud event representation of the value.
      * <p>
-     * This method simply returns the string representation of the type of value passed as argument.
+     * Native AMQP timestamps are converted to their RFC3339 representation.
+     * Other values are converted using their string representation.
      *
      * @param value The value of a CloudEvent attribute or extension.
      *
@@ -125,6 +129,9 @@ public final class ProtonAmqpBinaryMessageReader extends BaseGenericBinaryMessag
      */
     @Override
     protected String toCloudEventsValue(final Object value) {
+        if (value instanceof Date timestamp) {
+            return Time.writeTime(timestamp.toInstant().atOffset(ZoneOffset.UTC));
+        }
         return value.toString();
     }
 }
