@@ -15,7 +15,7 @@
 
     <properties>
         <module-name>io.cloudevents.sql</module-name>
-        <antlr.version>4.9.3</antlr.version>
+        <antlr.version>4.13.2</antlr.version>
         <jackson.version>2.21.5</jackson.version>
     </properties>
 
