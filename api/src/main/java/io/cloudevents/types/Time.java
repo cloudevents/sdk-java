@@ -21,14 +21,29 @@ import io.cloudevents.rw.CloudEventRWException;
 
 import java.time.DateTimeException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 /**
  * Utilities to handle the <a href="https://github.com/cloudevents/spec/blob/v1.0/spec.md#type-system">CloudEvent Attribute Timestamp type</a>
  */
 public final class Time {
+
+    /**
+     * RFC3339 section 5.6 note allows a space instead of the "T" between date and time.
+     */
+    private static final DateTimeFormatter SPACE_SEPARATED_OFFSET_DATE_TIME = new DateTimeFormatterBuilder()
+        .parseCaseInsensitive()
+        .append(ISO_LOCAL_DATE)
+        .appendLiteral(' ')
+        .append(ISO_LOCAL_TIME)
+        .appendOffsetId()
+        .toFormatter();
 
     private Time() {
     }
@@ -41,7 +56,15 @@ public final class Time {
      * @throws DateTimeParseException if something went wrong when parsing the provided time.
      */
     public static OffsetDateTime parseTime(String time) throws DateTimeParseException {
-        return OffsetDateTime.parse(time);
+        try {
+            return OffsetDateTime.parse(time);
+        } catch (DateTimeParseException e) {
+            try {
+                return OffsetDateTime.parse(time, SPACE_SEPARATED_OFFSET_DATE_TIME);
+            } catch (DateTimeParseException ignored) {
+                throw e;
+            }
+        }
     }
 
     /**

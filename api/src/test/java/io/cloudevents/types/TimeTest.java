@@ -47,6 +47,14 @@ public class TimeTest {
     }
 
     @Test
+    void testParseDateWithSpaceSeparator() {
+        assertThat(Time.parseTime("1985-04-12 23:20:50.52Z"))
+            .isEqualTo(Time.parseTime("1985-04-12T23:20:50.52Z"));
+        assertThat(Time.parseTime("1990-12-31 15:59-08:00"))
+            .isEqualTo(Time.parseTime("1990-12-31T15:59-08:00"));
+    }
+
+    @Test
     void testParseTimeException() {
         assertThatCode(() -> Time.parseTime("time", "01-01T12:20:27.87+00:20"))
             .isInstanceOf(CloudEventRWException.class)
