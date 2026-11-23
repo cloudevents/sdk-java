@@ -61,6 +61,18 @@ public class ProtonAmqpMessageFactoryTest {
     }
 
     @ParameterizedTest()
+    @MethodSource("binaryTestArguments")
+    public void readBinaryWithUnderscorePrefix(final Map<String, Object> props, final String contentType, final byte[] body,
+            final CloudEvent event) {
+        final Map<String, Object> underscoreProps = props.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey().replace(AmqpConstants.CE_PREFIX, AmqpConstants.CE_UNDERSCORE_PREFIX), Map.Entry::getValue));
+        final Section bodySection = body != null ? new org.apache.qpid.proton.amqp.messaging.Data(new Binary(body)) : null;
+        final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, new ApplicationProperties(underscoreProps), bodySection);
+        assertThat(amqpReader.getEncoding()).isEqualTo(Encoding.BINARY);
+        assertThat(amqpReader.toEvent()).isEqualTo(event);
+    }
+
+    @ParameterizedTest()
     @MethodSource("io.cloudevents.core.test.Data#allEventsWithoutExtensions")
     public void readStructured(final CloudEvent event) {
         final String contentType = CSVFormat.INSTANCE.serializedContentType() + "; charset=utf8";

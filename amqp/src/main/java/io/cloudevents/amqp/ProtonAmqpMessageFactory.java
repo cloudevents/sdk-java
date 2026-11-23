@@ -60,6 +60,7 @@ public final class ProtonAmqpMessageFactory {
     /**
      * Creates a MessageReader to read using the {@code content-type} property, {@code application-properties} and data payload
      * of a proton-based {@link Message}. This reader is able to read both binary and structured encoded {@link io.cloudevents.CloudEvent}.
+     * Attributes and extensions are read from {@code application-properties} with the {@code cloudEvents:} or the {@code cloudEvents_} prefix.
      *
      * @param contentType The {@code content-type} of the message payload.
      * @param props       The {@code application-properties} section of the proton-message containing cloud event metadata (attributes and/or extensions).
@@ -73,9 +74,17 @@ public final class ProtonAmqpMessageFactory {
         return MessageUtils.parseStructuredOrBinaryMessage(
             () -> contentType,
             format -> new GenericStructuredMessageReader(format, payload),
-            () -> AmqpConstants.getApplicationProperty(props, AmqpConstants.APP_PROPERTY_SPEC_VERSION, String.class),
+            () -> specVersion(props),
             sv -> new ProtonAmqpBinaryMessageReader(sv, props, contentType, payload)
         );
+    }
+
+    private static String specVersion(final ApplicationProperties props) {
+        final String specVersion = AmqpConstants.getApplicationProperty(props, AmqpConstants.APP_PROPERTY_SPEC_VERSION, String.class);
+        if (specVersion != null) {
+            return specVersion;
+        }
+        return AmqpConstants.getApplicationProperty(props, AmqpConstants.APP_PROPERTY_SPEC_VERSION_UNDERSCORE, String.class);
     }
 
     /**

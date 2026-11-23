@@ -44,6 +44,12 @@ public final class AmqpConstants {
 	public static final String CE_PREFIX = "cloudEvents:";
 
 	/**
+	 * The alternative prefix name for CloudEvent attributes in the <em>application-properties</em> section,
+	 * which JMS 2.0 clients can read and use in message selectors. Readers accept both prefixes.
+	 */
+	public static final String CE_UNDERSCORE_PREFIX = "cloudEvents_";
+
+	/**
 	 * The AMQP 1.0 <em>content-type</em> message property
 	 */
 	public static final String PROPERTY_CONTENT_TYPE = "content-type";
@@ -61,6 +67,8 @@ public final class AmqpConstants {
 	});
 
 	public static final String APP_PROPERTY_SPEC_VERSION = ATTRIBUTES_TO_PROPERTYNAMES.get("specversion");
+
+	public static final String APP_PROPERTY_SPEC_VERSION_UNDERSCORE = CE_UNDERSCORE_PREFIX + "specversion";
 
     /**
      * Gets the value of a specific <em>application property</em>.
