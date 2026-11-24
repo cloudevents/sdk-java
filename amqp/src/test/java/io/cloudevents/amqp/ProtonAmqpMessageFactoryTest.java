@@ -30,11 +30,14 @@ import io.cloudevents.types.Time;
 import org.apache.qpid.proton.amqp.Binary;
 import org.apache.qpid.proton.amqp.messaging.ApplicationProperties;
 import org.apache.qpid.proton.amqp.messaging.Section;
+import org.apache.qpid.proton.message.Message;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.time.OffsetDateTime;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -69,6 +72,41 @@ public class ProtonAmqpMessageFactoryTest {
         final MessageReader amqpReader = ProtonAmqpMessageFactory.createReader(contentType, null, new org.apache.qpid.proton.amqp.messaging.Data(new Binary(contentPayload)));
         assertThat(amqpReader.getEncoding()).isEqualTo(Encoding.STRUCTURED);
         assertThat(amqpReader.toEvent()).isEqualTo(event);
+    }
+
+    @ParameterizedTest
+    @MethodSource("nativeTimestampArguments")
+    public void readBinaryWithNativeTimestamp(final SpecVersion version, final OffsetDateTime expectedTime) {
+        final Date timestamp = Date.from(expectedTime.toInstant());
+        final Message message = Message.Factory.create();
+        message.setApplicationProperties(new ApplicationProperties(properties(
+            property("specversion", version.toString()),
+            property("id", Data.ID),
+            property("type", Data.TYPE),
+            property("source", Data.SOURCE.toString()),
+            property("time", timestamp),
+            property("observedtime", timestamp)
+        )));
+
+        final byte[] encoded = new byte[1024];
+        final int length = message.encode(encoded, 0, encoded.length);
+        final Message decoded = Message.Factory.create();
+        decoded.decode(encoded, 0, length);
+        assertThat(decoded.getApplicationProperties().getValue().get(AmqpConstants.CE_PREFIX + "time"))
+            .isInstanceOf(Date.class)
+            .isEqualTo(timestamp);
+
+        final CloudEvent event = ProtonAmqpMessageFactory.createReader(decoded).toEvent();
+        assertThat(event.getTime()).isEqualTo(expectedTime);
+        assertThat(event.getExtension("observedtime")).isEqualTo(Time.writeTime(expectedTime));
+    }
+
+    private static Stream<Arguments> nativeTimestampArguments() {
+        return Stream.of(SpecVersion.V03, SpecVersion.V1).flatMap(version -> Stream.of(
+            "1969-12-31T23:59:59.999Z",
+            "1970-01-01T00:00:00Z",
+            "2026-11-07T20:15:16.123Z"
+        ).map(time -> Arguments.of(version, OffsetDateTime.parse(time))));
     }
 
     private static Stream<Arguments> binaryTestArguments() {
